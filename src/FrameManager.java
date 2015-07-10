@@ -20,6 +20,10 @@ public class FrameManager
         this.mainFrame.setVisible(true);
 	}
 	
+	/* pushPanel - removes the current panel and replaces it with the newly opened panel
+	 *   panel - new panel to display
+	 *   title - title of the new panel
+	 */
 	public void pushPanel(JPanel panel, String title)
 	{
 		this.mainFrame.getContentPane().removeAll();
