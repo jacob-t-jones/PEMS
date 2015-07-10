@@ -15,17 +15,14 @@ public class FrameManager
         this.mainFrame.setVisible(true);
 	}
 	
-	public void pushPanel(JPanel panel)
+	public void pushPanel(JPanel panel, String title)
 	{
 		this.mainFrame.getContentPane().removeAll();
 		this.mainFrame.getContentPane().add(panel);
 		this.mainFrame.getContentPane().revalidate();
 		this.mainFrame.getContentPane().repaint();
-	}
-	
-	public void setTitle(String title)
-	{
 		this.mainFrame.setTitle(title);
 	}
+	
 	
 }
