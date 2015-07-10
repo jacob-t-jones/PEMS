@@ -31,6 +31,7 @@ public class FrameManager
 		this.mainFrame.getContentPane().revalidate();
 		this.mainFrame.getContentPane().repaint();
 		this.mainFrame.setTitle(title);
+		
 	}
 
 }
