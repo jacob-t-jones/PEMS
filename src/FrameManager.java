@@ -3,6 +3,7 @@
 // FrameManager.java
 
 import java.awt.*;
+
 import javax.swing.*;
 
 public class FrameManager 
@@ -31,7 +32,24 @@ public class FrameManager
 		this.mainFrame.getContentPane().revalidate();
 		this.mainFrame.getContentPane().repaint();
 		this.mainFrame.setTitle(title);
-		
+	}
+	
+	/* widthToPixels - converts a screen width percentage value to pixels
+	 *   percentage - the value to convert to pixels
+	 */
+	public double widthToPixels(double percentage)
+	{
+		double screenWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		return screenWidth * (percentage / 100.0);
+	}
+	
+	/* heightToPixels - converts a screen height percentage value to pixels
+	 *   percentage - the value to convert to pixels
+	 */
+	public double heightToPixels(double percentage)
+	{
+		double screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();	
+		return screenHeight * (percentage / 100.0);
 	}
 
 }

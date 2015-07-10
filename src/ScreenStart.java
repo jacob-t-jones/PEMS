@@ -10,10 +10,6 @@ public class ScreenStart extends JPanel
 	
 	private FrameManager manager;
 	private JLabel instructions;
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	int width = (int)screenSize.getWidth();
-	int height = (int)screenSize.getHeight();
-
 	
 	public ScreenStart(FrameManager manager)
 	{
