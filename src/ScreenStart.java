@@ -16,7 +16,6 @@ public class ScreenStart extends JPanel
 		this.manager = manager;
 		this.instructions = new JLabel();
 		this.instructions.setText("Police Evidence Management System");
-		this.instructions.setBounds(manager.widthToPixels(50), manager.heightToPixels(10), 100, 100);
 		this.add(this.instructions);
 	}
 	

@@ -3,13 +3,13 @@
 // FrameManager.java
 
 import java.awt.*;
-
 import javax.swing.*;
 
 public class FrameManager 
 {
 	
 	private JFrame mainFrame;
+	private Config configuration;
 	
 	public FrameManager()
 	{
