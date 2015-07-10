@@ -20,7 +20,7 @@ public class ScreenStart extends JPanel
 		this.manager = manager;
 		this.instructions = new JLabel();
 		this.instructions.setText("Police Evidence Management System");
-		this.instructions.setBounds(width/2, height/2, width, height);
+		this.instructions.setBounds(100, 100, 100, 100);
 		this.add(this.instructions);
 	}
 	
