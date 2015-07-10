@@ -37,19 +37,19 @@ public class FrameManager
 	/* widthToPixels - converts a screen width percentage value to pixels
 	 *       percent - the value to convert to pixels
 	 */
-	public double widthToPixels(double percent)
+	public int widthToPixels(double percent)
 	{
 		double screenWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-		return screenWidth * (percent / 100.0);
+		return (int)(screenWidth * (percent / 100.0));
 	}
 	
 	/* heightToPixels - converts a screen height percentage value to pixels
 	 *        percent - the value to convert to pixels
 	 */
-	public double heightToPixels(double percent)
+	public int heightToPixels(double percent)
 	{
 		double screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();	
-		return screenHeight * (percent / 100.0);
+		return (int)(screenHeight * (percent / 100.0));
 	}
 
 }
