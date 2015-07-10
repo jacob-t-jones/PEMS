@@ -21,9 +21,9 @@ public class FrameManager
         this.mainFrame.setVisible(true);
 	}
 	
-	/* pushPanel - removes the current panel and replaces it with the newly opened panel
-	 *   panel - new panel to display
-	 *   title - title of the new panel
+	/* pushPanel - removes the current panel and replaces it with a newly constructed one
+	 *	   panel - new panel to display
+	 *     title - title of the new panel
 	 */
 	public void pushPanel(JPanel panel, String title)
 	{
@@ -35,21 +35,21 @@ public class FrameManager
 	}
 	
 	/* widthToPixels - converts a screen width percentage value to pixels
-	 *   percentage - the value to convert to pixels
+	 *       percent - the value to convert to pixels
 	 */
-	public double widthToPixels(double percentage)
+	public double widthToPixels(double percent)
 	{
 		double screenWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-		return screenWidth * (percentage / 100.0);
+		return screenWidth * (percent / 100.0);
 	}
 	
 	/* heightToPixels - converts a screen height percentage value to pixels
-	 *   percentage - the value to convert to pixels
+	 *        percent - the value to convert to pixels
 	 */
-	public double heightToPixels(double percentage)
+	public double heightToPixels(double percent)
 	{
 		double screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();	
-		return screenHeight * (percentage / 100.0);
+		return screenHeight * (percent / 100.0);
 	}
 
 }
