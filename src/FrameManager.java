@@ -13,6 +13,7 @@ public class FrameManager
 	public FrameManager()
 	{
         this.mainFrame = new JFrame("PEMS (Police Evidence Management System) 0.1");
+        this.mainFrame.getContentPane().add(new ScreenStart(this));
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.pack();
         this.mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
