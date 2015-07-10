@@ -1,3 +1,7 @@
+// PEMS (Police Evidence Management System) Version 0.1
+// Copyright 2015 - Jacob Jones and Andrew Rottier
+// FrameManager.java
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -23,6 +27,5 @@ public class FrameManager
 		this.mainFrame.getContentPane().repaint();
 		this.mainFrame.setTitle(title);
 	}
-	
-	
+
 }
