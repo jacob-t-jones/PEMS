@@ -27,6 +27,7 @@ public class ScreenStart extends JPanel
 	}
 	
 	/* paintComponent - override function 
+	 * 			    g - the current Graphics instance
 	 */
 	protected void paintComponent(Graphics g) 
 	{
