@@ -10,14 +10,16 @@ public class FrameManager
 {
 	
 	public final Font TITLE_FONT = new Font("Courier New", Font.BOLD, 30);
-	public final Color TITLE_COLOR = new Color(2, 2, 123);
+	public final Font SUBTITLE_FONT = new Font("Courier New", Font.BOLD, 22);
+	public final Color TITLE_COLOR = new Color(46, 46, 46);
+	public final Color SUBTITLE_COLOR = new Color(2, 2, 123);
 	private Config configuration;
 	private JFrame mainFrame;
 	
 	public FrameManager()
 	{
 		this.configuration = new Config();
-        this.mainFrame = new JFrame("PEMS (Police Evidence Management System) 0.1");
+        this.mainFrame = new JFrame("PEMS (Police Evidence Management System) Version 0.1");
         this.mainFrame.getContentPane().add(new ScreenStart(this));
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.pack();

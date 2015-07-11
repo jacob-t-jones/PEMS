@@ -14,6 +14,7 @@ public class ScreenStart extends JPanel
 	
 	private FrameManager manager;
 	private JLabel logoLabel;
+	private JLabel titleLabel;
 	private JLabel nameLabel;
 	
 	public ScreenStart(FrameManager manager)
@@ -23,6 +24,8 @@ public class ScreenStart extends JPanel
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
 		this.constructLogoLabel();
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
+		this.constructTitleLabel();
+		this.add(Box.createRigidArea(new Dimension(0, 10)));
 		this.constructNameLabel();
 	}
 	
@@ -64,13 +67,24 @@ public class ScreenStart extends JPanel
 	    this.add(this.logoLabel);
 	}
 	
+	/* constructTitleLabel - creates "titleLabel" and adds it to ScreenStart
+	 */
+	private void constructTitleLabel()
+	{
+		this.titleLabel = new JLabel("Police Evidence Management System");
+		this.titleLabel.setFont(this.manager.TITLE_FONT);
+		this.titleLabel.setForeground(this.manager.TITLE_COLOR);
+	    this.titleLabel.setAlignmentX(CENTER_ALIGNMENT);
+		this.add(this.titleLabel);
+	}
+	
 	/* constructNameLabel - creates "nameLabel" and adds it to ScreenStart
 	 */
 	private void constructNameLabel()
 	{
 		this.nameLabel = new JLabel(this.manager.getConfiguration().getDepartmentName());
-		this.nameLabel.setFont(this.manager.TITLE_FONT);
-		this.nameLabel.setForeground(this.manager.TITLE_COLOR);
+		this.nameLabel.setFont(this.manager.SUBTITLE_FONT);
+		this.nameLabel.setForeground(this.manager.SUBTITLE_COLOR);
 	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(this.nameLabel);
 	}
