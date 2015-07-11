@@ -9,7 +9,8 @@ import javax.swing.*;
 public class FrameManager 
 {
 	
-	public final Font TITLE_FONT = new Font("Courier New", Font.BOLD, 26);
+	public final Font TITLE_FONT = new Font("Courier New", Font.BOLD, 30);
+	public final Color TITLE_COLOR = new Color(2, 2, 123);
 	private Config configuration;
 	private JFrame mainFrame;
 	

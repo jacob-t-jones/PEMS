@@ -16,11 +16,15 @@ public class Config
 		this.parseConfigFile();
 	}
 	
+	/* getDepartmentName - returns the name of the police department specified in the config file
+	 */
 	public String getDepartmentName()
 	{
 		return this.departmentName;
 	}
 	
+	/* parseConfigFile - parses config.pems line by line and puts acquired values into their respective instance fields
+	 */
 	private void parseConfigFile()
 	{
 		List<String> configFile = null;

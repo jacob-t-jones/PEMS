@@ -26,6 +26,24 @@ public class ScreenStart extends JPanel
 		this.constructNameLabel();
 	}
 	
+	/* paintComponent - override function 
+	 */
+	protected void paintComponent(Graphics g) 
+	{
+		super.paintComponent(g);
+		Image backgroundImage = null;
+	    try 
+	    {                
+	    	backgroundImage = ImageIO.read(new File("resources/background.png"));
+	    } 
+	    catch (Exception e)
+	    {
+			System.out.println("Error - Unable to find background image");
+			return;
+	    }
+		g.drawImage(backgroundImage, 0, 0, null);
+	}
+	
 	/* constructLogoLabel - creates "logoLabel" and adds it to ScreenStart
 	 */
 	private void constructLogoLabel()
@@ -51,6 +69,7 @@ public class ScreenStart extends JPanel
 	{
 		this.nameLabel = new JLabel(this.manager.getConfiguration().getDepartmentName());
 		this.nameLabel.setFont(this.manager.TITLE_FONT);
+		this.nameLabel.setForeground(this.manager.TITLE_COLOR);
 	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(this.nameLabel);
 	}
