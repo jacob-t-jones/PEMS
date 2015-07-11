@@ -2,8 +2,10 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // ScreenStart.java
 
+import java.awt.*;
 import java.awt.image.*;
 import java.io.File;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -16,14 +18,17 @@ public class ScreenStart extends JPanel
 	
 	public ScreenStart(FrameManager manager)
 	{
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.manager = manager;
+		this.add(Box.createRigidArea(new Dimension(0, 20)));
 		this.constructLogoLabel();
+		this.add(Box.createRigidArea(new Dimension(0, 20)));
 		this.constructNameLabel();
 	}
 	
 	/* constructLogoLabel - creates "logoLabel" and adds it to ScreenStart
 	 */
-	public void constructLogoLabel()
+	private void constructLogoLabel()
 	{
 		BufferedImage logoImage = null;
 	    try 
@@ -36,15 +41,17 @@ public class ScreenStart extends JPanel
 			return;
 	    }
 	    this.logoLabel = new JLabel(new ImageIcon(this.manager.resizeImage(logoImage, 200, 200)));
+	    this.logoLabel.setAlignmentX(CENTER_ALIGNMENT);
 	    this.add(this.logoLabel);
 	}
 	
 	/* constructNameLabel - creates "nameLabel" and adds it to ScreenStart
 	 */
-	public void constructNameLabel()
+	private void constructNameLabel()
 	{
 		this.nameLabel = new JLabel(this.manager.getConfiguration().getDepartmentName());
 		this.nameLabel.setFont(this.manager.TITLE_FONT);
+	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(this.nameLabel);
 	}
 	

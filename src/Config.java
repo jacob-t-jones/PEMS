@@ -16,7 +16,12 @@ public class Config
 		this.parseConfigFile();
 	}
 	
-	public void parseConfigFile()
+	public String getDepartmentName()
+	{
+		return this.departmentName;
+	}
+	
+	private void parseConfigFile()
 	{
 		List<String> configFile = null;
 		try
@@ -36,11 +41,6 @@ public class Config
 				this.departmentName = line.substring(line.indexOf("value") + 7, line.indexOf("\"", line.indexOf("value") + 7));
 			}
 		}
-	}
-	
-	public String getDepartmentName()
-	{
-		return this.departmentName;
 	}
 	
 }

@@ -8,6 +8,7 @@ import javax.swing.*;
 
 public class FrameManager 
 {
+	
 	public final Font TITLE_FONT = new Font("Courier New", Font.BOLD, 26);
 	private Config configuration;
 	private JFrame mainFrame;
@@ -19,7 +20,7 @@ public class FrameManager
         this.mainFrame.getContentPane().add(new ScreenStart(this));
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.pack();
-        this.mainFrame.setBounds(this.widthToPixels(25), this.heightToPixels(30), this.widthToPixels(50), this.heightToPixels(40));
+        this.mainFrame.setBounds(this.widthToPixels(25), this.heightToPixels(25), this.widthToPixels(50), this.heightToPixels(50));
         this.mainFrame.setResizable(false);
         this.mainFrame.setVisible(true);
 	}
