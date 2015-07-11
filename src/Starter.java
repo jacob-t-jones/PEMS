@@ -2,9 +2,6 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // Starter.java
 
-import java.awt.*;
-import javax.swing.*;
-
 public class Starter 
 {
 

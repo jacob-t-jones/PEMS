@@ -3,21 +3,24 @@
 // FrameManager.java
 
 import java.awt.*;
+import java.awt.image.*;
 import javax.swing.*;
 
 public class FrameManager 
 {
-	
-	private JFrame mainFrame;
+	public final Font TITLE_FONT = new Font("Courier New", Font.BOLD, 26);
 	private Config configuration;
+	private JFrame mainFrame;
 	
 	public FrameManager()
 	{
+		this.configuration = new Config();
         this.mainFrame = new JFrame("PEMS (Police Evidence Management System) 0.1");
         this.mainFrame.getContentPane().add(new ScreenStart(this));
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.mainFrame.pack();
-        this.mainFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+        this.mainFrame.setBounds(this.widthToPixels(25), this.heightToPixels(30), this.widthToPixels(50), this.heightToPixels(40));
+        this.mainFrame.setResizable(false);
         this.mainFrame.setVisible(true);
 	}
 	
@@ -33,23 +36,43 @@ public class FrameManager
 		this.mainFrame.getContentPane().repaint();
 		this.mainFrame.setTitle(title);
 	}
-	
-	/* widthToPixels - converts a screen width percentage value to pixels
+
+	/* widthToPixels - converts a width percentage value to its equivalent pixel value
 	 *       percent - the value to convert to pixels
 	 */
 	public int widthToPixels(double percent)
 	{
-		double screenWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-		return (int)(screenWidth * (percent / 100.0));
+		return (int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * (percent / 100.0));
 	}
 	
-	/* heightToPixels - converts a screen height percentage value to pixels
+	/* heightToPixels - converts a height percentage value to its equivalent pixel value
 	 *        percent - the value to convert to pixels
 	 */
 	public int heightToPixels(double percent)
 	{
-		double screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();	
-		return (int)(screenHeight * (percent / 100.0));
+		return (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * (percent / 100.0));
 	}
-
+	
+	/* resizeImage - returns a resized version of a given BufferedImage
+	 * 		 image - the image to resize
+	 * 	     width - the desired width
+	 *      height - the desired height
+	 */
+	public BufferedImage resizeImage(BufferedImage image, int width, int height)
+	{
+		Image tempImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB); 
+		Graphics2D g = newImage.createGraphics();
+		g.drawImage(tempImage, 0, 0, null);
+		g.dispose();
+		return newImage;
+	}
+	
+	/* getConfiguration - returns the global instance of the Config class
+	 */
+	public Config getConfiguration()
+	{
+		return this.configuration;
+	}
+	
 }

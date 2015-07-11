@@ -2,6 +2,7 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // ScreenImport.java
 
-public class ScreenImport {
+public class ScreenImport 
+{
 
 }

@@ -1,3 +1,7 @@
+// PEMS (Police Evidence Management System) Version 0.1
+// Copyright 2015 - Jacob Jones and Andrew Rottier
+// Config.java
+
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.List;
@@ -5,40 +9,38 @@ import java.util.List;
 public class Config 
 {
 	
-	private List<String> configFile;
 	private String departmentName;
 	
 	public Config()
 	{
+		this.parseConfigFile();
+	}
+	
+	public void parseConfigFile()
+	{
+		List<String> configFile = null;
 		try
 		{
-			this.configFile = Files.readAllLines(Paths.get("/resources/config.pems"), Charset.defaultCharset());
+			configFile = Files.readAllLines(Paths.get("resources/config.pems"), Charset.defaultCharset());
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			System.out.println("Error - Unable to read configuration file");
 			return;
 		}
-		this.readConfigFile();
-	}
-	
-	public void readConfigFile()
-	{
 		for (int i = 0; i < configFile.size(); i++)
 		{
 			String line = configFile.get(i);
-
+			if (line.contains("departmentname"))
+			{
+				this.departmentName = line.substring(line.indexOf("value") + 7, line.indexOf("\"", line.indexOf("value") + 7));
+			}
 		}
 	}
 	
 	public String getDepartmentName()
 	{
 		return this.departmentName;
-	}
-	
-	public void setDepartmentName(String departmentName)
-	{
-		this.departmentName = departmentName;
 	}
 	
 }
