@@ -2,41 +2,53 @@
 //Copyright 2015 - Jacob Jones and Andrew Rottier
 //ScreenImport.java
 
-<<<<<<< HEAD
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
-=======
->>>>>>> origin/master
 import javax.swing.*;
 
 public class ScreenImport extends JPanel
 {
 	
 	private FrameManager manager;
-<<<<<<< HEAD
 	private JLabel logoLabel;
 	private JLabel titleLabel;
 	private JLabel nameLabel;
 	private LinkedList<JLabel> photos;
-=======
->>>>>>> origin/master
 	
+	private Box inputBox;
+	private JLabel instructionsLabel;
+	private JTextField caseNumField;
+	private JButton continueButton;
+
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
-<<<<<<< HEAD
+		this.populateInputBox();
+		
 		
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
 		this.getImages();
 		
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
-		this.constructTitleLabel();
+		//this.constructTitleLabel();
 		this.add(Box.createRigidArea(new Dimension(0, 10)));
-		this.constructNameLabel();
+		//this.constructNameLabel();
+	}
+	
+	private void populateInputBox()
+	{
+		this.inputBox = Box.createVerticalBox();
+		this.inputBox.add(Box.createVerticalStrut(20));
+		this.constructInstructionsLabel();
+		this.inputBox.add(Box.createVerticalStrut(60));
+		this.constructCaseNumField();
+		this.inputBox.add(Box.createVerticalStrut(80));
+		this.constructContinueButton();
+		this.add(this.inputBox);
 	}
 	
 	/* paintComponent - override function 
@@ -60,9 +72,9 @@ public class ScreenImport extends JPanel
 	
 	/* getImages - creates "photoLists" and adds images to the ScreenImport
 	 */
-	private LinkedList<JLabel> getImages()
+	private LinkedList<BufferedImage> getImages()
 	{
-		LinkedList<JLabel> photoList = new LinkedList<JLabel>();
+		LinkedList<BufferedImage> photoList = new LinkedList<BufferedImage>();
 		BufferedImage logoImage = null;
 		
 	    try 
@@ -85,29 +97,7 @@ public class ScreenImport extends JPanel
 	    return photoList;
 	}
 	
-	/* constructTitleLabel - creates "titleLabel" and adds it to ScreenStart
-	 */
-	private void constructTitleLabel()
-	{
-		this.titleLabel = new JLabel("Police Evidence Management System");
-		this.titleLabel.setFont(this.manager.TITLE_FONT);
-		this.titleLabel.setForeground(this.manager.TITLE_COLOR);
-	    this.titleLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.add(this.titleLabel);
-	}
 	
-	/* constructNameLabel - creates "nameLabel" and adds it to ScreenStart
-	 */
-	private void constructNameLabel()
-	{
-		this.nameLabel = new JLabel(this.manager.getConfiguration().getDepartmentName());
-		this.nameLabel.setFont(this.manager.SUBTITLE_FONT);
-		this.nameLabel.setForeground(this.manager.SUBTITLE_COLOR);
-	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.add(this.nameLabel);
-=======
->>>>>>> origin/master
-	}
 
 }
 
