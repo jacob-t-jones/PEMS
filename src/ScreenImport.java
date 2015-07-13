@@ -2,7 +2,17 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // ScreenImport.java
 
-public class ScreenImport 
+import java.awt.*;
+import javax.swing.*;
+
+public class ScreenImport extends JPanel
 {
+
+	private FrameManager manager;
+	
+	public ScreenImport(FrameManager manager)
+	{
+		this.manager = manager;
+	}
 
 }
