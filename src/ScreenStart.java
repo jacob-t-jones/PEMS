@@ -13,20 +13,19 @@ public class ScreenStart extends JPanel
 {
 	
 	private FrameManager manager;
+	private Box titleBox;
+	private Box buttonsBox;
 	private JLabel logoLabel;
 	private JLabel titleLabel;
 	private JLabel nameLabel;
+	private JButton newCaseButton;
+	private JButton settingsButton;
 	
 	public ScreenStart(FrameManager manager)
 	{
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.manager = manager;
-		this.add(Box.createRigidArea(new Dimension(0, 20)));
-		this.constructLogoLabel();
-		this.add(Box.createRigidArea(new Dimension(0, 20)));
-		this.constructTitleLabel();
-		this.add(Box.createRigidArea(new Dimension(0, 10)));
-		this.constructNameLabel();
+		this.populateTitleBox();
+		this.populateButtonsBox();
 	}
 	
 	/* paintComponent - override function 
@@ -48,6 +47,27 @@ public class ScreenStart extends JPanel
 		g.drawImage(backgroundImage, 0, 0, null);
 	}
 	
+	private void populateTitleBox()
+	{
+		this.titleBox = Box.createVerticalBox();
+		this.constructLogoLabel();
+		this.titleBox.add(Box.createVerticalStrut(20));
+		this.constructTitleLabel();
+		this.titleBox.add(Box.createVerticalStrut(10));
+		this.constructNameLabel();
+		this.titleBox.add(Box.createVerticalStrut(40));
+		this.add(this.titleBox);
+	}
+	
+	private void populateButtonsBox()
+	{
+		this.buttonsBox = Box.createHorizontalBox();
+		this.constructNewCaseButton();
+		this.buttonsBox.add(Box.createHorizontalStrut(200));
+		this.constructSettingsButton();
+		this.add(this.buttonsBox);
+	}
+	
 	/* constructLogoLabel - creates "logoLabel" and adds it to ScreenStart
 	 */
 	private void constructLogoLabel()
@@ -64,7 +84,7 @@ public class ScreenStart extends JPanel
 	    }
 	    this.logoLabel = new JLabel(new ImageIcon(this.manager.resizeImage(logoImage, 200, 200)));
 	    this.logoLabel.setAlignmentX(CENTER_ALIGNMENT);
-	    this.add(this.logoLabel);
+	    this.titleBox.add(this.logoLabel);
 	}
 	
 	/* constructTitleLabel - creates "titleLabel" and adds it to ScreenStart
@@ -75,7 +95,7 @@ public class ScreenStart extends JPanel
 		this.titleLabel.setFont(this.manager.TITLE_FONT);
 		this.titleLabel.setForeground(this.manager.TITLE_COLOR);
 	    this.titleLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.add(this.titleLabel);
+		this.titleBox.add(this.titleLabel);
 	}
 	
 	/* constructNameLabel - creates "nameLabel" and adds it to ScreenStart
@@ -86,7 +106,23 @@ public class ScreenStart extends JPanel
 		this.nameLabel.setFont(this.manager.SUBTITLE_FONT);
 		this.nameLabel.setForeground(this.manager.SUBTITLE_COLOR);
 	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.add(this.nameLabel);
+		this.titleBox.add(this.nameLabel);
+	}
+	
+	/* constructNewCaseButton - creates "newCaseButton" and adds it to ScreenStart
+	 */
+	private void constructNewCaseButton()
+	{
+		this.newCaseButton = new JButton("New Case");
+		this.buttonsBox.add(this.newCaseButton);
+	}
+	
+	/* constructSettingsButton - creates "settingsButton" and adds it to ScreenStart
+	 */
+	private void constructSettingsButton()
+	{
+		this.settingsButton = new JButton("Settings");
+		this.buttonsBox.add(this.settingsButton);
 	}
 	
 }

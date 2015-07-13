@@ -10,6 +10,7 @@ public class Config
 {
 	
 	private String departmentName;
+	private boolean setupStatus;
 	
 	public Config()
 	{
@@ -21,6 +22,13 @@ public class Config
 	public String getDepartmentName()
 	{
 		return this.departmentName;
+	}
+	
+	/* getSetupStatus - returns a boolean value indicating whether or not the program has been set up
+	 */
+	public boolean getSetupStatus()
+	{
+		return this.setupStatus;
 	}
 	
 	/* parseConfigFile - parses config.pems line by line and puts acquired values into their respective instance fields
@@ -43,6 +51,10 @@ public class Config
 			if (line.contains("departmentname"))
 			{
 				this.departmentName = line.substring(line.indexOf("value") + 7, line.indexOf("\"", line.indexOf("value") + 7));
+			}
+			else if (line.contains("setupstatus"))
+			{
+				
 			}
 		}
 	}
