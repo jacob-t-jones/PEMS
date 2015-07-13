@@ -2,61 +2,24 @@
 //Copyright 2015 - Jacob Jones and Andrew Rottier
 //ScreenImport.java
 
-<<<<<<< HEAD
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
-
 import javax.imageio.ImageIO;
-=======
->>>>>>> origin/master
 import javax.swing.*;
 
 public class ScreenImport extends JPanel
 {
 	
 	private FrameManager manager;
-<<<<<<< HEAD
-	private JLabel logoLabel;
-	private JLabel titleLabel;
-	private JLabel nameLabel;
-	private LinkedList<JLabel> photos;
-=======
->>>>>>> origin/master
+	private LinkedList<JLabel> imageLabels;
 	
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
-<<<<<<< HEAD
-		
-		this.add(Box.createRigidArea(new Dimension(0, 20)));
-		this.getImages();
-		
-		this.add(Box.createRigidArea(new Dimension(0, 20)));
-		this.constructTitleLabel();
-		this.add(Box.createRigidArea(new Dimension(0, 10)));
-		this.constructNameLabel();
-	}
-	
-	/* paintComponent - override function 
-	 * 			    g - the current Graphics instance
-	 */
-	protected void paintComponent(Graphics g) 
-	{
-		super.paintComponent(g);
-		Image backgroundImage = null;
-	    try 
-	    {                
-	    	backgroundImage = ImageIO.read(new File("resources/background.png"));
-	    } 
-	    catch (Exception e)
-	    {
-			System.out.println("Error - Unable to find background image");
-			return;
-	    }
-		g.drawImage(backgroundImage, 0, 0, null);
-	}
+		this.imageLabels = this.getImages();
+	} 
 	
 	/* getImages - creates "photoLists" and adds images to the ScreenImport
 	 */
@@ -105,8 +68,6 @@ public class ScreenImport extends JPanel
 		this.nameLabel.setForeground(this.manager.SUBTITLE_COLOR);
 	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(this.nameLabel);
-=======
->>>>>>> origin/master
 	}
 
 }
