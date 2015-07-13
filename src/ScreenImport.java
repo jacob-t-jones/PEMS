@@ -5,6 +5,7 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,13 +17,16 @@ public class ScreenImport extends JPanel
 	private JLabel logoLabel;
 	private JLabel titleLabel;
 	private JLabel nameLabel;
+	private LinkedList<JLabel> photos;
 	
 	public ScreenImport(FrameManager manager)
 	{
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.manager = manager;
+		
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
-		this.constructLogoLabel();
+		this.getImages();
+		
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
 		this.constructTitleLabel();
 		this.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -48,23 +52,31 @@ public class ScreenImport extends JPanel
 		g.drawImage(backgroundImage, 0, 0, null);
 	}
 	
-	/* constructLogoLabel - creates "logoLabel" and adds it to ScreenStart
+	/* getImages - creates "photoLists" and adds images to the ScreenImport
 	 */
-	private void constructLogoLabel()
+	private LinkedList<JLabel> getImages()
 	{
+		LinkedList<JLabel> photoList = new LinkedList<JLabel>();
 		BufferedImage logoImage = null;
+		
 	    try 
-	    {                
+	    {   
+	    	//for loop to add all of the photos to the photoList..
+	    	
+	    	//replace with path of files on the camera when plugged in
 	    	logoImage = ImageIO.read(new File("resources/logo.png"));
 	    } 
 	    catch (Exception e)
 	    {
-			System.out.println("Error - Unable to find logo");
-			return;
+	    	//otherwise add the gif image prompting the user to plug in the camera
+			System.out.println("Please connected the camera via USB");
+			return null;
 	    }
 	    this.logoLabel = new JLabel(new ImageIcon(this.manager.resizeImage(logoImage, 200, 200)));
 	    this.logoLabel.setAlignmentX(CENTER_ALIGNMENT);
 	    this.add(this.logoLabel);
+	    //add images to a list to return
+	    return photoList;
 	}
 	
 	/* constructTitleLabel - creates "titleLabel" and adds it to ScreenStart
