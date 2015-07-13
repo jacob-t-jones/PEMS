@@ -14,12 +14,17 @@ public class ScreenImport extends JPanel
 	
 	private FrameManager manager;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	private JLabel logoLabel;
 	private JLabel titleLabel;
 	private JLabel nameLabel;
 	private LinkedList<JLabel> photos;
 =======
 	private LinkedList<JLabel> imageLabels;
+>>>>>>> origin/master
+=======
+	private LinkedList<BufferedImage> images;
+	private String imageDirectoryName;
 >>>>>>> origin/master
 	
 	private Box inputBox;
@@ -30,6 +35,7 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
+<<<<<<< HEAD
 <<<<<<< HEAD
 		this.populateInputBox();
 		
@@ -75,6 +81,9 @@ public class ScreenImport extends JPanel
 	}
 =======
 		this.imageLabels = this.getImages();
+=======
+		this.images = this.getImages();
+>>>>>>> origin/master
 	} 
 >>>>>>> origin/master
 	
@@ -82,6 +91,7 @@ public class ScreenImport extends JPanel
 	 */
 	private LinkedList<BufferedImage> getImages()
 	{
+<<<<<<< HEAD
 		LinkedList<BufferedImage> photoList = new LinkedList<BufferedImage>();
 		BufferedImage logoImage = null;
 		
@@ -118,6 +128,28 @@ public class ScreenImport extends JPanel
 	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(this.nameLabel);
 	}
+>>>>>>> origin/master
+=======
+		File imageDirectory = new File(this.imageDirectoryName);
+		String[] imageFileNames = imageDirectory.list();
+		LinkedList<BufferedImage> imageList = new LinkedList<BufferedImage>();
+		BufferedImage currentImage = null;
+		for (int i = 0; i < imageFileNames.length; i++)
+		{
+		    try 
+		    {   
+		    	currentImage = ImageIO.read(new File(imageDirectory + imageFileNames[i]));
+		    } 
+		    catch (Exception e)
+		    {
+		    	System.out.println("Error - Please connect the camera via USB");
+		    	return null;
+		    }
+		    imageList.addLast(currentImage);
+		}
+	    return imageList;
+	}
+	
 >>>>>>> origin/master
 
 }
