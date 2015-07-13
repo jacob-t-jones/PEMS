@@ -5,87 +5,45 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class ScreenImport extends JPanel
 {
-	
+
 	private FrameManager manager;
-	private BufferedImage[] images;
-	private JLabel[] labels;
-	private Box[] rows;
-	private Box[] col;
-	
-	private String imageDirectoryName;
-	private JLabel instructionsLabel;
-	private JButton continueButton;
+	private ImageEditor imgEditor;
+	private ArrayList<BufferedImage> images;
+	private ArrayList<JLabel> labels;
+	private String directoryName;
+	private Box imgBox;
+	private Box buttonsBox;
+	private JButton nextButton;
+	private JButton prevButton;
+	private int imagePlace;
 
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
-<<<<<<< HEAD
-		this.imageDirectoryName = "/Users/andrewrottier/Documents/Pictures/Instagram";
-=======
-<<<<<<< HEAD
-		//this.images = this.getImages();
-=======
->>>>>>> origin/master
-		//this.constructInstructionsLabel();
+		this.imgEditor = new ImageEditor();
+		this.directoryName = "/Users/Jacob/Documents/Pics";
+		this.imagePlace = 0;
 		this.images = this.getImages();
 		this.labels = this.fillLabels(); 
-		//now we have an array of Jlabels filled w images
-		//display the images on the screen
-		this.displayImages(labels);
-		
+		this.displayImages();
+		this.populateButtonsBox();
+		this.manager.setResizable(true);
+		this.manager.maximizeFrame();
 	}
 	
-	/* fillRows - fills a new row with 5 new images from our labels list
-	 * *****after put all code inside a for loop to create 3 rows******
-	 */
-	private void displayImages(JLabel[] labelList){
-		int imagePlace = 0;
-		Box container = Box.createVerticalBox();
-		
-		for(int i = 0; i < 3; i++){
-			Box row = Box.createHorizontalBox();
-			for(int j = 0; j < 5; j++){
-				row.add(labelList[imagePlace]);
-				row.createHorizontalStrut(10); //space each pic horizontally
-				imagePlace++;
-			}
-			container.add(row);
-			container.createVerticalStrut(20); //space between each row
-		}
-		
-		this.add(container);
-		return;
-		
->>>>>>> origin/master
-	}
-	
-	/* fillLabels - creates "labelList" and adds the images into an array of JLabels
-	 */
-	private JLabel[] fillLabels()
-	{
-		JLabel[] labelList = new JLabel[this.images.length];
-		
-		for(int i = 0; i < images.length; i++){
-			labelList[i] = new JLabel(new ImageIcon(this.manager.resizeImage(images[i], 50, 40)));;
-		}
-		
-		return labelList;
-	}
- 
 	/* getImages - creates "photoLists" and adds images to the ScreenImport
 	 */
-	private BufferedImage[] getImages()
+	private ArrayList<BufferedImage> getImages()
 	{
-	    File imageDirectory = new File(this.imageDirectoryName);
+		ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
+	    File imageDirectory = new File(this.directoryName);
 		String[] imageFileNames = imageDirectory.list();
-		System.out.println(imageDirectory.getPath());
-		BufferedImage[] imageList = new BufferedImage[imageFileNames.length];
 		BufferedImage currentImage = null;
 		for (int i = 0; i < imageFileNames.length; i++)
 		{
@@ -96,21 +54,62 @@ public class ScreenImport extends JPanel
 		    } 
 		    catch (Exception e)
 		    {
-		    	System.out.println("Error - Please connect the camera via USB");
+		    	System.out.println("Error - Unable to read image");
 		    	return null;
 		    }
-		    imageList[i] = currentImage;
-		    
+		    imageList.add(currentImage);
 		}
 	    return imageList;
 	}
 	
-	/*private void constructInstructionsLabel()
+	/* fillLabels - creates "labelList" and adds the images into an array of JLabels
+	 */
+	private ArrayList<JLabel> fillLabels()
 	{
-		this.instructionsLabel = new JLabel("Please select the images you would like to add to the case:");
-		this.instructionsLabel.setFont(this.manager.STANDARD_TEXT_FONT);
-		this.instructionsLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
-		this.instructionsLabel.setAlignmentX(CENTER_ALIGNMENT);
-	}*/
+		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
+		for (int i = 0; i < this.images.size(); i++)
+		{
+			labelList.add(new JLabel(new ImageIcon(this.imgEditor.resizeImage(this.images.get(i), 150, 200))));
+		}
+		return labelList;
+	}
+	
+	/* fillRows - fills a new row with 5 new images from our labels list
+	 * *****after put all code inside a for loop to create 3 rows******
+	 */
+	private void displayImages()
+	{
+		this.imgBox = Box.createVerticalBox();
+		for (int i = 0; i < 3; i++)
+		{
+			Box row = Box.createHorizontalBox();
+			for (int j = 0; j < 5; j++)
+			{
+				row.add(this.labels.get(this.imagePlace));
+				row.add(Box.createHorizontalStrut(25));
+				imagePlace++;
+			}
+			this.imgBox.add(Box.createVerticalStrut(10));
+			this.imgBox.add(row);
+			this.imgBox.add(Box.createVerticalStrut(10));
+		}
+		this.add(this.imgBox);
+		return;
+	}
+	
+	private void populateButtonsBox()
+	{
+		
+	}
+	
+	private void createNextButton()
+	{
+		
+	}
+	
+	private void createPrevButton()
+	{
+		
+	}
 
 }

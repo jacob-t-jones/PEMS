@@ -13,6 +13,7 @@ public class ScreenStart extends JPanel
 {
 	
 	private FrameManager manager;
+	private ImageEditor imgEditor;
 	private Box titleBox;
 	private Box buttonsBox;
 	private JLabel logoLabel;
@@ -24,6 +25,7 @@ public class ScreenStart extends JPanel
 	public ScreenStart(FrameManager manager)
 	{
 		this.manager = manager;
+		this.imgEditor = new ImageEditor();
 		this.populateTitleBox();
 		this.populateButtonsBox();
 	}
@@ -86,7 +88,7 @@ public class ScreenStart extends JPanel
 			System.out.println("Error - Unable to find logo");
 			return;
 	    }
-	    this.logoLabel = new JLabel(new ImageIcon(this.manager.resizeImage(logoImage, 200, 200)));
+	    this.logoLabel = new JLabel(new ImageIcon(this.imgEditor.resizeImage(logoImage, 200, 200)));
 	    this.logoLabel.setAlignmentX(CENTER_ALIGNMENT);
 	    this.titleBox.add(this.logoLabel);
 	}
