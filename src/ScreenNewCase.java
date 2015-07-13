@@ -3,7 +3,6 @@
 // ScreenNewCase.java
 
 import java.awt.event.*;
-
 import javax.swing.*;
 
 public class ScreenNewCase extends JPanel
@@ -28,7 +27,7 @@ public class ScreenNewCase extends JPanel
 		this.constructInstructionsLabel();
 		this.inputBox.add(Box.createVerticalStrut(60));
 		this.constructCaseNumField();
-		this.inputBox.add(Box.createVerticalStrut(100));
+		this.inputBox.add(Box.createVerticalStrut(80));
 		this.constructContinueButton();
 		this.add(this.inputBox);
 	}
