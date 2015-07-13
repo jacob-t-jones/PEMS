@@ -2,7 +2,8 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // ScreenNewCase.java
 
-import java.awt.*;
+import java.awt.event.*;
+
 import javax.swing.*;
 
 public class ScreenNewCase extends JPanel
@@ -23,10 +24,11 @@ public class ScreenNewCase extends JPanel
 	private void populateInputBox()
 	{
 		this.inputBox = Box.createVerticalBox();
+		this.inputBox.add(Box.createVerticalStrut(20));
 		this.constructInstructionsLabel();
-		this.inputBox.add(Box.createVerticalStrut(20));
+		this.inputBox.add(Box.createVerticalStrut(60));
 		this.constructCaseNumField();
-		this.inputBox.add(Box.createVerticalStrut(20));
+		this.inputBox.add(Box.createVerticalStrut(100));
 		this.constructContinueButton();
 		this.add(this.inputBox);
 	}
@@ -36,18 +38,39 @@ public class ScreenNewCase extends JPanel
 		this.instructionsLabel = new JLabel("Please enter the case number below:");
 		this.instructionsLabel.setFont(this.manager.STANDARD_TEXT_FONT);
 		this.instructionsLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
+		this.instructionsLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.inputBox.add(this.instructionsLabel);
 	}
 	
 	private void constructCaseNumField()
 	{
 		this.caseNumField = new JTextField("Type here...");
+		this.caseNumField.setAlignmentX(CENTER_ALIGNMENT);
+		this.caseNumField.addFocusListener(new FocusListener()
+		{
+			public void focusGained(FocusEvent e)
+			{
+				caseNumField.setText("");
+			}
+			public void focusLost(FocusEvent e)
+			{
+				return;
+			}
+		});
 		this.inputBox.add(this.caseNumField);
 	}
 	
 	private void constructContinueButton()
 	{
 		this.continueButton = new JButton("Continue");
+	    this.continueButton.setAlignmentX(CENTER_ALIGNMENT);
+	    this.continueButton.addActionListener(new ActionListener()
+	    {
+	    	public void actionPerformed(ActionEvent e)
+	    	{
+	    		manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
+	    	}
+	    });
 		this.inputBox.add(this.continueButton);
 	}
 	

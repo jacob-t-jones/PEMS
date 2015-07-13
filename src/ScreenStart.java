@@ -5,8 +5,7 @@
 import java.awt.*;
 import java.awt.image.*;
 import java.io.File;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
