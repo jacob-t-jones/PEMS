@@ -67,10 +67,29 @@ public class ScreenNewCase extends JPanel
 	    {
 	    	public void actionPerformed(ActionEvent e)
 	    	{
-	    		manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
+	    		if (isValidCaseNum())
+	    		{
+	    			manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
+	    			manager.setResizable(true);
+	    			manager.maximizeFrame();
+	    		}
+	    		else
+	    		{
+	    			caseNumField.setText("");
+	    		}
 	    	}
 	    });
 		this.inputBox.add(this.continueButton);
+	}
+	
+	private boolean isValidCaseNum(String caseNum)
+	{
+		boolean valid = true;
+		for (int i = 0; i < caseNum.length(); i++)
+		{
+			if (caseNum.charAt(i) )
+		}
+		return valid;
 	}
 	
 }

@@ -22,7 +22,7 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
-		this.images = this.getImages();
+		//this.images = this.getImages();
 	}
 
 	/* getImages - creates "photoLists" and adds images to the ScreenImport
