@@ -2,27 +2,33 @@
 //Copyright 2015 - Jacob Jones and Andrew Rottier
 //ScreenImport.java
 
+<<<<<<< HEAD
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+=======
+>>>>>>> origin/master
 import javax.swing.*;
 
 public class ScreenImport extends JPanel
 {
 	
 	private FrameManager manager;
+<<<<<<< HEAD
 	private JLabel logoLabel;
 	private JLabel titleLabel;
 	private JLabel nameLabel;
 	private LinkedList<JLabel> photos;
+=======
+>>>>>>> origin/master
 	
 	public ScreenImport(FrameManager manager)
 	{
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.manager = manager;
+<<<<<<< HEAD
 		
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
 		this.getImages();
@@ -99,6 +105,8 @@ public class ScreenImport extends JPanel
 		this.nameLabel.setForeground(this.manager.SUBTITLE_COLOR);
 	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(this.nameLabel);
+=======
+>>>>>>> origin/master
 	}
 
 }

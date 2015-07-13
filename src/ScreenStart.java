@@ -3,9 +3,9 @@
 // ScreenStart.java
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.*;
 import java.io.File;
-import java.awt.event.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -72,7 +72,7 @@ public class ScreenStart extends JPanel
 		this.add(this.buttonsBox);
 	}
 	
-	/* constructLogoLabel - creates "logoLabel" and adds it to ScreenStart
+	/* constructLogoLabel - creates "logoLabel" and adds it to "titleBox"
 	 */
 	private void constructLogoLabel()
 	{
@@ -91,7 +91,7 @@ public class ScreenStart extends JPanel
 	    this.titleBox.add(this.logoLabel);
 	}
 	
-	/* constructTitleLabel - creates "titleLabel" and adds it to ScreenStart
+	/* constructTitleLabel - creates "titleLabel" and adds it to "titleBox"
 	 */
 	private void constructTitleLabel()
 	{
@@ -102,7 +102,7 @@ public class ScreenStart extends JPanel
 		this.titleBox.add(this.titleLabel);
 	}
 	
-	/* constructNameLabel - creates "nameLabel" and adds it to ScreenStart
+	/* constructNameLabel - creates "nameLabel" and adds it to "titleBox"
 	 */
 	private void constructNameLabel()
 	{
@@ -113,7 +113,7 @@ public class ScreenStart extends JPanel
 		this.titleBox.add(this.nameLabel);
 	}
 	
-	/* constructNewCaseButton - creates "newCaseButton" and adds it to ScreenStart
+	/* constructNewCaseButton - creates "newCaseButton" and adds it to "buttonsBox"
 	 */
 	private void constructNewCaseButton()
 	{
@@ -128,7 +128,7 @@ public class ScreenStart extends JPanel
 		this.buttonsBox.add(this.newCaseButton);
 	}
 	
-	/* constructSettingsButton - creates "settingsButton" and adds it to ScreenStart
+	/* constructSettingsButton - creates "settingsButton" and adds it to "buttonsBox"
 	 */
 	private void constructSettingsButton()
 	{

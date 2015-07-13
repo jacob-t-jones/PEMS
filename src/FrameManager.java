@@ -50,6 +50,9 @@ public class FrameManager
 		this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 	
+	/* setResizable - determines whether or not the current JFrame is resizable
+	 *    resizable - boolean value that determines the status of the JFrame
+	 */
 	public void setResizable(boolean resizable)
 	{
 		this.mainFrame.setResizable(resizable);
