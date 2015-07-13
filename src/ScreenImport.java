@@ -25,7 +25,13 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
+<<<<<<< HEAD
 		this.imageDirectoryName = "/Users/andrewrottier/Documents/Pictures/Instagram";
+=======
+<<<<<<< HEAD
+		//this.images = this.getImages();
+=======
+>>>>>>> origin/master
 		//this.constructInstructionsLabel();
 		this.images = this.getImages();
 		this.labels = this.fillLabels(); 
@@ -56,6 +62,7 @@ public class ScreenImport extends JPanel
 		this.add(container);
 		return;
 		
+>>>>>>> origin/master
 	}
 	
 	/* fillLabels - creates "labelList" and adds the images into an array of JLabels
