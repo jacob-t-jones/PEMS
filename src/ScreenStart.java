@@ -123,6 +123,8 @@ public class ScreenStart extends JPanel
 		{
             public void actionPerformed(ActionEvent e)
             {
+            	manager.pushPanel(new ScreenNewCase(manager), "PEMS - Create New Case");
+            	manager.maximizeFrame();
             }
 		});
 		this.buttonsBox.add(this.newCaseButton);

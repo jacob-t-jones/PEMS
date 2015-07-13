@@ -40,6 +40,14 @@ public class FrameManager
 		this.mainFrame.getContentPane().repaint();
 		this.mainFrame.setTitle(title);
 	}
+	
+	/* maximizeFrame - maximizes the window the program is currently running in
+	 */
+	public void maximizeFrame()
+	{
+		this.mainFrame.setResizable(true);
+		this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	}
 
 	/* widthToPixels - converts a width percentage value to its equivalent pixel value
 	 *       percent - the value to convert to pixels
