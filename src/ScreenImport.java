@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -26,21 +25,47 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
+		this.imageDirectoryName = "/Users/andrewrottier/Documents/Pictures/Instagram";
 		//this.constructInstructionsLabel();
 		this.images = this.getImages();
-		this.labels = this.fillLabels(images); 
+		this.labels = this.fillLabels(); 
 		//now we have an array of Jlabels filled w images
 		//display the images on the screen
+		this.displayImages(labels);
+		
+	}
+	
+	/* fillRows - fills a new row with 5 new images from our labels list
+	 * *****after put all code inside a for loop to create 3 rows******
+	 */
+	private void displayImages(JLabel[] labelList){
+		int imagePlace = 0;
+		Box container = Box.createVerticalBox();
+		
+		for(int i = 0; i < 3; i++){
+			Box row = Box.createHorizontalBox();
+			for(int j = 0; j < 5; j++){
+				row.add(labelList[imagePlace]);
+				row.createHorizontalStrut(10); //space each pic horizontally
+				imagePlace++;
+			}
+			container.add(row);
+			container.createVerticalStrut(20); //space between each row
+		}
+		
+		this.add(container);
+		return;
 		
 	}
 	
 	/* fillLabels - creates "labelList" and adds the images into an array of JLabels
 	 */
-	private JLabel[] fillLabels(BufferedImage[] imageList){
-		JLabel[] labelList = new JLabel[imageList.length];
+	private JLabel[] fillLabels()
+	{
+		JLabel[] labelList = new JLabel[this.images.length];
 		
-		for(int i = 0; i < imageList.length; i++){
-			labelList[i] = new JLabel(new ImageIcon(this.manager.resizeImage(imageList[i], 50, 40)));;
+		for(int i = 0; i < images.length; i++){
+			labelList[i] = new JLabel(new ImageIcon(this.manager.resizeImage(images[i], 50, 40)));;
 		}
 		
 		return labelList;
@@ -52,13 +77,15 @@ public class ScreenImport extends JPanel
 	{
 	    File imageDirectory = new File(this.imageDirectoryName);
 		String[] imageFileNames = imageDirectory.list();
+		System.out.println(imageDirectory.getPath());
 		BufferedImage[] imageList = new BufferedImage[imageFileNames.length];
 		BufferedImage currentImage = null;
 		for (int i = 0; i < imageFileNames.length; i++)
 		{
+			System.out.println(imageFileNames[i]);
 		    try 
 		    {   
-		    	currentImage = ImageIO.read(new File(imageDirectory + imageFileNames[i]));
+		    	currentImage = ImageIO.read(new File(imageDirectory + "/" + imageFileNames[i]));
 		    } 
 		    catch (Exception e)
 		    {
