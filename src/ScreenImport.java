@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -14,10 +13,14 @@ public class ScreenImport extends JPanel
 {
 	
 	private FrameManager manager;
+<<<<<<< HEAD
 	private JLabel logoLabel;
 	private JLabel titleLabel;
 	private JLabel nameLabel;
 	private LinkedList<JLabel> photos;
+=======
+	private LinkedList<JLabel> imageLabels;
+>>>>>>> origin/master
 	
 	private Box inputBox;
 	private JLabel instructionsLabel;
@@ -27,6 +30,7 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
+<<<<<<< HEAD
 		this.populateInputBox();
 		
 		
@@ -69,6 +73,10 @@ public class ScreenImport extends JPanel
 	    }
 		g.drawImage(backgroundImage, 0, 0, null);
 	}
+=======
+		this.imageLabels = this.getImages();
+	} 
+>>>>>>> origin/master
 	
 	/* getImages - creates "photoLists" and adds images to the ScreenImport
 	 */
@@ -98,6 +106,19 @@ public class ScreenImport extends JPanel
 	}
 	
 	
+<<<<<<< HEAD
+=======
+	/* constructNameLabel - creates "nameLabel" and adds it to ScreenStart
+	 */
+	private void constructNameLabel()
+	{
+		this.nameLabel = new JLabel(this.manager.getConfiguration().getDepartmentName());
+		this.nameLabel.setFont(this.manager.SUBTITLE_FONT);
+		this.nameLabel.setForeground(this.manager.SUBTITLE_COLOR);
+	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
+		this.add(this.nameLabel);
+	}
+>>>>>>> origin/master
 
 }
 
