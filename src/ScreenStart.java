@@ -5,7 +5,8 @@
 import java.awt.*;
 import java.awt.image.*;
 import java.io.File;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -47,6 +48,8 @@ public class ScreenStart extends JPanel
 		g.drawImage(backgroundImage, 0, 0, null);
 	}
 	
+	/* populateTitleBox - fills the "titleBox" layout structure with the necessary components.
+	 */
 	private void populateTitleBox()
 	{
 		this.titleBox = Box.createVerticalBox();
@@ -59,6 +62,8 @@ public class ScreenStart extends JPanel
 		this.add(this.titleBox);
 	}
 	
+	/* populateButtonsBox - fills the "buttonsBox" layout structure with the necessary components.
+	 */
 	private void populateButtonsBox()
 	{
 		this.buttonsBox = Box.createHorizontalBox();
@@ -114,6 +119,12 @@ public class ScreenStart extends JPanel
 	private void constructNewCaseButton()
 	{
 		this.newCaseButton = new JButton("New Case");
+		this.newCaseButton.addActionListener(new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            }
+		});
 		this.buttonsBox.add(this.newCaseButton);
 	}
 	
@@ -122,6 +133,12 @@ public class ScreenStart extends JPanel
 	private void constructSettingsButton()
 	{
 		this.settingsButton = new JButton("Settings");
+		this.settingsButton.addActionListener(new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            }
+		});
 		this.buttonsBox.add(this.settingsButton);
 	}
 	
