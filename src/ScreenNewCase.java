@@ -3,7 +3,6 @@
 // ScreenNewCase.java
 
 import java.awt.*;
-
 import javax.swing.*;
 
 public class ScreenNewCase extends JPanel
@@ -18,6 +17,7 @@ public class ScreenNewCase extends JPanel
 	public ScreenNewCase(FrameManager manager) 
 	{
 		this.manager = manager;
+		this.populateInputBox();
 	}
 	
 	private void populateInputBox()
@@ -35,18 +35,20 @@ public class ScreenNewCase extends JPanel
 	{
 		this.instructionsLabel = new JLabel("Please enter the case number below:");
 		this.instructionsLabel.setFont(this.manager.STANDARD_TEXT_FONT);
-		//this.instructionsLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
+		this.instructionsLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
 		this.inputBox.add(this.instructionsLabel);
 	}
 	
 	private void constructCaseNumField()
 	{
-		
+		this.caseNumField = new JTextField("Type here...");
+		this.inputBox.add(this.caseNumField);
 	}
 	
 	private void constructContinueButton()
 	{
-		
+		this.continueButton = new JButton("Continue");
+		this.inputBox.add(this.continueButton);
 	}
 	
 }

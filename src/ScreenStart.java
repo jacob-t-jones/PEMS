@@ -29,7 +29,7 @@ public class ScreenStart extends JPanel
 		this.populateButtonsBox();
 	}
 	
-	/* paintComponent - override function 
+	/* paintComponent - override function used, in this case, to set a background image
 	 * 			    g - the current Graphics instance
 	 */
 	protected void paintComponent(Graphics g) 
@@ -48,7 +48,7 @@ public class ScreenStart extends JPanel
 		g.drawImage(backgroundImage, 0, 0, null);
 	}
 	
-	/* populateTitleBox - fills the "titleBox" layout structure with the necessary components.
+	/* populateTitleBox - fills the "titleBox" layout structure with the necessary components
 	 */
 	private void populateTitleBox()
 	{
@@ -62,7 +62,7 @@ public class ScreenStart extends JPanel
 		this.add(this.titleBox);
 	}
 	
-	/* populateButtonsBox - fills the "buttonsBox" layout structure with the necessary components.
+	/* populateButtonsBox - fills the "buttonsBox" layout structure with the necessary components
 	 */
 	private void populateButtonsBox()
 	{
@@ -138,6 +138,7 @@ public class ScreenStart extends JPanel
 		{
             public void actionPerformed(ActionEvent e)
             {
+            	// TODO: On button press actions
             }
 		});
 		this.buttonsBox.add(this.settingsButton);
