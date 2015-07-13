@@ -26,7 +26,6 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
-<<<<<<< HEAD
 		this.imgEditor = new ImageEditor();
 		this.directoryName = "/Users/Jacob/Documents/Pics";
 		this.imagePlace = 0;
@@ -36,39 +35,6 @@ public class ScreenImport extends JPanel
 		this.populateButtonsBox();
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
-=======
-		this.imageDirectoryName = "/Users/andrewrottier/Documents/Pictures/Instagram";
-		//this.constructInstructionsLabel();
-		this.images = this.getImages();
-		this.labels = this.fillLabels(); 
-		//now we have an array of Jlabels filled w images
-		//display the images on the screen
-		this.displayImages(labels);
-		
-	}
-	
-	/* fillRows - fills a new row with 5 new images from our labels list
-	 * *****after put all code inside a for loop to create 3 rows******
-	 */
-	private void displayImages(JLabel[] labelList){
-		int imagePlace = 0;
-		Box container = Box.createVerticalBox();
-		
-		for(int i = 0; i < 3; i++){
-			Box row = Box.createHorizontalBox();
-			for(int j = 0; j < 5; j++){
-				row.add(labelList[imagePlace]);
-				row.add(Box.createHorizontalStrut(10)); //space each pic horizontally
-				imagePlace++;
-			}
-			container.add(row);
-			container.add(Box.createVerticalStrut(20)); //space between each row
-		}
-		
-		this.add(container);
-		return;
-		
->>>>>>> origin/master
 	}
 	
 	/* getImages - creates "photoLists" and adds images to the ScreenImport

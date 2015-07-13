@@ -81,7 +81,6 @@ public class ScreenNewCase extends JPanel
 	    	{
 	    		if (isValidCaseNum(caseNumField.getText()))
 	    		{
-<<<<<<< HEAD
 	    			try 
 	    			{
 						Files.createDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
@@ -90,10 +89,6 @@ public class ScreenNewCase extends JPanel
 	    			{
 	    				System.out.println("Error - Directory could not be created");
 					}
-=======
-	    			manager.setResizable(true);
-	    			manager.maximizeFrame();
->>>>>>> origin/master
 	    			manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
 	    		}
 	    		else
