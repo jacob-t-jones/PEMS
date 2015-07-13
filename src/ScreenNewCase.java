@@ -69,9 +69,9 @@ public class ScreenNewCase extends JPanel
 	    	{
 	    		if (isValidCaseNum(caseNumField.getText()))
 	    		{
-	    			manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
 	    			manager.setResizable(true);
 	    			manager.maximizeFrame();
+	    			manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
 	    		}
 	    		else
 	    		{

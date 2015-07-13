@@ -25,13 +25,7 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
-<<<<<<< HEAD
 		this.imageDirectoryName = "/Users/andrewrottier/Documents/Pictures/Instagram";
-=======
-<<<<<<< HEAD
-		//this.images = this.getImages();
-=======
->>>>>>> origin/master
 		//this.constructInstructionsLabel();
 		this.images = this.getImages();
 		this.labels = this.fillLabels(); 
@@ -52,17 +46,16 @@ public class ScreenImport extends JPanel
 			Box row = Box.createHorizontalBox();
 			for(int j = 0; j < 5; j++){
 				row.add(labelList[imagePlace]);
-				row.createHorizontalStrut(10); //space each pic horizontally
+				row.add(Box.createHorizontalStrut(10)); //space each pic horizontally
 				imagePlace++;
 			}
 			container.add(row);
-			container.createVerticalStrut(20); //space between each row
+			container.add(Box.createVerticalStrut(20)); //space between each row
 		}
 		
 		this.add(container);
 		return;
 		
->>>>>>> origin/master
 	}
 	
 	/* fillLabels - creates "labelList" and adds the images into an array of JLabels
