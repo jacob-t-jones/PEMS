@@ -3,20 +3,6 @@
 //ScreenImport.java
 
 import java.awt.*;
-<<<<<<< HEAD
-import javax.swing.*;
-
-public class ScreenImport extends JPanel
-{
-
-	private FrameManager manager;
-	
-	public ScreenImport(FrameManager manager)
-	{
-		this.manager = manager;
-	}
-
-=======
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -102,8 +88,6 @@ public class ScreenImport extends JPanel
 	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(this.nameLabel);
 	}
-	
-	
->>>>>>> origin/master
+
 }
 

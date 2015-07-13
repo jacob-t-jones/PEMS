@@ -35,7 +35,7 @@ public class ScreenNewCase extends JPanel
 	{
 		this.instructionsLabel = new JLabel("Please enter the case number below:");
 		this.instructionsLabel.setFont(this.manager.STANDARD_TEXT_FONT);
-		this.instructionsLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
+		//this.instructionsLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
 		this.inputBox.add(this.instructionsLabel);
 	}
 	
