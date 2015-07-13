@@ -23,26 +23,13 @@ public class ScreenImport extends JPanel
 	{
 		this.manager = manager;
 		this.images = this.getImages();
-<<<<<<< Updated upstream
 	}
- 
 
-=======
-		
-	}
-	
-	
->>>>>>> Stashed changes
 	/* getImages - creates "photoLists" and adds images to the ScreenImport
 	 */
 	private LinkedList<BufferedImage> getImages()
 	{
-<<<<<<< Updated upstream
 		File imageDirectory = new File(this.imageDirectoryName);
-=======
-	
-	    File imageDirectory = new File(this.imageDirectoryName);
->>>>>>> Stashed changes
 		String[] imageFileNames = imageDirectory.list();
 		LinkedList<BufferedImage> imageList = new LinkedList<BufferedImage>();
 		BufferedImage currentImage = null;
@@ -63,4 +50,3 @@ public class ScreenImport extends JPanel
 	}
 
 }
-
