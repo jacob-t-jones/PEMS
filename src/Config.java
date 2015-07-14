@@ -48,13 +48,17 @@ public class Config
 		for (int i = 0; i < configFile.size(); i++)
 		{
 			String line = configFile.get(i);
-			if (line.contains("departmentname"))
+			if (line.contains("field") && line.contains("value"))
 			{
-				this.departmentName = line.substring(line.indexOf("value") + 7, line.indexOf("\"", line.indexOf("value") + 7));
-			}
-			else if (line.contains("setupstatus"))
-			{
-				
+				String value = line.substring(line.indexOf("value") + 7, line.indexOf("\"", line.indexOf("value") + 7));
+				if (line.contains("departmentname"))
+				{
+					this.departmentName = value;
+				}
+				else if (line.contains("setupstatus"))
+				{
+					this.setupStatus = Boolean.parseBoolean(value);
+				}
 			}
 		}
 	}
