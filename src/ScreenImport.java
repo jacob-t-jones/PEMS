@@ -19,7 +19,10 @@ public class ScreenImport extends JPanel
 	private FrameManager manager;
 	private String imageDirectoryName;
 	private JLabel instructionsLabel;
+<<<<<<< HEAD
 	private JButton continueButton;
+=======
+>>>>>>> origin/master
 	private ImageEditor imgEditor;
 	private ArrayList<BufferedImage> images;
 	private ArrayList<JLabel> labels;
@@ -30,10 +33,13 @@ public class ScreenImport extends JPanel
 	private JButton nextButton;
 	private JButton prevButton;
 	private int imagePlace;
+<<<<<<< HEAD
 	private int selectedImagePlace;
 	private JLabel displayLabel;
 	
 	private ArrayList<JLabel> selected;
+=======
+>>>>>>> origin/master
 
 	public ScreenImport(FrameManager manager)
 	{
