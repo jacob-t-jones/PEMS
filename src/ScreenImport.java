@@ -27,10 +27,6 @@ public class ScreenImport extends JPanel
 	private JButton nextButton;
 	private JButton prevButton;
 	private int imagePlace;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
 	private int selectedImagePlace;
 	private JLabel displayLabel;
 	private ArrayList<JLabel> selected;
@@ -39,7 +35,7 @@ public class ScreenImport extends JPanel
 	{
 		this.manager = manager;
 		this.imgEditor = new ImageEditor();
-		this.directoryName = "/Users/andrewrottier/Documents/Pictures/SamplePictures";
+		this.directoryName = "/Users/Jacob/Documents/Pics";
 		this.imagePlace = 0; this.selectedImagePlace = 0;
 		this.images = this.getImages();
 		this.labels = this.fillLabels();
@@ -87,7 +83,7 @@ public class ScreenImport extends JPanel
 		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
 		for (int i = 0; i < this.images.size(); i++)
 		{
-			JLabel newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeImage(this.images.get(i), 150, 200)));
+			JLabel newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeThumbnailImage(this.images.get(i), 200)));
 			newLabel.setAlignmentX(CENTER_ALIGNMENT);
 			labelList.add(newLabel);
 		}
@@ -212,7 +208,6 @@ public class ScreenImport extends JPanel
 		this.displayLabel.setFont(this.manager.STANDARD_TEXT_FONT);
 		this.displayLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
 		this.displayLabel.setAlignmentX(LEFT_ALIGNMENT);
-		imgBox.add(this);
 	}
 	
 	private void populateButtonsBox()

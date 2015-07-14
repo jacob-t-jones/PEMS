@@ -88,7 +88,7 @@ public class ScreenStart extends JPanel
 			System.out.println("Error - Unable to find logo");
 			return;
 	    }
-	    this.logoLabel = new JLabel(new ImageIcon(this.imgEditor.resizeImage(logoImage, 200, 200)));
+	    this.logoLabel = new JLabel(new ImageIcon(this.imgEditor.resizeFullImage(logoImage, 200, 200)));
 	    this.logoLabel.setAlignmentX(CENTER_ALIGNMENT);
 	    this.titleBox.add(this.logoLabel);
 	}
