@@ -19,10 +19,7 @@ public class ScreenImport extends JPanel
 	private FrameManager manager;
 	private String imageDirectoryName;
 	private JLabel instructionsLabel;
-<<<<<<< HEAD
 	private JButton continueButton;
-=======
->>>>>>> origin/master
 	private ImageEditor imgEditor;
 	private ArrayList<BufferedImage> images;
 	private ArrayList<JLabel> labels;
@@ -33,13 +30,10 @@ public class ScreenImport extends JPanel
 	private JButton nextButton;
 	private JButton prevButton;
 	private int imagePlace;
-<<<<<<< HEAD
 	private int selectedImagePlace;
+	private JLabel displayLabel;
 	
-	private ArrayList<JButton> buttons;
 	private ArrayList<JLabel> selected;
-=======
->>>>>>> origin/master
 
 	public ScreenImport(FrameManager manager)
 	{
@@ -105,6 +99,8 @@ public class ScreenImport extends JPanel
 	 */
 	private void displayImages()
 	{
+		this.constructDisplayLabel();
+		
 		//add selected images to the screen
 		selectedImagePlace = 0;
 		
@@ -137,8 +133,7 @@ public class ScreenImport extends JPanel
 				}
 				catch (Exception e)
 				{
-					row.add(Box.createHorizontalStrut(150)); //space the size of a pic
-					System.out.println("No more pictures");//remove
+					row.add(Box.createHorizontalStrut(150)); //space the size of a picture
 				}
 				row.add(Box.createHorizontalStrut(25)); //spacing between pictures
 				
@@ -165,10 +160,19 @@ public class ScreenImport extends JPanel
 			{
 				@Override
 				public void mouseClicked(java.awt.event.MouseEvent e) {
-					System.out.println("DO THIS");
-					selected.add(currentLabel);
-					labels.remove(currentLabel);
-					displayImages();
+					if(selected.contains(currentLabel))
+					{
+						labels.add(currentLabel);
+						selected.remove(currentLabel);
+						displayImages();
+					}
+					else if(labels.contains(currentLabel))
+					{
+						selected.add(currentLabel);
+						labels.remove(currentLabel);
+						displayImages();
+					}
+					
 					
 				}
 
@@ -199,6 +203,15 @@ public class ScreenImport extends JPanel
 				
 			});
 		}
+	}
+	
+	private void constructDisplayLabel()
+	{
+		this.displayLabel = new JLabel("Select the images you would like to import:");
+		this.displayLabel.setFont(this.manager.STANDARD_TEXT_FONT);
+		this.displayLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
+		this.displayLabel.setAlignmentX(LEFT_ALIGNMENT);
+		imgBox.add(this);
 	}
 	
 	private void populateButtonsBox()
