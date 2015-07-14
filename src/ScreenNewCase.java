@@ -3,8 +3,8 @@
 // ScreenNewCase.java
 
 import java.awt.event.*;
-import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 
 import javax.swing.*;
@@ -83,7 +83,14 @@ public class ScreenNewCase extends JPanel
 	    		{
 	    			try 
 	    			{
-						Files.createDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
+	    				if (!Files.exists(Paths.get("cases/" + caseNumField.getText() + "/"), LinkOption.NOFOLLOW_LINKS))
+	    				{
+	    					Files.createDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
+	    				}
+	    				else
+	    				{
+	    					// TODO: Error handling if file exists.
+	    				}
 					} 
 	    			catch (Exception e1) 
 	    			{
