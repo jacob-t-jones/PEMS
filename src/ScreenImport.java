@@ -18,6 +18,7 @@ public class ScreenImport extends JPanel
 	private String imageDirectoryName;
 	private JLabel instructionsLabel;
 	private JButton continueButton;
+	
 	private ImageEditor imgEditor;
 	private ArrayList<BufferedImage> images;
 	private ArrayList<JLabel> labels;
@@ -36,6 +37,7 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
+		this.populateButtonsBox();
 		this.imgEditor = new ImageEditor();
 		this.directoryName = "/Users/andrewrottier/Documents/Pictures/SamplePictures";
 		this.imagePlace = 0; this.selectedImagePlace = 0;
@@ -52,7 +54,7 @@ public class ScreenImport extends JPanel
 		this.initializeSelectedImages();
 		this.selected = new ArrayList<JLabel>();
 		this.addActions();
-		this.populateButtonsBox();
+		
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
 	}
@@ -132,7 +134,6 @@ public class ScreenImport extends JPanel
 			this.imgBox.add(row);
 		}
 		this.add(this.imgBox);
-		//this.constructLabel("Click to remove an image:");
 		revalidate();
 		repaint();
 		return;
@@ -239,9 +240,13 @@ public class ScreenImport extends JPanel
 	 */
 	private void populateButtonsBox()
 	{
+		
 		this.buttonsBox = Box.createHorizontalBox();
+		this.buttonsBox.setAlignmentX(CENTER_ALIGNMENT);
+		this.add(Box.createVerticalStrut(100));
 		this.constructNewCaseButton();
 		this.add(this.buttonsBox);
+		this.buttonsBox.setLocation(600, 700);
 	}
 	
 	/* createNextButton - navigate to the next screen

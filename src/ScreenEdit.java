@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class ScreenEdit {
+public class ScreenEdit extends JPanel{
 	private FrameManager manager;
 	
 	public ScreenEdit(FrameManager manager)
