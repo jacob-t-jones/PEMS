@@ -27,6 +27,10 @@ public class ScreenImport extends JPanel
 	private JButton nextButton;
 	private JButton prevButton;
 	private int imagePlace;
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 	private int selectedImagePlace;
 	private JLabel displayLabel;
 	private ArrayList<JLabel> selected;
