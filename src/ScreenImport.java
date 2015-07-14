@@ -15,8 +15,8 @@ public class ScreenImport extends JPanel
 	private FrameManager manager;
 	private BufferedImage[] images;
 	private JLabel[] labels;
-	private Box[] rows;
-	private Box[] col;
+	//private Box[] rows;
+	//private Box[] col;
 	
 	private String imageDirectoryName;
 	private JLabel instructionsLabel;
