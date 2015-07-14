@@ -7,6 +7,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -17,6 +18,7 @@ public class ScreenImport extends JPanel
 	private String imageDirectoryName;
 	private JLabel instructionsLabel;
 	private JButton continueButton;
+	
 	private ImageEditor imgEditor;
 	private ArrayList<BufferedImage> images;
 	private ArrayList<JLabel> labels;
@@ -27,6 +29,10 @@ public class ScreenImport extends JPanel
 	private JButton nextButton;
 	private JButton prevButton;
 	private int imagePlace;
+<<<<<<< HEAD
+=======
+	
+>>>>>>> origin/master
 	private int selectedImagePlace;
 	private JLabel displayLabel;
 	private ArrayList<JLabel> selected;
@@ -34,19 +40,24 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
+		this.populateButtonsBox();
 		this.imgEditor = new ImageEditor();
 		this.directoryName = "/Users/Jacob/Documents/Pics";
 		this.imagePlace = 0; this.selectedImagePlace = 0;
 		this.images = this.getImages();
 		this.labels = this.fillLabels();
+		
+		
 		this.selBox = Box.createHorizontalBox();
 		this.selBox.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.imgBox = Box.createVerticalBox();
 		this.imgBox.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.displayImages();
+		
+		this.initializedisplayImages();
+		this.initializeSelectedImages();
 		this.selected = new ArrayList<JLabel>();
 		this.addActions();
-		this.populateButtonsBox();
+		
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
 	}
@@ -89,30 +100,18 @@ public class ScreenImport extends JPanel
 		}
 		return labelList;
 	}
+
+	
+	private void initializedisplayImages(){
+		this.constructLabel("Select the images you would like to import:");
+		this.displayImages();
+	}
 	
 	/* fillRows - fills a new row with 5 new images from our labels list
 	 * *****check to see how many images there are ******
 	 */
 	private void displayImages()
 	{
-		this.constructDisplayLabel();
-		
-		//add selected images to the screen
-		selectedImagePlace = 0;
-		
-		for(int i = 0; i < 15; i++){
-			try
-			{
-				this.imgBox.setAlignmentX(CENTER_ALIGNMENT);
-				this.selBox.setAlignmentX(CENTER_ALIGNMENT);
-				selBox.add(this.selected.get(this.selectedImagePlace));
-				//selBox.add(Box.createHorizontalStrut(25));
-				selectedImagePlace++;
-			}
-			catch(Exception e){} 
-			
-		}
-		this.add(this.selBox);
 		
 		//add the images on the camera to the screen
 		imagePlace = 0;
@@ -138,12 +137,37 @@ public class ScreenImport extends JPanel
 			this.imgBox.add(row);
 		}
 		this.add(this.imgBox);
-		this.add(this.selBox);
 		revalidate();
 		repaint();
 		return;
 	}
 	
+	//break up into an initalize image function and display image func
+	private void initializeSelectedImages(){
+		this.constructLabel("Click to remove an image:");
+		this.displaySelectedImages();
+	}
+	
+	private void displaySelectedImages()
+	{
+		
+		//add selected images to the screen
+		selectedImagePlace = 0;
+		
+		for(int i = 0; i < 15; i++){
+			try
+			{
+				//this.imgBox.setAlignmentX(CENTER_ALIGNMENT);
+				this.selBox.setAlignmentX(CENTER_ALIGNMENT);
+				selBox.add(this.selected.get(this.selectedImagePlace));
+				//selBox.add(Box.createHorizontalStrut(25));
+				selectedImagePlace++;
+			}
+			catch(Exception e){} 
+			
+		}
+		this.imgBox.add(this.selBox);
+	}
 	
 	/* addActions - turns each picture into a button
 	 */
@@ -162,12 +186,16 @@ public class ScreenImport extends JPanel
 						labels.add(currentLabel);
 						selected.remove(currentLabel);
 						displayImages();
+						//constructLabel("Click to remove an image:");
+						displaySelectedImages();
 					}
 					else if(labels.contains(currentLabel))
 					{
 						selected.add(currentLabel);
 						labels.remove(currentLabel);
 						displayImages();
+						//constructLabel("Click to remove an image:");
+						displaySelectedImages();
 					}
 					
 					
@@ -202,22 +230,45 @@ public class ScreenImport extends JPanel
 		}
 	}
 	
-	private void constructDisplayLabel()
+	private void constructLabel(String text)
 	{
-		this.displayLabel = new JLabel("Select the images you would like to import:");
+		this.displayLabel = new JLabel(text);
 		this.displayLabel.setFont(this.manager.STANDARD_TEXT_FONT);
 		this.displayLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
+<<<<<<< HEAD
 		this.displayLabel.setAlignmentX(LEFT_ALIGNMENT);
+=======
+		this.displayLabel.setAlignmentX(CENTER_ALIGNMENT);
+		this.imgBox.add(this.displayLabel);
+>>>>>>> origin/master
 	}
 	
+	/* populateButtonsBox - fills the "buttonsBox" layout structure with the necessary components
+	 */
 	private void populateButtonsBox()
 	{
 		
+		this.buttonsBox = Box.createHorizontalBox();
+		this.buttonsBox.setAlignmentX(CENTER_ALIGNMENT);
+		this.add(Box.createVerticalStrut(100));
+		this.constructNewCaseButton();
+		this.add(this.buttonsBox);
+		this.buttonsBox.setLocation(600, 700);
 	}
 	
-	private void createNextButton()
+	/* createNextButton - navigate to the next screen
+	 */
+	private void constructNewCaseButton()
 	{
-		
+		this.nextButton = new JButton("Next");
+		this.nextButton.addActionListener(new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            	manager.pushPanel(new ScreenEdit(manager), "PEMS - Edit Photos");
+            }
+		});
+		this.buttonsBox.add(this.nextButton);
 	}
 	
 	private void createPrevButton()
