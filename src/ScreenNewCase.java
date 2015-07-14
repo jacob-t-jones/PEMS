@@ -4,10 +4,9 @@
 
 import java.awt.event.*;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Paths;
-
 import javax.swing.*;
+
 
 public class ScreenNewCase extends JPanel
 {
@@ -18,6 +17,7 @@ public class ScreenNewCase extends JPanel
 	private JLabel errorLabel;
 	private JTextField caseNumField;
 	private JButton continueButton;
+	private JProgressBar progress;
 	
 	public ScreenNewCase(FrameManager manager) 
 	{
@@ -119,6 +119,13 @@ public class ScreenNewCase extends JPanel
 	    	}
 	    });
 		this.inputBox.add(this.continueButton);
+	}
+	
+	private void displayProgressBar()
+	{
+		//this.progress = new JProgressBar(0, loadScreenImport.getLengthOfTask());
+		this.progress.setValue(0);
+		this.progress.setStringPainted(true);
 	}
 	
 	/* isValidCaseNum - returns a boolean value indicating whether or not the given case number is valid (only letters and numbers)
