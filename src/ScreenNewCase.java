@@ -3,6 +3,10 @@
 // ScreenNewCase.java
 
 import java.awt.event.*;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Paths;
+
 import javax.swing.*;
 
 public class ScreenNewCase extends JPanel
@@ -20,6 +24,8 @@ public class ScreenNewCase extends JPanel
 		this.populateInputBox();
 	}
 	
+	/* populateInputBox - fills the "inputBox" layout structure with the necessary components
+	 */
 	private void populateInputBox()
 	{
 		this.inputBox = Box.createVerticalBox();
@@ -32,6 +38,8 @@ public class ScreenNewCase extends JPanel
 		this.add(this.inputBox);
 	}
 	
+	/* constructInstructionsLabel - creates "instructionsLabel" and adds it to "inputBox"
+	 */
 	private void constructInstructionsLabel()
 	{
 		this.instructionsLabel = new JLabel("Please enter the case number below:");
@@ -41,6 +49,8 @@ public class ScreenNewCase extends JPanel
 		this.inputBox.add(this.instructionsLabel);
 	}
 	
+	/* constructCaseNumField - creates "caseNumField" and adds it to "inputBox"
+	 */
 	private void constructCaseNumField()
 	{
 		this.caseNumField = new JTextField("Type here...");
@@ -59,6 +69,8 @@ public class ScreenNewCase extends JPanel
 		this.inputBox.add(this.caseNumField);
 	}
 	
+	/* constructContinueButton - creates "continueButton" and adds it to "inputBox"
+	 */
 	private void constructContinueButton()
 	{
 		this.continueButton = new JButton("Continue");
@@ -69,8 +81,21 @@ public class ScreenNewCase extends JPanel
 	    	{
 	    		if (isValidCaseNum(caseNumField.getText()))
 	    		{
-	    			manager.setResizable(true);
-	    			manager.maximizeFrame();
+	    			try 
+	    			{
+	    				if (!Files.exists(Paths.get("cases/" + caseNumField.getText() + "/"), LinkOption.NOFOLLOW_LINKS))
+	    				{
+	    					Files.createDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
+	    				}
+	    				else
+	    				{
+	    					// TODO: Error handling if file exists.
+	    				}
+					} 
+	    			catch (Exception e1) 
+	    			{
+	    				System.out.println("Error - Directory could not be created");
+					}
 	    			manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
 	    		}
 	    		else
@@ -82,6 +107,9 @@ public class ScreenNewCase extends JPanel
 		this.inputBox.add(this.continueButton);
 	}
 	
+	/* isValidCaseNum - returns a boolean value indicating whether or not the given case number is valid (only letters and numbers)
+	 *        caseNum - the number to check, input by the user
+	 */
 	private boolean isValidCaseNum(String caseNum)
 	{
 		boolean valid = true;

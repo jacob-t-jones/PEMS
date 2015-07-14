@@ -4,6 +4,7 @@
 
 import java.awt.*;
 import java.awt.image.*;
+
 import javax.swing.*;
 
 public class FrameManager 
@@ -72,21 +73,6 @@ public class FrameManager
 	public int heightToPixels(double percent)
 	{
 		return (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * (percent / 100.0));
-	}
-	
-	/* resizeImage - returns a resized version of a given BufferedImage
-	 * 		 image - the image to resize
-	 * 	     width - the desired width
-	 *      height - the desired height
-	 */
-	public BufferedImage resizeImage(BufferedImage image, int width, int height)
-	{
-		Image tempImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-		BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB); 
-		Graphics2D g = newImage.createGraphics();
-		g.drawImage(tempImage, 0, 0, null);
-		g.dispose();
-		return newImage;
 	}
 	
 	/* getConfiguration - returns the global instance of the Config class
