@@ -7,11 +7,8 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
-import com.sun.glass.events.MouseEvent;
 
 public class ScreenImport extends JPanel
 {
@@ -19,10 +16,7 @@ public class ScreenImport extends JPanel
 	private FrameManager manager;
 	private String imageDirectoryName;
 	private JLabel instructionsLabel;
-<<<<<<< HEAD
 	private JButton continueButton;
-=======
->>>>>>> origin/master
 	private ImageEditor imgEditor;
 	private ArrayList<BufferedImage> images;
 	private ArrayList<JLabel> labels;
@@ -33,13 +27,9 @@ public class ScreenImport extends JPanel
 	private JButton nextButton;
 	private JButton prevButton;
 	private int imagePlace;
-<<<<<<< HEAD
 	private int selectedImagePlace;
 	private JLabel displayLabel;
-	
 	private ArrayList<JLabel> selected;
-=======
->>>>>>> origin/master
 
 	public ScreenImport(FrameManager manager)
 	{
@@ -161,11 +151,12 @@ public class ScreenImport extends JPanel
 		
 		for(int i = 0; i < labels.size(); i++)
 		{
-			JLabel currentLabel = this.labels.get(i);
+			final JLabel currentLabel = this.labels.get(i);
 			currentLabel.addMouseListener(new MouseListener()
 			{
 				@Override
-				public void mouseClicked(java.awt.event.MouseEvent e) {
+				public void mouseClicked(java.awt.event.MouseEvent e) 
+				{
 					if(selected.contains(currentLabel))
 					{
 						labels.add(currentLabel);

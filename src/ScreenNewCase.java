@@ -5,8 +5,8 @@
 import java.awt.event.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import javax.swing.*;
 
+import javax.swing.*;
 
 public class ScreenNewCase extends JPanel
 {
@@ -17,7 +17,6 @@ public class ScreenNewCase extends JPanel
 	private JLabel errorLabel;
 	private JTextField caseNumField;
 	private JButton continueButton;
-	private JProgressBar progress;
 	
 	public ScreenNewCase(FrameManager manager) 
 	{
@@ -93,23 +92,32 @@ public class ScreenNewCase extends JPanel
 	    	{
 	    		if (isValidCaseNum(caseNumField.getText()))
 	    		{
-	    			try 
+	    			boolean isDirectory = false;
+	    			try
 	    			{
-	    				if (!Files.isDirectory(Paths.get("cases/" + caseNumField.getText() + "/")))
+	    				isDirectory = Files.isDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
+	    			}
+	    			catch (Exception e1)
+	    			{
+	    				return;
+	    			}
+	    			if (!isDirectory)
+	    			{
+	    				try
 	    				{
 	    					Files.createDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
-	    	    			manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
 	    				}
-	    				else
+	    				catch (Exception e2)
 	    				{
-	    					caseNumField.setText("");
-	    					errorLabel.setText("Error - A case with that number already exists!");
+	    					return;
 	    				}
-					} 
-	    			catch (Exception e1) 
+	    	    		manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
+	    			}
+	    			else
 	    			{
-	    				System.out.println("Error - Directory could not be created");
-					}
+	    				caseNumField.setText("");
+	    				errorLabel.setText("Error - A case with that number already exists!");
+	    			} 
 	    		}
 	    		else
 	    		{
@@ -119,13 +127,6 @@ public class ScreenNewCase extends JPanel
 	    	}
 	    });
 		this.inputBox.add(this.continueButton);
-	}
-	
-	private void displayProgressBar()
-	{
-		//this.progress = new JProgressBar(0, loadScreenImport.getLengthOfTask());
-		this.progress.setValue(0);
-		this.progress.setStringPainted(true);
 	}
 	
 	/* isValidCaseNum - returns a boolean value indicating whether or not the given case number is valid (only letters and numbers)
