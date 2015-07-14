@@ -3,9 +3,14 @@
 // FrameManager.java
 
 import java.awt.*;
+<<<<<<< HEAD
+=======
 import java.util.ArrayList;
+>>>>>>> origin/master
 
 import javax.swing.*;
+
+import tools.Config;
 
 public class FrameManager 
 {

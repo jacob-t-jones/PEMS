@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import tools.ImageEditor;
+
 public class ScreenImport extends JPanel
 {
 
