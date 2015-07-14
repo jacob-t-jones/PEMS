@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import tools.ImageEditor;
+
 public class ScreenImport extends JPanel
 {
 
@@ -29,10 +31,6 @@ public class ScreenImport extends JPanel
 	private JButton nextButton;
 	private JButton prevButton;
 	private int imagePlace;
-<<<<<<< HEAD
-=======
-	
->>>>>>> origin/master
 	private int selectedImagePlace;
 	private JLabel displayLabel;
 	private ArrayList<JLabel> selected;
@@ -235,12 +233,9 @@ public class ScreenImport extends JPanel
 		this.displayLabel = new JLabel(text);
 		this.displayLabel.setFont(this.manager.STANDARD_TEXT_FONT);
 		this.displayLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
-<<<<<<< HEAD
 		this.displayLabel.setAlignmentX(LEFT_ALIGNMENT);
-=======
 		this.displayLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.imgBox.add(this.displayLabel);
->>>>>>> origin/master
 	}
 	
 	/* populateButtonsBox - fills the "buttonsBox" layout structure with the necessary components

@@ -2,6 +2,7 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // Config.java
 
+package tools;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.List;

@@ -3,7 +3,10 @@
 // FrameManager.java
 
 import java.awt.*;
+
 import javax.swing.*;
+
+import tools.Config;
 
 public class FrameManager 
 {
