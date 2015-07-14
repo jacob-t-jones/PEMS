@@ -3,6 +3,8 @@
 // FrameManager.java
 
 import java.awt.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 public class FrameManager 
@@ -43,7 +45,7 @@ public class FrameManager
 		this.mainFrame.getContentPane().repaint();
 		this.mainFrame.setTitle(title);
 	}
-	
+
 	/* maximizeFrame - maximizes the window the program is currently running in
 	 */
 	public void maximizeFrame()

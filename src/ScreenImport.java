@@ -258,15 +258,22 @@ public class ScreenImport extends JPanel
 		{
             public void actionPerformed(ActionEvent e)
             {
-            	manager.pushPanel(new ScreenEdit(manager), "PEMS - Edit Photos");
+            	manager.pushPanel(new ScreenEdit(manager, selected), "PEMS - Edit Photos");
             }
 		});
 		this.buttonsBox.add(this.nextButton);
+	}
+	
+	public ArrayList<JLabel> getSelected(){
+		return this.selected;
 	}
 	
 	private void createPrevButton()
 	{
 		
 	}
+	
+	
+	
 
 }

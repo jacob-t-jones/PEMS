@@ -19,7 +19,6 @@ public class ScreenEdit extends JPanel{
 	private ArrayList<BufferedImage> images;
 	private ArrayList<JLabel> labels;
 	private String directoryName;
-	private Box imgBox;
 	private Box selBox; //selected box
 	private Box buttonsBox;
 	private JButton nextButton;
@@ -29,15 +28,15 @@ public class ScreenEdit extends JPanel{
 	private JLabel displayLabel;
 	private ArrayList<JLabel> selected;
 	
-	public ScreenEdit(FrameManager manager)
+	public ScreenEdit(FrameManager manager, ArrayList<JLabel> labels)
 	{
 		this.manager = manager;
 		this.imgEditor = new ImageEditor();
 		this.directoryName = "/Users/andrewrottier/Documents/Pictures/SamplePictures";
 		this.selectedImagePlace = 0;
+		this.selected = labels;
 		this.images = this.getImages();
 		this.labels = this.fillLabels();
-		this.selected = new ArrayList<JLabel>();
 		
 		this.selBox = Box.createHorizontalBox();
 		this.selBox.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -50,7 +49,6 @@ public class ScreenEdit extends JPanel{
 		this.manager.maximizeFrame();
 	}
 	
-	//break up into an initailize image function and display image func
 	private void initializeSelectedImages(){
 		this.constructLabel("Click an image to edit it");
 		this.displaySelectedImages();
@@ -58,7 +56,6 @@ public class ScreenEdit extends JPanel{
 		
 	private void displaySelectedImages()
 	{
-			
 		//add selected images to the screen
 		selectedImagePlace = 0;
 			
@@ -73,6 +70,9 @@ public class ScreenEdit extends JPanel{
 			
 		}
 		this.add(this.selBox);
+		revalidate();
+		repaint();
+		return;
 	}
 		
 	private void constructLabel(String text)
