@@ -3,8 +3,11 @@
 // ImageEditor.java
 
 package tools;
+import gui.Thumbnail;
+
 import java.awt.*;
 import java.awt.image.*;
+
 import org.imgscalr.Scalr;
 
 public class ImageEditor 
@@ -77,9 +80,9 @@ public class ImageEditor
 	 *                image - the image in question
 	 *                 size - the new size of the image
 	 */
-	public static BufferedImage resizeThumbnailImage(BufferedImage image, int size)
+	public static BufferedImage resizeThumbnailImage(Thumbnail image, int size)
 	{
-		return Scalr.resize(image, Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
+		return Scalr.resize(image.getImage(), Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
 	}
 	
 	/* rotateRight90 - rotates an image right by 90 degrees
