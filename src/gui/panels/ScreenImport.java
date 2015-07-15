@@ -43,7 +43,7 @@ public class ScreenImport extends JPanel
 		this.manager = manager;
 		this.populateButtonsBox();
 		this.imgEditor = new ImageEditor();
-		this.directoryName = "/Users/Jacob/Documents/Pics";
+		this.directoryName = "/Users/andrewrottier/Documents/Pictures/SamplePictures";
 		this.imagePlace = 0; this.selectedImagePlace = 0;
 		this.images = this.getImages();
 		this.labels = this.fillLabels();
@@ -245,7 +245,6 @@ public class ScreenImport extends JPanel
 	 */
 	private void populateButtonsBox()
 	{
-		
 		this.buttonsBox = Box.createHorizontalBox();
 		this.buttonsBox.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(Box.createVerticalStrut(100));

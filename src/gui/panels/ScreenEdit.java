@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import tools.ImageEditor;
+
 public class ScreenEdit extends JPanel{
 	
 	private FrameManager manager;
@@ -22,7 +24,8 @@ public class ScreenEdit extends JPanel{
 	private ArrayList<BufferedImage> images;
 	private ArrayList<JLabel> labels;
 	private String directoryName;
-	private Box selBox; //selected box
+	private Box selBox;
+	private Box stageBox;
 	private Box buttonsBox;
 	private JButton nextButton;
 	private JButton prevButton;
@@ -41,6 +44,7 @@ public class ScreenEdit extends JPanel{
 		this.images = this.getImages();
 		this.labels = this.fillLabels();
 		
+		this.stageBox = Box.createVerticalBox();
 		this.selBox = Box.createHorizontalBox();
 		this.selBox.setBorder(BorderFactory.createLineBorder(Color.black));
 		
@@ -72,7 +76,9 @@ public class ScreenEdit extends JPanel{
 			catch(Exception e){} 
 			
 		}
-		this.add(this.selBox);
+		//this.add(this.selBox);
+		stageBox.add(this.selBox);
+		this.add(this.stageBox);
 		revalidate();
 		repaint();
 		return;
@@ -84,7 +90,7 @@ public class ScreenEdit extends JPanel{
 		this.displayLabel.setFont(this.manager.STANDARD_TEXT_FONT);
 		this.displayLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
 		this.displayLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.add(this.displayLabel);
+		this.stageBox.add(this.displayLabel);
 	}
 	
 	/* getImages - creates "photoLists" and adds images to the ScreenImport
@@ -119,7 +125,7 @@ public class ScreenEdit extends JPanel{
 		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
 		for (int i = 0; i < this.images.size(); i++)
 		{
-			JLabel newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeImage(this.images.get(i), 150, 200)));
+			JLabel newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeFullImage(this.images.get(i), 150, 200)));
 			newLabel.setAlignmentX(CENTER_ALIGNMENT);
 			labelList.add(newLabel);
 		}

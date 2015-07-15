@@ -6,6 +6,11 @@ package gui;
 import gui.panels.*;
 import tools.*;
 import java.awt.*;
+<<<<<<< HEAD:src/gui/FrameManager.java
+=======
+import java.util.ArrayList;
+
+>>>>>>> origin/master:src/FrameManager.java
 import javax.swing.*;
 import tools.Config;
 
