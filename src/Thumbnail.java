@@ -24,7 +24,7 @@ public class Thumbnail
 	
 	public void setImage(BufferedImage image)
 	{
-		this.
+		//this.
 	}
 	
 }
