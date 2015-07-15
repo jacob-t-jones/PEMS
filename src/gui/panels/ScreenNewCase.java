@@ -19,7 +19,6 @@ public class ScreenNewCase extends JPanel
 	private JLabel errorLabel;
 	private JTextField caseNumField;
 	private JButton continueButton;
-	private JButton addToExisting;
 	
 	
 	public ScreenNewCase(FrameManager manager) 
@@ -39,8 +38,6 @@ public class ScreenNewCase extends JPanel
 		this.constructErrorLabel();
 		this.container.add(Box.createVerticalStrut(50));
 		this.constructCaseNumField();
-		//this.container.add(Box.createVerticalStrut(40));
-		this.createAddToExistingButton();
 		this.container.add(Box.createVerticalStrut(80));
 		this.constructContinueButton();
 		this.add(this.container);
@@ -138,22 +135,6 @@ public class ScreenNewCase extends JPanel
 	    	}
 	    });
 		this.container.add(this.continueButton);
-	}
-	
-	/* createAddToExistingButton - navigate to the addToExisting screen
-	 */
-	private void createAddToExistingButton()
-	{
-		this.addToExisting = new JButton("Add to Existing File");
-		this.addToExisting.setAlignmentX(CENTER_ALIGNMENT);
-		this.addToExisting.addActionListener(new ActionListener()
-		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	manager.pushPanel(new ScreenAddToExisting(manager), "PEMS - Add to Existing File");
-            }
-		});
-		this.container.add(this.addToExisting);
 	}
 	
 	/* isValidCaseNum - returns a boolean value indicating whether or not the given case number is valid (only letters and numbers, at least one character)
