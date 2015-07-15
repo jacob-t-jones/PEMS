@@ -11,14 +11,6 @@ import tools.*;
 public class FrameManager 
 {
 	
-	public final Font TITLE_FONT = new Font("Courier New", Font.BOLD, 30);
-	public final Font SUBTITLE_FONT = new Font("Courier New", Font.BOLD, 22);
-	public final Font STANDARD_TEXT_FONT = new Font("Georgia", Font.PLAIN, 16);
-	public final Font ERROR_TEXT_FONT = new Font("Georgia", Font.ITALIC, 12);
-	public final Color TITLE_COLOR = new Color(46, 46, 46);
-	public final Color SUBTITLE_COLOR = new Color(2, 2, 123);
-	public final Color STANDARD_TEXT_COLOR = new Color(44, 29, 29);
-	public final Color ERROR_TEXT_COLOR = new Color(202, 12, 12);
 	private Config configuration;
 	private JFrame mainFrame;
 	
