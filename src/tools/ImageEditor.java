@@ -4,10 +4,8 @@
 
 package tools;
 import gui.Thumbnail;
-
 import java.awt.*;
 import java.awt.image.*;
-
 import org.imgscalr.Scalr;
 
 public class ImageEditor 
