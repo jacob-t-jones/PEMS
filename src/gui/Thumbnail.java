@@ -10,9 +10,9 @@ public class Thumbnail
 {
 
 	private BufferedImage image;
-	private Path location;
+	private String location;
 	
-	public Thumbnail(BufferedImage image, Path location)
+	public Thumbnail(BufferedImage image, String location)
 	{
 		this.image = image;
 		this.location = location;
@@ -35,15 +35,15 @@ public class Thumbnail
 	
 	/* getLocation - returns "location", the file system path associated with the thumbnail
 	 */
-	public Path getLocation()
+	public String getLocation()
 	{
 		return this.location;
 	}
 	
-	/* setLocation - sets "location" to be the Path passed in as a parameter
+	/* setLocation - sets "location" to be the String passed in as a parameter
 	 *    location - the new location
 	 */
-	public void setLocation(Path location)
+	public void setLocation(String location)
 	{
 		this.location = location;
 	}
