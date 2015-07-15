@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 
 
 
@@ -19,6 +20,14 @@ public class FileDisplay extends Box
 		super(axis);  
 		this.initializeDisplayInfo();
 		
+	}
+	
+	public String getDirectoryName(){
+		return this.directoryName;
+	}
+	
+	public ImageIcon getFilejpg(){
+		return new ImageIcon(this.filejpg);
 	}
 	
 	private void initializeDisplayInfo(){

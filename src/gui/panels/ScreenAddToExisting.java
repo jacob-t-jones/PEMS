@@ -31,6 +31,7 @@ public class ScreenAddToExisting extends JPanel
 		this.container = Box.createVerticalBox();
 		this.container.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.populateContainer();
+		this.manager.setResizable(true);
 	}
 	
 	private void displayImages(int imageNum)
@@ -40,49 +41,39 @@ public class ScreenAddToExisting extends JPanel
 		this.repaint();
 		this.revalidate(); 
 		
-		imagePlace = imageNum;
+		//imagePlace = imageNum;
+		Box col = Box.createVerticalBox();
+		col.setAlignmentX(CENTER_ALIGNMENT);
 		
 		File directory = new File("/Users/andrewrottier/Documents/Pictures/");
-		File tempFile = new File("");
 		File[] fileList = directory.listFiles();
 		
 		for (File file : fileList) {
-	        if (file.isFile()) {
-	        	JLabel tempFolder = new JLabel();
+			
+	        if (file.isDirectory()) {
 	        	
-	        	tempFile.renameTo(file);
-	        	tempFolder.add(tempFile);
-	        	Box col = Box.createVerticalBox();
-	        	col.add(tempFile);
-	            //files.add(file);
-	        } else if (file.isDirectory()) {
-	            listf(file.getAbsolutePath(), files);
+	        	//convert the folder image and name to jlabels
+	        	FileDisplay tempFolder = new FileDisplay(1);
+	        	JLabel tempLabel = new JLabel(tempFolder.getFilejpg());
+	        	JLabel tempFileName = new JLabel("" + file);
+	        	
+	        	//create the row and add elements to it
+	        	Box row = Box.createHorizontalBox();
+	        	row.add(tempLabel);
+	        	row.add(tempFileName);
+	        	row.setAlignmentX(CENTER_ALIGNMENT);
+				
+	        	
+	        	col.add(row);
+	        	col.add(Box.createVerticalStrut(10));
+	        
+	        } else if (file.isFile()) {
+	        	System.out.println("Other file: " + file);
 	        }
 	    }
+		this.container.add(col);
 		
-		for (int i = 0; i < 3; i++)
-		{
-			Box row = Box.createHorizontalBox();
-			for (int j = 0; j < 15; j++)
-			{
-				try
-				{
-					FileDisplay newFile = new FileDisplay(0);
-					row.add(this.folders.get(this.imagePlace));
-					System.out.println(imagePlace);
-					imagePlace++;
-				}
-				catch (Exception e)
-				{
-					row.add(Box.createHorizontalStrut(10)); //space the size of a picture
-				}
-				row.add(Box.createHorizontalStrut(10)); //spacing between pictures
-				
-			}
-			row.setAlignmentX(CENTER_ALIGNMENT);
-			this.container.add(row);
-		}
-		imagePlace = imageNum; //reset back to original param to avoid errors w next/prev buttons
+		//imagePlace = imageNum; //reset back to original param to avoid errors w next/prev buttons
 		this.add(this.container);
 		revalidate();
 		repaint();
