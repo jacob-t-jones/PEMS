@@ -1,15 +1,12 @@
+package gui;
 // PEMS (Police Evidence Management System) Version 0.1
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // FrameManager.java
 
+import gui.panels.*;
+import tools.*;
 import java.awt.*;
-<<<<<<< HEAD
-=======
-import java.util.ArrayList;
->>>>>>> origin/master
-
 import javax.swing.*;
-
 import tools.Config;
 
 public class FrameManager 
@@ -38,6 +35,20 @@ public class FrameManager
         this.mainFrame.setVisible(true);
 	}
 	
+	/* getConfiguration - returns the global instance of the Config class
+	 */
+	public Config getConfiguration()
+	{
+		return this.configuration;
+	}
+	
+	/* maximizeFrame - maximizes the window the program is currently running in
+	 */
+	public void maximizeFrame()
+	{
+		this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	}
+	
 	/* pushPanel - removes the current panel and replaces it with a newly constructed one
 	 *	   panel - new panel to display
 	 *     title - title of the new panel
@@ -49,13 +60,6 @@ public class FrameManager
 		this.mainFrame.getContentPane().revalidate();
 		this.mainFrame.getContentPane().repaint();
 		this.mainFrame.setTitle(title);
-	}
-
-	/* maximizeFrame - maximizes the window the program is currently running in
-	 */
-	public void maximizeFrame()
-	{
-		this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 	
 	/* setResizable - determines whether or not the current JFrame is resizable
@@ -80,13 +84,6 @@ public class FrameManager
 	public int heightToPixels(double percent)
 	{
 		return (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * (percent / 100.0));
-	}
-	
-	/* getConfiguration - returns the global instance of the Config class
-	 */
-	public Config getConfiguration()
-	{
-		return this.configuration;
 	}
 	
 }

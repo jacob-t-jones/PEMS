@@ -22,7 +22,7 @@ public class ImageEditor
 	 *      green - green RGB value for the color of the padding
 	 *       blue - blue RGB value for the color of the padding
 	 */
-	public BufferedImage addPadding(BufferedImage image, int size, int red, int green, int blue)
+	public static BufferedImage addPadding(BufferedImage image, int size, int red, int green, int blue)
 	{
 		return Scalr.pad(image, size, new Color(red, green, blue));
 	}
@@ -30,7 +30,7 @@ public class ImageEditor
 	/* applyAntiAliasing - applies anti aliasing procedure to the given image
 	 *             image - the image in question
 	 */
-	public BufferedImage applyAntiAliasing(BufferedImage image)
+	public static BufferedImage applyAntiAliasing(BufferedImage image)
 	{
 		return Scalr.apply(image, Scalr.OP_ANTIALIAS);
 	}
@@ -38,7 +38,7 @@ public class ImageEditor
 	/* brightenImage - brightens the given image by 10%
 	 *         image - the image in question
 	 */
-	public BufferedImage brightenImage(BufferedImage image)
+	public static BufferedImage brightenImage(BufferedImage image)
 	{
 		return Scalr.apply(image, Scalr.OP_BRIGHTER);
 	}
@@ -50,49 +50,68 @@ public class ImageEditor
 	 *     width - the width of the crop
 	 *    height - the height of the crop
 	 */
-	public BufferedImage cropImage(BufferedImage image, int x, int y, int width, int height)
+	public static BufferedImage cropImage(BufferedImage image, int x, int y, int width, int height)
 	{
 		return Scalr.crop(image, x, y, width, height, Scalr.OP_ANTIALIAS);
 	}
 	
 	/* darkenImage - darkens the given image by 10%
-	 *         image - the image in question
+	 *       image - the image in question
 	 */
-	public BufferedImage darkenImage(BufferedImage image)
+	public static BufferedImage darkenImage(BufferedImage image)
 	{
 		return Scalr.apply(image, Scalr.OP_DARKER);
 	}
 	
-	public BufferedImage resizeFullImage(BufferedImage image, int width, int height)
+	/* resizeFullImage - resizes an image to the width and height specified in the parameters
+	 *           image - the image in question
+	 *           width - the new width of the image
+	 *          height - the new height of the image
+	 */
+	public static BufferedImage resizeFullImage(BufferedImage image, int width, int height)
 	{
 		return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, width, height, Scalr.OP_ANTIALIAS);
 	}
 	
-	public BufferedImage resizeThumbnailImage(BufferedImage image, int size)
+	/* resizeThumbnailImage - converts an image to a shrunk down thumbnail, maintaining its aspect ratio
+	 *                image - the image in question
+	 *                 size - the new size of the image
+	 */
+	public static BufferedImage resizeThumbnailImage(BufferedImage image, int size)
 	{
 		return Scalr.resize(image, Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
 	}
 	
-	public BufferedImage rotateRight90(BufferedImage image)
+	/* rotateRight90 - rotates an image right by 90 degrees
+	 *         image - the image in question
+	 */
+	public static BufferedImage rotateRight90(BufferedImage image)
 	{
 		return Scalr.rotate(image, Scalr.Rotation.CW_90);
 	}
 	
-	public BufferedImage rotateRight180(BufferedImage image)
+	/* rotateRight180 - rotates an image right by 180 degrees
+	 *          image - the image in question
+	 */
+	public static BufferedImage rotateRight180(BufferedImage image)
 	{
 		return Scalr.rotate(image, Scalr.Rotation.CW_180);
 	}
 	
-	public BufferedImage rotateRight270(BufferedImage image)
+	/* rotateRight270 - rotates an image right by 270 degrees
+	 *          image - the image in question
+	 */
+	public static BufferedImage rotateRight270(BufferedImage image)
 	{
 		return Scalr.rotate(image, Scalr.Rotation.CW_270);
 	}
 	
-	public BufferedImage toGrayScale(BufferedImage image)
+	/* toGrayScale - converts an image to grayscale format
+	 *       image - the image in question
+	 */
+	public static BufferedImage toGrayscale(BufferedImage image)
 	{
 		return Scalr.apply(image, Scalr.OP_GRAYSCALE);
 	}
 
 }
-
-

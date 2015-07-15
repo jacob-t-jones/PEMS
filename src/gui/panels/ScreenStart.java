@@ -2,23 +2,22 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // ScreenStart.java
 
+package gui.panels;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
-import tools.ImageEditor;
+import gui.*;
+import tools.*;
 
 public class ScreenStart extends JPanel
 {
-	
+
 	private FrameManager manager;
-	private ImageEditor imgEditor;
-	private Box titleBox;
-	private Box buttonsBox;
+	private Box topContainer;
+	private Box bottomContainer;
 	private JLabel logoLabel;
 	private JLabel titleLabel;
 	private JLabel nameLabel;
@@ -28,9 +27,8 @@ public class ScreenStart extends JPanel
 	public ScreenStart(FrameManager manager)
 	{
 		this.manager = manager;
-		this.imgEditor = new ImageEditor();
-		this.populateTitleBox();
-		this.populateButtonsBox();
+		this.populateTopContainer();
+		this.populateBottomContainer();
 	}
 	
 	/* paintComponent - override function used, in this case, to set a background image
@@ -52,32 +50,21 @@ public class ScreenStart extends JPanel
 		g.drawImage(backgroundImage, 0, 0, null);
 	}
 	
-	/* populateTitleBox - fills the "titleBox" layout structure with the necessary components
+	/* populateTopContainer - adds "logoLabel", "titleLabel", and "nameLabel" to "topContainer" before displaying it
 	 */
-	private void populateTitleBox()
+	private void populateTopContainer()
 	{
-		this.titleBox = Box.createVerticalBox();
+		this.topContainer = Box.createVerticalBox();
 		this.constructLogoLabel();
-		this.titleBox.add(Box.createVerticalStrut(20));
+		this.topContainer.add(Box.createVerticalStrut(20));
 		this.constructTitleLabel();
-		this.titleBox.add(Box.createVerticalStrut(10));
+		this.topContainer.add(Box.createVerticalStrut(10));
 		this.constructNameLabel();
-		this.titleBox.add(Box.createVerticalStrut(40));
-		this.add(this.titleBox);
+		this.topContainer.add(Box.createVerticalStrut(40));
+		this.add(this.topContainer);
 	}
 	
-	/* populateButtonsBox - fills the "buttonsBox" layout structure with the necessary components
-	 */
-	private void populateButtonsBox()
-	{
-		this.buttonsBox = Box.createHorizontalBox();
-		this.constructNewCaseButton();
-		this.buttonsBox.add(Box.createHorizontalStrut(200));
-		this.constructSettingsButton();
-		this.add(this.buttonsBox);
-	}
-	
-	/* constructLogoLabel - creates "logoLabel" and adds it to "titleBox"
+	/* constructLogoLabel - creates "logoLabel" using an image imported from resources and adds it to "topContainer"
 	 */
 	private void constructLogoLabel()
 	{
@@ -91,12 +78,12 @@ public class ScreenStart extends JPanel
 			System.out.println("Error - Unable to find logo");
 			return;
 	    }
-	    this.logoLabel = new JLabel(new ImageIcon(this.imgEditor.resizeFullImage(logoImage, 200, 200)));
+	    this.logoLabel = new JLabel(new ImageIcon(ImageEditor.resizeFullImage(logoImage, 200, 200)));
 	    this.logoLabel.setAlignmentX(CENTER_ALIGNMENT);
-	    this.titleBox.add(this.logoLabel);
+	    this.topContainer.add(this.logoLabel);
 	}
 	
-	/* constructTitleLabel - creates "titleLabel" and adds it to "titleBox"
+	/* constructTitleLabel - creates "titleLabel", sets its font and alignment, and adds it to "topContainer"
 	 */
 	private void constructTitleLabel()
 	{
@@ -104,10 +91,10 @@ public class ScreenStart extends JPanel
 		this.titleLabel.setFont(this.manager.TITLE_FONT);
 		this.titleLabel.setForeground(this.manager.TITLE_COLOR);
 	    this.titleLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.titleBox.add(this.titleLabel);
+		this.topContainer.add(this.titleLabel);
 	}
 	
-	/* constructNameLabel - creates "nameLabel" and adds it to "titleBox"
+	/* constructNameLabel - creates "nameLabel", sets its font and alignment, and adds it to "topContainer"
 	 */
 	private void constructNameLabel()
 	{
@@ -115,10 +102,22 @@ public class ScreenStart extends JPanel
 		this.nameLabel.setFont(this.manager.SUBTITLE_FONT);
 		this.nameLabel.setForeground(this.manager.SUBTITLE_COLOR);
 	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.titleBox.add(this.nameLabel);
+		this.topContainer.add(this.nameLabel);
 	}
 	
-	/* constructNewCaseButton - creates "newCaseButton" and adds it to "buttonsBox"
+	/* populateBottomContainer - adds "newCaseButton" and "settingsButton" to "bottomContainer" before displaying it
+	 */
+	private void populateBottomContainer()
+	{
+		this.bottomContainer = Box.createHorizontalBox();
+		this.constructNewCaseButton();
+		this.bottomContainer.add(Box.createHorizontalStrut(200));
+		this.constructSettingsButton();
+		this.add(this.bottomContainer);
+	}
+	
+	/* constructNewCaseButton - creates "newCaseButton", makes an ActionListener for it, and adds it to "bottomContainer"
+	 *        actionPerformed - pushes the ScreenNewCase JPanel into the JFrame
 	 */
 	private void constructNewCaseButton()
 	{
@@ -130,10 +129,11 @@ public class ScreenStart extends JPanel
             	manager.pushPanel(new ScreenNewCase(manager), "PEMS - Create New Case");
             }
 		});
-		this.buttonsBox.add(this.newCaseButton);
+		this.bottomContainer.add(this.newCaseButton);
 	}
 	
-	/* constructSettingsButton - creates "settingsButton" and adds it to "buttonsBox"
+	/* constructSettingsButton - creates "settingsButton", makes an ActionListener for it, and adds it to "bottomContainer"
+	 *         actionPerformed - pushes the ScreenSettings JPanel into the JFrame
 	 */
 	private void constructSettingsButton()
 	{
@@ -145,7 +145,7 @@ public class ScreenStart extends JPanel
             	// TODO: On button press actions
             }
 		});
-		this.buttonsBox.add(this.settingsButton);
+		this.bottomContainer.add(this.settingsButton);
 	}
 	
 }

@@ -2,17 +2,17 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // ScreenNewCase.java
 
+package gui.panels;
 import java.awt.event.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
+import java.nio.file.*;
 import javax.swing.*;
+import gui.*;
 
 public class ScreenNewCase extends JPanel
 {
 	
 	private FrameManager manager;
-	private Box inputBox;
+	private Box container;
 	private JLabel instructionsLabel;
 	private JLabel errorLabel;
 	private JTextField caseNumField;
@@ -21,26 +21,26 @@ public class ScreenNewCase extends JPanel
 	public ScreenNewCase(FrameManager manager) 
 	{
 		this.manager = manager;
-		this.populateInputBox();
+		this.populateContainer();
 	}
 	
-	/* populateInputBox - fills the "inputBox" layout structure with the necessary components
+	/* populateContainer - adds "instructionsLabel", "errorLabel", "caseNumField", and "continueButton" to "container" before displaying it
 	 */
-	private void populateInputBox()
+	private void populateContainer()
 	{
-		this.inputBox = Box.createVerticalBox();
-		this.inputBox.add(Box.createVerticalStrut(20));
+		this.container = Box.createVerticalBox();
+		this.container.add(Box.createVerticalStrut(20));
 		this.constructInstructionsLabel();
-		this.inputBox.add(Box.createVerticalStrut(10));
+		this.container.add(Box.createVerticalStrut(10));
 		this.constructErrorLabel();
-		this.inputBox.add(Box.createVerticalStrut(50));
+		this.container.add(Box.createVerticalStrut(50));
 		this.constructCaseNumField();
-		this.inputBox.add(Box.createVerticalStrut(80));
+		this.container.add(Box.createVerticalStrut(80));
 		this.constructContinueButton();
-		this.add(this.inputBox);
+		this.add(this.container);
 	}
 	
-	/* constructInstructionsLabel - creates "instructionsLabel" and adds it to "inputBox"
+	/* constructInstructionsLabel - creates "instructionsLabel", sets its font and alignment, and adds it to "container"
 	 */
 	private void constructInstructionsLabel()
 	{
@@ -48,19 +48,23 @@ public class ScreenNewCase extends JPanel
 		this.instructionsLabel.setFont(this.manager.STANDARD_TEXT_FONT);
 		this.instructionsLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
 		this.instructionsLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.inputBox.add(this.instructionsLabel);
+		this.container.add(this.instructionsLabel);
 	}
 	
+	/* constructErrorLabel - creates "errorLabel", sets its font and alignment, and adds it to "container"
+	 */
 	private void constructErrorLabel()
 	{
 		this.errorLabel = new JLabel("");
 		this.errorLabel.setFont(this.manager.ERROR_TEXT_FONT);
 		this.errorLabel.setForeground(this.manager.ERROR_TEXT_COLOR);
 		this.errorLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.inputBox.add(errorLabel);
+		this.container.add(errorLabel);
 	}
 	
-	/* constructCaseNumField - creates "caseNumField" and adds it to "inputBox"
+	/* constructCaseNumField - creates "caseNumField", makes a FocusListener for it, and adds it to "container"
+	 *           focusGained - clears the default text in "caseNumField"
+	 *             focusLost - does absolutely nothing
 	 */
 	private void constructCaseNumField()
 	{
@@ -77,7 +81,7 @@ public class ScreenNewCase extends JPanel
 				return;
 			}
 		});
-		this.inputBox.add(this.caseNumField);
+		this.container.add(this.caseNumField);
 	}
 	
 	/* constructContinueButton - creates "continueButton" and adds it to "inputBox"
@@ -126,10 +130,10 @@ public class ScreenNewCase extends JPanel
 	    		}
 	    	}
 	    });
-		this.inputBox.add(this.continueButton);
+		this.container.add(this.continueButton);
 	}
 	
-	/* isValidCaseNum - returns a boolean value indicating whether or not the given case number is valid (only letters and numbers)
+	/* isValidCaseNum - returns a boolean value indicating whether or not the given case number is valid (only letters and numbers, at least one character)
 	 *        caseNum - the number to check, input by the user
 	 */
 	private boolean isValidCaseNum(String caseNum)

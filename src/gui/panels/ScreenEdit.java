@@ -1,6 +1,9 @@
+package gui.panels;
 // PEMS (Police Evidence Management System) Version 0.1
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // ScreenStart.java
+
+import gui.FrameManager;
 
 import java.awt.*;
 import java.awt.event.*;
