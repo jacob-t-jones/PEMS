@@ -4,11 +4,13 @@ package gui.panels;
 //ScreenImport.java
 
 import gui.FrameManager;
+import gui.Thumbnail;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.*;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -25,7 +27,7 @@ public class ScreenImport extends JPanel
 	private JButton continueButton;
 	
 	private ImageEditor imgEditor;
-	private ArrayList<BufferedImage> images;
+	private ArrayList<Thumbnail> images;
 	private ArrayList<JLabel> labels;
 	private String directoryName;
 	private Box imgBox;
@@ -65,25 +67,38 @@ public class ScreenImport extends JPanel
 	
 	/* getImages - creates "photoLists" and adds images to the ScreenImport
 	 */
-	private ArrayList<BufferedImage> getImages()
+	private ArrayList<Thumbnail> getImages()
 	{
-		ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
+		//switch to thumbnails 
+		ArrayList<Thumbnail> imageList = new ArrayList<Thumbnail>();
 	    File imageDirectory = new File(this.directoryName);
 		String[] imageFileNames = imageDirectory.list();
 		BufferedImage currentImage = null;
+		String currentPath = new String();
 		for (int i = 0; i < imageFileNames.length; i++)
 		{
+			
 			System.out.println(imageFileNames[i]);
 		    try 
 		    {   
 		    	currentImage = ImageIO.read(new File(imageDirectory + "/" + imageFileNames[i]));
+		    	try
+		    	{
+		    		currentPath = imageDirectory + "/" + imageFileNames[i];
+		    	}
+		    	catch(Exception e)
+		    	{
+		    		System.out.println("Error - Unable to get file location");
+			    	return null;
+		    	}
 		    } 
 		    catch (Exception e)
 		    {
 		    	System.out.println("Error - Unable to read image");
 		    	return null;
 		    }
-		    imageList.add(currentImage);
+		    Thumbnail currentThumb = new Thumbnail(currentImage, currentPath);
+		    imageList.add(currentThumb);
 		}
 	    return imageList;
 	}
