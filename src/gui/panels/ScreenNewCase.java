@@ -84,7 +84,8 @@ public class ScreenNewCase extends JPanel
 		this.container.add(this.caseNumField);
 	}
 	
-	/* constructContinueButton - creates "continueButton" and adds it to "inputBox"
+	/* constructContinueButton - creates "continueButton", makes an ActionListener for it, and adds it to "container"
+	 *         actionPerformed - checks the input case number for validity, and pushes ScreenImport if it is valid
 	 */
 	private void constructContinueButton()
 	{
