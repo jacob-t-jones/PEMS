@@ -22,6 +22,7 @@ public class ScreenStart extends JPanel
 	private JLabel titleLabel;
 	private JLabel nameLabel;
 	private JButton newCaseButton;
+	private JButton editCaseButton;
 	private JButton settingsButton;
 	
 	public ScreenStart(FrameManager manager)
@@ -111,7 +112,9 @@ public class ScreenStart extends JPanel
 	{
 		this.bottomContainer = Box.createHorizontalBox();
 		this.constructNewCaseButton();
-		this.bottomContainer.add(Box.createHorizontalStrut(200));
+		this.bottomContainer.add(Box.createHorizontalStrut(120));		
+		this.constructEditCaseButton();
+		this.bottomContainer.add(Box.createHorizontalStrut(120));
 		this.constructSettingsButton();
 		this.add(this.bottomContainer);
 	}
@@ -130,6 +133,23 @@ public class ScreenStart extends JPanel
             }
 		});
 		this.bottomContainer.add(this.newCaseButton);
+	}
+	
+	/* constructEditCaseButton - creates "editCaseButton", makes an ActionListener for it, and adds it to "bottomContainer"
+	 *         actionPerformed - pushes the ScreenEditCase JPanel into the JFrame
+	 */
+	private void constructEditCaseButton()
+	{
+		this.editCaseButton = new JButton("Edit Existing Case");
+		this.editCaseButton.setAlignmentX(CENTER_ALIGNMENT);
+		this.editCaseButton.addActionListener(new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            	manager.pushPanel(new ScreenAddToExisting(manager), "PEMS - Edit Existing Case");
+            }
+		});
+		this.bottomContainer.add(this.editCaseButton);
 	}
 	
 	/* constructSettingsButton - creates "settingsButton", makes an ActionListener for it, and adds it to "bottomContainer"
