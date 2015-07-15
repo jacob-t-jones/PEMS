@@ -65,7 +65,6 @@ public class ScreenImport extends JPanel
 	 */
 	private ArrayList<Thumbnail> getImages()
 	{
-		//switch to thumbnails 
 		ArrayList<Thumbnail> imageList = new ArrayList<Thumbnail>();
 	    File imageDirectory = new File(this.directoryName);
 		String[] imageFileNames = imageDirectory.list();
@@ -121,14 +120,17 @@ public class ScreenImport extends JPanel
 		return labelList;
 	}
 
-	
+	/* initializedisplayImages - Initialize the displayed images box - contents from the case folder
+	 */
 	private void initializedisplayImages(){
 		this.constructLabel("Select the images you would like to import:");
 		this.displayImages(0);
 	}
 	
-	/* fillRows - fills a new row with 5 new images from our labels list
-	 * *****check to see how many images there are ******
+	/* displayImages - iterate through the images in a case file and display the 
+	 * 				   specified ones on the screen
+	 *      imageNum - the image place holder that specifies which image you would like
+	 *                 to start at when displaying a screen of images
 	 */
 	private void displayImages(int imageNum)
 	{
@@ -166,25 +168,27 @@ public class ScreenImport extends JPanel
 		return;
 	}
 	
-	//break up into an initalize image function and display image func
+	/* initializeSelectedImages - Initialize the selected images box
+	 */
 	private void initializeSelectedImages(){
 		this.constructLabel("Click to remove an image:");
 		this.displaySelectedImages();
 	}
 	
+	/* displaySelectedImages - iterate through the images in a case file and display the 
+	 * 				  		   specified ones on the screen
+	 *      		imageNum - the image place holder that specifies which image you would like
+	 *              		   to start at when displaying a screen of images
+	 */
 	private void displaySelectedImages()
 	{
-		
-		//add selected images to the screen
 		selectedImagePlace = 0;
 		
 		for(int i = 0; i < 15; i++){
 			try
 			{
-				//this.imgBox.setAlignmentX(CENTER_ALIGNMENT);
 				this.selBox.setAlignmentX(CENTER_ALIGNMENT);
 				selBox.add(this.selected.get(this.selectedImagePlace));
-				//selBox.add(Box.createHorizontalStrut(25));
 				selectedImagePlace++;
 			}
 			catch(Exception e){} 
@@ -273,7 +277,7 @@ public class ScreenImport extends JPanel
 		this.add(Box.createVerticalStrut(100));
 		this.createLoadPrevButton();
 		this.add(Box.createVerticalStrut(100));
-		this.constructNewCaseButton();
+		this.constructNextButton();
 		this.add(Box.createVerticalStrut(100));
 		this.createLoadMoreButton();
 		this.add(this.buttonsBox);
@@ -282,7 +286,7 @@ public class ScreenImport extends JPanel
 	
 	/* createNextButton - navigate to the next screen
 	 */
-	private void constructNewCaseButton()
+	private void constructNextButton()
 	{
 		this.nextButton = new JButton("Next");
 		this.nextButton.addActionListener(new ActionListener()
@@ -294,11 +298,15 @@ public class ScreenImport extends JPanel
 		});
 		this.buttonsBox.add(this.nextButton);
 	}
-	
+
+	/* getSelected - return the selected pictures array 
+	 */
 	public ArrayList<JLabel> getSelected(){
 		return this.selected;
 	}
 	
+	/* createLoadPrevButton - Load the previous 15 pictures to display
+	 */
 	private void createLoadPrevButton()
 	{
 		this.loadPrevImagesButton = new JButton("Load Prev");
@@ -313,6 +321,8 @@ public class ScreenImport extends JPanel
 		this.buttonsBox.add(this.loadPrevImagesButton);
 	}
 	
+	/* createLoadMoreButton - Load the next 15 pictures to display
+	 */
 	private void createLoadMoreButton()
 	{
 		this.loadMoreImagesButton = new JButton("Load More");

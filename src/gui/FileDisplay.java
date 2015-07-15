@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -24,14 +23,21 @@ public class FileDisplay extends Box
 		
 	}
 	
+	/* getDirectoryName - return the directory name
+	 */
 	public String getDirectoryName(){
 		return this.directoryName;
 	}
 	
+	/* getFilejpg - return the BufferedImage as an ImageIcon
+	 */
 	public ImageIcon getFilejpg(){
 		return new ImageIcon(this.filejpg);
 	}
 	
+	/* initializeDisplayInfo - obtain the information about the file directory such as 
+	 * the folder.png image and the location of the cases directory
+	 */
 	private void initializeDisplayInfo(){
 		try 
 		{

@@ -45,8 +45,8 @@ public class ScreenNewCase extends JPanel
 	private void constructInstructionsLabel()
 	{
 		this.instructionsLabel = new JLabel("Please enter the case number below:");
-		this.instructionsLabel.setFont(this.manager.STANDARD_TEXT_FONT);
-		this.instructionsLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
+		this.instructionsLabel.setFont(ComponentGenerator.STANDARD_TEXT_FONT);
+		this.instructionsLabel.setForeground(ComponentGenerator.STANDARD_TEXT_COLOR);
 		this.instructionsLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.container.add(this.instructionsLabel);
 	}
@@ -56,8 +56,8 @@ public class ScreenNewCase extends JPanel
 	private void constructErrorLabel()
 	{
 		this.errorLabel = new JLabel("");
-		this.errorLabel.setFont(this.manager.ERROR_TEXT_FONT);
-		this.errorLabel.setForeground(this.manager.ERROR_TEXT_COLOR);
+		this.errorLabel.setFont(ComponentGenerator.ERROR_TEXT_FONT);
+		this.errorLabel.setForeground(ComponentGenerator.ERROR_TEXT_COLOR);
 		this.errorLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.container.add(errorLabel);
 	}

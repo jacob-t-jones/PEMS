@@ -2,6 +2,7 @@ package gui.panels;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public class ScreenAddToExisting extends JPanel
 {
 	private FrameManager manager;
 	private Box container;
+	private File[] fileList;
 	private JLabel selectedCase;
 	private JButton continueButton;
 	
@@ -29,6 +31,19 @@ public class ScreenAddToExisting extends JPanel
 		
 		this.populateContainer();
 		this.manager.setResizable(true);
+	}
+	
+	/* populateContainer - adds components  to thecontainer before displaying it
+	 */
+	private void populateContainer()
+	{
+		this.container = Box.createVerticalBox();
+		this.container.add(Box.createVerticalStrut(40));
+		//below line doesn't add text to the screen
+		this.container.add(ComponentGenerator.generateLabel("Choose a case", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT));;
+		this.container.add(Box.createVerticalStrut(20));
+		this.displayImages(0);
+		this.add(this.container);
 	}
 	
 	private void displayImages(int imageNum)
@@ -44,7 +59,7 @@ public class ScreenAddToExisting extends JPanel
 		col.setAlignmentX(CENTER_ALIGNMENT);
 		
 		File directory = new File("/Users/andrewrottier/Documents/Pictures/");
-		File[] fileList = directory.listFiles();
+		fileList = directory.listFiles();
 		
 		for (File file : fileList) {
 			
@@ -77,17 +92,5 @@ public class ScreenAddToExisting extends JPanel
 		return;
 	}
 	
-	/* populateContainer - adds componenets before displaying it
-	 */
-	private void populateContainer()
-	{
-		this.container = Box.createVerticalBox();
-		this.container.add(Box.createVerticalStrut(20));
-		
-		this.container.add(ComponentGenerator.generateLabel("Choose a case", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR));;
-		this.container.add(Box.createVerticalStrut(20));
-		this.displayImages(0);
-		this.add(this.container);
-	}
 	
 }
