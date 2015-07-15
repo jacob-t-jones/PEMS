@@ -4,7 +4,6 @@
 
 package gui;
 import java.awt.image.*;
-import java.nio.file.*;
 
 public class Thumbnail 
 {

@@ -1,34 +1,28 @@
-package gui.panels;
 //PEMS (Police Evidence Management System) Version 0.1
 //Copyright 2015 - Jacob Jones and Andrew Rottier
 //ScreenImport.java
 
-import gui.FrameManager;
-import gui.Thumbnail;
-
+package gui.panels;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import java.io.File;
-import java.nio.file.*;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
-import tools.ImageEditor;
+import gui.*;
+import tools.*;
 
 public class ScreenImport extends JPanel
 {
 
 	private FrameManager manager;
+	private ArrayList<Thumbnail> images;
+	private ArrayList<JLabel> labels;
 	private String imageDirectoryName;
 	private JLabel instructionsLabel;
 	private JButton continueButton;
-	
 	private ImageEditor imgEditor;
-	private ArrayList<Thumbnail> images;
-	private ArrayList<JLabel> labels;
 	private String directoryName;
 	private Box imgBox;
 	private Box selBox; //selected box

@@ -141,7 +141,6 @@ public class ScreenStart extends JPanel
 	private void constructEditCaseButton()
 	{
 		this.editCaseButton = new JButton("Edit Existing Case");
-		this.editCaseButton.setAlignmentX(CENTER_ALIGNMENT);
 		this.editCaseButton.addActionListener(new ActionListener()
 		{
             public void actionPerformed(ActionEvent e)
