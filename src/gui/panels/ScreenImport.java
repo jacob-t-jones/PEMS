@@ -47,7 +47,7 @@ public class ScreenImport extends JPanel
 		this.manager = manager;
 		this.populateButtonsBox();
 		this.imgEditor = new ImageEditor();
-		this.directoryName = "/Users/andrewrottier/Documents/Pictures/Instagram";
+		this.directoryName = "/Users/andrewrottier/Documents/Pictures/CrimePhotos";
 		this.imagePlace = 0; this.selectedImagePlace = 0;
 		this.images = this.getImages();
 		this.labels = this.fillLabels();
@@ -75,7 +75,7 @@ public class ScreenImport extends JPanel
 		ArrayList<Thumbnail> imageList = new ArrayList<Thumbnail>();
 	    File imageDirectory = new File(this.directoryName);
 		String[] imageFileNames = imageDirectory.list();
-		BufferedImage currentImage = null;
+		BufferedImage currentImage = new BufferedImage(12, 12, 12);
 		String currentPath = new String();
 		for (int i = 0; i < imageFileNames.length; i++)
 		{
@@ -110,9 +110,17 @@ public class ScreenImport extends JPanel
 	private ArrayList<JLabel> fillLabels()
 	{
 		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
+		JLabel newLabel = new JLabel();
 		for (int i = 0; i < this.images.size(); i++)
 		{
-			JLabel newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeThumbnailImage(this.images.get(i), 200)));
+			try
+			{
+				newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeThumbnailImage(this.images.get(i), 200)));
+			}
+			catch(Exception e)
+			{
+				System.out.println("Error - image could not be resized");
+			}
 			newLabel.setAlignmentX(CENTER_ALIGNMENT);
 			labelList.add(newLabel);
 		}
@@ -157,6 +165,7 @@ public class ScreenImport extends JPanel
 			row.setAlignmentX(CENTER_ALIGNMENT);
 			this.imgBox.add(row);
 		}
+		imagePlace = imageNum; //reset back to original param to avoid errors w next/prev buttons
 		this.add(this.imgBox);
 		revalidate();
 		repaint();

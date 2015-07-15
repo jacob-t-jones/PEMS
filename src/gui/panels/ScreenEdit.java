@@ -125,7 +125,15 @@ public class ScreenEdit extends JPanel{
 		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
 		for (int i = 0; i < this.images.size(); i++)
 		{
-			JLabel newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeFullImage(this.images.get(i), 150, 200)));
+			JLabel newLabel = new JLabel("NULL");
+			try
+			{
+				newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeFullImage(this.images.get(i), 150, 200)));
+			}
+			catch (Exception e)
+			{
+				
+			}
 			newLabel.setAlignmentX(CENTER_ALIGNMENT);
 			labelList.add(newLabel);
 		}
