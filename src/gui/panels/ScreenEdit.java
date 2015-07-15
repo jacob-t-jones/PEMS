@@ -46,7 +46,7 @@ public class ScreenEdit extends JPanel{
 		
 		this.stageBox = Box.createVerticalBox();
 		this.selBox = Box.createHorizontalBox();
-		this.selBox.setBorder(BorderFactory.createLineBorder(Color.black));
+		//this.selBox.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		this.initializeSelectedImages();
 		

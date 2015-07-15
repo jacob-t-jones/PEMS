@@ -34,6 +34,8 @@ public class ScreenImport extends JPanel
 	private Box selBox; //selected box
 	private Box buttonsBox;
 	private JButton nextButton;
+	private JButton loadMoreImagesButton;
+	private JButton loadPrevImagesButton;
 	private JButton prevButton;
 	private int imagePlace;
 	private int selectedImagePlace;
@@ -45,7 +47,7 @@ public class ScreenImport extends JPanel
 		this.manager = manager;
 		this.populateButtonsBox();
 		this.imgEditor = new ImageEditor();
-		this.directoryName = "/Users/andrewrottier/Documents/Pictures/SamplePictures";
+		this.directoryName = "/Users/andrewrottier/Documents/Pictures/Instagram";
 		this.imagePlace = 0; this.selectedImagePlace = 0;
 		this.images = this.getImages();
 		this.labels = this.fillLabels();
@@ -120,18 +122,20 @@ public class ScreenImport extends JPanel
 	
 	private void initializedisplayImages(){
 		this.constructLabel("Select the images you would like to import:");
-		this.displayImages();
+		this.displayImages(0);
 	}
 	
 	/* fillRows - fills a new row with 5 new images from our labels list
 	 * *****check to see how many images there are ******
 	 */
-	private void displayImages()
+	private void displayImages(int imageNum)
 	{
-		
+		this.imgBox.removeAll();
+		this.remove(this.imgBox);
+		this.repaint();
+		this.revalidate();
 		//add the images on the camera to the screen
-		imagePlace = 0;
-		
+		imagePlace = imageNum;
 		for (int i = 0; i < 3; i++)
 		{
 			Box row = Box.createHorizontalBox();
@@ -140,6 +144,7 @@ public class ScreenImport extends JPanel
 				try
 				{
 					row.add(this.labels.get(this.imagePlace));
+					System.out.println(imagePlace);
 					imagePlace++;
 				}
 				catch (Exception e)
@@ -201,7 +206,7 @@ public class ScreenImport extends JPanel
 					{
 						labels.add(currentLabel);
 						selected.remove(currentLabel);
-						displayImages();
+						displayImages(imagePlace);
 						//constructLabel("Click to remove an image:");
 						displaySelectedImages();
 					}
@@ -209,7 +214,7 @@ public class ScreenImport extends JPanel
 					{
 						selected.add(currentLabel);
 						labels.remove(currentLabel);
-						displayImages();
+						displayImages(imagePlace);
 						//constructLabel("Click to remove an image:");
 						displaySelectedImages();
 					}
@@ -263,7 +268,11 @@ public class ScreenImport extends JPanel
 		this.buttonsBox = Box.createHorizontalBox();
 		this.buttonsBox.setAlignmentX(CENTER_ALIGNMENT);
 		this.add(Box.createVerticalStrut(100));
+		this.createLoadPrevButton();
+		this.add(Box.createVerticalStrut(100));
 		this.constructNewCaseButton();
+		this.add(Box.createVerticalStrut(100));
+		this.createLoadMoreButton();
 		this.add(this.buttonsBox);
 		this.buttonsBox.setLocation(600, 700);
 	}
@@ -285,6 +294,34 @@ public class ScreenImport extends JPanel
 	
 	public ArrayList<JLabel> getSelected(){
 		return this.selected;
+	}
+	
+	private void createLoadPrevButton()
+	{
+		this.loadPrevImagesButton = new JButton("Load Prev");
+		this.loadPrevImagesButton.addActionListener(new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            	if(imagePlace > 0)
+            		displayImages(imagePlace-15);
+            }
+		});
+		this.buttonsBox.add(this.loadPrevImagesButton);
+	}
+	
+	private void createLoadMoreButton()
+	{
+		this.loadMoreImagesButton = new JButton("Load More");
+		this.loadMoreImagesButton.addActionListener(new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            	if(imagePlace < labels.size())
+            		displayImages(imagePlace+15);
+            }
+		});
+		this.buttonsBox.add(this.loadMoreImagesButton);
 	}
 	
 	private void createPrevButton()
