@@ -1,6 +1,7 @@
 package gui.panels;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -12,24 +13,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import gui.*;
-import gui.FrameManager;
 
 public class ScreenAddToExisting extends JPanel
 {
 	private FrameManager manager;
 	private Box container;
-	private JLabel instructionsLabel;
 	private JLabel selectedCase;
 	private JButton continueButton;
-	private int imagePlace;
-	private ArrayList<JLabel> cases;
-	private ArrayList<FileDisplay> folders;
 	
 	public ScreenAddToExisting(FrameManager manager) 
 	{
 		this.manager = manager;
 		this.container = Box.createVerticalBox();
 		this.container.setBorder(BorderFactory.createLineBorder(Color.black));
+		
 		this.populateContainer();
 		this.manager.setResizable(true);
 	}
@@ -43,6 +40,7 @@ public class ScreenAddToExisting extends JPanel
 		
 		//imagePlace = imageNum;
 		Box col = Box.createVerticalBox();
+		
 		col.setAlignmentX(CENTER_ALIGNMENT);
 		
 		File directory = new File("/Users/andrewrottier/Documents/Pictures/");
@@ -62,13 +60,12 @@ public class ScreenAddToExisting extends JPanel
 	        	row.add(tempLabel);
 	        	row.add(tempFileName);
 	        	row.setAlignmentX(LEFT_ALIGNMENT);
-				
 	        	
 	        	col.add(row);
 	        	col.add(Box.createVerticalStrut(10));
 	        
 	        } else if (file.isFile()) {
-	        	System.out.println("Other file: " + file);
+	        	//System.out.println("Other file: " + file);
 	        }
 	    }
 		this.container.add(col);
@@ -86,21 +83,11 @@ public class ScreenAddToExisting extends JPanel
 	{
 		this.container = Box.createVerticalBox();
 		this.container.add(Box.createVerticalStrut(20));
-		this.constructLabel("Choose a case");
+		
+		this.container.add(ComponentGenerator.generateLabel("Choose a case", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR));;
 		this.container.add(Box.createVerticalStrut(20));
 		this.displayImages(0);
-		//this.container.add(Box.createVerticalStrut(40));
-		//this.createAddToExistingButton();
 		this.add(this.container);
 	}
 	
-	private void constructLabel(String text)
-	{
-		this.instructionsLabel = new JLabel(text);
-		this.instructionsLabel.setFont(ComponentGenerator.STANDARD_TEXT_FONT);
-		this.instructionsLabel.setForeground(ComponentGenerator.STANDARD_TEXT_COLOR);
-		this.instructionsLabel.setAlignmentX(LEFT_ALIGNMENT);
-		this.instructionsLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.container.add(this.instructionsLabel);
-	}
 }
