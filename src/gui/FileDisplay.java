@@ -8,6 +8,8 @@ import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 
+import tools.ImageEditor;
+
 
 
 public class FileDisplay extends Box
@@ -33,7 +35,8 @@ public class FileDisplay extends Box
 	private void initializeDisplayInfo(){
 		try 
 		{
-			this.filejpg = ImageIO.read(new File("/Users/andrewrottier/Documents/Pictures/folder.jpg"));
+			this.filejpg = ImageIO.read(new File("/Users/andrewrottier/Documents/Pictures/folder.png"));
+			ImageEditor.resizeThumbnailImage(filejpg, 20);
 			try
 			{
 				directoryName = "/Users/andrewrottier/Documents/Pictures/";
