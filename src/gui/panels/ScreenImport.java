@@ -337,8 +337,6 @@ public class ScreenImport extends JPanel
 	{
 		
 	}
-	
-	
-	
+		
 
 }

@@ -82,14 +82,7 @@ public class ImageEditor
 	 */
 	public static BufferedImage resizeThumbnailImage(Thumbnail image, int size)
 	{
-		try
-		{
 			return Scalr.resize(image.getImage(), Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
 	}
 	
 	/* rotateRight90 - rotates an image right by 90 degrees
