@@ -109,7 +109,7 @@ public class ScreenImport extends JPanel
 		{
 			try
 			{
-				newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeThumbnailImage(this.images.get(i), 200)));
+				newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeImage(this.images.get(i).getImage(), 200)));
 			}
 			catch(Exception e)
 			{
@@ -257,8 +257,8 @@ public class ScreenImport extends JPanel
 	private void constructLabel(String text)
 	{
 		this.displayLabel = new JLabel(text);
-		this.displayLabel.setFont(this.manager.STANDARD_TEXT_FONT);
-		this.displayLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
+		this.displayLabel.setFont(ComponentGenerator.STANDARD_TEXT_FONT);
+		this.displayLabel.setForeground(ComponentGenerator.STANDARD_TEXT_COLOR);
 		this.displayLabel.setAlignmentX(LEFT_ALIGNMENT);
 		this.displayLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.imgBox.add(this.displayLabel);

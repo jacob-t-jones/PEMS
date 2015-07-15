@@ -36,7 +36,7 @@ public class FileDisplay extends Box
 		try 
 		{
 			this.filejpg = ImageIO.read(new File("/Users/andrewrottier/Documents/Pictures/folder.png"));
-			ImageEditor.resizeThumbnailImage(filejpg, 20);
+			filejpg = ImageEditor.resizeImage(filejpg, 15);
 			try
 			{
 				directoryName = "/Users/andrewrottier/Documents/Pictures/";

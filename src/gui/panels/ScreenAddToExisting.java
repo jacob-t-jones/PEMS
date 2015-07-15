@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import gui.FileDisplay;
+import gui.*;
 import gui.FrameManager;
 
 public class ScreenAddToExisting extends JPanel
@@ -61,7 +61,7 @@ public class ScreenAddToExisting extends JPanel
 	        	Box row = Box.createHorizontalBox();
 	        	row.add(tempLabel);
 	        	row.add(tempFileName);
-	        	row.setAlignmentX(CENTER_ALIGNMENT);
+	        	row.setAlignmentX(LEFT_ALIGNMENT);
 				
 	        	
 	        	col.add(row);
@@ -97,8 +97,8 @@ public class ScreenAddToExisting extends JPanel
 	private void constructLabel(String text)
 	{
 		this.instructionsLabel = new JLabel(text);
-		this.instructionsLabel.setFont(this.manager.STANDARD_TEXT_FONT);
-		this.instructionsLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
+		this.instructionsLabel.setFont(ComponentGenerator.STANDARD_TEXT_FONT);
+		this.instructionsLabel.setForeground(ComponentGenerator.STANDARD_TEXT_COLOR);
 		this.instructionsLabel.setAlignmentX(LEFT_ALIGNMENT);
 		this.instructionsLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.container.add(this.instructionsLabel);

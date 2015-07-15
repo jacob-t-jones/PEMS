@@ -79,7 +79,7 @@ public class ScreenStart extends JPanel
 			System.out.println("Error - Unable to find logo");
 			return;
 	    }
-	    this.logoLabel = new JLabel(new ImageIcon(ImageEditor.resizeFullImage(logoImage, 200, 200)));
+	    this.logoLabel = new JLabel(new ImageIcon(ImageEditor.resizeImage(logoImage, 200, 200)));
 	    this.logoLabel.setAlignmentX(CENTER_ALIGNMENT);
 	    this.topContainer.add(this.logoLabel);
 	}
@@ -89,8 +89,8 @@ public class ScreenStart extends JPanel
 	private void constructTitleLabel()
 	{
 		this.titleLabel = new JLabel("Police Evidence Management System");
-		this.titleLabel.setFont(this.manager.TITLE_FONT);
-		this.titleLabel.setForeground(this.manager.TITLE_COLOR);
+		this.titleLabel.setFont(ComponentGenerator.TITLE_FONT);
+		this.titleLabel.setForeground(ComponentGenerator.TITLE_COLOR);
 	    this.titleLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.topContainer.add(this.titleLabel);
 	}
@@ -100,8 +100,8 @@ public class ScreenStart extends JPanel
 	private void constructNameLabel()
 	{
 		this.nameLabel = new JLabel(this.manager.getConfiguration().getDepartmentName());
-		this.nameLabel.setFont(this.manager.SUBTITLE_FONT);
-		this.nameLabel.setForeground(this.manager.SUBTITLE_COLOR);
+		this.nameLabel.setFont(ComponentGenerator.SUBTITLE_FONT);
+		this.nameLabel.setForeground(ComponentGenerator.SUBTITLE_COLOR);
 	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
 		this.topContainer.add(this.nameLabel);
 	}
