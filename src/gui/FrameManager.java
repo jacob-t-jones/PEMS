@@ -1,18 +1,12 @@
-package gui;
 // PEMS (Police Evidence Management System) Version 0.1
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // FrameManager.java
 
+package gui;
+import java.awt.*;
+import javax.swing.*;
 import gui.panels.*;
 import tools.*;
-import java.awt.*;
-<<<<<<< HEAD:src/gui/FrameManager.java
-=======
-import java.util.ArrayList;
-
->>>>>>> origin/master:src/FrameManager.java
-import javax.swing.*;
-import tools.Config;
 
 public class FrameManager 
 {
