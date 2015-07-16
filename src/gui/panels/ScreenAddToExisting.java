@@ -30,7 +30,8 @@ public class ScreenAddToExisting extends JPanel
 	private File[] fileList;
 	private String filePath;
 	private ActionListener continueAction;
-	private ArrayList<JLabel> fileButtons;
+	private ArrayList<JLabel> fileButtons = new ArrayList<JLabel>();
+	
 	private JLabel selectedCase;
 	private JButton continueButton;
 	private int caseNumField;
@@ -42,6 +43,7 @@ public class ScreenAddToExisting extends JPanel
 		//this.container.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		this.populateContainer();
+		generateListeners();
 		this.manager.setResizable(true);
 	}
 	
@@ -82,7 +84,7 @@ public class ScreenAddToExisting extends JPanel
 	        	//convert the folder image and name to jlabels
 	        	FileDisplay tempFolder = new FileDisplay(1);
 	        	JLabel tempLabel = new JLabel(tempFolder.getFilejpg());
-	        	fileButtons.add(tempLabel); //make the folder a click-able button
+	        	this.fileButtons.add(tempLabel); //make the folder a click-able button
 	        	JLabel tempFilePath = new JLabel("" + file);
 	        	
 	        	filePath = file.getAbsolutePath(); //
