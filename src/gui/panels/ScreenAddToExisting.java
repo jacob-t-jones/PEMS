@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.*;
 
 import javax.imageio.ImageIO;
 
@@ -24,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import tools.ImageEditor;
 import gui.*;
 
 public class ScreenAddToExisting extends JPanel
@@ -54,7 +56,7 @@ public class ScreenAddToExisting extends JPanel
 	 */
 	private void populateContainer() throws IOException
 	{
-		this.container = Box.createVerticalBox();
+		this.container = Box.createHorizontalBox();
 		this.container.add(Box.createVerticalStrut(40));
 		//below line doesn't add text to the screen
 		this.container.add(Box.createVerticalStrut(20));
@@ -65,6 +67,8 @@ public class ScreenAddToExisting extends JPanel
 	
 	/* displayImages - gets the folders from the cases directory and display them on screen
 	 *      imageNum - the number of folders to be displayed on the screen at one time
+	 * WARNING - when truncating the path of the directories, will need to replace location with location
+	 *           on police computers!
 	 */
 	private void displayImages(int imageNum) throws IOException
 	{
@@ -75,13 +79,13 @@ public class ScreenAddToExisting extends JPanel
 		
 		this.container.add(ComponentGenerator.generateLabel("Choose a case", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT));
 		
-		//imagePlace = imageNum;
 		Box col = Box.createVerticalBox();
 		
-		col.setAlignmentX(CENTER_ALIGNMENT);
+		col.setAlignmentX(LEFT_ALIGNMENT);
 		
 		File directory = new File("/Users/andrewrottier/Documents/Pictures/");
 		fileList = directory.listFiles();
+		int numberOfFiles = fileList.length;
 		
 		for (File file : fileList) {
 			
@@ -94,18 +98,39 @@ public class ScreenAddToExisting extends JPanel
 	        	catch(Exception e){
 	        		System.out.println("Error - the folder image does not exist in the folder");
 	        	}
+	        	tempLabel.setImage(ImageEditor.resizeImage(tempLabel.getImage(), 20));
 	        	this.fileButtons.add(tempLabel);//construct or list of thumbnails to later turn to buttons
 	        	
 	        	//create the row and add elements to it
 	        	Box row = Box.createHorizontalBox();
 	        	row.addMouseListener(this.generateThumbnailListener(tempLabel));
-	        	
 	        	row.add(ComponentGenerator.generateLabel(tempLabel.getImage()));
-	        	row.add(ComponentGenerator.generateLabel(tempLabel.getFileLocation(), ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR));
+	        	
+	        	//truncate off the beginning of the path so more directories can fit the screen
+	        	int endOfCase = tempLabel.getFileLocation().length();
+	        	int startOfCase = tempLabel.getFileLocation().indexOf("Pictures/")+9; //replace with cases once on police computers!!!!!
+	        	String displayCaseName = tempLabel.getFileLocation().substring(startOfCase, endOfCase);
+	        	
+	        	row.add(ComponentGenerator.generateLabel(displayCaseName, ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR));
 	        	row.setAlignmentX(LEFT_ALIGNMENT);
 	        	
-	        	col.add(row);
-	        	col.add(Box.createVerticalStrut(10));
+	        	//working on making columns
+	        	int onLine = 0;
+	        	for(int i = 0; i < numberOfFiles; i++){
+	        		if(onLine < 10){
+	        			col.add(row);
+	        			col.add(Box.createVerticalStrut(10));
+	        			onLine++;
+	        		}
+	        		else{
+	        			//Box col2 = Box.createVerticalBox();
+	        			onLine = 0;
+	        			
+	        		}
+	        	}
+	        	
+	        	//col.add(row);
+	        	//col.add(Box.createVerticalStrut(10));
 	        
 	        } else if (file.isFile()) {
 	        	//System.out.println("Other file: " + file);
