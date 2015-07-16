@@ -6,7 +6,9 @@ package gui.panels;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
+
 import javax.swing.*;
+
 import gui.*;
 
 public class ScreenNewCase extends JPanel
@@ -20,6 +22,7 @@ public class ScreenNewCase extends JPanel
 	private JLabel errorLabel;
 	private JTextField caseNumField;
 	private JButton continueButton;
+	private String filePath;
 	
 	public ScreenNewCase(FrameManager manager) 
 	{
@@ -28,53 +31,10 @@ public class ScreenNewCase extends JPanel
 		this.populateContainer();
 	}
 	
-<<<<<<< HEAD
-	/* populateContainer - adds "instructionsLabel", "errorLabel", "caseNumField", and "continueButton" to "container" before displaying it
-	 */
-	private void populateContainer()
-	{
-		this.container = Box.createVerticalBox();
-		this.container.add(Box.createVerticalStrut(20));
-		this.constructInstructionsLabel();
-		this.container.add(Box.createVerticalStrut(10));
-		this.constructErrorLabel();
-		this.container.add(Box.createVerticalStrut(50));
-		this.constructCaseNumField();
-		this.container.add(Box.createVerticalStrut(80));
-		this.constructContinueButton();
-		this.add(this.container);
-	}
-	
-	/* constructInstructionsLabel - creates "instructionsLabel", sets its font and alignment, and adds it to "container"
-	 */
-	private void constructInstructionsLabel()
-	{
-		this.instructionsLabel = new JLabel("Please enter the case number below:");
-		this.instructionsLabel.setFont(ComponentGenerator.STANDARD_TEXT_FONT);
-		this.instructionsLabel.setForeground(ComponentGenerator.STANDARD_TEXT_COLOR);
-		this.instructionsLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.container.add(this.instructionsLabel);
-	}
-	
-	/* constructErrorLabel - creates "errorLabel", sets its font and alignment, and adds it to "container"
-	 */
-	private void constructErrorLabel()
-	{
-		this.errorLabel = new JLabel("");
-		this.errorLabel.setFont(ComponentGenerator.ERROR_TEXT_FONT);
-		this.errorLabel.setForeground(ComponentGenerator.ERROR_TEXT_COLOR);
-		this.errorLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.container.add(errorLabel);
-	}
-	
-	/* constructCaseNumField - creates "caseNumField", makes a FocusListener for it, and adds it to "container"
-	 *           focusGained - clears the default text in "caseNumField"
-	 *             focusLost - does absolutely nothing
-=======
+
 	/* generateListeners - initializes listeners for all of the components within the JPanel
 	 *    continueAction - attempts to create a directory for the user specified case number
 	 *      caseNumFocus - clears the text within "caseNumField" upon said component coming into focus
->>>>>>> origin/master
 	 */
 	private void generateListeners()
 	{
@@ -87,6 +47,7 @@ public class ScreenNewCase extends JPanel
 	    			boolean isDirectory = Files.isDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
 	    			if (!isDirectory)
 	    			{
+	    				filePath = "cases/" + caseNumField.getText() + "/";
 	    				try
 	    				{
 	    					Files.createDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
@@ -97,7 +58,7 @@ public class ScreenNewCase extends JPanel
 	    					e1.printStackTrace();
 	    					return;
 	    				}
-	    	    		manager.pushPanel(new ScreenImport(manager), "PEMS - Import Images");
+	    	    		manager.pushPanel(new ScreenImport(manager, filePath), "PEMS - Import Images");
 	    			}
 	    			else
 	    			{

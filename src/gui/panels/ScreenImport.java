@@ -7,9 +7,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import gui.*;
 import tools.*;
 
@@ -32,10 +35,10 @@ public class ScreenImport extends JPanel
 	private int displayedImagePlace;
 	private int selectedImagePlace;
 
-	public ScreenImport(FrameManager manager)
+	public ScreenImport(FrameManager manager, String filePath)
 	{
 		this.manager = manager;
-		this.directoryName = "/Users/Jacob/Documents/Pics";
+		this.directoryName = "/Users/andrewrottier/Documents/Pictures/";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.thumbnails = this.getThumbnails();
@@ -54,7 +57,7 @@ public class ScreenImport extends JPanel
 	
 	/* getThumbnails - fills "thumbnails" by importing images into memory
 	 */
-<<<<<<< HEAD
+
 	private ArrayList<Thumbnail> getImages()
 	{
 		ArrayList<Thumbnail> imageList = new ArrayList<Thumbnail>();
@@ -62,15 +65,18 @@ public class ScreenImport extends JPanel
 		String[] imageFileNames = imageDirectory.list();
 		BufferedImage currentImage = new BufferedImage(12, 12, 12);
 		String currentPath = new String();
-		for (int i = 0; i < imageFileNames.length; i++)
-=======
+		for (int i = 0; i < imageFileNames.length; i++){
+			
+		}
+	}
+	
 	private ArrayList<Thumbnail> getThumbnails()
 	{ 
 		ArrayList<Thumbnail> thumbnailList = new ArrayList<Thumbnail>();
 	    File directory = new File(this.directoryName);
 		String[] fileNames = directory.list();
 		for (int i = 0; i < fileNames.length; i++)
->>>>>>> origin/master
+
 		{
 			String currentFileName = fileNames[i];
 			if (this.validateExtension(currentFileName))
@@ -106,7 +112,7 @@ public class ScreenImport extends JPanel
 		}
 		return labelList;
 	}
-<<<<<<< HEAD
+
 
 	/* initializedisplayImages - Initialize the displayed images box - contents from the case folder
 	 */
@@ -119,10 +125,8 @@ public class ScreenImport extends JPanel
 	 * 				   specified ones on the screen
 	 *      imageNum - the image place holder that specifies which image you would like
 	 *                 to start at when displaying a screen of images
-=======
 	
 	/* refreshDisplayedLabels - refreshes the JLabels displayed on the screen
->>>>>>> origin/master
 	 */
 	private void refreshDisplayedLabels(int displayedImagePlace)
 	{
@@ -150,7 +154,7 @@ public class ScreenImport extends JPanel
 			}
 			this.displayedBox.add(row);
 		}
-<<<<<<< HEAD
+
 		imagePlace = imageNum; //reset back to original param to avoid errors w next/prev buttons
 		this.add(this.imgBox);
 		revalidate();
@@ -163,12 +167,12 @@ public class ScreenImport extends JPanel
 	private void initializeSelectedImages(){
 		this.constructLabel("Click to remove an image:");
 		this.displaySelectedImages();
-=======
+
 		this.displayedImagePlace = displayedImagePlace;
 		this.add(this.displayedBox);
 		this.revalidate();
 		this.repaint();
->>>>>>> origin/master
+
 	}
 	
 	/* displaySelectedImages - iterate through the images in a case file and display the 
@@ -178,7 +182,7 @@ public class ScreenImport extends JPanel
 	 */
 	private void displaySelectedImages()
 	{
-<<<<<<< HEAD
+
 		selectedImagePlace = 0;
 		
 		for(int i = 0; i < 15; i++){
@@ -186,7 +190,7 @@ public class ScreenImport extends JPanel
 			{
 				this.selBox.setAlignmentX(CENTER_ALIGNMENT);
 				selBox.add(this.selected.get(this.selectedImagePlace));
-=======
+
 		this.selectedImagePlace = 0;	
 		this.selectedBox.setAlignmentX(CENTER_ALIGNMENT);
 		for (int i = 0; i < 15; i++)
@@ -194,7 +198,6 @@ public class ScreenImport extends JPanel
 			if (this.selectedImagePlace < this.selectedLabels.size())
 			{
 				selectedBox.add(this.selectedLabels.get(this.selectedImagePlace));
->>>>>>> origin/master
 				selectedImagePlace++;
 			}
 		}
