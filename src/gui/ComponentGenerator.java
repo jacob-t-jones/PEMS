@@ -180,5 +180,17 @@ public class ComponentGenerator
 		newTextField.setAlignmentY(alignmentY);
 		return newTextField;
 	}
+	
+	/* generateTextField - creates and returns a JTextField that complies with the parameters
+	 *              text - the default text displayed in the field
+	 *             focus - the action to execute when the field comes into focus
+	 *        alignmentX - the horizontal alignment of the field
+	 *        alignmentY - the vertical alignment of the field
+	 */
+	public static Thumbnail generateThumbnail(BufferedImage image, String pathName)
+	{
+		Thumbnail newThumb = new Thumbnail(image, pathName);
+		return newThumb;
+	}
 
 }

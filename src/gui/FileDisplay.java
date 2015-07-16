@@ -29,10 +29,16 @@ public class FileDisplay extends Box
 		return this.directoryName;
 	}
 	
-	/* getFilejpg - return the BufferedImage as an ImageIcon
+	/* getFileIcon - return the BufferedImage as an ImageIcon
 	 */
-	public ImageIcon getFilejpg(){
+	public ImageIcon getFileIcon(){
 		return new ImageIcon(this.filejpg);
+	}
+	
+	/* getFile - return the BufferedImage as an ImageIcon
+	 */
+	public BufferedImage getFile(){
+		return this.filejpg;
 	}
 	
 	/* initializeDisplayInfo - obtain the information about the file directory such as 

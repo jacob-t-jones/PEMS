@@ -42,7 +42,7 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager, String filePath)
 	{
 		this.manager = manager;
-		this.directoryName = "/Users/Jacob/Documents/Pics";
+		this.directoryName = filePath;
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.thumbnails = this.getThumbnails();
