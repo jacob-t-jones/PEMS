@@ -23,12 +23,17 @@ public class ScreenImport extends JPanel
 	private ActionListener loadNextAction;
 	private ActionListener loadPrevAction;
 	private ActionListener continueAction;
+	private ActionListener loadNextSelectedAction;
+	private ActionListener loadPrevSelectedAction;
+	private Box container;
 	private Box imageContainer;
 	private Box displayedContainer;
 	private Box selectedContainer; 
 	private Box buttonsContainer;
 	private JButton loadNextButton;
 	private JButton loadPrevButton;
+	private JButton loadNextSelectedButton;
+	private JButton loadPrevSelectedButton;
 	private JButton continueButton;
 	private String directoryName;
 	private int displayedImagePlace;
@@ -43,18 +48,20 @@ public class ScreenImport extends JPanel
 		this.thumbnails = this.getThumbnails();
 		this.displayedLabels = this.getDisplayedLabels();
 		this.selectedLabels = new ArrayList<JLabel>();
+		this.container = Box.createVerticalBox();
 		this.imageContainer = Box.createHorizontalBox();
 		this.displayedContainer = Box.createVerticalBox();
 		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.selectedContainer = Box.createVerticalBox();
 		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.refreshDisplayedLabels(0);
-		this.refreshSelectedLabels();
 		this.generateListeners();
+		this.refreshDisplayedLabels(0);
+		this.refreshSelectedLabels(0);
+		this.container.add(this.imageContainer);
 		this.populateButtonsContainer();
-		this.add(this.imageContainer);
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
+		this.add(container);
 	}
 	
 	private void generateListeners()
@@ -86,6 +93,26 @@ public class ScreenImport extends JPanel
             	manager.pushPanel(new ScreenEdit(manager, thumbnails, selectedLabels), "PEMS - Edit Photos");
             }
 		};
+		this.loadNextSelectedAction = new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            	if (selectedImagePlace < selectedLabels.size())
+            	{
+            		refreshSelectedLabels(selectedImagePlace + 3);
+            	}
+            }
+		};
+		this.loadPrevSelectedAction = new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            	if (selectedImagePlace >= 3)
+            	{
+            		refreshSelectedLabels(selectedImagePlace - 3);
+            	}
+            }
+		};
 	}
 	
 	private MouseListener generateLabelSelectionListener(final JLabel selectedLabel)
@@ -99,14 +126,14 @@ public class ScreenImport extends JPanel
 					displayedLabels.add(selectedLabel);
 					selectedLabels.remove(selectedLabel);
 					refreshDisplayedLabels(displayedImagePlace);
-					refreshSelectedLabels();
+					refreshSelectedLabels(selectedImagePlace);
 				}
 				else if (displayedLabels.contains(selectedLabel))
 				{
 					selectedLabels.add(selectedLabel);
 					displayedLabels.remove(selectedLabel);
 					refreshDisplayedLabels(displayedImagePlace);
-					refreshSelectedLabels();
+					refreshSelectedLabels(selectedImagePlace);
 				}
 			}
 			public void mousePressed(MouseEvent e) 
@@ -167,7 +194,7 @@ public class ScreenImport extends JPanel
 		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
 		for (int i = 0; i < this.thumbnails.size(); i++)
 		{
-			JLabel newLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.thumbnails.get(i).getImage(), 200), CENTER_ALIGNMENT);
+			JLabel newLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.thumbnails.get(i).getImage(), 150), CENTER_ALIGNMENT);
 			newLabel.addMouseListener(generateLabelSelectionListener(newLabel));
 			labelList.add(newLabel);
 		}
@@ -196,33 +223,41 @@ public class ScreenImport extends JPanel
 				}
 				else
 				{
-					row.add(Box.createHorizontalStrut(150));
+					//row.add(Box.createHorizontalStrut(150));
 				}
-				row.add(Box.createHorizontalStrut(25));
+				//row.add(Box.createHorizontalStrut(25));
 			}
 			this.displayedContainer.add(row);
 		}
 		this.displayedImagePlace = displayedImagePlace;
 		this.imageContainer.add(this.displayedContainer);
-		this.imageContainer.add(Box.createHorizontalStrut(20));
+		//this.imageContainer.add(Box.createHorizontalStrut(20));
 		this.revalidate();
 		this.repaint();
 	}
 	
 	/* refreshSelectedLabels - refreshes the JLabels placed in "selectedContainer" by the user
 	 */
-	private void refreshSelectedLabels()
+	private void refreshSelectedLabels(int selectedImagePlace)
 	{
-		this.selectedImagePlace = 0;	
-		this.selectedContainer.setAlignmentX(CENTER_ALIGNMENT);
-		for (int i = 0; i < 15; i++)
+	    this.loadNextSelectedButton = ComponentGenerator.generateButton("Prev", this.loadNextSelectedAction, CENTER_ALIGNMENT);
+		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Next", this.loadPrevSelectedAction, CENTER_ALIGNMENT);
+		this.selectedContainer.removeAll();
+		this.remove(this.selectedContainer);
+		this.revalidate();
+		this.repaint();
+		this.selectedImagePlace = selectedImagePlace;
+		this.selectedContainer.add(this.loadPrevSelectedButton);
+		for (int i = 0; i < 3; i++)
 		{
 			if (this.selectedImagePlace < this.selectedLabels.size())
 			{
-				selectedContainer.add(this.selectedLabels.get(this.selectedImagePlace));
-				selectedImagePlace++;
+				this.selectedContainer.add(this.selectedLabels.get(this.selectedImagePlace));
+				this.selectedImagePlace++;
 			}
 		}
+		this.selectedContainer.add(this.loadNextSelectedButton);
+		this.selectedImagePlace = selectedImagePlace;
 		this.imageContainer.add(this.selectedContainer);
 	}
 	
@@ -258,7 +293,7 @@ public class ScreenImport extends JPanel
 		this.buttonsContainer.add(this.continueButton);
 		this.buttonsContainer.add(Box.createVerticalStrut(100));
 		this.buttonsContainer.add(this.loadNextButton);
-		this.add(this.buttonsContainer);
+		this.container.add(this.buttonsContainer);
 		this.buttonsContainer.setLocation(600, 700);
 	}
 		
