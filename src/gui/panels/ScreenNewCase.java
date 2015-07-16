@@ -6,7 +6,9 @@ package gui.panels;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
+
 import javax.swing.*;
+
 import gui.*;
 
 public class ScreenNewCase extends JPanel
@@ -20,6 +22,7 @@ public class ScreenNewCase extends JPanel
 	private JLabel errorLabel;
 	private JTextField caseNumField;
 	private JButton continueButton;
+	private String filePath;
 	
 	public ScreenNewCase(FrameManager manager) 
 	{
@@ -28,6 +31,10 @@ public class ScreenNewCase extends JPanel
 		this.populateContainer();
 	}
 	
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 	/* generateListeners - initializes listeners for all of the components within the JPanel
 	 *    continueAction - attempts to create a directory for the user specified case number
 	 *      caseNumFocus - clears the text within "caseNumField" upon said component coming into focus
@@ -43,6 +50,7 @@ public class ScreenNewCase extends JPanel
 	    			boolean isDirectory = Files.isDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
 	    			if (!isDirectory)
 	    			{
+	    				filePath = "cases/" + caseNumField.getText() + "/";
 	    				try
 	    				{
 	    					Files.createDirectory(Paths.get("cases/" + caseNumField.getText() + "/"));
@@ -53,7 +61,11 @@ public class ScreenNewCase extends JPanel
 	    					e1.printStackTrace();
 	    					return;
 	    				}
+<<<<<<< HEAD
 	    	    		manager.pushPanel(new ScreenImport(manager, null), "PEMS - Import Images");
+=======
+	    	    		manager.pushPanel(new ScreenImport(manager, filePath), "PEMS - Import Images");
+>>>>>>> origin/master
 	    			}
 	    			else
 	    			{

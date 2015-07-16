@@ -3,9 +3,13 @@
 // Thumbnail.java
 
 package gui;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.*;
 
-public class Thumbnail 
+import javax.swing.JLabel;
+
+public class Thumbnail extends JLabel implements ActionListener
 {
 
 	private BufferedImage image;
@@ -34,7 +38,7 @@ public class Thumbnail
 	
 	/* getLocation - returns "location", the file system path associated with the thumbnail
 	 */
-	public String getLocation()
+	public String getFileLocation()
 	{
 		return this.location;
 	}
@@ -45,6 +49,12 @@ public class Thumbnail
 	public void setLocation(String location)
 	{
 		this.location = location;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

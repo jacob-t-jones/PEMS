@@ -3,7 +3,9 @@ package gui.panels;
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // ScreenStart.java
 
+import gui.ComponentGenerator;
 import gui.FrameManager;
+import gui.Thumbnail;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -21,8 +23,8 @@ public class ScreenEdit extends JPanel{
 	private FrameManager manager;
 	
 	private ImageEditor imgEditor;
-	private ArrayList<BufferedImage> images;
-	private ArrayList<JLabel> labels;
+	private ArrayList<JLabel> selectedLabels;
+	private ArrayList<Thumbnail> labels;
 	private String directoryName;
 	private Box selBox;
 	private Box stageBox;
@@ -34,15 +36,14 @@ public class ScreenEdit extends JPanel{
 	private JLabel displayLabel;
 	private ArrayList<JLabel> selected;
 	
-	public ScreenEdit(FrameManager manager, ArrayList<JLabel> labels)
+	public ScreenEdit(FrameManager manager, ArrayList<Thumbnail> labels, ArrayList<JLabel> selectedLabels)
 	{
 		this.manager = manager;
 		this.imgEditor = new ImageEditor();
-		this.directoryName = "/Users/andrewrottier/Documents/Pictures/SamplePictures";
+		this.directoryName = "/Users/andrewrottier/Documents/Pictures/";
 		this.selectedImagePlace = 0;
-		this.selected = labels;
-		this.images = this.getImages();
-		this.labels = this.fillLabels();
+		this.selectedLabels = selectedLabels;
+		this.labels = labels;
 		
 		this.stageBox = Box.createVerticalBox();
 		this.selBox = Box.createHorizontalBox();
@@ -57,7 +58,7 @@ public class ScreenEdit extends JPanel{
 	}
 	
 	private void initializeSelectedImages(){
-		this.constructLabel("Click an image to edit it");
+		//this.constructLabel("Click an image to edit it");
 		this.displaySelectedImages();
 	}
 		
@@ -83,89 +84,29 @@ public class ScreenEdit extends JPanel{
 		repaint();
 		return;
 	}
+	
+	private void displayEditImage(BufferedImage image){
+		this.add(ComponentGenerator.generateLabel(image));
+	}
 		
-	private void constructLabel(String text)
-	{
-		this.displayLabel = new JLabel(text);
-		this.displayLabel.setFont(this.manager.STANDARD_TEXT_FONT);
-		this.displayLabel.setForeground(this.manager.STANDARD_TEXT_COLOR);
-		this.displayLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.stageBox.add(this.displayLabel);
-	}
 	
-	/* getImages - creates "photoLists" and adds images to the ScreenImport
-	 */
-	private ArrayList<BufferedImage> getImages()
-	{
-		ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
-	    File imageDirectory = new File(this.directoryName);
-		String[] imageFileNames = imageDirectory.list();
-		BufferedImage currentImage = null;
-		for (int i = 0; i < imageFileNames.length; i++)
-		{
-			System.out.println(imageFileNames[i]);
-		    try 
-		    {   
-		    	currentImage = ImageIO.read(new File(imageDirectory + "/" + imageFileNames[i]));
-		    } 
-		    catch (Exception e)
-		    {
-		    	System.out.println("Error - Unable to read image");
-		    	return null;
-		    }
-		    imageList.add(currentImage);
-		}
-	    return imageList;
-	}
-	
-	/* fillLabels - creates "labelList" and adds the images into an array of JLabels
-	 */
-	private ArrayList<JLabel> fillLabels()
-	{
-		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
-		for (int i = 0; i < this.images.size(); i++)
-		{
-			JLabel newLabel = new JLabel("NULL");
-			try
-			{
-				newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeFullImage(this.images.get(i), 150, 200)));
-			}
-			catch (Exception e)
-			{
-				
-			}
-			newLabel.setAlignmentX(CENTER_ALIGNMENT);
-			labelList.add(newLabel);
-		}
-		return labelList;
-	}
 	
 	/* addActions - turns each picture into a button
 	 */
 	private void addActions(){
 		
-		for(int i = 0; i < labels.size(); i++)
+		for(int i = 0; i < selectedLabels.size(); i++)
 		{
-			final JLabel currentLabel = this.labels.get(i);
+			
+			final Thumbnail currentLabel = this.labels.get(i);
+			
 			currentLabel.addMouseListener(new MouseListener()
 			{
 				@Override
 				public void mouseClicked(java.awt.event.MouseEvent e) 
 				{
-					if(selected.contains(currentLabel))
-					{
-						labels.add(currentLabel);
-						selected.remove(currentLabel);
-						displaySelectedImages();
-					}
-					else if(labels.contains(currentLabel))
-					{
-						selected.add(currentLabel);
-						labels.remove(currentLabel);
-						displaySelectedImages();
-					}
-					
-					
+					//label needs to be linked to an image.. woo check
+					displayEditImage(currentLabel.getImage());
 				}
 
 				@Override
@@ -191,7 +132,6 @@ public class ScreenEdit extends JPanel{
 					// TODO Auto-generated method stub
 					
 				}
-
 				
 			});
 		}

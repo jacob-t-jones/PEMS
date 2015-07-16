@@ -2,8 +2,16 @@ package gui.panels;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -20,29 +28,35 @@ public class ScreenAddToExisting extends JPanel
 	private FrameManager manager;
 	private Box container;
 	private File[] fileList;
+	private String filePath;
+	private ActionListener continueAction;
+	private ArrayList<JLabel> fileButtons = new ArrayList<JLabel>();
+	
 	private JLabel selectedCase;
 	private JButton continueButton;
+	private int caseNumField;
 	
 	public ScreenAddToExisting(FrameManager manager) 
 	{
 		this.manager = manager;
 		this.container = Box.createVerticalBox();
-		this.container.setBorder(BorderFactory.createLineBorder(Color.black));
+		//this.container.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		this.populateContainer();
+		generateListeners();
 		this.manager.setResizable(true);
 	}
 	
-	/* populateContainer - adds components  to thecontainer before displaying it
+	/* populateContainer - adds components  to the container before displaying it
 	 */
 	private void populateContainer()
 	{
 		this.container = Box.createVerticalBox();
 		this.container.add(Box.createVerticalStrut(40));
 		//below line doesn't add text to the screen
-		this.container.add(ComponentGenerator.generateLabel("Choose a case", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT));;
 		this.container.add(Box.createVerticalStrut(20));
 		this.displayImages(0);
+
 		this.add(this.container);
 	}
 	
@@ -52,6 +66,8 @@ public class ScreenAddToExisting extends JPanel
 		this.remove(this.container);
 		this.repaint();
 		this.revalidate(); 
+		
+		this.container.add(ComponentGenerator.generateLabel("Choose a case", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT));
 		
 		//imagePlace = imageNum;
 		Box col = Box.createVerticalBox();
@@ -68,12 +84,15 @@ public class ScreenAddToExisting extends JPanel
 	        	//convert the folder image and name to jlabels
 	        	FileDisplay tempFolder = new FileDisplay(1);
 	        	JLabel tempLabel = new JLabel(tempFolder.getFilejpg());
-	        	JLabel tempFileName = new JLabel("" + file);
+	        	this.fileButtons.add(tempLabel); //make the folder a click-able button
+	        	JLabel tempFilePath = new JLabel("" + file);
+	        	
+	        	filePath = file.getAbsolutePath(); //
 	        	
 	        	//create the row and add elements to it
 	        	Box row = Box.createHorizontalBox();
 	        	row.add(tempLabel);
-	        	row.add(tempFileName);
+	        	row.add(tempFilePath);
 	        	row.setAlignmentX(LEFT_ALIGNMENT);
 	        	
 	        	col.add(row);
@@ -91,6 +110,53 @@ public class ScreenAddToExisting extends JPanel
 		repaint();
 		return;
 	}
+	
+	/* generateListeners - initializes listeners for all of the components within the JPanel
+	 *    continueAction - attempts to create a directory for the user specified case number
+	 *      caseNumFocus - clears the text within "caseNumField" upon said component coming into focus
+	 */
+	private void generateListeners()
+	{
+		for(int i = 0; i < fileButtons.size(); i++)
+		{
+			final JLabel currentLabel = this.fileButtons.get(i);
+			currentLabel.addMouseListener(new MouseListener()
+			{
+				@Override
+				public void mouseClicked(java.awt.event.MouseEvent e) 
+				{
+					manager.pushPanel(new ScreenImport(manager, filePath), "PEMS - Import Images");
+				}
+
+				@Override
+				public void mousePressed(java.awt.event.MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseReleased(java.awt.event.MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseEntered(java.awt.event.MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseExited(java.awt.event.MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				
+			});
+		}
+	}
+	
 	
 	
 }

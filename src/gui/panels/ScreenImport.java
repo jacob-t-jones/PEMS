@@ -9,8 +9,10 @@ import java.awt.image.*;
 import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import gui.*;
 import tools.*;
 
@@ -36,10 +38,14 @@ public class ScreenImport extends JPanel
 	private int displayedImagePlace;
 	private int selectedImagePlace;
 
+<<<<<<< HEAD
 	public ScreenImport(FrameManager manager, Path filePath)
+=======
+	public ScreenImport(FrameManager manager, String filePath)
+>>>>>>> origin/master
 	{
 		this.manager = manager;
-		this.directoryName = "/Users/Jacob/Documents/Pics";
+		this.directoryName = "/Users/andrewrottier/Documents/Pictures/";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.thumbnails = this.getThumbnails();
@@ -131,12 +137,32 @@ public class ScreenImport extends JPanel
 	
 	/* getThumbnails - fills "thumbnails" by importing images into memory
 	 */
+<<<<<<< HEAD
+=======
+
+	private ArrayList<Thumbnail> getImages()
+	{
+		ArrayList<Thumbnail> imageList = new ArrayList<Thumbnail>();
+	    File imageDirectory = new File(this.directoryName);
+		String[] imageFileNames = imageDirectory.list();
+		BufferedImage currentImage = new BufferedImage(12, 12, 12);
+		String currentPath = new String();
+		for (int i = 0; i < imageFileNames.length; i++){
+			
+		}
+	}
+	
+>>>>>>> origin/master
 	private ArrayList<Thumbnail> getThumbnails()
 	{ 
 		ArrayList<Thumbnail> thumbnailList = new ArrayList<Thumbnail>();
 	    File directory = new File(this.directoryName);
 		String[] fileNames = directory.list();
 		for (int i = 0; i < fileNames.length; i++)
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 		{
 			String currentFileName = fileNames[i];
 			if (this.validateExtension(currentFileName))
@@ -173,8 +199,26 @@ public class ScreenImport extends JPanel
 		}
 		return labelList;
 	}
+<<<<<<< HEAD
 	
 	/* refreshDisplayedLabels - refreshes the JLabels for images not yet selected by the user
+=======
+
+
+	/* initializedisplayImages - Initialize the displayed images box - contents from the case folder
+	 */
+	private void initializedisplayImages(){
+		this.constructLabel("Select the images you would like to import:");
+		this.displayImages(0);
+	}
+	
+	/* displayImages - iterate through the images in a case file and display the 
+	 * 				   specified ones on the screen
+	 *      imageNum - the image place holder that specifies which image you would like
+	 *                 to start at when displaying a screen of images
+	
+	/* refreshDisplayedLabels - refreshes the JLabels displayed on the screen
+>>>>>>> origin/master
 	 */
 	private void refreshDisplayedLabels(int displayedImagePlace)
 	{
@@ -202,23 +246,60 @@ public class ScreenImport extends JPanel
 			}
 			this.imageContainer.add(row);
 		}
+<<<<<<< HEAD
+=======
+
+		imagePlace = imageNum; //reset back to original param to avoid errors w next/prev buttons
+		this.add(this.imgBox);
+		revalidate();
+		repaint();
+		return;
+	}
+	
+	/* initializeSelectedImages - Initialize the selected images box
+	 */
+	private void initializeSelectedImages(){
+		this.constructLabel("Click to remove an image:");
+		this.displaySelectedImages();
+
+>>>>>>> origin/master
 		this.displayedImagePlace = displayedImagePlace;
 		this.add(this.imageContainer);
 		this.revalidate();
 		this.repaint();
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 	}
 	
 	/* refreshSelectedLabels - refreshes the JLabels placed in "selectedContainer" by the user
 	 */
 	private void refreshSelectedLabels()
 	{
+<<<<<<< HEAD
+=======
+
+		selectedImagePlace = 0;
+		
+		for(int i = 0; i < 15; i++){
+			try
+			{
+				this.selBox.setAlignmentX(CENTER_ALIGNMENT);
+				selBox.add(this.selected.get(this.selectedImagePlace));
+
+>>>>>>> origin/master
 		this.selectedImagePlace = 0;	
 		this.selectedContainer.setAlignmentX(CENTER_ALIGNMENT);
 		for (int i = 0; i < 15; i++)
 		{
 			if (this.selectedImagePlace < this.selectedLabels.size())
 			{
+<<<<<<< HEAD
 				selectedContainer.add(this.selectedLabels.get(this.selectedImagePlace));
+=======
+				selectedBox.add(this.selectedLabels.get(this.selectedImagePlace));
+>>>>>>> origin/master
 				selectedImagePlace++;
 			}
 		}
