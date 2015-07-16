@@ -57,7 +57,7 @@ public class ScreenNewCase extends JPanel
 	    					e1.printStackTrace();
 	    					return;
 	    				}
-	    	    		manager.pushPanel(new ScreenImport(manager, filePath), "PEMS - Import Images");
+	    	    		manager.pushPanel(new ScreenImport(manager, "Users/andrewrottier/Documents/Pictures/CrimePhotos/"), "PEMS - Import Images");//replace with camera directory
 	    			}
 	    			else
 	    			{
