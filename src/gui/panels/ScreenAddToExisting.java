@@ -47,7 +47,6 @@ public class ScreenAddToExisting extends JPanel
 		//this.container.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		this.populateContainer();
-		generateListeners();
 		this.manager.setResizable(true);
 	}
 	
@@ -64,6 +63,9 @@ public class ScreenAddToExisting extends JPanel
 		this.add(this.container);
 	}
 	
+	/* displayImages - gets the folders from the cases directory and display them on screen
+	 *      imageNum - the number of folders to be displayed on the screen at one time
+	 */
 	private void displayImages(int imageNum) throws IOException
 	{
 		this.container.removeAll();
@@ -85,8 +87,6 @@ public class ScreenAddToExisting extends JPanel
 			
 	        if (file.isDirectory()) {
 	        	
-	        	//convert the folder image and name to jlabels
-	        	FileDisplay tempFolder = new FileDisplay(1);
 	        	Thumbnail tempLabel = new Thumbnail(null, filePath);
 	        	try{
 		        	tempLabel = ComponentGenerator.generateThumbnail(ImageIO.read(new File("/Users/andrewrottier/Documents/Pictures/folder.png")), file.getAbsolutePath());
@@ -98,7 +98,9 @@ public class ScreenAddToExisting extends JPanel
 	        	
 	        	//create the row and add elements to it
 	        	Box row = Box.createHorizontalBox();
-	        	row.add(ComponentGenerator.generateLabel(tempFolder.getFile()));
+	        	row.addMouseListener(this.generateThumbnailListener(tempLabel));
+	        	
+	        	row.add(ComponentGenerator.generateLabel(tempLabel.getImage()));
 	        	row.add(ComponentGenerator.generateLabel(tempLabel.getFileLocation(), ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR));
 	        	row.setAlignmentX(LEFT_ALIGNMENT);
 	        	
@@ -111,7 +113,6 @@ public class ScreenAddToExisting extends JPanel
 	    }
 		this.container.add(col);
 		
-		//imagePlace = imageNum; //reset back to original param to avoid errors w next/prev buttons
 		this.add(this.container);
 		revalidate();
 		repaint();
@@ -122,48 +123,42 @@ public class ScreenAddToExisting extends JPanel
 	 *    continueAction - attempts to create a directory for the user specified case number
 	 *      caseNumFocus - clears the text within "caseNumField" upon said component coming into focus
 	 */
-	private void generateListeners()
+	private MouseListener generateThumbnailListener(final Thumbnail folderThumbnail)
 	{
-		for(int i = 0; i < fileButtons.size(); i++)
+		MouseListener thumbnailListener = new MouseListener()
 		{
-			
-			final Thumbnail currentLabel = this.fileButtons.get(i);
-			currentLabel.addMouseListener(new MouseListener()
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) 
 			{
-				@Override
-				public void mouseClicked(java.awt.event.MouseEvent e) 
-				{
-					System.out.println("1");
-					manager.pushPanel(new ScreenImport(manager, currentLabel.getFileLocation()), "PEMS - Import Images");
-				}
+				System.out.println("1");
+				manager.pushPanel(new ScreenImport(manager, folderThumbnail.getFileLocation()), "PEMS - Import Images");
+			}
 
-				@Override
-				public void mousePressed(java.awt.event.MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void mouseReleased(java.awt.event.MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void mouseEntered(java.awt.event.MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void mouseExited(java.awt.event.MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-
+			@Override
+			public void mousePressed(java.awt.event.MouseEvent e) {
+				// TODO Auto-generated method stub
 				
-			});
-		}
+			}
+
+			@Override
+			public void mouseReleased(java.awt.event.MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(java.awt.event.MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(java.awt.event.MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}	
+		};
+		return thumbnailListener;
 	}
 	
 	
