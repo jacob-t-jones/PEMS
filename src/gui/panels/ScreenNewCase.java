@@ -31,10 +31,6 @@ public class ScreenNewCase extends JPanel
 		this.populateContainer();
 	}
 	
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
 	/* generateListeners - initializes listeners for all of the components within the JPanel
 	 *    continueAction - attempts to create a directory for the user specified case number
 	 *      caseNumFocus - clears the text within "caseNumField" upon said component coming into focus
@@ -61,11 +57,7 @@ public class ScreenNewCase extends JPanel
 	    					e1.printStackTrace();
 	    					return;
 	    				}
-<<<<<<< HEAD
-	    	    		manager.pushPanel(new ScreenImport(manager, null), "PEMS - Import Images");
-=======
 	    	    		manager.pushPanel(new ScreenImport(manager, filePath), "PEMS - Import Images");
->>>>>>> origin/master
 	    			}
 	    			else
 	    			{
