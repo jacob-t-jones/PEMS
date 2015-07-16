@@ -88,7 +88,6 @@ public class ScreenEdit extends JPanel{
 	private void displayEditImage(BufferedImage image){
 		this.add(ComponentGenerator.generateLabel(image));
 	}
-		
 	
 	
 	/* addActions - turns each picture into a button
