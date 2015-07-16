@@ -24,7 +24,7 @@ public class ScreenEdit extends JPanel{
 	
 	private ImageEditor imgEditor;
 	private ArrayList<JLabel> selectedLabels;
-	private ArrayList<JLabel> labels;
+	private ArrayList<Thumbnail> labels;
 	private String directoryName;
 	private Box selBox;
 	private Box stageBox;
@@ -43,6 +43,7 @@ public class ScreenEdit extends JPanel{
 		this.directoryName = "/Users/andrewrottier/Documents/Pictures/";
 		this.selectedImagePlace = 0;
 		this.selectedLabels = selectedLabels;
+		this.labels = labels;
 		
 		this.stageBox = Box.createVerticalBox();
 		this.selBox = Box.createHorizontalBox();
@@ -83,6 +84,10 @@ public class ScreenEdit extends JPanel{
 		repaint();
 		return;
 	}
+	
+	private void displayEditImage(BufferedImage image){
+		this.add(ComponentGenerator.generateLabel(image));
+	}
 		
 	
 	
@@ -92,14 +97,16 @@ public class ScreenEdit extends JPanel{
 		
 		for(int i = 0; i < selectedLabels.size(); i++)
 		{
-			final JLabel currentLabel = this.selectedLabels.get(i);
+			
+			final Thumbnail currentLabel = this.labels.get(i);
+			
 			currentLabel.addMouseListener(new MouseListener()
 			{
 				@Override
 				public void mouseClicked(java.awt.event.MouseEvent e) 
 				{
-					//label needs to be linked to an image..
-					
+					//label needs to be linked to an image.. woo check
+					displayEditImage(currentLabel.getImage());
 				}
 
 				@Override
