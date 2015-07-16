@@ -31,7 +31,6 @@ public class ScreenNewCase extends JPanel
 		this.populateContainer();
 	}
 	
-
 	/* generateListeners - initializes listeners for all of the components within the JPanel
 	 *    continueAction - attempts to create a directory for the user specified case number
 	 *      caseNumFocus - clears the text within "caseNumField" upon said component coming into focus
