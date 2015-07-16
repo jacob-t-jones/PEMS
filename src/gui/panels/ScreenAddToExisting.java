@@ -7,13 +7,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
+import javax.imageio.ImageIO;
+
+import java.nio.file.*;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -30,13 +33,14 @@ public class ScreenAddToExisting extends JPanel
 	private File[] fileList;
 	private String filePath;
 	private ActionListener continueAction;
-	private ArrayList<JLabel> fileButtons = new ArrayList<JLabel>();
+	private ArrayList<Thumbnail> fileButtons = new ArrayList<Thumbnail>();
+	private static String folderImageLocation = "/Users/andrewrottier/Documents/Pictures/folder.pgn";
 	
 	private JLabel selectedCase;
 	private JButton continueButton;
 	private int caseNumField;
 	
-	public ScreenAddToExisting(FrameManager manager) 
+	public ScreenAddToExisting(FrameManager manager) throws IOException 
 	{
 		this.manager = manager;
 		this.container = Box.createVerticalBox();
@@ -49,7 +53,7 @@ public class ScreenAddToExisting extends JPanel
 	
 	/* populateContainer - adds components  to the container before displaying it
 	 */
-	private void populateContainer()
+	private void populateContainer() throws IOException
 	{
 		this.container = Box.createVerticalBox();
 		this.container.add(Box.createVerticalStrut(40));
@@ -60,7 +64,7 @@ public class ScreenAddToExisting extends JPanel
 		this.add(this.container);
 	}
 	
-	private void displayImages(int imageNum)
+	private void displayImages(int imageNum) throws IOException
 	{
 		this.container.removeAll();
 		this.remove(this.container);
@@ -83,16 +87,19 @@ public class ScreenAddToExisting extends JPanel
 	        	
 	        	//convert the folder image and name to jlabels
 	        	FileDisplay tempFolder = new FileDisplay(1);
-	        	JLabel tempLabel = new JLabel(tempFolder.getFilejpg());
-	        	this.fileButtons.add(tempLabel); //make the folder a click-able button
-	        	JLabel tempFilePath = new JLabel("" + file);
-	        	
-	        	filePath = file.getAbsolutePath(); //
+	        	Thumbnail tempLabel = new Thumbnail(null, filePath);
+	        	try{
+		        	tempLabel = ComponentGenerator.generateThumbnail(ImageIO.read(new File("/Users/andrewrottier/Documents/Pictures/folder.png")), file.getAbsolutePath());
+	        	}
+	        	catch(Exception e){
+	        		System.out.println("Error - the folder image does not exist in the folder");
+	        	}
+	        	this.fileButtons.add(tempLabel);//construct or list of thumbnails to later turn to buttons
 	        	
 	        	//create the row and add elements to it
 	        	Box row = Box.createHorizontalBox();
-	        	row.add(tempLabel);
-	        	row.add(tempFilePath);
+	        	row.add(ComponentGenerator.generateLabel(tempFolder.getFile()));
+	        	row.add(ComponentGenerator.generateLabel(tempLabel.getFileLocation(), ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR));
 	        	row.setAlignmentX(LEFT_ALIGNMENT);
 	        	
 	        	col.add(row);
@@ -119,13 +126,15 @@ public class ScreenAddToExisting extends JPanel
 	{
 		for(int i = 0; i < fileButtons.size(); i++)
 		{
-			final JLabel currentLabel = this.fileButtons.get(i);
+			
+			final Thumbnail currentLabel = this.fileButtons.get(i);
 			currentLabel.addMouseListener(new MouseListener()
 			{
 				@Override
 				public void mouseClicked(java.awt.event.MouseEvent e) 
 				{
-					manager.pushPanel(new ScreenImport(manager, filePath), "PEMS - Import Images");
+					System.out.println("1");
+					manager.pushPanel(new ScreenImport(manager, currentLabel.getFileLocation()), "PEMS - Import Images");
 				}
 
 				@Override
