@@ -6,7 +6,7 @@ package gui.panels;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.io.File;
+import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import gui.*;
@@ -16,6 +16,11 @@ public class ScreenStart extends JPanel
 {
 
 	private FrameManager manager;
+	private BufferedImage logoImage;
+	private BufferedImage bgImage;
+	private ActionListener newCaseListener;
+	private ActionListener editCaseListener;
+	private ActionListener settingsListener;
 	private Box topContainer;
 	private Box bottomContainer;
 	private JLabel logoLabel;
@@ -28,6 +33,8 @@ public class ScreenStart extends JPanel
 	public ScreenStart(FrameManager manager)
 	{
 		this.manager = manager;
+		this.importImages();
+		this.generateListeners();
 		this.populateTopContainer();
 		this.populateBottomContainer();
 	}
@@ -38,133 +45,89 @@ public class ScreenStart extends JPanel
 	protected void paintComponent(Graphics g) 
 	{
 		super.paintComponent(g);
-		Image backgroundImage = null;
+		g.drawImage(this.bgImage, 0, 0, null);
+	}
+	
+	/* importImages - reads all necessary images into memory
+	 */
+	private void importImages()
+	{
+		this.logoImage = null;
+		this.bgImage = null;
 	    try 
-	    {                
-	    	backgroundImage = ImageIO.read(new File("resources/background.png"));
+	    {      
+	    	this.logoImage = ImageIO.read(new File("resources/logo.png"));
+	    	this.bgImage = ImageIO.read(new File("resources/background.png"));
 	    } 
-	    catch (Exception e)
+	    catch (IOException e)
 	    {
-			System.out.println("Error - Unable to find background image");
+			System.out.println("Error - Unable to import images");
+			e.printStackTrace();
 			return;
 	    }
-		g.drawImage(backgroundImage, 0, 0, null);
+	}
+	
+	/* generateListeners - initializes listeners for all of the components within the JPanel
+	 *   newCaseListener - pushes ScreenNewCase to the JFrame
+	 *  editCaseListener - pushes ScreenAddToExisting to the JFrame
+	 *  settingsListener - pushes ScreenSettings to the JFrame
+	 */
+	private void generateListeners()
+	{
+		this.newCaseListener = new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            	manager.pushPanel(new ScreenNewCase(manager), "PEMS - Create New Case");
+            }
+		};
+		this.editCaseListener = new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            	manager.pushPanel(new ScreenAddToExisting(manager), "PEMS - Edit Existing Case");
+            }
+		};
+		this.settingsListener = new ActionListener()
+		{
+            public void actionPerformed(ActionEvent e)
+            {
+            	// TODO: On button press actions
+            }
+		};
 	}
 	
 	/* populateTopContainer - adds "logoLabel", "titleLabel", and "nameLabel" to "topContainer" before displaying it
 	 */
 	private void populateTopContainer()
 	{
+		this.logoLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.logoImage, 200, 200), CENTER_ALIGNMENT);
+		this.titleLabel = ComponentGenerator.generateLabel("Police Evidence Management System", ComponentGenerator.TITLE_FONT, ComponentGenerator.TITLE_COLOR, CENTER_ALIGNMENT);
+		this.nameLabel = ComponentGenerator.generateLabel(this.manager.getConfiguration().getDepartmentName(), ComponentGenerator.SUBTITLE_FONT, ComponentGenerator.SUBTITLE_COLOR, CENTER_ALIGNMENT);
 		this.topContainer = Box.createVerticalBox();
-		this.constructLogoLabel();
+		this.topContainer.add(this.logoLabel);
 		this.topContainer.add(Box.createVerticalStrut(20));
-		this.constructTitleLabel();
+		this.topContainer.add(this.titleLabel);
 		this.topContainer.add(Box.createVerticalStrut(10));
-		this.constructNameLabel();
+		this.topContainer.add(this.nameLabel);
 		this.topContainer.add(Box.createVerticalStrut(40));
 		this.add(this.topContainer);
 	}
 	
-	/* constructLogoLabel - creates "logoLabel" using an image imported from resources and adds it to "topContainer"
-	 */
-	private void constructLogoLabel()
-	{
-		BufferedImage logoImage = null;
-	    try 
-	    {                
-	    	logoImage = ImageIO.read(new File("resources/logo.png"));
-	    } 
-	    catch (Exception e)
-	    {
-			System.out.println("Error - Unable to find logo");
-			return;
-	    }
-	    this.logoLabel = new JLabel(new ImageIcon(ImageEditor.resizeImage(logoImage, 200, 200)));
-	    this.logoLabel.setAlignmentX(CENTER_ALIGNMENT);
-	    this.topContainer.add(this.logoLabel);
-	}
-	
-	/* constructTitleLabel - creates "titleLabel", sets its font and alignment, and adds it to "topContainer"
-	 */
-	private void constructTitleLabel()
-	{
-		this.titleLabel = new JLabel("Police Evidence Management System");
-		this.titleLabel.setFont(ComponentGenerator.TITLE_FONT);
-		this.titleLabel.setForeground(ComponentGenerator.TITLE_COLOR);
-	    this.titleLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.topContainer.add(this.titleLabel);
-	}
-	
-	/* constructNameLabel - creates "nameLabel", sets its font and alignment, and adds it to "topContainer"
-	 */
-	private void constructNameLabel()
-	{
-		this.nameLabel = new JLabel(this.manager.getConfiguration().getDepartmentName());
-		this.nameLabel.setFont(ComponentGenerator.SUBTITLE_FONT);
-		this.nameLabel.setForeground(ComponentGenerator.SUBTITLE_COLOR);
-	    this.nameLabel.setAlignmentX(CENTER_ALIGNMENT);
-		this.topContainer.add(this.nameLabel);
-	}
-	
-	/* populateBottomContainer - adds "newCaseButton" and "settingsButton" to "bottomContainer" before displaying it
+	/* populateBottomContainer - adds "newCaseButton", "editCaseButton", and "settingsButton" to "bottomContainer" before displaying it
 	 */
 	private void populateBottomContainer()
 	{
+		this.newCaseButton = ComponentGenerator.generateButton("New Case", this.newCaseListener);
+		this.editCaseButton = ComponentGenerator.generateButton("Edit Case", this.editCaseListener);
+		this.settingsButton = ComponentGenerator.generateButton("Settings", this.settingsListener);
 		this.bottomContainer = Box.createHorizontalBox();
-		this.constructNewCaseButton();
-		this.bottomContainer.add(Box.createHorizontalStrut(120));		
-		this.constructEditCaseButton();
-		this.bottomContainer.add(Box.createHorizontalStrut(120));
-		this.constructSettingsButton();
-		this.add(this.bottomContainer);
-	}
-	
-	/* constructNewCaseButton - creates "newCaseButton", makes an ActionListener for it, and adds it to "bottomContainer"
-	 *        actionPerformed - pushes the ScreenNewCase JPanel into the JFrame
-	 */
-	private void constructNewCaseButton()
-	{
-		this.newCaseButton = new JButton("New Case");
-		this.newCaseButton.addActionListener(new ActionListener()
-		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	manager.pushPanel(new ScreenNewCase(manager), "PEMS - Create New Case");
-            }
-		});
 		this.bottomContainer.add(this.newCaseButton);
-	}
-	
-	/* constructEditCaseButton - creates "editCaseButton", makes an ActionListener for it, and adds it to "bottomContainer"
-	 *         actionPerformed - pushes the ScreenEditCase JPanel into the JFrame
-	 */
-	private void constructEditCaseButton()
-	{
-		this.editCaseButton = new JButton("Edit Existing Case");
-		this.editCaseButton.addActionListener(new ActionListener()
-		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	manager.pushPanel(new ScreenAddToExisting(manager), "PEMS - Edit Existing Case");
-            }
-		});
+		this.bottomContainer.add(Box.createHorizontalStrut(120));		
 		this.bottomContainer.add(this.editCaseButton);
-	}
-	
-	/* constructSettingsButton - creates "settingsButton", makes an ActionListener for it, and adds it to "bottomContainer"
-	 *         actionPerformed - pushes the ScreenSettings JPanel into the JFrame
-	 */
-	private void constructSettingsButton()
-	{
-		this.settingsButton = new JButton("Settings");
-		this.settingsButton.addActionListener(new ActionListener()
-		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	// TODO: On button press actions
-            }
-		});
+		this.bottomContainer.add(Box.createHorizontalStrut(120));
 		this.bottomContainer.add(this.settingsButton);
+		this.add(this.bottomContainer);
 	}
 	
 }

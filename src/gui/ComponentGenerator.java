@@ -6,7 +6,6 @@ package gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-
 import javax.swing.*;
 
 public class ComponentGenerator 
@@ -141,6 +140,45 @@ public class ComponentGenerator
 		newLabel.setAlignmentX(alignmentX);
 		newLabel.setAlignmentY(alignmentY);
 		return newLabel;
+	}
+	
+	/* generateTextField - creates and returns a JTextField that complies with the parameters
+	 *              text - the default text displayed in the field
+	 *             focus - the action to execute when the field comes into focus
+	 */
+	public static JTextField generateTextField(String text, FocusListener focus)
+	{
+		JTextField newTextField = new JTextField(text);
+		newTextField.addFocusListener(focus);
+		return newTextField;
+	}
+	
+	/* generateTextField - creates and returns a JTextField that complies with the parameters
+	 *              text - the default text displayed in the field
+	 *             focus - the action to execute when the field comes into focus
+	 *        alignmentX - the horizontal alignment of the field
+	 */
+	public static JTextField generateTextField(String text, FocusListener focus, float alignmentX)
+	{
+		JTextField newTextField = new JTextField(text);
+		newTextField.addFocusListener(focus);
+		newTextField.setAlignmentX(alignmentX);
+		return newTextField;
+	}
+	
+	/* generateTextField - creates and returns a JTextField that complies with the parameters
+	 *              text - the default text displayed in the field
+	 *             focus - the action to execute when the field comes into focus
+	 *        alignmentX - the horizontal alignment of the field
+	 *        alignmentY - the vertical alignment of the field
+	 */
+	public static JTextField generateTextField(String text, FocusListener focus, float alignmentX, float alignmentY)
+	{
+		JTextField newTextField = new JTextField(text);
+		newTextField.addFocusListener(focus);
+		newTextField.setAlignmentX(alignmentX);
+		newTextField.setAlignmentY(alignmentY);
+		return newTextField;
 	}
 
 }

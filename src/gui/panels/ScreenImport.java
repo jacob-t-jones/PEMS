@@ -1,12 +1,12 @@
-//PEMS (Police Evidence Management System) Version 0.1
-//Copyright 2015 - Jacob Jones and Andrew Rottier
-//ScreenImport.java
+// PEMS (Police Evidence Management System) Version 0.1
+// Copyright 2015 - Jacob Jones and Andrew Rottier
+// ScreenImport.java
 
 package gui.panels;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,52 +17,44 @@ public class ScreenImport extends JPanel
 {
 
 	private FrameManager manager;
-	private ArrayList<Thumbnail> images;
-	private ArrayList<JLabel> labels;
+	private ArrayList<Thumbnail> thumbnails;
+	private ArrayList<JLabel> displayedLabels;
+	private ArrayList<JLabel> selectedLabels;
 	private String imageDirectoryName;
-	private JLabel instructionsLabel;
-	private JButton continueButton;
-	private ImageEditor imgEditor;
-	private String directoryName;
-	private Box imgBox;
-	private Box selBox; //selected box
+	private Box displayedBox;
+	private Box selectedBox; 
 	private Box buttonsBox;
-	private JButton nextButton;
-	private JButton loadMoreImagesButton;
-	private JButton loadPrevImagesButton;
-	private JButton prevButton;
-	private int imagePlace;
+	private JLabel instructionsLabel;
+	private JButton loadNextButton;
+	private JButton loadPrevButton;
+	private JButton continueButton;
+	private String directoryName;
+	private int displayedImagePlace;
 	private int selectedImagePlace;
-	private JLabel displayLabel;
-	private ArrayList<JLabel> selected;
 
 	public ScreenImport(FrameManager manager)
 	{
 		this.manager = manager;
-		this.populateButtonsBox();
-		this.imgEditor = new ImageEditor();
-		this.directoryName = "/Users/andrewrottier/Documents/Pictures/CrimePhotos";
-		this.imagePlace = 0; this.selectedImagePlace = 0;
-		this.images = this.getImages();
-		this.labels = this.fillLabels();
-		
-		
-		this.selBox = Box.createHorizontalBox();
+		this.directoryName = "/Users/Jacob/Documents/Pics";
+		this.displayedImagePlace = 0;
+		this.selectedImagePlace = 0;
+		this.thumbnails = this.getThumbnails();
+		this.displayedLabels = this.getDisplayedLabels();
+		this.selectedLabels = new ArrayList<JLabel>();
+		/*this.selBox = Box.createHorizontalBox();
 		this.selBox.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.imgBox = Box.createVerticalBox();
 		this.imgBox.setBorder(BorderFactory.createLineBorder(Color.black));
-		
 		this.initializedisplayImages();
 		this.initializeSelectedImages();
-		this.selected = new ArrayList<JLabel>();
-		this.addActions();
-		
+		this.addActions();*/
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
 	}
 	
-	/* getImages - creates "photoLists" and adds images to the ScreenImport
+	/* getThumbnails - fills "thumbnails" by importing images into memory
 	 */
+<<<<<<< HEAD
 	private ArrayList<Thumbnail> getImages()
 	{
 		ArrayList<Thumbnail> imageList = new ArrayList<Thumbnail>();
@@ -71,54 +63,50 @@ public class ScreenImport extends JPanel
 		BufferedImage currentImage = new BufferedImage(12, 12, 12);
 		String currentPath = new String();
 		for (int i = 0; i < imageFileNames.length; i++)
+=======
+	private ArrayList<Thumbnail> getThumbnails()
+	{ 
+		ArrayList<Thumbnail> thumbnailList = new ArrayList<Thumbnail>();
+	    File directory = new File(this.directoryName);
+		String[] fileNames = directory.list();
+		for (int i = 0; i < fileNames.length; i++)
+>>>>>>> origin/master
 		{
-			
-			System.out.println(imageFileNames[i]);
-		    try 
-		    {   
-		    	currentImage = ImageIO.read(new File(imageDirectory + "/" + imageFileNames[i]));
-		    	try
-		    	{
-		    		currentPath = imageDirectory + "/" + imageFileNames[i];
-		    	}
-		    	catch(Exception e)
-		    	{
-		    		System.out.println("Error - Unable to get file location");
-			    	return null;
-		    	}
-		    } 
-		    catch (Exception e)
-		    {
-		    	System.out.println("Error - Unable to read image");
-		    	return null;
-		    }
-		    Thumbnail currentThumb = new Thumbnail(currentImage, currentPath);
-		    imageList.add(currentThumb);
+			String currentFileName = fileNames[i];
+			if (this.validateExtension(currentFileName))
+			{
+				BufferedImage currentImage = null;
+				String currentLocation = this.directoryName + "/" + fileNames[i];
+			    try 
+			    {   
+			    	 currentImage = ImageIO.read(new File(currentLocation));
+			    }
+			    catch (IOException e)
+			    {
+			    	System.out.println("Error - Unable to read image into memory");
+			    	e.printStackTrace();
+				    return null;
+			    }	    	
+			    Thumbnail currentThumb = new Thumbnail(currentImage, currentLocation);
+			    thumbnailList.add(currentThumb);
+			}
 		}
-	    return imageList;
+	    return thumbnailList;
 	}
 	
-	/* fillLabels - creates "labelList" and adds the images into an array of JLabels
+	/* getDisplayedLabels - fills "displayedLabels" by creating a JLabel for each entry in the "thumbnails" ArrayList.
 	 */
-	private ArrayList<JLabel> fillLabels()
+	private ArrayList<JLabel> getDisplayedLabels()
 	{
 		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
-		JLabel newLabel = new JLabel();
-		for (int i = 0; i < this.images.size(); i++)
+		for (int i = 0; i < this.thumbnails.size(); i++)
 		{
-			try
-			{
-				newLabel = new JLabel(new ImageIcon(this.imgEditor.resizeImage(this.images.get(i).getImage(), 200)));
-			}
-			catch(Exception e)
-			{
-				System.out.println("Error - image could not be resized");
-			}
-			newLabel.setAlignmentX(CENTER_ALIGNMENT);
+			JLabel newLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.thumbnails.get(i).getImage(), 200), CENTER_ALIGNMENT);
 			labelList.add(newLabel);
 		}
 		return labelList;
 	}
+<<<<<<< HEAD
 
 	/* initializedisplayImages - Initialize the displayed images box - contents from the case folder
 	 */
@@ -131,36 +119,38 @@ public class ScreenImport extends JPanel
 	 * 				   specified ones on the screen
 	 *      imageNum - the image place holder that specifies which image you would like
 	 *                 to start at when displaying a screen of images
+=======
+	
+	/* refreshDisplayedLabels - refreshes the JLabels displayed on the screen
+>>>>>>> origin/master
 	 */
-	private void displayImages(int imageNum)
+	private void refreshDisplayedLabels(int displayedImagePlace)
 	{
-		this.imgBox.removeAll();
-		this.remove(this.imgBox);
-		this.repaint();
+		this.displayedBox.removeAll();
+		this.remove(this.displayedBox);
 		this.revalidate();
-		//add the images on the camera to the screen
-		imagePlace = imageNum;
+		this.repaint();
+		this.displayedImagePlace = displayedImagePlace;
 		for (int i = 0; i < 3; i++)
 		{
 			Box row = Box.createHorizontalBox();
+			row.setAlignmentX(CENTER_ALIGNMENT);
 			for (int j = 0; j < 5; j++)
 			{
-				try
+				if (this.displayedImagePlace < this.displayedLabels.size())
 				{
-					row.add(this.labels.get(this.imagePlace));
-					System.out.println(imagePlace);
-					imagePlace++;
+					row.add(this.displayedLabels.get(this.displayedImagePlace));
+					this.displayedImagePlace++;
 				}
-				catch (Exception e)
+				else
 				{
-					row.add(Box.createHorizontalStrut(150)); //space the size of a picture
+					row.add(Box.createHorizontalStrut(150));
 				}
-				row.add(Box.createHorizontalStrut(25)); //spacing between pictures
-				
+				row.add(Box.createHorizontalStrut(25));
 			}
-			row.setAlignmentX(CENTER_ALIGNMENT);
-			this.imgBox.add(row);
+			this.displayedBox.add(row);
 		}
+<<<<<<< HEAD
 		imagePlace = imageNum; //reset back to original param to avoid errors w next/prev buttons
 		this.add(this.imgBox);
 		revalidate();
@@ -173,6 +163,12 @@ public class ScreenImport extends JPanel
 	private void initializeSelectedImages(){
 		this.constructLabel("Click to remove an image:");
 		this.displaySelectedImages();
+=======
+		this.displayedImagePlace = displayedImagePlace;
+		this.add(this.displayedBox);
+		this.revalidate();
+		this.repaint();
+>>>>>>> origin/master
 	}
 	
 	/* displaySelectedImages - iterate through the images in a case file and display the 
@@ -182,6 +178,7 @@ public class ScreenImport extends JPanel
 	 */
 	private void displaySelectedImages()
 	{
+<<<<<<< HEAD
 		selectedImagePlace = 0;
 		
 		for(int i = 0; i < 15; i++){
@@ -189,12 +186,64 @@ public class ScreenImport extends JPanel
 			{
 				this.selBox.setAlignmentX(CENTER_ALIGNMENT);
 				selBox.add(this.selected.get(this.selectedImagePlace));
+=======
+		this.selectedImagePlace = 0;	
+		this.selectedBox.setAlignmentX(CENTER_ALIGNMENT);
+		for (int i = 0; i < 15; i++)
+		{
+			if (this.selectedImagePlace < this.selectedLabels.size())
+			{
+				selectedBox.add(this.selectedLabels.get(this.selectedImagePlace));
+>>>>>>> origin/master
 				selectedImagePlace++;
 			}
-			catch(Exception e){} 
-			
 		}
-		this.imgBox.add(this.selBox);
+		this.displayedBox.add(this.selectedBox);
+	}
+	
+	/* validateExtension - determines whether or not the extension in a given file name is that of a valid image (.png, .jpg, .jpeg)
+	 *          fileName - the file name to check
+	 */
+	private boolean validateExtension(String fileName)
+	{
+		if (fileName.length() > 4)
+		{
+			String threeLetterExt = fileName.substring(fileName.length() - 4, fileName.length());
+			String fourLetterExt = fileName.substring(fileName.length() - 5, fileName.length());
+			if (threeLetterExt.equalsIgnoreCase(".png") || threeLetterExt.equalsIgnoreCase(".jpg") || fourLetterExt.equalsIgnoreCase(".jpeg"))
+			{
+				return true;
+			}
+		}
+		return false;		
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	private void initializedisplayImages(){
+		this.constructLabel("Select the images you would like to import:");
+		this.displayImages(0);
+	}
+	
+	//break up into an initalize image function and display image func
+	private void initializeSelectedImages(){
+		this.constructLabel("Click to remove an image:");
+		this.displaySelectedImages();
 	}
 	
 	/* addActions - turns each picture into a button
@@ -340,7 +389,7 @@ public class ScreenImport extends JPanel
 	private void createPrevButton()
 	{
 		
-	}
+	}*/
 		
 
 }
