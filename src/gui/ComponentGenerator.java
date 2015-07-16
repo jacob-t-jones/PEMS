@@ -142,5 +142,7 @@ public class ComponentGenerator
 		newLabel.setAlignmentY(alignmentY);
 		return newLabel;
 	}
+	
+		return newTextField;
+	}
 
-}

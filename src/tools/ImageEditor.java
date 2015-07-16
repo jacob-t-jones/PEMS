@@ -3,7 +3,6 @@
 // ImageEditor.java
 
 package tools;
-import gui.Thumbnail;
 import java.awt.*;
 import java.awt.image.*;
 import org.imgscalr.Scalr;
@@ -64,6 +63,15 @@ public class ImageEditor
 		return Scalr.apply(image, Scalr.OP_DARKER);
 	}
 	
+	/* resizeImage - resizes an image to the size specified in the parameters, maintaining its aspect ratio
+	 *       image - the image in question
+	 *        size - the new size of the image
+	 */
+	public static BufferedImage resizeImage(BufferedImage image, int size)
+	{
+		return Scalr.resize(image, Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
+	}
+	
 	/* resizeImage - resizes an image to the width and height specified in the parameters
 	 *       image - the image in question
 	 *       width - the new width of the image
@@ -72,15 +80,6 @@ public class ImageEditor
 	public static BufferedImage resizeImage(BufferedImage image, int width, int height)
 	{
 		return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, width, height, Scalr.OP_ANTIALIAS);
-	}
-	
-	/* resizeImage - resizes an image to the size specified in the parameters, maintaining its aspect ratio
-	 *       image - the image in question
-	 *        size - the new size of the image
-	 */
-	public static BufferedImage resizeImage(BufferedImage image, int size)
-	{
-		return Scalr.resize(image, Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
 	}
 	
 	/* rotateRight90 - rotates an image right by 90 degrees

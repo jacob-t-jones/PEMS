@@ -3,6 +3,7 @@
 // Config.java
 
 package tools;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.List;
@@ -41,9 +42,10 @@ public class Config
 		{
 			configFile = Files.readAllLines(Paths.get("resources/config.pems"), Charset.defaultCharset());
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
 			System.out.println("Error - Unable to read configuration file");
+			e.printStackTrace();
 			return;
 		}
 		for (int i = 0; i < configFile.size(); i++)
