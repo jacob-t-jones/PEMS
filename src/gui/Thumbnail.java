@@ -6,7 +6,6 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.*;
-
 import javax.swing.JLabel;
 
 public class Thumbnail extends JLabel implements ActionListener
@@ -51,10 +50,9 @@ public class Thumbnail extends JLabel implements ActionListener
 		this.location = location;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void actionPerformed(ActionEvent e) 
+	{
+
 	}
 	
 }

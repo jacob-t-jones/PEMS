@@ -6,9 +6,7 @@ package gui.panels;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
-
 import javax.swing.*;
-
 import gui.*;
 
 public class ScreenNewCase extends JPanel

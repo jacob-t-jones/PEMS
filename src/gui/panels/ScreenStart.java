@@ -7,10 +7,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import gui.*;
 import tools.*;
 
@@ -87,10 +85,11 @@ public class ScreenStart extends JPanel
 		{
             public void actionPerformed(ActionEvent e)
             {
-            	try {
+            	try 
+            	{
 					manager.pushPanel(new ScreenAddToExisting(manager), "PEMS - Edit Existing Case");
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+				} catch (IOException e1) 
+            	{
 					e1.printStackTrace();
 				}
             }

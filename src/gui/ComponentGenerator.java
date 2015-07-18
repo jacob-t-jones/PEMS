@@ -181,11 +181,9 @@ public class ComponentGenerator
 		return newTextField;
 	}
 	
-	/* generateTextField - creates and returns a JTextField that complies with the parameters
-	 *              text - the default text displayed in the field
-	 *             focus - the action to execute when the field comes into focus
-	 *        alignmentX - the horizontal alignment of the field
-	 *        alignmentY - the vertical alignment of the field
+	/* generateThumbnail - creates and returns an instance of our custom Thumbnail object, which inherits from JLabel
+	 *             image - the image represented by the Thumbnail
+	 *          pathName - the file system path name of the aforementioned image
 	 */
 	public static Thumbnail generateThumbnail(BufferedImage image, String pathName)
 	{
