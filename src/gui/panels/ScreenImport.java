@@ -25,11 +25,13 @@ public class ScreenImport extends JPanel
 	private ActionListener continueAction;
 	private ActionListener loadNextSelectedAction;
 	private ActionListener loadPrevSelectedAction;
+	private Box mainContainer;
 	private Box leftContainer;
 	private Box rightContainer;
 	private Box displayedContainer;
 	private Box selectedContainer;
 	private Box buttonsContainer;
+	private JLabel instructionsLabel;
 	private JButton loadNextButton;
 	private JButton loadPrevButton;
 	private JButton loadNextSelectedButton;
@@ -48,6 +50,7 @@ public class ScreenImport extends JPanel
 		this.thumbnails = this.getThumbnails();
 		this.displayedLabels = this.getDisplayedLabels();
 		this.selectedLabels = new ArrayList<JLabel>();
+		this.mainContainer = Box.createHorizontalBox();
 		this.leftContainer = Box.createVerticalBox();
 		this.rightContainer = Box.createVerticalBox();
 		this.displayedContainer = Box.createVerticalBox();
@@ -57,13 +60,16 @@ public class ScreenImport extends JPanel
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.generateListeners();
 		this.refreshDisplayedLabels(0);
-		this.leftContainer.add(this.displayedContainer);
-		this.populateButtonsContainer();
-		this.leftContainer.add(this.buttonsContainer);
 		this.refreshSelectedLabels(0);
+		this.populateButtonsContainer();
+		this.leftContainer.add(this.displayedContainer);
+		this.leftContainer.add(Box.createVerticalStrut(30));
+		this.leftContainer.add(this.buttonsContainer);
 		this.rightContainer.add(this.selectedContainer);
-		this.add(this.leftContainer);
-		this.add(this.rightContainer);
+		this.mainContainer.add(this.leftContainer);
+		this.mainContainer.add(Box.createHorizontalStrut(100));
+		this.mainContainer.add(this.rightContainer);
+		this.add(this.mainContainer);
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
 		this.revalidate();
@@ -213,8 +219,10 @@ public class ScreenImport extends JPanel
 	 */
 	private void refreshDisplayedLabels(int displayedImagePlace)
 	{
+		this.instructionsLabel = ComponentGenerator.generateLabel("Images Detected on Camera", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.displayedImagePlace = displayedImagePlace;
 		this.displayedContainer.removeAll();
+		this.displayedContainer.add(this.instructionsLabel);
 		for (int i = 0; i < 3; i++)
 		{
 			Box row = Box.createHorizontalBox();
@@ -312,7 +320,6 @@ public class ScreenImport extends JPanel
 		this.continueButton = ComponentGenerator.generateButton("Finish", this.continueAction);
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.buttonsContainer.setAlignmentX(CENTER_ALIGNMENT);
-		this.buttonsContainer.add(Box.createHorizontalStrut(100));
 		this.buttonsContainer.add(this.loadPrevButton);
 		this.buttonsContainer.add(Box.createHorizontalStrut(100));
 		this.buttonsContainer.add(this.continueButton);
