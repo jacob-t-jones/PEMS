@@ -8,8 +8,10 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import gui.*;
 import tools.*;
 
@@ -42,7 +44,7 @@ public class ScreenImport extends JPanel
 	public ScreenImport(FrameManager manager, String filePath)
 	{
 		this.manager = manager;
-		this.directoryName = filePath;
+		this.directoryName = "/Users/Jacob/Documents/Pics";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.thumbnails = this.getThumbnails();
@@ -194,7 +196,7 @@ public class ScreenImport extends JPanel
 		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
 		for (int i = 0; i < this.thumbnails.size(); i++)
 		{
-			JLabel newLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.thumbnails.get(i).getImage(), 150), CENTER_ALIGNMENT);
+			JLabel newLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.thumbnails.get(i).getImage(), 120), CENTER_ALIGNMENT);
 			newLabel.addMouseListener(generateLabelSelectionListener(newLabel));
 			labelList.add(newLabel);
 		}
@@ -213,25 +215,25 @@ public class ScreenImport extends JPanel
 		for (int i = 0; i < 3; i++)
 		{
 			Box row = Box.createHorizontalBox();
-			row.setAlignmentX(CENTER_ALIGNMENT);
 			for (int j = 0; j < 5; j++)
 			{
 				if (this.displayedImagePlace < this.displayedLabels.size())
 				{
-					row.add(this.displayedLabels.get(this.displayedImagePlace));
+					Box col = Box.createHorizontalBox();
+					col.setMinimumSize(new Dimension(150, 150));
+					col.setMaximumSize(new Dimension(150, 150));
+					col.add(Box.createHorizontalGlue());
+					col.add(this.displayedLabels.get(this.displayedImagePlace));
+					col.add(Box.createHorizontalGlue());
+					row.add(col);
 					this.displayedImagePlace++;
 				}
-				else
-				{
-					//row.add(Box.createHorizontalStrut(150));
-				}
-				//row.add(Box.createHorizontalStrut(25));
 			}
 			this.displayedContainer.add(row);
 		}
 		this.displayedImagePlace = displayedImagePlace;
+		this.displayedContainer.add(Box.createHorizontalStrut(150 * 5));
 		this.imageContainer.add(this.displayedContainer);
-		//this.imageContainer.add(Box.createHorizontalStrut(20));
 		this.revalidate();
 		this.repaint();
 	}
