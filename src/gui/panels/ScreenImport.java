@@ -23,15 +23,18 @@ public class ScreenImport extends JPanel
 	private ActionListener loadNextAction;
 	private ActionListener loadPrevAction;
 	private ActionListener continueAction;
-	private ActionListener loadNextSelectedAction;
-	private ActionListener loadPrevSelectedAction;
+	private ActionListener loadNextSelAction;
+	private ActionListener loadPrevSelAction;
 	private Box mainContainer;
+	private Box innerContainer;
 	private Box leftContainer;
 	private Box rightContainer;
 	private Box displayedContainer;
 	private Box selectedContainer;
 	private Box buttonsContainer;
 	private JLabel instructionsLabel;
+	private JLabel displayedTitleLabel;
+	private JLabel selectedTitleLabel;
 	private JButton loadNextButton;
 	private JButton loadPrevButton;
 	private JButton loadNextSelectedButton;
@@ -50,7 +53,8 @@ public class ScreenImport extends JPanel
 		this.thumbnails = this.getThumbnails();
 		this.displayedLabels = this.getDisplayedLabels();
 		this.selectedLabels = new ArrayList<JLabel>();
-		this.mainContainer = Box.createHorizontalBox();
+		this.mainContainer = Box.createVerticalBox();
+		this.innerContainer = Box.createHorizontalBox();
 		this.leftContainer = Box.createVerticalBox();
 		this.rightContainer = Box.createVerticalBox();
 		this.displayedContainer = Box.createVerticalBox();
@@ -58,6 +62,7 @@ public class ScreenImport extends JPanel
 		this.selectedContainer = Box.createVerticalBox();
 		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.buttonsContainer = Box.createHorizontalBox();
+		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Once selected, an image can be removed from the case by simply clicking on it again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.generateListeners();
 		this.refreshDisplayedLabels(0);
 		this.refreshSelectedLabels(0);
@@ -66,9 +71,13 @@ public class ScreenImport extends JPanel
 		this.leftContainer.add(Box.createVerticalStrut(30));
 		this.leftContainer.add(this.buttonsContainer);
 		this.rightContainer.add(this.selectedContainer);
-		this.mainContainer.add(this.leftContainer);
-		this.mainContainer.add(Box.createHorizontalStrut(100));
-		this.mainContainer.add(this.rightContainer);
+		this.innerContainer.add(this.leftContainer);
+		this.innerContainer.add(Box.createHorizontalStrut(100));
+		this.innerContainer.add(this.rightContainer);
+		this.mainContainer.add(Box.createVerticalStrut(20));
+		this.mainContainer.add(this.instructionsLabel);
+		this.mainContainer.add(Box.createVerticalStrut(30));
+		this.mainContainer.add(this.innerContainer);
 		this.add(this.mainContainer);
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
@@ -76,6 +85,13 @@ public class ScreenImport extends JPanel
 		this.repaint();
 	}
 	
+	/* generateListeners - initializes listeners for all of the components within the JPanel
+	 *    loadNextAction - attempts to load the next fifteen images from the camera within "displayedContainer"
+	 *    loadPrevAction - attempts to load the previous fifteen images from the camera within "displayedContainer"
+	 *    continueAction - pushes the ScreenEdit JPanel into view
+	 * loadNextSelAction - attempts to load the next three selected images within "selectedContainer"
+	 * loadPrevSelAction - attempts to load the previous three selected images within "selectedContainer"
+	 */
 	private void generateListeners()
 	{
 		this.loadNextAction = new ActionListener()
@@ -84,8 +100,6 @@ public class ScreenImport extends JPanel
             {
             	if (displayedImagePlace + 15 < displayedLabels.size())
             	{
-            		System.out.println(displayedImagePlace);
-            		System.out.println(displayedLabels.size());
             		refreshDisplayedLabels(displayedImagePlace + 15);
             	}
             }
@@ -107,7 +121,7 @@ public class ScreenImport extends JPanel
             	manager.pushPanel(new ScreenEdit(manager, thumbnails, selectedLabels), "PEMS - Edit Photos");
             }
 		};
-		this.loadNextSelectedAction = new ActionListener()
+		this.loadNextSelAction = new ActionListener()
 		{
             public void actionPerformed(ActionEvent e)
             {
@@ -117,7 +131,7 @@ public class ScreenImport extends JPanel
             	}
             }
 		};
-		this.loadPrevSelectedAction = new ActionListener()
+		this.loadPrevSelAction = new ActionListener()
 		{
             public void actionPerformed(ActionEvent e)
             {
@@ -129,6 +143,10 @@ public class ScreenImport extends JPanel
 		};
 	}
 	
+	/* generateLabelSelectionListener - creates and returns a MouseListener for the JLabel passed in as a parameter
+	 * 			        selectedLabel - the JLabel that the listener is being created for
+	 *         labelSelectionListener - if the JLabel is part of "displayedLabels" it is moved to "selectedLabels", and vice versa
+	 */
 	private MouseListener generateLabelSelectionListener(final JLabel selectedLabel)
 	{
 		MouseListener labelSelectionListener = new MouseListener()
@@ -170,7 +188,7 @@ public class ScreenImport extends JPanel
 		return labelSelectionListener;
 	}
 	
-	/* getThumbnails - fills "thumbnails" by importing images into memory
+	/* getThumbnails - fills the "thumbnails" ArrayList by importing images from the camera into memory
 	 */
 	private ArrayList<Thumbnail> getThumbnails()
 	{ 
@@ -219,10 +237,10 @@ public class ScreenImport extends JPanel
 	 */
 	private void refreshDisplayedLabels(int displayedImagePlace)
 	{
-		this.instructionsLabel = ComponentGenerator.generateLabel("Images Detected on Camera", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images Detected on Camera", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.displayedImagePlace = displayedImagePlace;
 		this.displayedContainer.removeAll();
-		this.displayedContainer.add(this.instructionsLabel);
+		this.displayedContainer.add(this.displayedTitleLabel);
 		for (int i = 0; i < 3; i++)
 		{
 			Box row = Box.createHorizontalBox();
@@ -260,9 +278,11 @@ public class ScreenImport extends JPanel
 	 */
 	private void refreshSelectedLabels(int selectedImagePlace)
 	{
-	    this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this.loadNextSelectedAction, CENTER_ALIGNMENT);
-		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Prev", this.loadPrevSelectedAction, CENTER_ALIGNMENT);
+		this.selectedTitleLabel = ComponentGenerator.generateLabel("Selected Images", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+	    this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this.loadNextSelAction, CENTER_ALIGNMENT);
+		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Prev", this.loadPrevSelAction, CENTER_ALIGNMENT);
 		this.selectedContainer.removeAll();
+		this.selectedContainer.add(this.selectedTitleLabel);
 		this.selectedImagePlace = selectedImagePlace;
 		this.selectedContainer.add(this.loadPrevSelectedButton);
 		for (int i = 0; i < 3; i++)
@@ -315,9 +335,9 @@ public class ScreenImport extends JPanel
 	 */
 	private void populateButtonsContainer()
 	{
-		this.loadNextButton = ComponentGenerator.generateButton("Load More Images", this.loadNextAction);
-		this.loadPrevButton = ComponentGenerator.generateButton("Load Previous Images", this.loadPrevAction);
-		this.continueButton = ComponentGenerator.generateButton("Finish", this.continueAction);
+		this.loadNextButton = ComponentGenerator.generateButton("Load Next Images   >", this.loadNextAction);
+		this.loadPrevButton = ComponentGenerator.generateButton("<   Load Previous Images", this.loadPrevAction);
+		this.continueButton = ComponentGenerator.generateButton("Finish Importing", this.continueAction);
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.buttonsContainer.setAlignmentX(CENTER_ALIGNMENT);
 		this.buttonsContainer.add(this.loadPrevButton);

@@ -35,7 +35,7 @@ public class Thumbnail extends JLabel implements ActionListener
 		this.image = image;
 	}
 	
-	/* getLocation - returns "location", the file system path associated with the thumbnail
+	/* getLocation - returns "location", the file system path associated with the Thumbnail
 	 */
 	public String getFileLocation()
 	{
@@ -50,6 +50,9 @@ public class Thumbnail extends JLabel implements ActionListener
 		this.location = location;
 	}
 
+	/* actionPerformed - mandatory override method
+	 *               e - mandatory ActionEvent parameter
+	 */
 	public void actionPerformed(ActionEvent e) 
 	{
 

@@ -13,8 +13,9 @@ public class ComponentGenerator
 	
 	public static final Font TITLE_FONT = new Font("Courier New", Font.BOLD, 30);
 	public static final Font SUBTITLE_FONT = new Font("Courier New", Font.BOLD, 22);
-	public static final Font STANDARD_TEXT_FONT = new Font("Georgia", Font.PLAIN, 16);
-	public static final Font STANDARD_TEXT_FONT_BOLD = new Font("Georgia", Font.BOLD, 16);
+	public static final Font STANDARD_TEXT_FONT = new Font("Georgia", Font.PLAIN, 14);
+	public static final Font STANDARD_TEXT_FONT_BOLD = new Font("Georgia", Font.BOLD, 14);
+	public static final Font STANDARD_TEXT_FONT_ITALIC = new Font("Georgia", Font.ITALIC, 14);
 	public static final Font ERROR_TEXT_FONT = new Font("Georgia", Font.ITALIC, 12);
 	public static final Color TITLE_COLOR = new Color(46, 46, 46);
 	public static final Color SUBTITLE_COLOR = new Color(2, 2, 123);
