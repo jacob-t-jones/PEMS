@@ -3,10 +3,13 @@
 // ScreenNewCase.java
 
 package gui.panels;
+import java.awt.Cursor;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
+
 import javax.swing.*;
+
 import gui.*;
 
 public class ScreenNewCase extends JPanel implements ActionListener, FocusListener
@@ -48,6 +51,7 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
     					e1.printStackTrace();
     					return;
     				}
+    				this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     	    		this.manager.pushPanel(new ScreenImport(this.manager, this.caseNumField.getText()), "PEMS - Import Images");
     			}
     			else

@@ -53,6 +53,14 @@ public class FrameManager
 		this.mainFrame.setTitle(title);
 	}
 	
+	/* setCursor - sets the cursor displayed in the current JFrame
+	 *    cursor - the cursor to be displayed
+	 */
+	public void setCursor(Cursor cursor)
+	{
+		this.mainFrame.setCursor(cursor);
+	}
+	
 	/* setMenuBar - adds the JMenuBar specified in the parameters to "mainFrame"
 	 *    menuBar - the JMenuBar to display
 	 */

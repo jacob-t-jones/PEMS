@@ -76,6 +76,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.add(this.mainContainer);
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
+		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();
 	}
