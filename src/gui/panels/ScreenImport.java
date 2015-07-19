@@ -92,16 +92,16 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	{
 		if (e.getSource() == this.loadNextButton)
 		{
-        	if (displayedImagePlace + 15 < displayedThumbnails.size())
+        	if (this.displayedImagePlace + 15 < this.displayedThumbnails.size())
         	{
-        		refreshDisplayedThumbnails(displayedImagePlace + 15);
+        		this.refreshDisplayedThumbnails(this.displayedImagePlace + 15);
         	}
 		}
 		else if (e.getSource() == this.loadPrevButton)
 		{
-          	if (displayedImagePlace >= 15)
+          	if (this.displayedImagePlace >= 15)
         	{
-        		refreshDisplayedThumbnails(displayedImagePlace - 15);
+        		this.refreshDisplayedThumbnails(this.displayedImagePlace - 15);
         	}
 		}
 		else if (e.getSource() == this.finishButton)
@@ -119,20 +119,20 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 					return;
 				}
         	}
-        	manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
+        	this.manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
-        	if (selectedImagePlace + 3 < selectedThumbnails.size())
+        	if (this.selectedImagePlace + 3 < this.selectedThumbnails.size())
         	{
-        		refreshSelectedThumbnails(selectedImagePlace + 3);
+        		this.refreshSelectedThumbnails(this.selectedImagePlace + 3);
         	}
 		}
 		else if (e.getSource() == this.loadPrevSelectedButton)
 		{
-        	if (selectedImagePlace >= 3)
+        	if (this.selectedImagePlace >= 3)
         	{
-        		refreshSelectedThumbnails(selectedImagePlace - 3);
+        		this.refreshSelectedThumbnails(this.selectedImagePlace - 3);
         	}
 		}
 	}
@@ -144,19 +144,19 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
-		if (selectedThumbnails.contains(e.getSource()))
+		if (this.selectedThumbnails.contains(e.getSource()))
 		{
-			displayedThumbnails.add((Thumbnail)e.getSource());
-			selectedThumbnails.remove(e.getSource());
-			refreshDisplayedThumbnails(displayedImagePlace);
-			refreshSelectedThumbnails(selectedImagePlace);
+			this.displayedThumbnails.add((Thumbnail)e.getSource());
+			this.selectedThumbnails.remove(e.getSource());
+			this.refreshDisplayedThumbnails(this.displayedImagePlace);
+			this.refreshSelectedThumbnails(this.selectedImagePlace);
 		}
 		else if (displayedThumbnails.contains(e.getSource()))
 		{
-			selectedThumbnails.add((Thumbnail)e.getSource());
-			displayedThumbnails.remove(e.getSource());
-			refreshDisplayedThumbnails(displayedImagePlace);
-			refreshSelectedThumbnails(selectedImagePlace);
+			this.selectedThumbnails.add((Thumbnail)e.getSource());
+			this.displayedThumbnails.remove(e.getSource());
+			this.refreshDisplayedThumbnails(this.displayedImagePlace);
+			this.refreshSelectedThumbnails(this.selectedImagePlace);
 		}
 	}
 	
@@ -165,7 +165,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	 */
 	public void mousePressed(MouseEvent e) 
 	{
-
+		return;
 	}
 	 
 	/* mouseReleased - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
@@ -173,7 +173,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	 */
 	public void mouseReleased(MouseEvent e)
 	{
-
+		return;
 	}
 	
 	/* mouseEntered - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
@@ -181,7 +181,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	 */
 	public void mouseEntered(MouseEvent e) 
 	{
-
+		return;
 	}
 	
 	/* mouseExited - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
@@ -189,7 +189,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	 */
 	public void mouseExited(MouseEvent e) 
 	{
-
+		return;
 	}	
 	
 	/* getThumbnails - fills the "thumbnails" ArrayList by importing images from the camera into memory
@@ -216,7 +216,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 			    	e.printStackTrace();
 				    return null;
 			    }	    	
-			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeImage(currentImage, 120), currentLocation, currentFileName);
+			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 120), currentLocation, currentFileName);
 			    currentThumb.addMouseListener(this);
 			    thumbnailList.add(currentThumb);
 			}

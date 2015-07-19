@@ -69,8 +69,9 @@ public class ImageEditor
 	 */
 	public static BufferedImage resizeImage(BufferedImage image, int size)
 	{
-		return Scalr.resize(image, Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
+		return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, size, Scalr.OP_ANTIALIAS);
 	}
+	
 	
 	/* resizeImage - resizes an image to the width and height specified in the parameters
 	 *       image - the image in question
@@ -80,6 +81,15 @@ public class ImageEditor
 	public static BufferedImage resizeImage(BufferedImage image, int width, int height)
 	{
 		return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, width, height, Scalr.OP_ANTIALIAS);
+	}
+	
+	/* resizeThumbnail - quickly resizes an image to the size specified in the parameters, maintaining its aspect ratio
+	 *           image - the image in question
+	 *            size - the new size of the image
+	 */
+	public static BufferedImage resizeThumbnail(BufferedImage image, int size)
+	{
+		return Scalr.resize(image, Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
 	}
 	
 	/* rotateRight90 - rotates an image right by 90 degrees

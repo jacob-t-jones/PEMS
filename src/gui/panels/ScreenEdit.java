@@ -20,7 +20,12 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	
 	private FrameManager manager;
 	private ArrayList<Thumbnail> caseThumbnails;
+	private ArrayList<BufferedImage> selectedImageHistory;
+	private BufferedImage selectedImage;
+	private Box mainContainer;
+	private Box selectedImageContainer;
 	private Box caseThumbnailContainer;
+	private JLabel selectedImageLabel;
 	private JButton loadNextThumbnails;
 	private JButton loadPrevThumbnails;
 	private JMenuBar menuBar;
@@ -43,18 +48,28 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	private JMenuItem rotate180MenuItem;
 	private JMenuItem rotate270MenuItem;
 	private String caseNum;
+	private String selectedImageName;
+	private int selectedImageHistoryIndex;
 	private int caseThumbnailIndex;
 	
 	public ScreenEdit(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
+		this.selectedImageHistory = new ArrayList<BufferedImage>();
 		this.caseNum = caseNum;
+		this.selectedImageHistoryIndex = 0;
 		this.caseThumbnailIndex = 0;
-		this.caseThumbnails = getCaseThumbnails();
+		this.mainContainer = Box.createVerticalBox();
+		this.selectedImageContainer = Box.createHorizontalBox();
+		this.selectedImageContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.caseThumbnailContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.caseThumbnails = getCaseThumbnails();
 		this.refreshCaseThumbnails(0);
-		this.add(this.caseThumbnailContainer);
+		this.mainContainer.add(this.selectedImageContainer);
+		this.mainContainer.add(Box.createVerticalStrut(40));
+		this.mainContainer.add(this.caseThumbnailContainer);
+		this.add(this.mainContainer);
 		this.constructMenuBar();
 		this.revalidate();
 		this.repaint();
@@ -102,19 +117,23 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 	    else if (e.getSource() == this.antiAliasMenuItem)
 		{
-			
+			this.selectedImage = ImageEditor.applyAntiAliasing(this.selectedImage);
+			this.refreshSelectedImage();
 		}
 		else if (e.getSource() == this.brightenMenuItem)
 		{
-			
+			this.selectedImage = ImageEditor.brightenImage(this.selectedImage);
+			this.refreshSelectedImage();
 		}
 		else if (e.getSource() == this.darkenMenuItem)
 		{
-			
+			this.selectedImage = ImageEditor.darkenImage(this.selectedImage);
+			this.refreshSelectedImage();
 		}
 		else if (e.getSource() == this.grayscaleMenuItem)
 		{
-			
+			this.selectedImage = ImageEditor.toGrayscale(this.selectedImage);
+			this.refreshSelectedImage();
 		}
 		else if (e.getSource() == this.resizeMenuItem)
 		{
@@ -122,41 +141,81 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.rotate90MenuItem)
 		{
-			
+			this.selectedImage = ImageEditor.rotateRight90(this.selectedImage);
+			this.refreshSelectedImage();
 		}
 		else if (e.getSource() == this.rotate180MenuItem)
 		{
-			
+			this.selectedImage = ImageEditor.rotateRight180(this.selectedImage);
+			this.refreshSelectedImage();
 		}
 		else if (e.getSource() == this.rotate270MenuItem)
 		{
-			
+			this.selectedImage = ImageEditor.rotateRight270(this.selectedImage);
+			this.refreshSelectedImage();
 		}
 	}
 	
 	public void mouseClicked(MouseEvent e) 
 	{
-		
+		Thumbnail selectedThumbnail = (Thumbnail)e.getSource();
+		this.selectedImage = null;
+	    try 
+	    {      
+	    	this.selectedImage = ImageIO.read(new File(selectedThumbnail.getFilePath()));
+	    } 
+	    catch (IOException e1)
+	    {
+			System.out.println("Error - Unable to import selected image");
+			e1.printStackTrace();
+			return;
+	    }
+    	this.selectedImageName = selectedThumbnail.getFileName();
+	    this.selectedImageHistory.clear();
+	    this.selectedImageHistoryIndex = 0;
+	    this.refreshSelectedImage();
 	}
 
 	public void mousePressed(MouseEvent e) 
 	{
-		
+		return;
 	}
 
 	public void mouseReleased(MouseEvent e) 
 	{
-		
+		return;
 	}
 
 	public void mouseEntered(MouseEvent e) 
 	{
-		
+		return;
 	}
 
 	public void mouseExited(MouseEvent e) 
 	{
-		
+		return;
+	}
+	
+	private void refreshSelectedImage()
+	{
+		this.selectedImageContainer.removeAll();
+		if (this.selectedImage.getWidth() > 500 || this.selectedImage.getHeight() > 500)
+		{
+			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 500), CENTER_ALIGNMENT);
+		}
+		else
+		{
+			this.selectedImageLabel = ComponentGenerator.generateLabel(this.selectedImage, CENTER_ALIGNMENT);
+		}
+		this.selectedImageContainer.setMaximumSize(new Dimension(500, 500));
+		this.selectedImageContainer.setMinimumSize(new Dimension(500, 500));
+		this.selectedImageContainer.add(Box.createHorizontalGlue());
+		this.selectedImageContainer.add(Box.createVerticalStrut(500));
+		this.selectedImageContainer.add(this.selectedImageLabel);
+		this.selectedImageContainer.add(Box.createVerticalStrut(500));
+		this.selectedImageContainer.add(Box.createHorizontalGlue());
+		this.revalidate();
+		this.repaint();
 	}
 	
 	private ArrayList<Thumbnail> getCaseThumbnails()
@@ -181,7 +240,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 			    	e.printStackTrace();
 				    return null;
 			    }	    	
-			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeImage(currentImage, 80), currentLocation, currentFileName);
+			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 80), currentLocation, currentFileName);
 				currentThumb.setAlignmentX(CENTER_ALIGNMENT);
 			    currentThumb.addMouseListener(this);
 			    thumbnailList.add(currentThumb);
