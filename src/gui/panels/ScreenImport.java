@@ -7,13 +7,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
-import java.net.URI;
 import java.nio.file.*;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import gui.*;
 import tools.*;
 
@@ -21,7 +18,6 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 {
 
 	private FrameManager manager;
-	private ArrayList<Thumbnail> thumbnails;
 	private ArrayList<Thumbnail> displayedThumbnails;
 	private ArrayList<Thumbnail> selectedThumbnails;
 	private Box mainContainer;
@@ -51,7 +47,6 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.directoryName = "/Users/Jacob/Documents/Pics";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
-		this.thumbnails = this.getThumbnails();
 		this.displayedThumbnails = this.getThumbnails();
 		this.selectedThumbnails = new ArrayList<Thumbnail>();
 		this.mainContainer = Box.createVerticalBox();
