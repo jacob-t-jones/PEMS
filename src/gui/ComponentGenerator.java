@@ -29,7 +29,7 @@ public class ComponentGenerator
 	
 	/* generateButton - creates and returns a JButton that complies with the parameters
 	 *           text - the text displayed in the button
-	 *         action - the action to execute when the button is pressed
+	 *         action - the ActionListener for the button
 	 */
 	public static JButton generateButton(String text, ActionListener action)
 	{
@@ -40,7 +40,7 @@ public class ComponentGenerator
 	
 	/* generateButton - creates and returns a JButton that complies with the parameters
 	 *           text - the text displayed in the button
-	 *         action - the action to execute when the button is pressed
+	 *         action - the ActionListener for the button
 	 *     alignmentX - the horizontal alignment of the button
 	 */
 	public static JButton generateButton(String text, ActionListener action, float alignmentX)
@@ -53,7 +53,7 @@ public class ComponentGenerator
 	
 	/* generateButton - creates and returns a JButton that complies with the parameters
 	 *           text - the text displayed in the button
-	 *         action - the action to execute when the button is pressed
+	 *         action - the ActionListener for the button
 	 *     alignmentX - the horizontal alignment of the button
 	 *     alignmentY - the vertical alignment of the button
 	 */
@@ -146,7 +146,7 @@ public class ComponentGenerator
 	
 	/* generateTextField - creates and returns a JTextField that complies with the parameters
 	 *              text - the default text displayed in the field
-	 *             focus - the action to execute when the field comes into focus
+	 *             focus - the FocusListener for the field
 	 */
 	public static JTextField generateTextField(String text, FocusListener focus)
 	{
@@ -157,7 +157,7 @@ public class ComponentGenerator
 	
 	/* generateTextField - creates and returns a JTextField that complies with the parameters
 	 *              text - the default text displayed in the field
-	 *             focus - the action to execute when the field comes into focus
+	 *             focus - the FocusListener for the field
 	 *        alignmentX - the horizontal alignment of the field
 	 */
 	public static JTextField generateTextField(String text, FocusListener focus, float alignmentX)
@@ -170,7 +170,7 @@ public class ComponentGenerator
 	
 	/* generateTextField - creates and returns a JTextField that complies with the parameters
 	 *              text - the default text displayed in the field
-	 *             focus - the action to execute when the field comes into focus
+	 *             focus - the FocusListener for the field
 	 *        alignmentX - the horizontal alignment of the field
 	 *        alignmentY - the vertical alignment of the field
 	 */
@@ -191,6 +191,45 @@ public class ComponentGenerator
 	{
 		Thumbnail newThumb = new Thumbnail(image, pathName);
 		return newThumb;
+	}
+	
+	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
+	 *             text - the text displayed on the menu item
+	 *           action - the ActionListener for the menu item
+	 */
+	public static JMenuItem generateMenuItem(String text, ActionListener action)
+	{
+		JMenuItem newMenuItem = new JMenuItem(text);
+		newMenuItem.addActionListener(action);
+		return newMenuItem;
+	}
+	
+	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
+	 *             text - the text displayed on the menu item
+	 *           action - the ActionListener for the menu item
+	 *      accelerator - the KeyStroke to set the accelerator to (see: normal keyboard shortcut)
+	 */
+	public static JMenuItem generateMenuItem(String text, ActionListener action, KeyStroke accelerator)
+	{
+		JMenuItem newMenuItem = new JMenuItem(text);
+		newMenuItem.addActionListener(action);
+		newMenuItem.setAccelerator(accelerator);
+		return newMenuItem;
+	}
+	
+	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
+	 *             text - the text displayed on the menu item
+	 *           action - the ActionListener for the menu item
+	 *      accelerator - the KeyStroke to set the menu item accelerator to (see: normal keyboard shortcut)
+	 *         mnemonic - the integer representation of the menu item mnemonic (see: stupid weird keyboard shortcut)
+	 */
+	public static JMenuItem generateMenuItem(String text, ActionListener action, KeyStroke accelerator, int mnemonic)
+	{
+		JMenuItem newMenuItem = new JMenuItem(text);
+		newMenuItem.addActionListener(action);
+		newMenuItem.setAccelerator(accelerator);
+		newMenuItem.setMnemonic(mnemonic);
+		return newMenuItem;
 	}
 
 }
