@@ -53,6 +53,14 @@ public class FrameManager
 		this.mainFrame.setTitle(title);
 	}
 	
+	/* setMenuBar - adds the JMenuBar specified in the parameters to "mainFrame"
+	 *    menuBar - the JMenuBar to display
+	 */
+	public void setMenuBar(JMenuBar menuBar)
+	{
+		this.mainFrame.setJMenuBar(menuBar);
+	}
+	
 	/* setResizable - determines whether or not the current JFrame is resizable
 	 *    resizable - boolean value that determines the status of the JFrame
 	 */

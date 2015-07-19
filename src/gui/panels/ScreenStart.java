@@ -12,15 +12,12 @@ import javax.swing.*;
 import gui.*;
 import tools.*;
 
-public class ScreenStart extends JPanel
+public class ScreenStart extends JPanel implements ActionListener
 {
 
 	private FrameManager manager;
 	private BufferedImage logoImage;
 	private BufferedImage bgImage;
-	private ActionListener newCaseListener;
-	private ActionListener editCaseListener;
-	private ActionListener settingsListener;
 	private Box topContainer;
 	private Box bottomContainer;
 	private JLabel logoLabel;
@@ -34,7 +31,6 @@ public class ScreenStart extends JPanel
 	{
 		this.manager = manager;
 		this.importImages();
-		this.generateListeners();
 		this.populateTopContainer();
 		this.populateBottomContainer();
 	}
@@ -46,6 +42,35 @@ public class ScreenStart extends JPanel
 	{
 		super.paintComponent(g);
 		g.drawImage(this.bgImage, 0, 0, null);
+	}
+	
+	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
+	 *	             e - the event in question
+	 *	               1. pushes ScreenNewCase to the JFrame
+	 *                 2. pushes ScreenAddToExisting to the JFrame
+	 *                 3. pushes ScreenSettings to the JFrame
+	 */
+	public void actionPerformed(ActionEvent e)
+	{
+		if (e.getSource() == this.newCaseButton)
+		{
+			this.manager.pushPanel(new ScreenNewCase(this.manager), "PEMS - Create New Case");
+		}
+		else if (e.getSource() == this.editCaseButton)
+		{
+        	try 
+        	{
+				this.manager.pushPanel(new ScreenAddToExisting(this.manager), "PEMS - Edit Existing Case");
+			} 
+        	catch (IOException e1) 
+        	{
+				e1.printStackTrace();
+			}
+		}
+		else if (e.getSource() == this.settingsButton)
+		{
+			// TODO: On button press actions
+		}
 	}
 	
 	/* importImages - reads all necessary images into memory
@@ -65,42 +90,6 @@ public class ScreenStart extends JPanel
 			e.printStackTrace();
 			return;
 	    }
-	}
-	
-	/* generateListeners - initializes listeners for all of the components within the JPanel
-	 *   newCaseListener - pushes ScreenNewCase to the JFrame
-	 *  editCaseListener - pushes ScreenAddToExisting to the JFrame
-	 *  settingsListener - pushes ScreenSettings to the JFrame
-	 */
-	private void generateListeners()
-	{
-		this.newCaseListener = new ActionListener()
-		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	manager.pushPanel(new ScreenNewCase(manager), "PEMS - Create New Case");
-            }
-		};
-		this.editCaseListener = new ActionListener()
-		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	try 
-            	{
-					manager.pushPanel(new ScreenAddToExisting(manager), "PEMS - Edit Existing Case");
-				} catch (IOException e1) 
-            	{
-					e1.printStackTrace();
-				}
-            }
-		};
-		this.settingsListener = new ActionListener()
-		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	// TODO: On button press actions
-            }
-		};
 	}
 	
 	/* populateTopContainer - adds "logoLabel", "titleLabel", and "nameLabel" to "topContainer" before displaying it
@@ -124,9 +113,9 @@ public class ScreenStart extends JPanel
 	 */
 	private void populateBottomContainer()
 	{
-		this.newCaseButton = ComponentGenerator.generateButton("New Case", this.newCaseListener);
-		this.editCaseButton = ComponentGenerator.generateButton("Edit Case", this.editCaseListener);
-		this.settingsButton = ComponentGenerator.generateButton("Settings", this.settingsListener);
+		this.newCaseButton = ComponentGenerator.generateButton("New Case", this);
+		this.editCaseButton = ComponentGenerator.generateButton("Edit Case", this);
+		this.settingsButton = ComponentGenerator.generateButton("Settings", this);
 		this.bottomContainer = Box.createHorizontalBox();
 		this.bottomContainer.add(this.newCaseButton);
 		this.bottomContainer.add(Box.createHorizontalStrut(120));		

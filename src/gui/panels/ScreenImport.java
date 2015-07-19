@@ -13,18 +13,13 @@ import javax.swing.*;
 import gui.*;
 import tools.*;
 
-public class ScreenImport extends JPanel
+public class ScreenImport extends JPanel implements ActionListener, MouseListener
 {
 
 	private FrameManager manager;
 	private ArrayList<Thumbnail> thumbnails;
 	private ArrayList<JLabel> displayedLabels;
 	private ArrayList<JLabel> selectedLabels;
-	private ActionListener loadNextAction;
-	private ActionListener loadPrevAction;
-	private ActionListener continueAction;
-	private ActionListener loadNextSelAction;
-	private ActionListener loadPrevSelAction;
 	private Box mainContainer;
 	private Box innerContainer;
 	private Box leftContainer;
@@ -39,7 +34,7 @@ public class ScreenImport extends JPanel
 	private JButton loadPrevButton;
 	private JButton loadNextSelectedButton;
 	private JButton loadPrevSelectedButton;
-	private JButton continueButton;
+	private JButton finishButton;
 	private String directoryName;
 	private int displayedImagePlace;
 	private int selectedImagePlace;
@@ -63,7 +58,6 @@ public class ScreenImport extends JPanel
 		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Once selected, an image can be removed from the case by simply clicking on it again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
-		this.generateListeners();
 		this.refreshDisplayedLabels(0);
 		this.refreshSelectedLabels(0);
 		this.populateButtonsContainer();
@@ -85,108 +79,104 @@ public class ScreenImport extends JPanel
 		this.repaint();
 	}
 	
-	/* generateListeners - initializes listeners for all of the components within the JPanel
-	 *    loadNextAction - attempts to load the next fifteen images from the camera within "displayedContainer"
-	 *    loadPrevAction - attempts to load the previous fifteen images from the camera within "displayedContainer"
-	 *    continueAction - pushes the ScreenEdit JPanel into view
-	 * loadNextSelAction - attempts to load the next three selected images within "selectedContainer"
-	 * loadPrevSelAction - attempts to load the previous three selected images within "selectedContainer"
+	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
+	 *	             e - the event in question
+	 *                 1. attempts to load the next fifteen images from the camera within "displayedContainer"
+	 *                 2. attempts to load the previous fifteen images from the camera within "displayedContainer"
+	 *                 3. pushes the ScreenEdit JPanel into view
+	 *                 4. attempts to load the next three selected images within "selectedContainer"
+	 *                 5. attempts to load the previous three selected images within "selectedContainer"
 	 */
-	private void generateListeners()
+	public void actionPerformed(ActionEvent e) 
 	{
-		this.loadNextAction = new ActionListener()
+		if (e.getSource() == this.loadNextButton)
 		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	if (displayedImagePlace + 15 < displayedLabels.size())
-            	{
-            		refreshDisplayedLabels(displayedImagePlace + 15);
-            	}
-            }
-		};
-		this.loadPrevAction = new ActionListener()
+        	if (displayedImagePlace + 15 < displayedLabels.size())
+        	{
+        		refreshDisplayedLabels(displayedImagePlace + 15);
+        	}
+		}
+		else if (e.getSource() == this.loadPrevButton)
 		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	if (displayedImagePlace >= 15)
-            	{
-            		refreshDisplayedLabels(displayedImagePlace - 15);
-            	}
-            }
-		};
-		this.continueAction = new ActionListener()
+          	if (displayedImagePlace >= 15)
+        	{
+        		refreshDisplayedLabels(displayedImagePlace - 15);
+        	}
+		}
+		else if (e.getSource() == this.finishButton)
 		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	manager.pushPanel(new ScreenEdit(manager, thumbnails, selectedLabels), "PEMS - Edit Photos");
-            }
-		};
-		this.loadNextSelAction = new ActionListener()
+        	manager.pushPanel(new ScreenEdit(manager), "PEMS - Edit Photos");
+		}
+		else if (e.getSource() == this.loadNextSelectedButton)
 		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	if (selectedImagePlace + 3 < selectedLabels.size())
-            	{
-            		refreshSelectedLabels(selectedImagePlace + 3);
-            	}
-            }
-		};
-		this.loadPrevSelAction = new ActionListener()
+        	if (selectedImagePlace + 3 < selectedLabels.size())
+        	{
+        		refreshSelectedLabels(selectedImagePlace + 3);
+        	}
+		}
+		else if (e.getSource() == this.loadPrevSelectedButton)
 		{
-            public void actionPerformed(ActionEvent e)
-            {
-            	if (selectedImagePlace >= 3)
-            	{
-            		refreshSelectedLabels(selectedImagePlace - 3);
-            	}
-            }
-		};
+        	if (selectedImagePlace >= 3)
+        	{
+        		refreshSelectedLabels(selectedImagePlace - 3);
+        	}
+		}
 	}
 	
-	/* generateLabelSelectionListener - creates and returns a MouseListener for the JLabel passed in as a parameter
-	 * 			        selectedLabel - the JLabel that the listener is being created for
-	 *         labelSelectionListener - if the JLabel is part of "displayedLabels" it is moved to "selectedLabels", and vice versa
+	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 *              1. removes the source JLabel from "selectedLabels" and adds it to "displayedLabels"
+	 *              2. removes the source JLabel from "displayedLabels" and adds it to "selectedLabels"
 	 */
-	private MouseListener generateLabelSelectionListener(final JLabel selectedLabel)
+	public void mouseClicked(MouseEvent e) 
 	{
-		MouseListener labelSelectionListener = new MouseListener()
+		if (selectedLabels.contains(e.getSource()))
 		{
-			public void mouseClicked(MouseEvent e) 
-			{
-				if (selectedLabels.contains(selectedLabel))
-				{
-					displayedLabels.add(selectedLabel);
-					selectedLabels.remove(selectedLabel);
-					refreshDisplayedLabels(displayedImagePlace);
-					refreshSelectedLabels(selectedImagePlace);
-				}
-				else if (displayedLabels.contains(selectedLabel))
-				{
-					selectedLabels.add(selectedLabel);
-					displayedLabels.remove(selectedLabel);
-					refreshDisplayedLabels(displayedImagePlace);
-					refreshSelectedLabels(selectedImagePlace);
-				}
-			}
-			public void mousePressed(MouseEvent e) 
-			{
-
-			}
-			public void mouseReleased(MouseEvent e)
-			{
-
-			}
-			public void mouseEntered(MouseEvent e) 
-			{
-
-			}
-			public void mouseExited(MouseEvent e) 
-			{
-
-			}	
-		};
-		return labelSelectionListener;
+			displayedLabels.add((JLabel)e.getSource());
+			selectedLabels.remove(e.getSource());
+			refreshDisplayedLabels(displayedImagePlace);
+			refreshSelectedLabels(selectedImagePlace);
+		}
+		else if (displayedLabels.contains(e.getSource()))
+		{
+			selectedLabels.add((JLabel)e.getSource());
+			displayedLabels.remove(e.getSource());
+			refreshDisplayedLabels(displayedImagePlace);
+			refreshSelectedLabels(selectedImagePlace);
+		}
 	}
+	
+	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
+	public void mousePressed(MouseEvent e) 
+	{
+
+	}
+	 
+	/* mouseReleased - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	           e - the event in question
+	 */
+	public void mouseReleased(MouseEvent e)
+	{
+
+	}
+	
+	/* mouseEntered - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
+	public void mouseEntered(MouseEvent e) 
+	{
+
+	}
+	
+	/* mouseExited - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	         e - the event in question
+	 */
+	public void mouseExited(MouseEvent e) 
+	{
+
+	}	
 	
 	/* getThumbnails - fills the "thumbnails" ArrayList by importing images from the camera into memory
 	 */
@@ -227,7 +217,7 @@ public class ScreenImport extends JPanel
 		for (int i = 0; i < this.thumbnails.size(); i++)
 		{
 			JLabel newLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.thumbnails.get(i).getImage(), 120), CENTER_ALIGNMENT);
-			newLabel.addMouseListener(generateLabelSelectionListener(newLabel));
+			newLabel.addMouseListener(this);
 			labelList.add(newLabel);
 		}
 		return labelList;
@@ -279,8 +269,8 @@ public class ScreenImport extends JPanel
 	private void refreshSelectedLabels(int selectedImagePlace)
 	{
 		this.selectedTitleLabel = ComponentGenerator.generateLabel("Selected Images", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
-	    this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this.loadNextSelAction, CENTER_ALIGNMENT);
-		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Prev", this.loadPrevSelAction, CENTER_ALIGNMENT);
+	    this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
+		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Prev", this, CENTER_ALIGNMENT);
 		this.selectedContainer.removeAll();
 		this.selectedContainer.add(this.selectedTitleLabel);
 		this.selectedImagePlace = selectedImagePlace;
@@ -335,14 +325,14 @@ public class ScreenImport extends JPanel
 	 */
 	private void populateButtonsContainer()
 	{
-		this.loadNextButton = ComponentGenerator.generateButton("Load Next Images   >", this.loadNextAction);
-		this.loadPrevButton = ComponentGenerator.generateButton("<   Load Previous Images", this.loadPrevAction);
-		this.continueButton = ComponentGenerator.generateButton("Finish Importing", this.continueAction);
+		this.loadNextButton = ComponentGenerator.generateButton("Load Next Images   >", this);
+		this.loadPrevButton = ComponentGenerator.generateButton("<   Load Previous Images", this);
+		this.finishButton = ComponentGenerator.generateButton("Finish Importing", this);
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.buttonsContainer.setAlignmentX(CENTER_ALIGNMENT);
 		this.buttonsContainer.add(this.loadPrevButton);
 		this.buttonsContainer.add(Box.createHorizontalStrut(100));
-		this.buttonsContainer.add(this.continueButton);
+		this.buttonsContainer.add(this.finishButton);
 		this.buttonsContainer.add(Box.createHorizontalStrut(100));
 		this.buttonsContainer.add(this.loadNextButton);
 	}
