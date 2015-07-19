@@ -4,6 +4,8 @@
 
 package gui.panels;
 import java.awt.event.*;
+import java.awt.image.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import gui.*;
 
@@ -49,7 +51,7 @@ public class ScreenEdit extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.quitMenuItem)
 		{
-
+			System.exit(0);
 		}
 		else if (e.getSource() == this.undoMenuItem)
 		{

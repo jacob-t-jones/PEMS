@@ -50,7 +50,7 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
     					e1.printStackTrace();
     					return;
     				}
-    	    		this.manager.pushPanel(new ScreenImport(this.manager, "Users/andrewrottier/Documents/Pictures/CrimePhotos/"), "PEMS - Import Images");
+    	    		this.manager.pushPanel(new ScreenImport(this.manager, this.caseNumField.getText()), "PEMS - Import Images");
     			}
     			else
     			{

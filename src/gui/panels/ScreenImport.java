@@ -7,9 +7,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
+import java.net.URI;
+import java.nio.file.*;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import gui.*;
 import tools.*;
 
@@ -18,8 +22,8 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 
 	private FrameManager manager;
 	private ArrayList<Thumbnail> thumbnails;
-	private ArrayList<JLabel> displayedLabels;
-	private ArrayList<JLabel> selectedLabels;
+	private ArrayList<Thumbnail> displayedThumbnails;
+	private ArrayList<Thumbnail> selectedThumbnails;
 	private Box mainContainer;
 	private Box innerContainer;
 	private Box leftContainer;
@@ -35,19 +39,21 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	private JButton loadNextSelectedButton;
 	private JButton loadPrevSelectedButton;
 	private JButton finishButton;
+	private String caseName;
 	private String directoryName;
 	private int displayedImagePlace;
 	private int selectedImagePlace;
 
-	public ScreenImport(FrameManager manager, String filePath)
+	public ScreenImport(FrameManager manager, String caseName)
 	{
 		this.manager = manager;
+		this.caseName = caseName;
 		this.directoryName = "/Users/Jacob/Documents/Pics";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.thumbnails = this.getThumbnails();
-		this.displayedLabels = this.getDisplayedLabels();
-		this.selectedLabels = new ArrayList<JLabel>();
+		this.displayedThumbnails = this.getThumbnails();
+		this.selectedThumbnails = new ArrayList<Thumbnail>();
 		this.mainContainer = Box.createVerticalBox();
 		this.innerContainer = Box.createHorizontalBox();
 		this.leftContainer = Box.createVerticalBox();
@@ -58,8 +64,8 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Once selected, an image can be removed from the case by simply clicking on it again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
-		this.refreshDisplayedLabels(0);
-		this.refreshSelectedLabels(0);
+		this.refreshDisplayedThumbnails(0);
+		this.refreshSelectedThumbnails(0);
 		this.populateButtonsContainer();
 		this.leftContainer.add(this.displayedContainer);
 		this.leftContainer.add(Box.createVerticalStrut(30));
@@ -83,7 +89,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	 *	             e - the event in question
 	 *                 1. attempts to load the next fifteen images from the camera within "displayedContainer"
 	 *                 2. attempts to load the previous fifteen images from the camera within "displayedContainer"
-	 *                 3. pushes the ScreenEdit JPanel into view
+	 *                 3. pushes the ScreenEdit JPanel into view, copies imported images to the proper case folder
 	 *                 4. attempts to load the next three selected images within "selectedContainer"
 	 *                 5. attempts to load the previous three selected images within "selectedContainer"
 	 */
@@ -91,58 +97,71 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	{
 		if (e.getSource() == this.loadNextButton)
 		{
-        	if (displayedImagePlace + 15 < displayedLabels.size())
+        	if (displayedImagePlace + 15 < displayedThumbnails.size())
         	{
-        		refreshDisplayedLabels(displayedImagePlace + 15);
+        		refreshDisplayedThumbnails(displayedImagePlace + 15);
         	}
 		}
 		else if (e.getSource() == this.loadPrevButton)
 		{
           	if (displayedImagePlace >= 15)
         	{
-        		refreshDisplayedLabels(displayedImagePlace - 15);
+        		refreshDisplayedThumbnails(displayedImagePlace - 15);
         	}
 		}
 		else if (e.getSource() == this.finishButton)
 		{
+        	for (int i = 0; i < this.selectedThumbnails.size(); i++)
+        	{
+				try 
+				{
+					Files.copy(Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName()), Paths.get("cases/" + this.caseName + "/" + this.selectedThumbnails.get(i).getFileName()), StandardCopyOption.REPLACE_EXISTING);
+				} 
+				catch (IOException e1) 
+				{
+					System.out.println("Error - Unable to copy image files to new directory");
+					e1.printStackTrace();
+					return;
+				}
+        	}
         	manager.pushPanel(new ScreenEdit(manager), "PEMS - Edit Photos");
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
-        	if (selectedImagePlace + 3 < selectedLabels.size())
+        	if (selectedImagePlace + 3 < selectedThumbnails.size())
         	{
-        		refreshSelectedLabels(selectedImagePlace + 3);
+        		refreshSelectedThumbnails(selectedImagePlace + 3);
         	}
 		}
 		else if (e.getSource() == this.loadPrevSelectedButton)
 		{
         	if (selectedImagePlace >= 3)
         	{
-        		refreshSelectedLabels(selectedImagePlace - 3);
+        		refreshSelectedThumbnails(selectedImagePlace - 3);
         	}
 		}
 	}
 	
 	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
 	 *	          e - the event in question
-	 *              1. removes the source JLabel from "selectedLabels" and adds it to "displayedLabels"
-	 *              2. removes the source JLabel from "displayedLabels" and adds it to "selectedLabels"
+	 *              1. removes the source Thumbnail from "selectedThumbnails" and adds it to "displayedThumbnails"
+	 *              2. removes the source Thumbnail from "displayedThumbnails" and adds it to "selectedThumbnails"
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
-		if (selectedLabels.contains(e.getSource()))
+		if (selectedThumbnails.contains(e.getSource()))
 		{
-			displayedLabels.add((JLabel)e.getSource());
-			selectedLabels.remove(e.getSource());
-			refreshDisplayedLabels(displayedImagePlace);
-			refreshSelectedLabels(selectedImagePlace);
+			displayedThumbnails.add((Thumbnail)e.getSource());
+			selectedThumbnails.remove(e.getSource());
+			refreshDisplayedThumbnails(displayedImagePlace);
+			refreshSelectedThumbnails(selectedImagePlace);
 		}
-		else if (displayedLabels.contains(e.getSource()))
+		else if (displayedThumbnails.contains(e.getSource()))
 		{
-			selectedLabels.add((JLabel)e.getSource());
-			displayedLabels.remove(e.getSource());
-			refreshDisplayedLabels(displayedImagePlace);
-			refreshSelectedLabels(selectedImagePlace);
+			selectedThumbnails.add((Thumbnail)e.getSource());
+			displayedThumbnails.remove(e.getSource());
+			refreshDisplayedThumbnails(displayedImagePlace);
+			refreshSelectedThumbnails(selectedImagePlace);
 		}
 	}
 	
@@ -202,30 +221,17 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 			    	e.printStackTrace();
 				    return null;
 			    }	    	
-			    Thumbnail currentThumb = new Thumbnail(currentImage, currentLocation);
+			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeImage(currentImage, 120), currentLocation, currentFileName);
+			    currentThumb.addMouseListener(this);
 			    thumbnailList.add(currentThumb);
 			}
 		}
 	    return thumbnailList;
 	}
-	
-	/* getDisplayedLabels - fills "displayedLabels" by creating a JLabel for each entry in the "thumbnails" ArrayList
+
+	/* refreshDisplayedThumbnails - refreshes the Thumbnails for images not yet selected by the user
 	 */
-	private ArrayList<JLabel> getDisplayedLabels()
-	{
-		ArrayList<JLabel> labelList = new ArrayList<JLabel>();
-		for (int i = 0; i < this.thumbnails.size(); i++)
-		{
-			JLabel newLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.thumbnails.get(i).getImage(), 120), CENTER_ALIGNMENT);
-			newLabel.addMouseListener(this);
-			labelList.add(newLabel);
-		}
-		return labelList;
-	}
-	
-	/* refreshDisplayedLabels - refreshes the JLabels for images not yet selected by the user
-	 */
-	private void refreshDisplayedLabels(int displayedImagePlace)
+	private void refreshDisplayedThumbnails(int displayedImagePlace)
 	{
 		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images Detected on Camera", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.displayedImagePlace = displayedImagePlace;
@@ -239,11 +245,11 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 				Box col = Box.createHorizontalBox();
 				col.setMinimumSize(new Dimension(150, 150));
 				col.setMaximumSize(new Dimension(150, 150));
-				if (this.displayedImagePlace < this.displayedLabels.size())
+				if (this.displayedImagePlace < this.displayedThumbnails.size())
 				{
 					col.add(Box.createHorizontalGlue());
 					col.add(Box.createVerticalStrut(150));
-					col.add(this.displayedLabels.get(this.displayedImagePlace));
+					col.add(this.displayedThumbnails.get(this.displayedImagePlace));
 					col.add(Box.createVerticalStrut(150));
 					col.add(Box.createHorizontalGlue());
 				}
@@ -264,9 +270,9 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.repaint();
 	}
 	
-	/* refreshSelectedLabels - refreshes the JLabels placed in "selectedContainer" by the user
+	/* refreshSelectedLabels - refreshes the Thumbnails placed in "selectedContainer" by the user
 	 */
-	private void refreshSelectedLabels(int selectedImagePlace)
+	private void refreshSelectedThumbnails(int selectedImagePlace)
 	{
 		this.selectedTitleLabel = ComponentGenerator.generateLabel("Selected Images", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 	    this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
@@ -280,11 +286,11 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 			Box row = Box.createHorizontalBox();
 			row.setMinimumSize(new Dimension(150, 150));
 			row.setMaximumSize(new Dimension(150, 150));
-			if (this.selectedImagePlace < this.selectedLabels.size())
+			if (this.selectedImagePlace < this.selectedThumbnails.size())
 			{
 				row.add(Box.createHorizontalGlue());
 				row.add(Box.createVerticalStrut(150));
-				row.add(this.selectedLabels.get(this.selectedImagePlace));
+				row.add(this.selectedThumbnails.get(this.selectedImagePlace));
 				row.add(Box.createVerticalStrut(150));
 				row.add(Box.createHorizontalGlue());
 			}

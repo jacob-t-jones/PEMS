@@ -185,11 +185,12 @@ public class ComponentGenerator
 	
 	/* generateThumbnail - creates and returns an instance of our custom Thumbnail object, which inherits from JLabel
 	 *             image - the image represented by the Thumbnail
-	 *          pathName - the file system path name of the aforementioned image
+	 *          filePath - the full file system path name of the aforementioned image
+	 *          fileName - the shorthand file name of the aforementioned image
 	 */
-	public static Thumbnail generateThumbnail(BufferedImage image, String pathName)
+	public static Thumbnail generateThumbnail(BufferedImage image, String filePath, String fileName)
 	{
-		Thumbnail newThumb = new Thumbnail(image, pathName);
+		Thumbnail newThumb = new Thumbnail(image, filePath, fileName);
 		return newThumb;
 	}
 	
