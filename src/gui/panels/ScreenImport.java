@@ -35,15 +35,15 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	private JButton loadNextSelectedButton;
 	private JButton loadPrevSelectedButton;
 	private JButton finishButton;
-	private String caseName;
+	private String caseNum;
 	private String directoryName;
 	private int displayedImagePlace;
 	private int selectedImagePlace;
 
-	public ScreenImport(FrameManager manager, String caseName)
+	public ScreenImport(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
-		this.caseName = caseName;
+		this.caseNum = caseNum;
 		this.directoryName = "/Users/Jacob/Documents/Pics";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
@@ -110,7 +110,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
         	{
 				try 
 				{
-					Files.copy(Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName()), Paths.get("cases/" + this.caseName + "/" + this.selectedThumbnails.get(i).getFileName()), StandardCopyOption.REPLACE_EXISTING);
+					Files.copy(Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName()), Paths.get("cases/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName()), StandardCopyOption.REPLACE_EXISTING);
 				} 
 				catch (IOException e1) 
 				{
@@ -119,7 +119,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 					return;
 				}
         	}
-        	manager.pushPanel(new ScreenEdit(manager), "PEMS - Edit Photos");
+        	manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{

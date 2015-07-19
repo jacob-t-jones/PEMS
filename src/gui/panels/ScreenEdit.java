@@ -3,16 +3,26 @@
 // ScreenEdit.java
 
 package gui.panels;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import tools.ImageEditor;
 import gui.*;
 
-public class ScreenEdit extends JPanel implements ActionListener
+public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 {
 	
 	private FrameManager manager;
+	private ArrayList<Thumbnail> caseThumbnails;
+	private Box caseThumbnailContainer;
+	private JButton loadNextThumbnails;
+	private JButton loadPrevThumbnails;
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
 	private JMenu editMenu;
@@ -32,16 +42,41 @@ public class ScreenEdit extends JPanel implements ActionListener
 	private JMenuItem rotate90MenuItem;
 	private JMenuItem rotate180MenuItem;
 	private JMenuItem rotate270MenuItem;
+	private String caseNum;
+	private int caseThumbnailIndex;
 	
-	public ScreenEdit(FrameManager manager)
+	public ScreenEdit(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
+		this.caseNum = caseNum;
+		this.caseThumbnailIndex = 0;
+		this.caseThumbnails = getCaseThumbnails();
+		this.caseThumbnailContainer = Box.createHorizontalBox();
+		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.refreshCaseThumbnails(0);
+		this.add(this.caseThumbnailContainer);
 		this.constructMenuBar();
+		this.revalidate();
+		this.repaint();
 	}
 	
 	public void actionPerformed(ActionEvent e)
 	{ 
-		if (e.getSource() == this.saveImageMenuItem)
+		if (e.getSource() == this.loadNextThumbnails)
+		{
+        	if (this.caseThumbnailIndex + 8 < this.caseThumbnails.size())
+        	{
+        		this.refreshCaseThumbnails(this.caseThumbnailIndex + 8);
+        	}
+		}
+		else if (e.getSource() == this.loadPrevThumbnails)
+		{
+          	if (this.caseThumbnailIndex >= 8)
+        	{
+        		this.refreshCaseThumbnails(this.caseThumbnailIndex - 8);
+        	}
+		}
+		else if (e.getSource() == this.saveImageMenuItem)
 		{
 			
 		}
@@ -51,7 +86,7 @@ public class ScreenEdit extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.quitMenuItem)
 		{
-			System.exit(0);
+
 		}
 		else if (e.getSource() == this.undoMenuItem)
 		{
@@ -97,6 +132,112 @@ public class ScreenEdit extends JPanel implements ActionListener
 		{
 			
 		}
+	}
+	
+	public void mouseClicked(MouseEvent e) 
+	{
+		
+	}
+
+	public void mousePressed(MouseEvent e) 
+	{
+		
+	}
+
+	public void mouseReleased(MouseEvent e) 
+	{
+		
+	}
+
+	public void mouseEntered(MouseEvent e) 
+	{
+		
+	}
+
+	public void mouseExited(MouseEvent e) 
+	{
+		
+	}
+	
+	private ArrayList<Thumbnail> getCaseThumbnails()
+	{
+		ArrayList<Thumbnail> thumbnailList = new ArrayList<Thumbnail>();
+	    File directory = new File("cases", "/" + this.caseNum + "/");
+		String[] fileNames = directory.list();
+		for (int i = 0; i < fileNames.length; i++)
+		{
+			String currentFileName = fileNames[i];
+			if (this.validateExtension(currentFileName))
+			{
+				BufferedImage currentImage = null;
+				String currentLocation = "cases/" + this.caseNum + "/" + fileNames[i];
+			    try 
+			    {   
+			    	 currentImage = ImageIO.read(new File(currentLocation));
+			    }
+			    catch (IOException e)
+			    {
+			    	System.out.println("Error - Unable to read image into memory");
+			    	e.printStackTrace();
+				    return null;
+			    }	    	
+			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeImage(currentImage, 80), currentLocation, currentFileName);
+				currentThumb.setAlignmentX(CENTER_ALIGNMENT);
+			    currentThumb.addMouseListener(this);
+			    thumbnailList.add(currentThumb);
+			}
+		}
+	    return thumbnailList;
+	}
+	
+	private void refreshCaseThumbnails(int caseThumbnailIndex)
+	{
+		this.loadNextThumbnails = ComponentGenerator.generateButton("Next     >", this);
+		this.loadPrevThumbnails = ComponentGenerator.generateButton("<     Prev", this);
+		this.caseThumbnailContainer.removeAll();
+		this.caseThumbnailIndex = caseThumbnailIndex;
+		this.caseThumbnailContainer.add(this.loadPrevThumbnails);
+		for (int i = 0; i < 8; i++)
+		{
+			Box col = Box.createVerticalBox();
+			col.setMinimumSize(new Dimension(100, 100));
+			col.setMaximumSize(new Dimension(100, 100));
+			if (this.caseThumbnailIndex < this.caseThumbnails.size())
+			{
+				col.add(Box.createVerticalGlue());
+				col.add(Box.createHorizontalStrut(100));
+				col.add(this.caseThumbnails.get(this.caseThumbnailIndex));
+				col.add(Box.createHorizontalStrut(100));
+				col.add(Box.createVerticalGlue());
+			}
+			else
+			{
+				col.add(Box.createVerticalGlue());
+				col.add(Box.createHorizontalStrut(100));
+				col.add(Box.createVerticalGlue());
+			}
+			this.caseThumbnailContainer.add(col);
+			this.caseThumbnailIndex++;
+		}
+		this.caseThumbnailContainer.add(this.loadNextThumbnails);
+		this.caseThumbnailContainer.add(Box.createVerticalStrut(100));
+		this.caseThumbnailIndex = caseThumbnailIndex;
+		this.revalidate();
+		this.repaint();
+	}
+	
+	private boolean validateExtension(String fileName)
+	{
+		if (fileName.length() > 4)
+		{
+			String threeLetterExt = fileName.substring(fileName.length() - 4, fileName.length());
+			String fourLetterExt = fileName.substring(fileName.length() - 5, fileName.length());
+			if (threeLetterExt.equalsIgnoreCase(".png") || threeLetterExt.equalsIgnoreCase(".jpg") || fourLetterExt.equalsIgnoreCase(".jpeg"))
+			{
+				return true;
+			}
+		}
+		return false;		
 	}
 	
 	private void constructMenuBar()

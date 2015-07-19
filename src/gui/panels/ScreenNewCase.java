@@ -18,7 +18,6 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
 	private JLabel errorLabel;
 	private JTextField caseNumField;
 	private JButton continueButton;
-	private String filePath;
 	
 	public ScreenNewCase(FrameManager manager) 
 	{
@@ -39,7 +38,6 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
     			boolean isDirectory = Files.isDirectory(Paths.get("cases/" + this.caseNumField.getText() + "/"));
     			if (!isDirectory)
     			{
-    				this.filePath = "cases/" + this.caseNumField.getText() + "/";
     				try
     				{
     					Files.createDirectory(Paths.get("cases/" + this.caseNumField.getText() + "/"));
