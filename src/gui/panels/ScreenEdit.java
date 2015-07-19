@@ -107,7 +107,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.renameImageMenuItem)
 		{
-		
+			this.manager.displayRenameDialogue();
 		}
 		else if (e.getSource() == this.quitMenuItem)
 		{

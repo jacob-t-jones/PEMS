@@ -13,6 +13,8 @@ public class FrameManager
 	
 	private Config configuration;
 	private JFrame mainFrame;
+	private JFrame renameDialogue;
+	private JFrame quitWarningDialogue;
 	
 	public FrameManager()
 	{
@@ -91,6 +93,17 @@ public class FrameManager
 	public int heightToPixels(double percent)
 	{
 		return (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * (percent / 100.0));
+	}
+	
+	public void displayRenameDialogue()
+	{
+        this.renameDialogue = new JFrame("Rename Image");
+        this.renameDialogue.getContentPane().add(new ScreenRenameDialogue(this));
+        this.renameDialogue.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.renameDialogue.pack();
+        this.renameDialogue.setBounds(this.widthToPixels(15), this.heightToPixels(15), this.widthToPixels(30), this.heightToPixels(30));
+        this.renameDialogue.setResizable(false);
+        this.renameDialogue.setVisible(true);
 	}
 	
 }
