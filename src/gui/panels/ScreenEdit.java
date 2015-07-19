@@ -4,14 +4,18 @@
 
 package gui.panels;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import tools.ImageEditor;
 import gui.*;
 
@@ -71,6 +75,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.mainContainer.add(this.caseThumbnailContainer);
 		this.add(this.mainContainer);
 		this.constructMenuBar();
+		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();
 	}
@@ -93,15 +98,24 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.saveImageMenuItem)
 		{
-			
+			try 
+			{
+			    ImageIO.write(this.selectedImage, "jpg", new File("cases/" + this.caseNum + "/" + this.selectedImageName));
+			} 
+			catch (IOException e1) 
+			{
+			    System.out.println("Error - Save failed");
+			    e1.printStackTrace();
+			    return;
+			}
 		}
 		else if (e.getSource() == this.renameImageMenuItem)
 		{
-			
+		
 		}
 		else if (e.getSource() == this.quitMenuItem)
 		{
-
+			System.exit(0);
 		}
 		else if (e.getSource() == this.undoMenuItem)
 		{

@@ -41,6 +41,7 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
     			boolean isDirectory = Files.isDirectory(Paths.get("cases/" + this.caseNumField.getText() + "/"));
     			if (!isDirectory)
     			{
+    				this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     				try
     				{
     					Files.createDirectory(Paths.get("cases/" + this.caseNumField.getText() + "/"));
@@ -51,7 +52,6 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
     					e1.printStackTrace();
     					return;
     				}
-    				this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     	    		this.manager.pushPanel(new ScreenImport(this.manager, this.caseNumField.getText()), "PEMS - Import Images");
     			}
     			else

@@ -9,8 +9,10 @@ import java.awt.image.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import gui.*;
 import tools.*;
 
@@ -107,6 +109,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		}
 		else if (e.getSource() == this.finishButton)
 		{
+    		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         	for (int i = 0; i < this.selectedThumbnails.size(); i++)
         	{
 				try 
