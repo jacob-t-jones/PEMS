@@ -4,6 +4,7 @@ import gui.ComponentGenerator;
 import gui.FrameManager;
 import gui.Thumbnail;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -56,8 +58,42 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 	public ScreenPrint(FrameManager manager, String caseNum) 
 	{
 		this.manager = manager;
+		this.caseNum = caseNum;
 		this.directoryName = "/Users/andrewrottier/Documents/Pictures/Instagram/";
-		this.displayedThumbnails = new ArrayList<Thumbnail>();
+		this.displayedImagePlace = 0;
+		this.selectedImagePlace = 0;
+		this.displayedThumbnails = this.getThumbnails(); ////
+		this.selectedThumbnails = new ArrayList<Thumbnail>();
+		this.mainContainer = Box.createVerticalBox();
+		this.innerContainer = Box.createHorizontalBox();
+		this.leftContainer = Box.createVerticalBox();
+		this.rightContainer = Box.createVerticalBox();
+		this.displayedContainer = Box.createVerticalBox();
+		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.selectedContainer = Box.createVerticalBox();
+		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.buttonsContainer = Box.createHorizontalBox();
+		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Once selected, an image can be removed from the case by simply clicking on it again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.refreshDisplayedThumbnails(0);
+		this.refreshSelectedThumbnails(0);
+		this.populateButtonsContainer();
+		this.leftContainer.add(this.displayedContainer);
+		this.leftContainer.add(Box.createVerticalStrut(30));
+		this.leftContainer.add(this.buttonsContainer);
+		this.rightContainer.add(this.selectedContainer);
+		this.innerContainer.add(this.leftContainer);
+		this.innerContainer.add(Box.createHorizontalStrut(100));
+		this.innerContainer.add(this.rightContainer);
+		this.mainContainer.add(Box.createVerticalStrut(20));
+		this.mainContainer.add(this.instructionsLabel);
+		this.mainContainer.add(Box.createVerticalStrut(30));
+		this.mainContainer.add(this.innerContainer);
+		this.add(this.mainContainer);
+		this.manager.setResizable(true);
+		this.manager.maximizeFrame();
+		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.revalidate();
+		this.repaint();
 	}
 	
 	
@@ -253,6 +289,22 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
         		this.refreshSelectedThumbnails(this.selectedImagePlace - 3);
         	}
 		}
+	}
+	
+	/* populateButtonsContainer - fills the "buttonsContainer" layout structure with the necessary components
+	 */
+	private void populateButtonsContainer()
+	{
+		this.loadNextButton = ComponentGenerator.generateButton("Load Next Images   >", this);
+		this.loadPrevButton = ComponentGenerator.generateButton("<   Load Previous Images", this);
+		this.finishButton = ComponentGenerator.generateButton("Finish Importing", this);
+		this.buttonsContainer = Box.createHorizontalBox();
+		this.buttonsContainer.setAlignmentX(CENTER_ALIGNMENT);
+		this.buttonsContainer.add(this.loadPrevButton);
+		this.buttonsContainer.add(Box.createHorizontalStrut(100));
+		this.buttonsContainer.add(this.finishButton);
+		this.buttonsContainer.add(Box.createHorizontalStrut(100));
+		this.buttonsContainer.add(this.loadNextButton);
 	}
 
 
