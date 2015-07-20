@@ -9,10 +9,8 @@ import java.awt.image.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import gui.*;
 import tools.*;
 

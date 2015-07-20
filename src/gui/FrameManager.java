@@ -14,7 +14,7 @@ public class FrameManager
 	private Config configuration;
 	private JFrame mainFrame;
 	private JFrame renameDialogue;
-	private JFrame quitWarningDialogue;
+	private JFrame resizeDialogue;
 	
 	public FrameManager()
 	{
@@ -33,6 +33,30 @@ public class FrameManager
 	public Config getConfiguration()
 	{
 		return this.configuration;
+	}
+	
+	/* displayRenameDialogue() - initializes and opens the JFrame for the rename image dialogue 
+	 */
+	public void displayRenameDialogue()
+	{
+        this.renameDialogue = new JFrame("Rename Image");
+        this.renameDialogue.getContentPane().add(new ScreenRenameDialogue(this));
+        this.renameDialogue.pack();
+        this.renameDialogue.setBounds(this.widthToPixels(35), this.heightToPixels(0), this.widthToPixels(30), this.heightToPixels(20));
+        this.renameDialogue.setResizable(false);
+        this.renameDialogue.setVisible(true);
+	}
+	
+	/* displayResizeDialogue() - initializes and opens the JFrame for the resize image dialogue 
+	 */
+	public void displayResizeDialogue()
+	{
+        this.renameDialogue = new JFrame("Resize Image");
+        this.renameDialogue.getContentPane().add(new ScreenResizeDialogue(this));
+        this.renameDialogue.pack();
+        this.renameDialogue.setBounds(this.widthToPixels(35), this.heightToPixels(0), this.widthToPixels(30), this.heightToPixels(20));
+        this.renameDialogue.setResizable(false);
+        this.renameDialogue.setVisible(true);
 	}
 	
 	/* maximizeFrame - maximizes the window the program is currently running in
@@ -94,16 +118,6 @@ public class FrameManager
 	{
 		return (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * (percent / 100.0));
 	}
-	
-	public void displayRenameDialogue()
-	{
-        this.renameDialogue = new JFrame("Rename Image");
-        this.renameDialogue.getContentPane().add(new ScreenRenameDialogue(this));
-        this.renameDialogue.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.renameDialogue.pack();
-        this.renameDialogue.setBounds(this.widthToPixels(15), this.heightToPixels(15), this.widthToPixels(30), this.heightToPixels(30));
-        this.renameDialogue.setResizable(false);
-        this.renameDialogue.setVisible(true);
-	}
+
 	
 }
