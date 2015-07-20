@@ -42,6 +42,7 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 	private File directory;
 	private JButton loadNextButton;
 	private JButton loadPrevButton;
+	private JButton backButton;
 	private ActionListener continueAction;
 	private ArrayList<Thumbnail> fileButtons = new ArrayList<Thumbnail>();
 	private static String folderImageLocation = "/Users/andrewrottier/Documents/Pictures/folder.pgn";
@@ -140,7 +141,8 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 		}
 		
 		this.displayedContainer.add(displayedImages);
-		
+		this.backButton = ComponentGenerator.generateButton("Back", this, CENTER_ALIGNMENT);
+		this.displayedContainer.add(backButton);
 		//this.displayedContainer.add(Box.createVerticalStrut(750));
 		this.displayedImagePlace = displayedImagePlace;
 		
@@ -162,7 +164,6 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) 
 			{
-				//System.out.println("1");
 				manager.pushPanel(new ScreenImport(manager, folderThumbnail.getFilePath()), "PEMS - Import Images");
 			}
 
@@ -217,12 +218,16 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 			}
 		}
 		
-		if (e.getSource() == this.loadPrevButton)
+		else if (e.getSource() == this.loadPrevButton)
 		{
 			if (this.displayedImagePlace - 10 >= 0)
 			{
 				this.displayedThumbnails(this.displayedImagePlace - 10);
 			}
+		}
+		else if(e.getSource() == this.backButton)
+		{
+			manager.pushPanel(new ScreenStart(manager), "PEMS (Police Evidence Management System) Version 0.1");
 		}
 	
 	}
