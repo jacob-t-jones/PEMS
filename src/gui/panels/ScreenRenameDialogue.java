@@ -29,17 +29,23 @@ public class ScreenRenameDialogue extends JPanel implements ActionListener, Focu
 	
 	public void actionPerformed(ActionEvent e) 
 	{
-		
+		if (e.getSource() == this.renameButton)
+		{
+			
+		}
 	}
 	
 	public void focusGained(FocusEvent e) 
 	{
-
+		if (e.getSource() == this.newNameField)
+		{
+			this.newNameField.setText("");
+		}
 	}
 
 	public void focusLost(FocusEvent e) 
 	{
-
+		return;
 	}
 	
 }

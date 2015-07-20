@@ -271,8 +271,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.selectedImageContainer.add(Box.createHorizontalGlue());
 		this.revalidate();
 		this.repaint();
-		System.out.println(this.selectedImageHistoryIndex);
-		System.out.println(this.selectedImageHistory.size());
 	}
 	
 	private ArrayList<Thumbnail> getCaseThumbnails()

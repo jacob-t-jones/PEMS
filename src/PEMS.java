@@ -9,7 +9,6 @@ public class PEMS
 
 	public static void main(String[] args)
 	{
-		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		FrameManager frame = new FrameManager();
 	}
 	
