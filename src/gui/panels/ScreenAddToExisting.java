@@ -37,6 +37,7 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 	private JLabel displayedCasesLabel;
 	private Box displayedContainer;
 	private Box displayedImages;
+	private Box titleBox;
 	private int displayedImagePlace;
 	private File directory;
 	private JButton loadNextButton;
@@ -54,6 +55,7 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 		//this.container = Box.createVerticalBox();
 		this.displayedImages = Box.createHorizontalBox();
 		this.displayedContainer = Box.createVerticalBox();
+		this.titleBox = Box.createHorizontalBox();
 		directory = new File("/Users/andrewrottier/Documents/Pictures/");
 		this.displayedImagePlace = 0;
 		this.populateContainer();
@@ -74,12 +76,21 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 	 */
 	private void displayedThumbnails(int displayedImagePlace)
 	{
+		this.displayedImages.removeAll();
 		this.displayedContainer.removeAll();
+		this.titleBox.removeAll();
 		this.displayedCasesLabel = ComponentGenerator.generateLabel("Choose a case", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.displayedImagePlace = displayedImagePlace;
 		this.fileList = this.getFileList(); //get list of files
 		
-		this.displayedContainer.add(this.displayedCasesLabel);
+		//add components to the title container
+		this.titleBox.add(this.displayedCasesLabel);
+		this.loadPrevButton = ComponentGenerator.generateButton("Prev", this, CENTER_ALIGNMENT);
+		this.loadNextButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
+		this.titleBox.add(loadPrevButton);
+		this.titleBox.add(loadNextButton);
+		
+		this.displayedContainer.add(titleBox);
 		
 		for (int i = 0; i < 2; i++)
 		{
@@ -130,8 +141,6 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 		
 		this.displayedContainer.add(displayedImages);
 		
-		this.loadNextButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
-		this.displayedContainer.add(loadNextButton);
 		//this.displayedContainer.add(Box.createVerticalStrut(750));
 		this.displayedImagePlace = displayedImagePlace;
 		
@@ -202,10 +211,17 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 	{
 		if (e.getSource() == this.loadNextButton)
 		{
-			System.out.println(this.displayedImagePlace);
 			if (this.displayedImagePlace + 10 < this.fileList.length)
 			{
 				this.displayedThumbnails(this.displayedImagePlace + 10);
+			}
+		}
+		
+		if (e.getSource() == this.loadPrevButton)
+		{
+			if (this.displayedImagePlace - 10 >= 0)
+			{
+				this.displayedThumbnails(this.displayedImagePlace - 10);
 			}
 		}
 	
