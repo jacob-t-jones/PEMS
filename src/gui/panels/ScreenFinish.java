@@ -15,6 +15,7 @@ public class ScreenFinish extends JPanel implements ActionListener
 {
 	
 	private FrameManager manager;
+	private String caseNum;
 	private Box container;
 	private Box optionsBox;
 	private JButton openInDirButton;
@@ -24,6 +25,7 @@ public class ScreenFinish extends JPanel implements ActionListener
 	public ScreenFinish(FrameManager manager, String caseNum) 
 	{
 		this.manager = manager;
+		this.caseNum = caseNum;
 		this.container = Box.createVerticalBox();
 		
 	}
@@ -50,6 +52,11 @@ public class ScreenFinish extends JPanel implements ActionListener
 		if (e.getSource() == this.closeButton)
 		{
 			this.manager.closePanel();
+		}
+		
+		if (e.getSource() == this.printButton)
+		{
+			manager.pushPanel(new ScreenImport(manager, this.caseNum), "PEMS - Print Images");
 		}
 		
 		if (e.getSource() == this.openInDirButton)
