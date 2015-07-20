@@ -79,6 +79,16 @@ public class FrameManager
 		this.mainFrame.setTitle(title);
 	}
 	
+	/* closePanel - close the program
+	 * 
+	 */
+	public void closePanel()
+	{
+		this.mainFrame.getContentPane().removeAll();
+		this.mainFrame.getContentPane().revalidate();
+		this.mainFrame.getContentPane().repaint();
+	}
+	
 	/* setCursor - sets the cursor displayed in the current JFrame
 	 *    cursor - the cursor to be displayed
 	 */

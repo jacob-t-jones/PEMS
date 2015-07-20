@@ -53,7 +53,6 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 	public ScreenAddToExisting(FrameManager manager) throws IOException 
 	{
 		this.manager = manager;
-		//this.container = Box.createVerticalBox();
 		this.displayedImages = Box.createHorizontalBox();
 		this.displayedContainer = Box.createVerticalBox();
 		this.titleBox = Box.createHorizontalBox();
@@ -145,12 +144,10 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 		this.displayedContainer.add(backButton);
 		//this.displayedContainer.add(Box.createVerticalStrut(750));
 		this.displayedImagePlace = displayedImagePlace;
-		
-		
+	
 		this.revalidate();
 		this.repaint();
 	}
-	
 	
 	
 	/* generateListeners - initializes listeners for all of the components within the JPanel
@@ -202,11 +199,9 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 
 	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
 	 *	             e - the event in question
-	 *               1. attempts to load the next fifteen images from the camera within "displayedContainer"
-	 *                 2. attempts to load the previous fifteen images from the camera within "displayedContainer"
-	 *                 3. pushes the ScreenEdit JPanel into view, copies imported images to the proper case folder
-	 *                 4. attempts to load the next three selected images within "selectedContainer"
-	 *                 5. attempts to load the previous three selected images within "selectedContainer"
+	 *               1. attempts to load the next x amount of cases
+	 *                 2. attempts to load the previous x amount of cases
+	 *                 3. returns the user back to the home screen
 	 */
 	public void actionPerformed(ActionEvent e) 
 	{
