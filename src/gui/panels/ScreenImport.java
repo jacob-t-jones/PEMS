@@ -223,7 +223,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 120), currentLocation, currentFileName);
 			    currentThumb.addMouseListener(this);
 			    thumbnailList.add(currentThumb);
-			}
+			} 
 		}
 	    return thumbnailList;
 	}
