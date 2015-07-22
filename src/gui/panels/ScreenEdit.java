@@ -202,12 +202,10 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		else if (e.getSource() == this.nextButton)
 		{
 			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			
-        	if (this.displayedImagePlace + 15 < this.displayedThumbnails.size())
-        	{
-        		this.refreshDisplayedThumbnails(this.displayedImagePlace + 15);
-        	}
-        	this.manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Finish");
+			this.manager.remMenuBar(menuBar);
+			this.mainContainer.removeAll();
+			this.clearForwardHistory();
+        	this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS - Finish");
 		}
 	}
 	
