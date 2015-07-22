@@ -11,19 +11,17 @@ public class ScreenRenameDialogue extends JPanel implements ActionListener, Focu
 {
 	
 	private FrameManager manager;
+	private ScreenEdit currentScreen;
 	private Box container;
 	private JTextField newNameField;
 	private JButton renameButton;
 
-	public ScreenRenameDialogue(FrameManager manager)
+	public ScreenRenameDialogue(FrameManager manager, ScreenEdit currentScreen)
 	{
 		this.manager = manager;
-		this.newNameField = ComponentGenerator.generateTextField("Enter the new name for the image here...", this, CENTER_ALIGNMENT);
-		this.renameButton = ComponentGenerator.generateButton("Rename", this, CENTER_ALIGNMENT);
+		this.currentScreen = currentScreen;
 		this.container = Box.createVerticalBox();
-		this.container.add(this.newNameField);
-		this.container.add(Box.createVerticalStrut(40));
-		this.container.add(this.renameButton);
+		this.populateContainer();
 		this.add(this.container);
 	}
 	
@@ -31,7 +29,11 @@ public class ScreenRenameDialogue extends JPanel implements ActionListener, Focu
 	{
 		if (e.getSource() == this.renameButton)
 		{
-			
+			if (this.newNameField.getText().length() > 0)
+			{
+				this.currentScreen.renameImage(this.newNameField.getText());
+				this.manager.closeRenameDialogue();
+			}
 		}
 	}
 	
@@ -46,6 +48,15 @@ public class ScreenRenameDialogue extends JPanel implements ActionListener, Focu
 	public void focusLost(FocusEvent e) 
 	{
 		return;
+	}
+	
+	private void populateContainer()
+	{
+		this.newNameField = ComponentGenerator.generateTextField("Enter the new name for the image here...", this, CENTER_ALIGNMENT);
+		this.renameButton = ComponentGenerator.generateButton("Rename", this, CENTER_ALIGNMENT);
+		this.container.add(this.newNameField);
+		this.container.add(Box.createVerticalStrut(40));
+		this.container.add(this.renameButton);
 	}
 	
 }

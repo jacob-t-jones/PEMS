@@ -3,24 +3,24 @@
 // Thumbnail.java
 
 package gui;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.*;
 import javax.swing.*;
 
-public class Thumbnail extends JLabel implements ActionListener
+public class Thumbnail extends JLabel
 {
 
 	private BufferedImage image;
 	private String filePath;
 	private String fileName;
+	private String fileExt;
 	
-	public Thumbnail(BufferedImage image, String filePath, String fileName)
+	public Thumbnail(BufferedImage image, String filePath, String fileName, String fileExt)
 	{
 		super(new ImageIcon(image));
 		this.image = image;
 		this.filePath = filePath;
 		this.fileName = fileName;
+		this.fileExt = fileExt;
 	}
 	
 	/* getImage - returns "image", the BufferedImage associated with the class
@@ -67,13 +67,20 @@ public class Thumbnail extends JLabel implements ActionListener
 	{
 		this.fileName = fileName;
 	}
-
-	/* actionPerformed - mandatory override method
-	 *               e - mandatory ActionEvent parameter
+	
+	/* getFileExt - returns "fileExt", the extension of the image file associated with the Thumbnail
 	 */
-	public void actionPerformed(ActionEvent e) 
+	public String getFileExt()
 	{
-
+		return this.fileExt;
+	}
+	
+	/* setFileExt - sets "fileExt" to be the String passed in as a parameter
+	 *    fileExt - the new file extension
+	 */
+	public void setFileExt(String fileExt)
+	{
+		this.fileExt = fileExt;
 	}
 	
 }

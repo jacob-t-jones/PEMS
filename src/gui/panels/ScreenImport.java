@@ -44,10 +44,10 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.directoryName = "/Users/andrewrottier/Documents/Pictures/Instagram/";
+		this.directoryName = "/Users/Jacob/Documents/Pics";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
-		this.displayedThumbnails = this.getThumbnails(); ////
+		this.displayedThumbnails = this.getThumbnails();
 		this.selectedThumbnails = new ArrayList<Thumbnail>();
 		this.mainContainer = Box.createVerticalBox();
 		this.innerContainer = Box.createHorizontalBox();
@@ -112,7 +112,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
         	{
 				try 
 				{
-					Files.copy(Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName()), Paths.get("cases/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName()), StandardCopyOption.REPLACE_EXISTING);
+					Files.copy(Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt()), Paths.get("cases/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt()), StandardCopyOption.REPLACE_EXISTING);
 				} 
 				catch (IOException e1) 
 				{
@@ -203,14 +203,15 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		String[] fileNames = directory.list();
 		for (int i = 0; i < fileNames.length; i++)
 		{
-			String currentFileName = fileNames[i];
-			if (this.validateExtension(currentFileName))
+			String currentFileName = fileNames[i].substring(0, fileNames[i].indexOf('.')).toLowerCase();
+			String currentExtension = fileNames[i].substring(fileNames[i].indexOf('.'), fileNames[i].length()).toLowerCase();
+			if (currentExtension.equalsIgnoreCase(".png") || currentExtension.equalsIgnoreCase(".jpg") || currentExtension.equalsIgnoreCase(".jpeg"))
 			{
 				BufferedImage currentImage = null;
-				String currentLocation = this.directoryName + "/" + fileNames[i];
+				String currentPath = this.directoryName + "/" + fileNames[i];
 			    try 
 			    {   
-			    	 currentImage = ImageIO.read(new File(currentLocation));
+			    	 currentImage = ImageIO.read(new File(currentPath));
 			    }
 			    catch (IOException e)
 			    {
@@ -218,7 +219,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 			    	e.printStackTrace();
 				    return null;
 			    }	    	
-			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 120), currentLocation, currentFileName);
+			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 120), currentPath, currentFileName, currentExtension);
 			    currentThumb.addMouseListener(this);
 			    thumbnailList.add(currentThumb);
 			} 
@@ -306,24 +307,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.revalidate();
 		this.repaint();
 	}
-	
-	/* validateExtension - determines whether or not the extension in a given file name is that of a valid image (.png, .jpg, .jpeg)
-	 *          fileName - the file name to check
-	 */
-	private boolean validateExtension(String fileName)
-	{
-		if (fileName.length() > 4)
-		{
-			String threeLetterExt = fileName.substring(fileName.length() - 4, fileName.length());
-			String fourLetterExt = fileName.substring(fileName.length() - 5, fileName.length());
-			if (threeLetterExt.equalsIgnoreCase(".png") || threeLetterExt.equalsIgnoreCase(".jpg") || fourLetterExt.equalsIgnoreCase(".jpeg"))
-			{
-				return true;
-			}
-		}
-		return false;		
-	}
-	
+
 	/* populateButtonsContainer - fills the "buttonsContainer" layout structure with the necessary components
 	 */
 	private void populateButtonsContainer()
