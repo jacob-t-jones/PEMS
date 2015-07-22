@@ -112,6 +112,8 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 			{
 				BufferedImage currentImage = null;
 				String currentLocation = this.directoryName + "/" + fileNames[i];
+				//Check this line of code
+				String currentThumbExt = fileNames[i].substring(fileNames[i].length()-3, fileNames[i].length());
 			    try 
 			    {   
 			    	 currentImage = ImageIO.read(new File(currentLocation));
@@ -122,7 +124,7 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 			    	e.printStackTrace();
 				    return null;
 			    }	    	
-			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 120), currentLocation, currentFileName);
+			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 120), currentLocation, currentFileName, currentThumbExt);
 			    currentThumb.addMouseListener(this);
 			    thumbnailList.add(currentThumb);
 			} 
