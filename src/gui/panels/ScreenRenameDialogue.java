@@ -37,7 +37,7 @@ public class ScreenRenameDialogue extends JPanel implements ActionListener, Focu
 			}
 			else
 			{
-				this.errorLabel.setText("Error - Only letters and numbers can be used in the image file name!");
+				this.errorLabel.setText("Error - Only letters and numbers can be used in the file name!");
 			}
 		}
 	}

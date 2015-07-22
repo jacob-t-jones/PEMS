@@ -267,6 +267,15 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		oldFile.renameTo(newFile);
 	}
 	
+	public void resizeImage(int width, int height)
+	{
+		this.selectedImageHistoryIndex++;
+    	this.clearForwardHistory();
+		this.selectedImage = ImageEditor.resizeImage(this.selectedImage, width, height);
+    	this.selectedImageHistory.add(this.selectedImage);
+		this.refreshSelectedImage();
+	}
+	
 	private void clearForwardHistory()
 	{
 		int i = this.selectedImageHistoryIndex;
