@@ -120,7 +120,19 @@ public class FrameManager
 		this.mainFrame.setJMenuBar(menuBar);
 	}
 	
+<<<<<<< HEAD
 	/* setResizable - determines whether or not "mainFrame" is resizable
+=======
+	/* remMenuBar - removes the JMenuBar specified in the parameters from the "mainFrame"
+	 *    menuBar - the JMenuBar to be taken off the display
+	 */
+	public void remMenuBar(JMenuBar menuBar)
+	{
+		this.mainFrame.remove(menuBar);
+	}
+	
+	/* setResizable - determines whether or not the current JFrame is resizable
+>>>>>>> origin/master
 	 *    resizable - boolean value that determines the status of the JFrame
 	 */
 	public void setResizable(boolean resizable)

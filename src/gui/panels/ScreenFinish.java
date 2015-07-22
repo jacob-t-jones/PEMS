@@ -3,8 +3,11 @@ package gui.panels;
 import gui.ComponentGenerator;
 import gui.FrameManager;
 
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.Box;
@@ -26,21 +29,32 @@ public class ScreenFinish extends JPanel implements ActionListener
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
+		this.optionsBox = Box.createHorizontalBox();
 		this.container = Box.createVerticalBox();
+		this.populateBox();
+		this.revalidate();
+		this.repaint();
+		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		
 	}
 	
 	private void populateBox()
 	{
-		this.openInDirButton = ComponentGenerator.generateButton("Open in Director", this, CENTER_ALIGNMENT);
+		this.container.add(Box.createVerticalStrut(250));
+		this.openInDirButton = ComponentGenerator.generateButton("Open in Directory", this, CENTER_ALIGNMENT);
 		this.printButton = ComponentGenerator.generateButton("Print Image", this, CENTER_ALIGNMENT);
 		this.closeButton = ComponentGenerator.generateButton("Exit", this, CENTER_ALIGNMENT);
 		
 		this.optionsBox.add(openInDirButton);
 		this.optionsBox.add(printButton);
+		this.container.add(Box.createVerticalStrut(50));
 		this.container.add(optionsBox);
 		this.container.add(closeButton);
 		
+		this.container.add(Box.createHorizontalStrut(50));
+		
+		this.add(container);
+
 		this.revalidate();
 		this.repaint();
 	}
@@ -66,8 +80,13 @@ public class ScreenFinish extends JPanel implements ActionListener
 			{
 				//..CHANGE TO OPENING IN WINDOWS..
 				try {
-					Runtime.getRuntime().exec("open /Users/andrewrottier/Documents/Pictures/");
+					File file = new File ("c:/users/cops/cases");
+					Desktop desktop = Desktop.getDesktop();
+					desktop.open(file);
+					//or try: (with correct path)
+					//Runtime.getRuntime().exec("open /Users/andrewrottier/Documents/Pictures/");
 				} catch (IOException e1) {
+					System.out.println("error - could not locate the directory");
 					e1.printStackTrace();
 				}
 			} else if(OSname == "mac")
@@ -75,6 +94,7 @@ public class ScreenFinish extends JPanel implements ActionListener
 				try {
 					Runtime.getRuntime().exec("open /Users/andrewrottier/Documents/Pictures/");
 				} catch (IOException e1) {
+					System.out.println("error - could not locate the directory");
 					e1.printStackTrace();
 				}
 				
@@ -87,11 +107,16 @@ public class ScreenFinish extends JPanel implements ActionListener
 	{
 		 String OS = System.getProperty("os.name").toLowerCase();
 	 
-		if (isWindows(OS)) {
+		if (isWindows(OS)) 
+		{
 			return "win";
-		} else if (isMac(OS)) {
+		} 
+		else if (isMac(OS)) 
+		{
 			return "mac";
-		} else {
+		} 
+		else 
+		{
 			return "error - Your OS is not support!!";
 		}
 		
