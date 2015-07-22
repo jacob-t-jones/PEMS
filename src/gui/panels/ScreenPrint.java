@@ -6,6 +6,7 @@ import gui.Thumbnail;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -73,7 +74,7 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 		this.selectedContainer = Box.createVerticalBox();
 		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.buttonsContainer = Box.createHorizontalBox();
-		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Once selected, an image can be removed from the case by simply clicking on it again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.instructionsLabel = ComponentGenerator.generateLabel("Select the images you would like to print. Once selected, an image can be removed from the case by simply clicking on it again in the selected box.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.refreshDisplayedThumbnails(0);
 		this.refreshSelectedThumbnails(0);
 		this.populateButtonsContainer();
@@ -111,6 +112,8 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 			{
 				BufferedImage currentImage = null;
 				String currentLocation = this.directoryName + "/" + fileNames[i];
+				//Check this line of code
+				String currentThumbExt = fileNames[i].substring(fileNames[i].length()-3, fileNames[i].length());
 			    try 
 			    {   
 			    	 currentImage = ImageIO.read(new File(currentLocation));
@@ -121,7 +124,7 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 			    	e.printStackTrace();
 				    return null;
 			    }	    	
-			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 120), currentLocation, currentFileName);
+			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 120), currentLocation, currentFileName, currentThumbExt);
 			    currentThumb.addMouseListener(this);
 			    thumbnailList.add(currentThumb);
 			} 
@@ -259,21 +262,8 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 		else if (e.getSource() == this.finishButton)
 		{
     		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        	for (int i = 0; i < this.selectedThumbnails.size(); i++)
-        	{
-        		//ATTEMPT TO PRINT SELECTED IMAGES///
-				try 
-				{
-					Files.copy(Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName()), Paths.get("cases/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName()), StandardCopyOption.REPLACE_EXISTING);
-				} 
-				catch (IOException e1) 
-				{
-					System.out.println("Error - Unable to copy image files to new directory");
-					e1.printStackTrace();
-					return;
-				}
-        	}
-        	this.manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
+        	this.printImages();
+        	this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS - Finish");
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
@@ -297,7 +287,7 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 	{
 		this.loadNextButton = ComponentGenerator.generateButton("Load Next Images   >", this);
 		this.loadPrevButton = ComponentGenerator.generateButton("<   Load Previous Images", this);
-		this.finishButton = ComponentGenerator.generateButton("Finish Importing", this);
+		this.finishButton = ComponentGenerator.generateButton("Print Selected", this);
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.buttonsContainer.setAlignmentX(CENTER_ALIGNMENT);
 		this.buttonsContainer.add(this.loadPrevButton);
@@ -340,6 +330,25 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void printImages() {
+	    //The desktop api can help calling other applications in our machine
+	    //and also many other features...
+	    Desktop desktop = Desktop.getDesktop();
+	    for(int i = 0; i < selectedThumbnails.size(); i++)
+	    {
+	    	try 
+	    	{
+	    		desktop.print(new File(selectedThumbnails.get(i).getFilePath()));
+	    	} 
+	    	catch (IOException e) 
+	    	{   
+	    		System.out.println("error - file, " + selectedThumbnails.get(i).getFilePath() + ", could not be printed.");
+	    		e.printStackTrace();
+	    	}
+	    }
+	    
 	}
 
 }

@@ -70,7 +70,8 @@ public class ScreenFinish extends JPanel implements ActionListener
 		
 		if (e.getSource() == this.printButton)
 		{
-			manager.pushPanel(new ScreenImport(manager, this.caseNum), "PEMS - Print Images");
+			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			manager.pushPanel(new ScreenPrint(manager, this.caseNum), "PEMS - Print Images");
 		}
 		
 		if (e.getSource() == this.openInDirButton)
