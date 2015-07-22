@@ -29,7 +29,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	private JLabel selectedImageLabel;
 	private JButton loadNextThumbnails;
 	private JButton loadPrevThumbnails;
-	private JButton nextButton;
+	private JButton continueButton;
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
 	private JMenu editMenu;
@@ -67,12 +67,14 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.selectedImageContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
 		this.caseThumbnails = getCaseThumbnails();
 		this.refreshCaseThumbnails(0);
 		this.mainContainer.add(this.selectedImageContainer);
 		this.mainContainer.add(Box.createVerticalStrut(40));
 		this.mainContainer.add(this.caseThumbnailContainer);
-		this.mainContainer.add(this.nextButton);
+		this.mainContainer.add(Box.createVerticalStrut(20));
+		this.mainContainer.add(this.continueButton);
 		this.add(this.mainContainer);
 		this.constructMenuBar();
 		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -204,7 +206,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	    	this.selectedImageHistory.add(this.selectedImage);
 			this.refreshSelectedImage();
 		}
-		else if (e.getSource() == this.nextButton)
+		else if (e.getSource() == this.continueButton)
 		{
 			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			this.manager.remMenuBar(menuBar);
@@ -347,7 +349,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	{
 		this.loadNextThumbnails = ComponentGenerator.generateButton("Next     >", this);
 		this.loadPrevThumbnails = ComponentGenerator.generateButton("<     Prev", this); 
-		this.nextButton = ComponentGenerator.generateButton("Continue", this);
 		this.caseThumbnailContainer.removeAll();
 		this.caseThumbnailIndex = caseThumbnailIndex;
 		this.caseThumbnailContainer.add(this.loadPrevThumbnails);
@@ -375,7 +376,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		this.caseThumbnailContainer.add(this.loadNextThumbnails);
 		this.caseThumbnailContainer.add(Box.createVerticalStrut(100));
-		
 		this.caseThumbnailIndex = caseThumbnailIndex;
 		this.revalidate();
 		this.repaint();
