@@ -3,9 +3,7 @@
 // ScreenEdit.java
 
 package gui.panels;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.File;
@@ -52,7 +50,9 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	private JMenuItem rotate180MenuItem;
 	private JMenuItem rotate270MenuItem;
 	private String caseNum;
+	private String selectedImagePath;
 	private String selectedImageName;
+	private String selectedImageExt;
 	private int selectedImageHistoryIndex;
 	private int caseThumbnailIndex;
 	
@@ -98,9 +98,14 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.saveImageMenuItem)
 		{
+			String fileType = "jpg";
+			if (this.selectedImageExt.equalsIgnoreCase(".png"))
+			{
+				fileType = "png";
+			}
 			try 
 			{
-			    ImageIO.write(this.selectedImage, "jpg", new File("cases/" + this.caseNum + "/" + this.selectedImageName));
+			    ImageIO.write(this.selectedImage, fileType, new File("cases/" + this.caseNum + "/" + this.selectedImageName + this.selectedImageExt));
 			} 
 			catch (IOException e1) 
 			{
@@ -111,7 +116,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.renameImageMenuItem)
 		{
-			this.manager.displayRenameDialogue();
+			this.manager.displayRenameDialogue(this);
 		}
 		else if (e.getSource() == this.quitMenuItem)
 		{
@@ -173,7 +178,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.resizeMenuItem)
 		{
-			
+			this.manager.displayResizeDialogue(this, this.selectedImage.getWidth(), this.selectedImage.getHeight());
 		}
 		else if (e.getSource() == this.rotate90MenuItem)
 		{
@@ -212,23 +217,28 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	
 	public void mouseClicked(MouseEvent e) 
 	{
-		Thumbnail selectedThumbnail = (Thumbnail)e.getSource();
-		this.selectedImage = null;
-	    try 
-	    {      
-	    	this.selectedImage = ImageIO.read(new File(selectedThumbnail.getFilePath()));
-	    } 
-	    catch (IOException e1)
-	    {
-			System.out.println("Error - Unable to import selected image");
-			e1.printStackTrace();
-			return;
-	    }
-    	this.selectedImageName = selectedThumbnail.getFileName();
-	    this.selectedImageHistory.clear();
-	    this.selectedImageHistory.add(this.selectedImage);
-	    this.selectedImageHistoryIndex = 0;
-	    this.refreshSelectedImage();
+		if (e.getSource() instanceof Thumbnail)
+		{
+			Thumbnail selectedThumbnail = (Thumbnail)e.getSource();
+			this.selectedImage = null;
+			try 
+			{      
+				this.selectedImage = ImageIO.read(new File(selectedThumbnail.getFilePath()));
+			} 
+			catch (IOException e1)
+			{
+				System.out.println("Error - Unable to import selected image");
+				e1.printStackTrace();
+				return;
+			}
+			this.selectedImagePath = selectedThumbnail.getFilePath();
+			this.selectedImageName = selectedThumbnail.getFileName();
+			this.selectedImageExt = selectedThumbnail.getFileExt();
+			this.selectedImageHistory.clear();
+			this.selectedImageHistory.add(this.selectedImage);
+			this.selectedImageHistoryIndex = 0;
+			this.refreshSelectedImage();
+		}
 	}
 
 	public void mousePressed(MouseEvent e) 
@@ -249,6 +259,22 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	public void mouseExited(MouseEvent e) 
 	{
 		return;
+	}
+	
+	public void renameImage(String name)
+	{
+		File oldFile = new File(this.selectedImagePath);
+		File newFile = new File("cases/" + this.caseNum + "/" + name + this.selectedImageExt);
+		oldFile.renameTo(newFile);
+	}
+	
+	public void resizeImage(int width, int height)
+	{
+		this.selectedImageHistoryIndex++;
+    	this.clearForwardHistory();
+		this.selectedImage = ImageEditor.resizeImage(this.selectedImage, width, height);
+    	this.selectedImageHistory.add(this.selectedImage);
+		this.refreshSelectedImage();
 	}
 	
 	private void clearForwardHistory()
@@ -293,14 +319,15 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		String[] fileNames = directory.list();
 		for (int i = 0; i < fileNames.length; i++)
 		{
-			String currentFileName = fileNames[i];
-			if (this.validateExtension(currentFileName))
+			String currentFileName = fileNames[i].substring(0, fileNames[i].indexOf('.')).toLowerCase();
+			String currentExtension = fileNames[i].substring(fileNames[i].indexOf('.'), fileNames[i].length()).toLowerCase();
+			if ((currentExtension.equalsIgnoreCase(".png") || currentExtension.equalsIgnoreCase(".jpg") || currentExtension.equalsIgnoreCase(".jpeg")))
 			{
 				BufferedImage currentImage = null;
-				String currentLocation = "cases/" + this.caseNum + "/" + fileNames[i];
+				String currentPath = "cases/" + this.caseNum + "/" + fileNames[i];
 			    try 
 			    {   
-			    	 currentImage = ImageIO.read(new File(currentLocation));
+			    	 currentImage = ImageIO.read(new File(currentPath));
 			    }
 			    catch (IOException e)
 			    {
@@ -308,7 +335,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 			    	e.printStackTrace();
 				    return null;
 			    }	    	
-			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 80), currentLocation, currentFileName);
+			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 80), currentPath, currentFileName, currentExtension);
 				currentThumb.setAlignmentX(CENTER_ALIGNMENT);
 			    currentThumb.addMouseListener(this);
 			    thumbnailList.add(currentThumb);
@@ -353,20 +380,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.caseThumbnailIndex = caseThumbnailIndex;
 		this.revalidate();
 		this.repaint();
-	}
-	
-	private boolean validateExtension(String fileName)
-	{
-		if (fileName.length() > 4)
-		{
-			String threeLetterExt = fileName.substring(fileName.length() - 4, fileName.length());
-			String fourLetterExt = fileName.substring(fileName.length() - 5, fileName.length());
-			if (threeLetterExt.equalsIgnoreCase(".png") || threeLetterExt.equalsIgnoreCase(".jpg") || fourLetterExt.equalsIgnoreCase(".jpeg"))
-			{
-				return true;
-			}
-		}
-		return false;		
 	}
 	
 	private void constructMenuBar()

@@ -188,9 +188,9 @@ public class ComponentGenerator
 	 *          filePath - the full file system path name of the aforementioned image
 	 *          fileName - the shorthand file name of the aforementioned image
 	 */
-	public static Thumbnail generateThumbnail(BufferedImage image, String filePath, String fileName)
+	public static Thumbnail generateThumbnail(BufferedImage image, String filePath, String fileName, String fileExt)
 	{
-		Thumbnail newThumb = new Thumbnail(image, filePath, fileName);
+		Thumbnail newThumb = new Thumbnail(image, filePath, fileName, fileExt);
 		return newThumb;
 	}
 	

@@ -35,38 +35,54 @@ public class FrameManager
 		return this.configuration;
 	}
 	
-	/* displayRenameDialogue() - initializes and opens the JFrame for the rename image dialogue 
+	/* displayRenameDialogue - initializes and opens the JFrame for the rename image dialogue 
 	 */
-	public void displayRenameDialogue()
+	public void displayRenameDialogue(ScreenEdit currentScreen)
 	{
         this.renameDialogue = new JFrame("Rename Image");
-        this.renameDialogue.getContentPane().add(new ScreenRenameDialogue(this));
+        this.renameDialogue.getContentPane().add(new ScreenRenameDialogue(this, currentScreen));
         this.renameDialogue.pack();
         this.renameDialogue.setBounds(this.widthToPixels(35), this.heightToPixels(0), this.widthToPixels(30), this.heightToPixels(20));
         this.renameDialogue.setResizable(false);
         this.renameDialogue.setVisible(true);
 	}
 	
-	/* displayResizeDialogue() - initializes and opens the JFrame for the resize image dialogue 
+	/* closeRenameDialogue - closes and disposes of "renameDialogue"
 	 */
-	public void displayResizeDialogue()
+	public void closeRenameDialogue()
 	{
-        this.renameDialogue = new JFrame("Resize Image");
-        this.renameDialogue.getContentPane().add(new ScreenResizeDialogue(this));
-        this.renameDialogue.pack();
-        this.renameDialogue.setBounds(this.widthToPixels(35), this.heightToPixels(0), this.widthToPixels(30), this.heightToPixels(20));
-        this.renameDialogue.setResizable(false);
-        this.renameDialogue.setVisible(true);
+		this.renameDialogue.setVisible(false);
+		this.renameDialogue.dispose();
 	}
 	
-	/* maximizeFrame - maximizes the window the program is currently running in
+	/* displayResizeDialogue - initializes and opens the JFrame for the resize image dialogue 
+	 */
+	public void displayResizeDialogue(ScreenEdit currentScreen, int currentWidth, int currentHeight)
+	{
+        this.resizeDialogue = new JFrame("Resize Image");
+        this.resizeDialogue.getContentPane().add(new ScreenResizeDialogue(this, currentScreen, currentWidth, currentHeight));
+        this.resizeDialogue.pack();
+        this.resizeDialogue.setBounds(this.widthToPixels(35), this.heightToPixels(0), this.widthToPixels(30), this.heightToPixels(20));
+        this.resizeDialogue.setResizable(false);
+        this.resizeDialogue.setVisible(true);
+	}
+	
+	/* closeResizeDialogue - closes and disposes of "resizeDialogue"
+	 */
+	public void closeResizeDialogue()
+	{
+		this.resizeDialogue.setVisible(false);
+		this.resizeDialogue.dispose();
+	}
+	
+	/* maximizeFrame - maximizes "mainFrame"
 	 */
 	public void maximizeFrame()
 	{
 		this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 	
-	/* pushPanel - removes the current panel and replaces it with a newly constructed one
+	/* pushPanel - removes the current panel from "mainFrame" and replaces it with a newly constructed one
 	 *	   panel - new panel to display
 	 *     title - title of the new panel
 	 */
@@ -79,8 +95,7 @@ public class FrameManager
 		this.mainFrame.setTitle(title);
 	}
 	
-	/* closePanel - close the program
-	 * 
+	/* closePanel - removes all displayed panels from "mainFrame" and then repaints said JFrame
 	 */
 	public void closePanel()
 	{
@@ -89,7 +104,7 @@ public class FrameManager
 		this.mainFrame.getContentPane().repaint();
 	}
 	
-	/* setCursor - sets the cursor displayed in the current JFrame
+	/* setCursor - sets the cursor displayed in "mainFrame"
 	 *    cursor - the cursor to be displayed
 	 */
 	public void setCursor(Cursor cursor)
@@ -113,14 +128,14 @@ public class FrameManager
 		this.mainFrame.remove(menuBar);
 	}
 	
-	/* setResizable - determines whether or not the current JFrame is resizable
+	/* setResizable - determines whether or not "mainFrame" is resizable
 	 *    resizable - boolean value that determines the status of the JFrame
 	 */
 	public void setResizable(boolean resizable)
 	{
 		this.mainFrame.setResizable(resizable);
 	}
-
+	
 	/* widthToPixels - converts a width percentage value to its equivalent pixel value
 	 *       percent - the value to convert to pixels
 	 */
@@ -137,5 +152,4 @@ public class FrameManager
 		return (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * (percent / 100.0));
 	}
 
-	
 }
