@@ -294,13 +294,30 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 		this.buttonsContainer.add(Box.createHorizontalStrut(100));
 		this.buttonsContainer.add(this.loadNextButton);
 	}
-
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	
+	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 *              1. removes the source Thumbnail from "selectedThumbnails" and adds it to "displayedThumbnails"
+	 *              2. removes the source Thumbnail from "displayedThumbnails" and adds it to "selectedThumbnails"
+	 */
+	public void mouseClicked(MouseEvent e) 
+	{
+		if (this.selectedThumbnails.contains(e.getSource()))
+		{
+			this.displayedThumbnails.add((Thumbnail)e.getSource());
+			this.selectedThumbnails.remove(e.getSource());
+			this.refreshDisplayedThumbnails(this.displayedImagePlace);
+			this.refreshSelectedThumbnails(this.selectedImagePlace);
+		}
+		else if (displayedThumbnails.contains(e.getSource()))
+		{
+			this.selectedThumbnails.add((Thumbnail)e.getSource());
+			this.displayedThumbnails.remove(e.getSource());
+			this.refreshDisplayedThumbnails(this.displayedImagePlace);
+			this.refreshSelectedThumbnails(this.selectedImagePlace);
+		}
 	}
+
 
 
 	@Override
