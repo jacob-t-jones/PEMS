@@ -194,11 +194,18 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 			if (this.saved)
 			{
 				this.manager.removeMenuBar();
-				this.manager.closeRenameDialogue();
-				this.manager.closeResizeDialogue();
-				this.manager.closeQuitWarningDialogue();
-				this.manager.closeRemoveWarningDialogue();
-				this.manager.closeSwitchWarningDialogue();
+				try
+				{
+					this.manager.closeRenameDialogue();
+					this.manager.closeResizeDialogue();
+					this.manager.closeQuitWarningDialogue();
+					this.manager.closeRemoveWarningDialogue();
+					this.manager.closeSwitchWarningDialogue();
+				}
+				catch (Exception e1)
+				{
+					System.out.println("error - no dialogue panels open");
+				}
 		    	this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS - Finish");
 			}
 			else
