@@ -18,7 +18,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 {
 	
 	private FrameManager manager;
-	private ArrayList<BufferedImage> selectedImageHistory;
+	private Stack<BufferedImage> selectedImageHistorySaved;
+	private Stack<BufferedImage> selectedImageHistoryUndone;
 	private ArrayList<Thumbnail> caseThumbnails;
 	private BufferedImage selectedImage;
 	private Box mainContainer;
@@ -51,22 +52,24 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	private String selectedImagePath;
 	private String selectedImageName;
 	private String selectedImageExt;
-	private int selectedImageHistoryIndex;
+	private boolean saved;
 	private int caseThumbnailIndex;
 	
 	public ScreenEdit(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.selectedImageHistoryIndex = 0;
+		this.saved = true;
 		this.caseThumbnailIndex = 0;
-		this.selectedImageHistory = new ArrayList<BufferedImage>();
+		this.selectedImageHistorySaved = new Stack<BufferedImage>();
+		this.selectedImageHistoryUndone = new Stack<BufferedImage>();
 		this.caseThumbnails = this.getCaseThumbnails();
 		this.mainContainer = Box.createVerticalBox();
 		this.selectedImageContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.refreshCaseThumbnails(0);
+		this.loadFirstImage();
 		this.populateMainContainer();
 		this.add(this.mainContainer);
 		this.constructMenuBar();
@@ -101,61 +104,42 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.quitMenuItem)
 		{
-			System.exit(0);
+			if (this.saved)
+			{
+				System.exit(0);
+			}
+			else
+			{
+				this.manager.displayQuitWarningDialogue(this);
+			}
 		}
 		else if (e.getSource() == this.undoMenuItem)
 		{
-			if (this.selectedImageHistoryIndex > 0)
-			{
-				this.selectedImageHistoryIndex--;
-				this.selectedImage = this.selectedImageHistory.get(this.selectedImageHistoryIndex);
-				this.refreshSelectedImage();
-			}
+			this.undo();
 		}
 		else if (e.getSource() == this.redoMenuItem)
 		{
-			if (this.selectedImageHistoryIndex < this.selectedImageHistory.size() - 1)
-			{
-				this.selectedImageHistoryIndex++;
-				this.selectedImage = this.selectedImageHistory.get(this.selectedImageHistoryIndex);
-				this.refreshSelectedImage();
-			}
+			this.redo();
 		}
 		else if (e.getSource() == this.removeImageMenuItem)
 		{
-			
+			this.manager.displayRemoveWarningDialogue(this);
 		}
 	    else if (e.getSource() == this.antiAliasMenuItem)
 		{
-	    	this.selectedImageHistoryIndex++;
-	    	this.clearForwardHistory();
-			this.selectedImage = ImageEditor.applyAntiAliasing(this.selectedImage);
-	    	this.selectedImageHistory.add(this.selectedImage);
-			this.refreshSelectedImage();
+	    	this.antiAlias();
 		}
 		else if (e.getSource() == this.brightenMenuItem)
 		{
-			this.selectedImageHistoryIndex++;
-	    	this.clearForwardHistory();
-			this.selectedImage = ImageEditor.brightenImage(this.selectedImage);
-	    	this.selectedImageHistory.add(this.selectedImage);
-			this.refreshSelectedImage();
+			this.brighten();
 		}
 		else if (e.getSource() == this.darkenMenuItem)
 		{
-			this.selectedImageHistoryIndex++;	    	
-			this.clearForwardHistory();
-			this.selectedImage = ImageEditor.darkenImage(this.selectedImage);
-	    	this.selectedImageHistory.add(this.selectedImage);
-			this.refreshSelectedImage();
+			this.darken();
 		}
 		else if (e.getSource() == this.grayscaleMenuItem)
 		{
-			this.selectedImageHistoryIndex++;
-	    	this.clearForwardHistory();
-			this.selectedImage = ImageEditor.toGrayscale(this.selectedImage);
-	    	this.selectedImageHistory.add(this.selectedImage);
-			this.refreshSelectedImage();
+			this.grayscale();
 		}
 		else if (e.getSource() == this.resizeMenuItem)
 		{
@@ -163,35 +147,24 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.rotate90MenuItem)
 		{
-			this.selectedImageHistoryIndex++;
-	    	this.clearForwardHistory();
-			this.selectedImage = ImageEditor.rotateRight90(this.selectedImage);
-	    	this.selectedImageHistory.add(this.selectedImage);
-			this.refreshSelectedImage();
+			this.rotate90();
 		}
 		else if (e.getSource() == this.rotate180MenuItem)
 		{
-			this.selectedImageHistoryIndex++;
-	    	this.clearForwardHistory();
-			this.selectedImage = ImageEditor.rotateRight180(this.selectedImage);
-	    	this.selectedImageHistory.add(this.selectedImage);
-			this.refreshSelectedImage();
+			this.rotate180();
 		}
 		else if (e.getSource() == this.rotate270MenuItem)
 		{
-			this.selectedImageHistoryIndex++;
-	    	this.clearForwardHistory();
-			this.selectedImage = ImageEditor.rotateRight270(this.selectedImage);
-	    	this.selectedImageHistory.add(this.selectedImage);
-			this.refreshSelectedImage();
+			this.rotate270();
 		}
 		else if (e.getSource() == this.continueButton)
 		{
-			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			this.manager.removeMenuBar();
-			this.mainContainer.removeAll();
-			this.removeAll();
-			this.clearForwardHistory();
+			this.manager.closeRenameDialogue();
+			this.manager.closeResizeDialogue();
+			this.manager.closeQuitWarningDialogue();
+			this.manager.closeRemoveWarningDialogue();
+			this.manager.closeSwitchWarningDialogue();
         	this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS - Finish");
 		}
 	}
@@ -215,9 +188,9 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 			this.selectedImagePath = selectedThumbnail.getFilePath();
 			this.selectedImageName = selectedThumbnail.getFileName();
 			this.selectedImageExt = selectedThumbnail.getFileExt();
-			this.selectedImageHistory.clear();
-			this.selectedImageHistory.add(this.selectedImage);
-			this.selectedImageHistoryIndex = 0;
+			this.selectedImageHistorySaved.clear();
+			this.selectedImageHistoryUndone.clear();
+			this.selectedImageHistorySaved.add(this.selectedImage);
 			this.refreshSelectedImage();
 		}
 	}
@@ -240,31 +213,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	public void mouseExited(MouseEvent e) 
 	{
 		return;
-	}
-	
-	public void renameImage(String name)
-	{
-		File oldFile = new File(this.selectedImagePath);
-		File newFile = new File("cases/" + this.caseNum + "/" + name + this.selectedImageExt);
-		oldFile.renameTo(newFile);
-	}
-	
-	public void resizeImage(int width, int height)
-	{
-		this.selectedImageHistoryIndex++;
-    	this.clearForwardHistory();
-		this.selectedImage = ImageEditor.resizeImage(this.selectedImage, width, height);
-    	this.selectedImageHistory.add(this.selectedImage);
-		this.refreshSelectedImage();
-	}
-	
-	private void clearForwardHistory()
-	{
-		int i = this.selectedImageHistoryIndex;
-		while (i < this.selectedImageHistory.size())
-		{
-			this.selectedImageHistory.remove(i);
-		}
 	}
 	
 	private void refreshSelectedImage()
@@ -361,29 +309,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.repaint();
 	}
 	
-	private String getImageFileType(String extension)
-	{
-		if (extension.equalsIgnoreCase(".png"))
-		{
-			return "png";
-		}
-		else if (extension.equalsIgnoreCase(".jpg") || extension.equalsIgnoreCase(".jpeg"))
-		{
-			return "jpg";
-		}
-		return null;
-	}
-	
-	private void populateMainContainer()
-	{
-		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
-		this.mainContainer.add(this.selectedImageContainer);
-		this.mainContainer.add(Box.createVerticalStrut(40));
-		this.mainContainer.add(this.caseThumbnailContainer);
-		this.mainContainer.add(Box.createVerticalStrut(20));
-		this.mainContainer.add(this.continueButton);
-	}
-	
 	private void constructMenuBar()
 	{
 		this.menuBar = new JMenuBar();
@@ -431,6 +356,50 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.manager.setMenuBar(this.menuBar);
 	}
 	
+	private String getImageFileType(String extension)
+	{
+		if (extension.equalsIgnoreCase(".png"))
+		{
+			return "png";
+		}
+		else if (extension.equalsIgnoreCase(".jpg") || extension.equalsIgnoreCase(".jpeg"))
+		{
+			return "jpg";
+		}
+		return null;
+	}
+	
+	private void populateMainContainer()
+	{
+		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
+		this.mainContainer.add(this.selectedImageContainer);
+		this.mainContainer.add(Box.createVerticalStrut(40));
+		this.mainContainer.add(this.caseThumbnailContainer);
+		this.mainContainer.add(Box.createVerticalStrut(10));
+		this.mainContainer.add(this.continueButton);
+	}
+	
+	private void loadFirstImage()
+	{
+		Thumbnail selectedThumbnail = this.caseThumbnails.get(0);
+		this.selectedImage = null;
+		try 
+		{      
+			this.selectedImage = ImageIO.read(new File(selectedThumbnail.getFilePath()));
+		} 
+		catch (IOException e)
+		{
+			System.out.println("Error - Unable to import selected image");
+			e.printStackTrace();
+			return;
+		}
+		this.selectedImagePath = selectedThumbnail.getFilePath();
+		this.selectedImageName = selectedThumbnail.getFileName();
+		this.selectedImageExt = selectedThumbnail.getFileExt();
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+	}
+	
 	private void saveImage()
 	{
 		int backupIncrement = 0;
@@ -454,12 +423,114 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 			}
 		    ImageIO.write(this.selectedImage, this.getImageFileType(this.selectedImageExt), new File("cases/" + this.caseNum + "/" + this.selectedImageName + this.selectedImageExt));
 		} 
-		catch (IOException e1) 
+		catch (IOException e) 
 		{
 		    System.out.println("Error - Save failed");
-		    e1.printStackTrace();
+		    e.printStackTrace();
 		    return;
 		}
+		this.saved = true;
+	}
+	
+	public void renameImage(String newName)
+	{
+		File oldFile = new File(this.selectedImagePath);
+		File newFile = new File("cases/" + this.caseNum + "/" + newName + this.selectedImageExt);
+		oldFile.renameTo(newFile);
+	}
+	
+	private void undo()
+	{
+		if (this.selectedImageHistorySaved.size() > 1)
+		{
+			this.selectedImageHistoryUndone.push(this.selectedImageHistorySaved.pop());
+			this.selectedImage = this.selectedImageHistorySaved.peek();
+			this.refreshSelectedImage();
+			this.saved = false;
+		}
+	}
+	
+	private void redo()
+	{
+		if (this.selectedImageHistoryUndone.size() > 0)
+		{
+			this.selectedImageHistorySaved.push(this.selectedImageHistoryUndone.pop());
+			this.selectedImage = this.selectedImageHistorySaved.peek();
+			this.refreshSelectedImage();
+			this.saved = false;
+		}
+	}
+	
+	private void antiAlias()
+	{
+		this.selectedImageHistoryUndone.clear();
+		this.selectedImage = ImageEditor.applyAntiAliasing(this.selectedImage);
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+		this.saved = false;
+	}
+	
+	private void brighten()
+	{
+		this.selectedImageHistoryUndone.clear();
+		this.selectedImage = ImageEditor.brightenImage(this.selectedImage);
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+		this.saved = false;
+	}
+	
+	private void darken()
+	{  
+		this.selectedImageHistoryUndone.clear();
+		this.selectedImage = ImageEditor.darkenImage(this.selectedImage);
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+		this.saved = false;
+	}
+	
+	private void grayscale()
+	{
+		this.selectedImageHistoryUndone.clear();
+		this.selectedImage = ImageEditor.toGrayscale(this.selectedImage);
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+		this.saved = false;
+	}
+	
+	public void resizeImage(int newWidth, int newHeight)
+	{
+		this.selectedImageHistoryUndone.clear();
+		this.selectedImage = ImageEditor.resizeImage(this.selectedImage, newWidth, newHeight);
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+		this.saved = false;
+	}
+	
+	private void rotate90()
+	{
+		this.selectedImageHistoryUndone.clear();
+		this.selectedImage = ImageEditor.rotateRight90(this.selectedImage);
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+		this.saved = false;
+	}
+	
+	private void rotate180()
+	{
+		this.selectedImageHistoryUndone.clear();
+		this.selectedImage = ImageEditor.rotateRight180(this.selectedImage);
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+		this.saved = false;
+	}
+	
+	private void rotate270()
+	{
+		this.selectedImageHistoryUndone.clear();
+		this.selectedImage = ImageEditor.rotateRight270(this.selectedImage);
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+		this.saved = false;
 	}
 
 }

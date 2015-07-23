@@ -16,7 +16,9 @@ public class FrameManager
 	private JFrame renameDialogue;
 	private JFrame resizeDialogue;
 	private JFrame quitWarningDialogue;
+	private JFrame removeWarningDialogue;
 	private JFrame switchWarningDialogue;
+	private JFrame deleteImportsDialogue;
 	
 	public FrameManager()
 	{
@@ -75,6 +77,86 @@ public class FrameManager
 	{
 		this.resizeDialogue.setVisible(false);
 		this.resizeDialogue.dispose();
+	}
+	
+	/* displayQuitWarningDialogue - initializes and opens the JFrame for the quit warning dialogue 
+	 */
+	public void displayQuitWarningDialogue(ScreenEdit currentScreen)
+	{
+        this.quitWarningDialogue = new JFrame("Quit Program");
+        //this.resizeDialogue.getContentPane().add();
+        this.quitWarningDialogue.pack();
+        this.quitWarningDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
+        this.quitWarningDialogue.setResizable(false);
+        this.quitWarningDialogue.setVisible(true);
+	}
+	
+	/* closeQuitWarningDialogue - closes and disposes of "quitWarningDialogue"
+	 */
+	public void closeQuitWarningDialogue()
+	{
+		this.quitWarningDialogue.setVisible(false);
+		this.quitWarningDialogue.dispose();
+	}
+	
+	/* displayRemoveWarningDialogue - initializes and opens the JFrame for the remove warning dialogue 
+	 */
+	public void displayRemoveWarningDialogue(ScreenEdit currentScreen)
+	{
+        this.removeWarningDialogue = new JFrame("Remove Image");
+        //this.resizeDialogue.getContentPane().add();
+        this.removeWarningDialogue.pack();
+        this.removeWarningDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
+        this.removeWarningDialogue.setResizable(false);
+        this.removeWarningDialogue.setVisible(true);
+	}
+	
+	/* closeRemoveWarningDialogue - closes and disposes of "removeWarningDialogue"
+	 */
+	public void closeRemoveWarningDialogue()
+	{
+		this.removeWarningDialogue.setVisible(false);
+		this.removeWarningDialogue.dispose();
+	}
+	
+	/* displaySwitchWarningDialogue - initializes and opens the JFrame for the switch warning dialogue 
+	 */
+	public void displaySwitchWarningDialogue(ScreenEdit currentScreen)
+	{
+        this.switchWarningDialogue = new JFrame("Edit New Image");
+        //this.resizeDialogue.getContentPane().add();
+        this.switchWarningDialogue.pack();
+        this.switchWarningDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
+        this.switchWarningDialogue.setResizable(false);
+        this.switchWarningDialogue.setVisible(true);
+	}
+	
+	/* closeSwitchWarningDialogue - closes and disposes of "switchWarningDialogue"
+	 */
+	public void closeSwitchWarningDialogue()
+	{
+		this.switchWarningDialogue.setVisible(false);
+		this.switchWarningDialogue.dispose();
+	}
+	
+	/* displayDeleteImportsDialogue - initializes and opens the JFrame for the delete imports dialogue 
+	 */
+	public void displayDeleteImportsDialogue(ScreenEdit currentScreen)
+	{
+        this.deleteImportsDialogue = new JFrame("Delete Imported Files");
+        //this.resizeDialogue.getContentPane().add();
+        this.deleteImportsDialogue.pack();
+        this.deleteImportsDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
+        this.deleteImportsDialogue.setResizable(false);
+        this.deleteImportsDialogue.setVisible(true);
+	}
+	
+	/* closeDeleteImportsDialogue - closes and disposes of "deleteImportsDialogue"
+	 */
+	public void closeDeleteImportsDialogue()
+	{
+		this.deleteImportsDialogue.setVisible(false);
+		this.deleteImportsDialogue.dispose();
 	}
 	
 	/* pushPanel - removes the current panel from "mainFrame" and replaces it with a newly constructed one
