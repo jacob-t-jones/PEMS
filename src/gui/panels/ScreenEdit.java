@@ -9,12 +9,14 @@ import java.awt.image.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+
 import javax.imageio.*;
 import javax.swing.*;
+
 import tools.*;
 import gui.*;
 
-public class ScreenEdit extends JPanel implements ActionListener, MouseListener
+public class ScreenEdit extends JPanel implements ActionListener, MouseListener, MouseMotionListener
 {
 	
 	private FrameManager manager;
@@ -43,9 +45,11 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	private JButton renameButton;
 	private JButton undoButton;
 	private JButton redoButton;
-	
-	//Editor box
 	private Box editorBox;
+	
+	//crop box stuff
+	private DrawRect cropBox;
+	private Point mousePoint;
 	
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
@@ -82,6 +86,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = true;
 		this.cropping = false;
 		this.caseThumbnailIndex = 0;
+		this.cropBox = new DrawRect(this.getGraphics(), mousePoint, mousePoint);
 		this.selectedImageHistorySaved = new Stack<BufferedImage>();
 		this.selectedImageHistoryUndone = new Stack<BufferedImage>();
 		this.caseThumbnails = this.getCaseThumbnails();
@@ -267,6 +272,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.selectedImageLabel && this.cropping)
 		{
+			System.out.println("cropVal[0]: " + this.cropVals[0]);
 			if (this.cropVals[0] == null)
 			{
 				this.cropVals[0] = new Point();
@@ -278,6 +284,31 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 			this.crop(this.cropVals[0], this.cropVals[1]);
 		}
 	}
+	
+	
+	
+	private void drawRec(Graphics g, Point initPoint, Point mousePoint)
+	{
+		this.remove(cropBox);
+		cropBox = new DrawRect(this.getGraphics(), initPoint, mousePoint);
+		cropBox.paint(g, initPoint, mousePoint);
+		//this.revalidate();
+		this.cropBox.repaint();
+		//g.fillRect(initPoint.x, initPoint.y, mousePoint.x-initPoint.x, mousePoint.y-initPoint.y);
+	}
+	
+	/* mouseMoved - detect when the mouse is moved and redraw the low alpha grey box on area to be cropped
+	 *  
+	 */
+	public void mouseMoved(MouseEvent e)
+	{
+		if(this.cropping && this.cropVals[0] != null && this.cropVals[1] == null){
+			this.mousePoint = MouseInfo.getPointerInfo().getLocation();
+			this.drawRec(this.getGraphics(), this.cropVals[0], this.mousePoint);
+			//this.cropBox = ComponentGenerator.generateRectangle(this.getGraphics(), this.cropVals[0] , this.mousePoint);
+		}
+	}
+	
 	
 	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
 	 *	          e - the event in question
@@ -444,16 +475,19 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		{
 			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 500), CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
+			this.selectedImageLabel.addMouseMotionListener(this);
 		}
 		else if (this.selectedImage.getWidth() > 1000)
 		{
 			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 1000), CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
+			this.selectedImageLabel.addMouseMotionListener(this);
 		}
 		else
 		{
 			this.selectedImageLabel = ComponentGenerator.generateLabel(this.selectedImage, CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
+			this.selectedImageLabel.addMouseMotionListener(this);
 		}
 		this.selectedImageContainer.setMaximumSize(new Dimension(1000, 500));
 		this.selectedImageContainer.setMinimumSize(new Dimension(1000, 500));
@@ -662,6 +696,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	/* crop - crops the current image based on the Point objects passed in as parameters
 	 * locA - the first point selected by the user for the cropping procedure
 	 * locB - the second point selected by the user for the cropping procedure
+	 *    *mousePos - the location of the mouse coordinate after the initial click
 	 */
 	private void crop(Point locA, Point locB)
 	{
@@ -742,6 +777,12 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.cropVals = new Point[2];
 		this.cropVals[0] = null;
 		this.cropVals[1] = null;
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

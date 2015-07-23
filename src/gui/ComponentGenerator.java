@@ -234,5 +234,15 @@ public class ComponentGenerator
 		newMenuItem.setMnemonic(mnemonic);
 		return newMenuItem;
 	}
+	
+	/*
+	 * 
+	 */
+	public static void generateRectangle(Graphics g, Point first, Point second)
+	{
+		Rectangle r = new Rectangle(first.x, first.y, second.x, second.y);
+		g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight()); 
+		//return r;
+	}
 
 }
