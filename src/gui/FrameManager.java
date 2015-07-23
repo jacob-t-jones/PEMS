@@ -13,13 +13,13 @@ public class FrameManager
 	
 	private Config configuration;
 	private JFrame mainFrame;
-	private JFrame renameDialogue;
-	private JFrame resizeDialogue;
-	private JFrame quitWarningDialogue;
-	private JFrame removeWarningDialogue;
-	private JFrame switchWarningDialogue;
-	private JFrame continueWarningDialogue;
-	private JFrame deleteImportsDialogue;
+	private JFrame renameDialogue;//
+	private JFrame resizeDialogue;//
+	private JFrame quitWarningDialogue;//
+	private JFrame removeWarningDialogue;//
+	private JFrame switchWarningDialogue;//
+	private JFrame continueWarningDialogue;//
+	private JFrame deleteImportsDialogue;//
 	
 	public FrameManager()
 	{
