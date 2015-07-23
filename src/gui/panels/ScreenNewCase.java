@@ -23,7 +23,9 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
 	public ScreenNewCase(FrameManager manager) 
 	{
 		this.manager = manager;
+		this.container = Box.createVerticalBox();
 		this.populateContainer();
+		this.add(this.container);
 	}
 	
 	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
@@ -86,7 +88,7 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
 		return;
 	}
 	
-	/* populateContainer - adds "instructionsLabel", "errorLabel", "caseNumField", and "continueButton" to "container" before displaying it
+	/* populateContainer - adds "instructionsLabel", "errorLabel", "caseNumField", and "continueButton" to "container" 
 	 */
 	private void populateContainer()
 	{
@@ -94,7 +96,6 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
 		this.errorLabel = ComponentGenerator.generateLabel("", ComponentGenerator.ERROR_TEXT_FONT, ComponentGenerator.ERROR_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.caseNumField = ComponentGenerator.generateTextField("Type here...", this, CENTER_ALIGNMENT);
 		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
-		this.container = Box.createVerticalBox();
 		this.container.add(Box.createVerticalStrut(20));
 		this.container.add(this.instructionsLabel);
 		this.container.add(Box.createVerticalStrut(10));
@@ -103,7 +104,6 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
 		this.container.add(this.caseNumField);
 		this.container.add(Box.createVerticalStrut(80));
 		this.container.add(this.continueButton);
-		this.add(this.container);
 	}
 	
 	/* isValidCaseNum - returns a boolean value indicating whether or not the given case number is valid (only letters and numbers, at least one character)

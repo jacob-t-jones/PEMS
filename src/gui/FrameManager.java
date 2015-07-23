@@ -15,6 +15,8 @@ public class FrameManager
 	private JFrame mainFrame;
 	private JFrame renameDialogue;
 	private JFrame resizeDialogue;
+	private JFrame quitWarningDialogue;
+	private JFrame switchWarningDialogue;
 	
 	public FrameManager()
 	{
@@ -42,7 +44,7 @@ public class FrameManager
         this.renameDialogue = new JFrame("Rename Image");
         this.renameDialogue.getContentPane().add(new ScreenRenameDialogue(this, currentScreen));
         this.renameDialogue.pack();
-        this.renameDialogue.setBounds(this.widthToPixels(35), this.heightToPixels(0), this.widthToPixels(30), this.heightToPixels(20));
+        this.renameDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
         this.renameDialogue.setResizable(false);
         this.renameDialogue.setVisible(true);
 	}
@@ -62,7 +64,7 @@ public class FrameManager
         this.resizeDialogue = new JFrame("Resize Image");
         this.resizeDialogue.getContentPane().add(new ScreenResizeDialogue(this, currentScreen, currentWidth, currentHeight));
         this.resizeDialogue.pack();
-        this.resizeDialogue.setBounds(this.widthToPixels(35), this.heightToPixels(0), this.widthToPixels(30), this.heightToPixels(20));
+        this.resizeDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
         this.resizeDialogue.setResizable(false);
         this.resizeDialogue.setVisible(true);
 	}
@@ -73,13 +75,6 @@ public class FrameManager
 	{
 		this.resizeDialogue.setVisible(false);
 		this.resizeDialogue.dispose();
-	}
-	
-	/* maximizeFrame - maximizes "mainFrame"
-	 */
-	public void maximizeFrame()
-	{
-		this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 	
 	/* pushPanel - removes the current panel from "mainFrame" and replaces it with a newly constructed one
@@ -104,12 +99,27 @@ public class FrameManager
 		this.mainFrame.getContentPane().repaint();
 	}
 	
+	/* maximizeFrame - maximizes "mainFrame"
+	 */
+	public void maximizeFrame()
+	{
+		this.mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	}
+	
 	/* setCursor - sets the cursor displayed in "mainFrame"
 	 *    cursor - the cursor to be displayed
 	 */
 	public void setCursor(Cursor cursor)
 	{
 		this.mainFrame.setCursor(cursor);
+	}
+	
+	/* setResizable - determines whether or not "mainFrame" is resizable
+	 *    resizable - boolean value that determines the status of the JFrame
+	 */
+	public void setResizable(boolean resizable)
+	{
+		this.mainFrame.setResizable(resizable);
 	}
 	
 	/* setMenuBar - adds the JMenuBar specified in the parameters to "mainFrame"
@@ -120,20 +130,11 @@ public class FrameManager
 		this.mainFrame.setJMenuBar(menuBar);
 	}
 	
-	/* remMenuBar - removes the JMenuBar specified in the parameters from the "mainFrame"
-	 *    menuBar - the JMenuBar to be taken off the display
+	/* removeMenuBar - removes the JMenuBar from "mainFrame"
 	 */
-	public void remMenuBar(JMenuBar menuBar)
+	public void removeMenuBar()
 	{
-		this.mainFrame.remove(menuBar);
-	}
-	
-	/* setResizable - determines whether or not "mainFrame" is resizable
-	 *    resizable - boolean value that determines the status of the JFrame
-	 */
-	public void setResizable(boolean resizable)
-	{
-		this.mainFrame.setResizable(resizable);
+		this.mainFrame.remove(this.mainFrame.getMenuBar());
 	}
 	
 	/* widthToPixels - converts a width percentage value to its equivalent pixel value

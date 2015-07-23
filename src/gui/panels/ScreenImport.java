@@ -8,8 +8,8 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import java.nio.file.*;
-import java.util.ArrayList;
-import javax.imageio.ImageIO;
+import java.util.*;
+import javax.imageio.*;
 import javax.swing.*;
 import gui.*;
 import tools.*;
@@ -54,25 +54,17 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.leftContainer = Box.createVerticalBox();
 		this.rightContainer = Box.createVerticalBox();
 		this.displayedContainer = Box.createVerticalBox();
-		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.selectedContainer = Box.createVerticalBox();
-		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.buttonsContainer = Box.createHorizontalBox();
-		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Once selected, an image can be removed from the case by simply clicking on it again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.refreshDisplayedThumbnails(0);
 		this.refreshSelectedThumbnails(0);
 		this.populateButtonsContainer();
-		this.leftContainer.add(this.displayedContainer);
-		this.leftContainer.add(Box.createVerticalStrut(30));
-		this.leftContainer.add(this.buttonsContainer);
-		this.rightContainer.add(this.selectedContainer);
-		this.innerContainer.add(this.leftContainer);
-		this.innerContainer.add(Box.createHorizontalStrut(100));
-		this.innerContainer.add(this.rightContainer);
-		this.mainContainer.add(Box.createVerticalStrut(20));
-		this.mainContainer.add(this.instructionsLabel);
-		this.mainContainer.add(Box.createVerticalStrut(30));
-		this.mainContainer.add(this.innerContainer);
+		this.populateLeftContainer();
+		this.populateRightContainer();
+		this.populateInnerContainer();
+		this.populateMainContainer();
 		this.add(this.mainContainer);
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
@@ -274,11 +266,11 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	{
 		this.selectedTitleLabel = ComponentGenerator.generateLabel("Selected Images", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 	    this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
-		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Prev", this, CENTER_ALIGNMENT);
+		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Previous", this, CENTER_ALIGNMENT);
 		this.selectedContainer.removeAll();
 		this.selectedContainer.add(this.selectedTitleLabel);
-		this.selectedImagePlace = selectedImagePlace;
 		this.selectedContainer.add(this.loadPrevSelectedButton);
+		this.selectedImagePlace = selectedImagePlace;
 		for (int i = 0; i < 3; i++)
 		{
 			Box row = Box.createHorizontalBox();
@@ -307,7 +299,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.revalidate();
 		this.repaint();
 	}
-
+	
 	/* populateButtonsContainer - fills the "buttonsContainer" layout structure with the necessary components
 	 */
 	private void populateButtonsContainer()
@@ -322,6 +314,42 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.buttonsContainer.add(this.finishButton);
 		this.buttonsContainer.add(Box.createHorizontalStrut(100));
 		this.buttonsContainer.add(this.loadNextButton);
+	}
+	
+	/* populateLeftContainer - adds "displayedContainer" and "buttonsContainer" to "leftContainer"
+	 */
+	private void populateLeftContainer()
+	{
+		this.leftContainer.add(this.displayedContainer);
+		this.leftContainer.add(Box.createVerticalStrut(30));
+		this.leftContainer.add(this.buttonsContainer);
+	}
+	
+	/* populateRightContainer - adds "selectedContainer" to "rightContainer"
+	 */
+	private void populateRightContainer()
+	{
+		this.rightContainer.add(this.selectedContainer);
+	}
+	
+	/* populateInnerContainer - adds "leftContainer" and "rightContainer" to "innerContainer"
+	 */
+	private void populateInnerContainer()
+	{
+		this.innerContainer.add(this.leftContainer);
+		this.innerContainer.add(Box.createHorizontalStrut(100));
+		this.innerContainer.add(this.rightContainer);
+	}
+	
+	/* populateMainContainer - adds "instructionsLabel" and "innerContainer" to "mainContainer"
+	 */
+	private void populateMainContainer()
+	{
+		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Selected images will appear on the right, and can be removed from the case by simply clicking on them again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.mainContainer.add(Box.createVerticalStrut(20));
+		this.mainContainer.add(this.instructionsLabel);
+		this.mainContainer.add(Box.createVerticalStrut(30));
+		this.mainContainer.add(this.innerContainer);
 	}
 		
 }
