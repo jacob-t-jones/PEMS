@@ -64,7 +64,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.caseNum = caseNum;
 		this.saved = true;
 		this.cropping = false;
-		this.resetCropValues();
 		this.caseThumbnailIndex = 0;
 		this.selectedImageHistorySaved = new Stack<BufferedImage>();
 		this.selectedImageHistoryUndone = new Stack<BufferedImage>();
@@ -73,6 +72,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.selectedImageContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.resetCropValues();
 		this.refreshCaseThumbnails(0);
 		this.loadFirstImage();
 		this.populateMainContainer();
@@ -99,7 +99,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	 *                 11. calls darken()
 	 *                 12. calls grayScale()
 	 *                 13. displays the dialogue for resizing an image
-	 *                 14. 
+	 *                 14. begins the cropping process
 	 *                 15. calls rotate90()
 	 *                 16. calls rotate180()
 	 *                 17. calls rotate270()
@@ -203,11 +203,16 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 			}
 			else
 			{
-				
+				this.manager.displayContinueWarningDialogue(this);
 			}
 		}
 	}
 	
+	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 *              1. displays the image selected for editing by the user when he or she clicks on its corresponding Thumbnail in the bottom panel
+	 *              2. carries out the cropping procedure once the user has opted in and selected two distinct locations on the image
+	 */
 	public void mouseClicked(MouseEvent e) 
 	{
 		if (e.getSource() instanceof Thumbnail)
@@ -236,53 +241,50 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		{
 			if (this.cropVals[0] == null)
 			{
-				System.out.println(e.getX() + " " + e.getY());
 				this.cropVals[0] = new Point();
 				this.cropVals[0].setLocation(e.getX(), e.getY());
+				return;
 			}
-			else if (this.cropVals[1] == null)
-			{
-				System.out.println(e.getX() + " " + e.getY());
-				this.cropVals[1] = new Point();
-				this.cropVals[1].setLocation(e.getX(), e.getY());
-				int x = (int)Math.min(cropVals[0].getX(), cropVals[1].getX());
-				int y = (int)Math.min(cropVals[0].getY(), cropVals[1].getY());
-				int width = (int)Math.abs(this.cropVals[1].getX() - this.cropVals[0].getX());
-				int height = (int)Math.abs(this.cropVals[1].getY() - this.cropVals[0].getY());
-				if (this.selectedImage.getWidth() != this.selectedImageLabel.getWidth() || this.selectedImage.getHeight() != this.selectedImageLabel.getHeight())
-				{
-					System.out.println("yo");
-					x = (this.selectedImage.getWidth() * x) / this.selectedImageLabel.getWidth();
-					y = (this.selectedImage.getHeight() * y) / this.selectedImageLabel.getHeight();
-					width = (this.selectedImage.getWidth() * width) / this.selectedImageLabel.getWidth();
-					height = (this.selectedImage.getHeight() * height) / this.selectedImageLabel.getHeight();
-				}
-				System.out.println(x + " " + y + " " + width + " " + height);
-				this.crop(x, y, width, height);
-			}
+			this.cropVals[1] = new Point();
+			this.cropVals[1].setLocation(e.getX(), e.getY());
+			this.crop(this.cropVals[0], this.cropVals[1]);
 		}
 	}
-
+	
+	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
 	public void mousePressed(MouseEvent e) 
 	{
 		return;
 	}
 
+	/* mouseReleased - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	           e - the event in question
+	 */
 	public void mouseReleased(MouseEvent e) 
 	{
 		return;
 	}
 
+	/* mouseEntered - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
 	public void mouseEntered(MouseEvent e) 
 	{
 		return;
 	}
 
+	/* mouseExited - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	         e - the event in question
+	 */
 	public void mouseExited(MouseEvent e) 
 	{
 		return;
 	}
 	
+	/* saveImage - saves the image currently being edited to both the "backups" and "cases" folders, overwriting previous saves in "cases" and saving a uniquely named version in "backups"
+	 */
 	public void saveImage()
 	{
 		int backupIncrement = 0;
@@ -315,6 +317,9 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = true;
 	}
 	
+	/* renameImage - renames the "cases" version of the image that is currently being edited
+	 * 	   newName - the new name of the file
+	 */
 	public void renameImage(String newName)
 	{
 		File oldFile = new File(this.selectedImagePath);
@@ -322,6 +327,10 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		oldFile.renameTo(newFile);
 	}
 	
+	/* resizeImage - resizes the image that is currently being edited to the size specified in the paramaters
+	 *    newWidth - the new width of the image
+	 *   newHeight - the new height of the image
+	 */
 	public void resizeImage(int newWidth, int newHeight)
 	{
 		this.selectedImageHistoryUndone.clear();
@@ -329,36 +338,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.selectedImageHistorySaved.push(this.selectedImage);
 		this.refreshSelectedImage();
 		this.saved = false;
-	}
-	
-	
-	private void refreshSelectedImage()
-	{
-		this.selectedImageContainer.removeAll();
-		if (this.selectedImage.getHeight() > 500)
-		{
-			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 500), CENTER_ALIGNMENT);
-			this.selectedImageLabel.addMouseListener(this);
-		}
-		else if (this.selectedImage.getWidth() > 1000)
-		{
-			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 1000), CENTER_ALIGNMENT);
-			this.selectedImageLabel.addMouseListener(this);
-		}
-		else
-		{
-			this.selectedImageLabel = ComponentGenerator.generateLabel(this.selectedImage, CENTER_ALIGNMENT);
-			this.selectedImageLabel.addMouseListener(this);
-		}
-		this.selectedImageContainer.setMaximumSize(new Dimension(1000, 500));
-		this.selectedImageContainer.setMinimumSize(new Dimension(1000, 500));
-		this.selectedImageContainer.add(Box.createHorizontalGlue());
-		this.selectedImageContainer.add(Box.createVerticalStrut(500));
-		this.selectedImageContainer.add(this.selectedImageLabel);
-		this.selectedImageContainer.add(Box.createVerticalStrut(500));
-		this.selectedImageContainer.add(Box.createHorizontalGlue());
-		this.revalidate();
-		this.repaint();
 	}
 	
 	private ArrayList<Thumbnail> getCaseThumbnails()
@@ -391,6 +370,35 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 			}
 		}
 	    return thumbnailList;
+	}
+	
+	private void refreshSelectedImage()
+	{
+		this.selectedImageContainer.removeAll();
+		if (this.selectedImage.getHeight() > 500)
+		{
+			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 500), CENTER_ALIGNMENT);
+			this.selectedImageLabel.addMouseListener(this);
+		}
+		else if (this.selectedImage.getWidth() > 1000)
+		{
+			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 1000), CENTER_ALIGNMENT);
+			this.selectedImageLabel.addMouseListener(this);
+		}
+		else
+		{
+			this.selectedImageLabel = ComponentGenerator.generateLabel(this.selectedImage, CENTER_ALIGNMENT);
+			this.selectedImageLabel.addMouseListener(this);
+		}
+		this.selectedImageContainer.setMaximumSize(new Dimension(1000, 500));
+		this.selectedImageContainer.setMinimumSize(new Dimension(1000, 500));
+		this.selectedImageContainer.add(Box.createHorizontalGlue());
+		this.selectedImageContainer.add(Box.createVerticalStrut(500));
+		this.selectedImageContainer.add(this.selectedImageLabel);
+		this.selectedImageContainer.add(Box.createVerticalStrut(500));
+		this.selectedImageContainer.add(Box.createHorizontalGlue());
+		this.revalidate();
+		this.repaint();
 	}
 	
 	private void refreshCaseThumbnails(int caseThumbnailIndex)
@@ -427,6 +435,37 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.caseThumbnailIndex = caseThumbnailIndex;
 		this.revalidate();
 		this.repaint();
+	}
+	
+	private void loadFirstImage()
+	{
+		Thumbnail selectedThumbnail = this.caseThumbnails.get(0);
+		this.selectedImage = null;
+		try 
+		{      
+			this.selectedImage = ImageIO.read(new File(selectedThumbnail.getFilePath()));
+		} 
+		catch (IOException e)
+		{
+			System.out.println("Error - Unable to import selected image");
+			e.printStackTrace();
+			return;
+		}
+		this.selectedImagePath = selectedThumbnail.getFilePath();
+		this.selectedImageName = selectedThumbnail.getFileName();
+		this.selectedImageExt = selectedThumbnail.getFileExt();
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
+	}
+	
+	private void populateMainContainer()
+	{
+		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
+		this.mainContainer.add(this.selectedImageContainer);
+		this.mainContainer.add(Box.createVerticalStrut(40));
+		this.mainContainer.add(this.caseThumbnailContainer);
+		this.mainContainer.add(Box.createVerticalStrut(10));
+		this.mainContainer.add(this.continueButton);
 	}
 	
 	private void constructMenuBar()
@@ -476,50 +515,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.menuBar.add(this.editMenu);
 		this.menuBar.add(this.caseMenu);
 		this.menuBar.add(this.imageMenu);
-	}
-	
-	private String getImageFileType(String extension)
-	{
-		if (extension.equalsIgnoreCase(".png"))
-		{
-			return "png";
-		}
-		else if (extension.equalsIgnoreCase(".jpg") || extension.equalsIgnoreCase(".jpeg"))
-		{
-			return "jpg";
-		}
-		return null;
-	}
-	
-	private void populateMainContainer()
-	{
-		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
-		this.mainContainer.add(this.selectedImageContainer);
-		this.mainContainer.add(Box.createVerticalStrut(40));
-		this.mainContainer.add(this.caseThumbnailContainer);
-		this.mainContainer.add(Box.createVerticalStrut(10));
-		this.mainContainer.add(this.continueButton);
-	}
-	
-	private void loadFirstImage()
-	{
-		Thumbnail selectedThumbnail = this.caseThumbnails.get(0);
-		this.selectedImage = null;
-		try 
-		{      
-			this.selectedImage = ImageIO.read(new File(selectedThumbnail.getFilePath()));
-		} 
-		catch (IOException e)
-		{
-			System.out.println("Error - Unable to import selected image");
-			e.printStackTrace();
-			return;
-		}
-		this.selectedImagePath = selectedThumbnail.getFilePath();
-		this.selectedImageName = selectedThumbnail.getFileName();
-		this.selectedImageExt = selectedThumbnail.getFileExt();
-		this.selectedImageHistorySaved.push(this.selectedImage);
-		this.refreshSelectedImage();
 	}
 	
 	private void undo()
@@ -580,16 +575,27 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = false;
 	}
 	
-	private void crop(int x, int y, int width, int height)
+	private void crop(Point locationA, Point locationB)
 	{
-		this.selectedImageHistoryUndone.clear();
-		this.selectedImage = ImageEditor.cropImage(this.selectedImage, x, y, width, height);
-		this.selectedImageHistorySaved.push(this.selectedImage);
-		this.refreshSelectedImage();
+		int x = (int)Math.min(locationA.getX(), locationB.getX());
+		int y = (int)Math.min(locationA.getY(), locationB.getY());
+		int width = (int)Math.abs(locationB.getX() - locationA.getX());
+		int height = (int)Math.abs(locationB.getY() - locationA.getY());
+		if (this.selectedImage.getWidth() != this.selectedImageLabel.getWidth() || this.selectedImage.getHeight() != this.selectedImageLabel.getHeight())
+		{
+			x = (this.selectedImage.getWidth() * x) / this.selectedImageLabel.getWidth();
+			y = (this.selectedImage.getHeight() * y) / this.selectedImageLabel.getHeight();
+			width = (this.selectedImage.getWidth() * width) / this.selectedImageLabel.getWidth();
+			height = (this.selectedImage.getHeight() * height) / this.selectedImageLabel.getHeight();
+		}
 		this.saved = false;
 		this.cropping = false;
 		this.resetCropValues();
 		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.selectedImageHistoryUndone.clear();
+		this.selectedImage = ImageEditor.cropImage(this.selectedImage, x, y, width, height);
+		this.selectedImageHistorySaved.push(this.selectedImage);
+		this.refreshSelectedImage();
 	}
 	
 	private void rotate90()
@@ -617,6 +623,19 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.selectedImageHistorySaved.push(this.selectedImage);
 		this.refreshSelectedImage();
 		this.saved = false;
+	}
+	
+	private String getImageFileType(String extension)
+	{
+		if (extension.equalsIgnoreCase(".png"))
+		{
+			return "png";
+		}
+		else if (extension.equalsIgnoreCase(".jpg") || extension.equalsIgnoreCase(".jpeg"))
+		{
+			return "jpg";
+		}
+		return null;
 	}
 	
 	private void resetCropValues()

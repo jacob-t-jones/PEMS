@@ -18,6 +18,7 @@ public class FrameManager
 	private JFrame quitWarningDialogue;
 	private JFrame removeWarningDialogue;
 	private JFrame switchWarningDialogue;
+	private JFrame continueWarningDialogue;
 	private JFrame deleteImportsDialogue;
 	
 	public FrameManager()
@@ -144,6 +145,27 @@ public class FrameManager
 	{
 		this.switchWarningDialogue.setVisible(false);
 		this.switchWarningDialogue.dispose();
+	}
+	
+	/* displayContinueWarningDialogue - initializes and opens the JFrame for the continue warning dialogue 
+	 * 		            currentScreen - the instance of ScreenEdit calling this method 
+	 */
+	public void displayContinueWarningDialogue(ScreenEdit currentScreen)
+	{
+        this.continueWarningDialogue = new JFrame("Continue");
+        //this.resizeDialogue.getContentPane().add();
+        this.continueWarningDialogue.pack();
+        this.continueWarningDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
+        this.continueWarningDialogue.setResizable(false);
+        this.continueWarningDialogue.setVisible(true);
+	}
+	
+	/* closeContinueWarningDialogue - closes and disposes of "continueWarningDialogue"
+	 */
+	public void closeContinueWarningDialogue()
+	{
+		this.continueWarningDialogue.setVisible(false);
+		this.continueWarningDialogue.dispose();
 	}
 	
 	/* displayDeleteImportsDialogue - initializes and opens the JFrame for the delete imports dialogue 
