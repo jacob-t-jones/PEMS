@@ -71,8 +71,7 @@ public class ImageEditor
 	{
 		return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, size, Scalr.OP_ANTIALIAS);
 	}
-	
-	
+
 	/* resizeImage - resizes an image to the width and height specified in the parameters
 	 *       image - the image in question
 	 *       width - the new width of the image

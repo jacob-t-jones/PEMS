@@ -17,6 +17,7 @@ public class ComponentGenerator
 	public static final Font STANDARD_TEXT_FONT_BOLD = new Font("Georgia", Font.BOLD, 14);
 	public static final Font STANDARD_TEXT_FONT_ITALIC = new Font("Georgia", Font.ITALIC, 14);
 	public static final Font ERROR_TEXT_FONT = new Font("Georgia", Font.ITALIC, 12);
+	public static final Font SMALL_TEXT_FONT = new Font ("Georgia", Font.PLAIN, 10);
 	public static final Color TITLE_COLOR = new Color(46, 46, 46);
 	public static final Color SUBTITLE_COLOR = new Color(2, 2, 123);
 	public static final Color STANDARD_TEXT_COLOR = new Color(44, 29, 29);
@@ -187,6 +188,7 @@ public class ComponentGenerator
 	 *             image - the image represented by the Thumbnail
 	 *          filePath - the full file system path name of the aforementioned image
 	 *          fileName - the shorthand file name of the aforementioned image
+	 *           fileExt - the file extension (".png", ".jpg", etc.) for the image
 	 */
 	public static Thumbnail generateThumbnail(BufferedImage image, String filePath, String fileName, String fileExt)
 	{

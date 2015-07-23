@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
-import javax.imageio.ImageIO;
+import javax.imageio.*;
 import javax.swing.*;
 import gui.*;
 import tools.*;
@@ -19,10 +19,12 @@ public class ScreenStart extends JPanel implements ActionListener
 	private BufferedImage logoImage;
 	private BufferedImage bgImage;
 	private Box topContainer;
+	private Box middleContainer;
 	private Box bottomContainer;
 	private JLabel logoLabel;
 	private JLabel titleLabel;
 	private JLabel nameLabel;
+	private JLabel creditLabel;
 	private JButton newCaseButton;
 	private JButton editCaseButton;
 	private JButton settingsButton;
@@ -31,8 +33,15 @@ public class ScreenStart extends JPanel implements ActionListener
 	{
 		this.manager = manager;
 		this.importImages();
+		this.topContainer = Box.createVerticalBox();
+		this.middleContainer = Box.createHorizontalBox();
+		this.bottomContainer = Box.createVerticalBox();
 		this.populateTopContainer();
+		this.populateMiddleContainer();
 		this.populateBottomContainer();
+		this.add(this.topContainer);
+		this.add(this.middleContainer);
+		this.add(this.bottomContainer);
 	}
 	
 	/* paintComponent - override function used, in this case, to set a background image
@@ -58,14 +67,7 @@ public class ScreenStart extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.editCaseButton)
 		{
-        	try 
-        	{
-				this.manager.pushPanel(new ScreenAddToExisting(this.manager), "PEMS - Edit Existing Case");
-			} 
-        	catch (IOException e1) 
-        	{
-				e1.printStackTrace();
-			}
+			// TODO: this.manager.pushPanel(new ScreenAddToExisting(this.manager), "PEMS - Edit Existing Case");
 		}
 		else if (e.getSource() == this.settingsButton)
 		{
@@ -92,37 +94,42 @@ public class ScreenStart extends JPanel implements ActionListener
 	    }
 	}
 	
-	/* populateTopContainer - adds "logoLabel", "titleLabel", and "nameLabel" to "topContainer" before displaying it
+	/* populateTopContainer - adds "logoLabel", "titleLabel", and "nameLabel" to "topContainer" 
 	 */
 	private void populateTopContainer()
 	{
 		this.logoLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.logoImage, 200, 200), CENTER_ALIGNMENT);
 		this.titleLabel = ComponentGenerator.generateLabel("Police Evidence Management System", ComponentGenerator.TITLE_FONT, ComponentGenerator.TITLE_COLOR, CENTER_ALIGNMENT);
 		this.nameLabel = ComponentGenerator.generateLabel(this.manager.getConfiguration().getDepartmentName(), ComponentGenerator.SUBTITLE_FONT, ComponentGenerator.SUBTITLE_COLOR, CENTER_ALIGNMENT);
-		this.topContainer = Box.createVerticalBox();
 		this.topContainer.add(this.logoLabel);
-		this.topContainer.add(Box.createVerticalStrut(20));
+		this.topContainer.add(Box.createVerticalStrut(15));
 		this.topContainer.add(this.titleLabel);
 		this.topContainer.add(Box.createVerticalStrut(10));
 		this.topContainer.add(this.nameLabel);
-		this.topContainer.add(Box.createVerticalStrut(40));
-		this.add(this.topContainer);
+		this.topContainer.add(Box.createVerticalStrut(25));
 	}
 	
-	/* populateBottomContainer - adds "newCaseButton", "editCaseButton", and "settingsButton" to "bottomContainer" before displaying it
+	/* populateMiddleContainer - adds "newCaseButton", "editCaseButton", and "settingsButton" to "middleContainer" 
 	 */
-	private void populateBottomContainer()
+	private void populateMiddleContainer()
 	{
 		this.newCaseButton = ComponentGenerator.generateButton("New Case", this);
 		this.editCaseButton = ComponentGenerator.generateButton("Edit Case", this);
 		this.settingsButton = ComponentGenerator.generateButton("Settings", this);
-		this.bottomContainer = Box.createHorizontalBox();
-		this.bottomContainer.add(this.newCaseButton);
-		this.bottomContainer.add(Box.createHorizontalStrut(120));		
-		this.bottomContainer.add(this.editCaseButton);
-		this.bottomContainer.add(Box.createHorizontalStrut(120));
-		this.bottomContainer.add(this.settingsButton);
-		this.add(this.bottomContainer);
+		this.middleContainer.add(this.newCaseButton);
+		this.middleContainer.add(Box.createHorizontalStrut(120));		
+		this.middleContainer.add(this.editCaseButton);
+		this.middleContainer.add(Box.createHorizontalStrut(120));
+		this.middleContainer.add(this.settingsButton);
+	}
+	
+	/* populateBottomContainer - adds "creditLabel" to "bottomContainer"
+	 */
+	private void populateBottomContainer()
+	{
+		this.creditLabel = ComponentGenerator.generateLabel("Copyright 2015 \u00a9 Jacob Jones and Andrew Rottier", ComponentGenerator.SMALL_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.bottomContainer.add(Box.createVerticalStrut(5));
+		this.bottomContainer.add(this.creditLabel);
 	}
 	
 }

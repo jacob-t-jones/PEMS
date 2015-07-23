@@ -8,8 +8,8 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import java.nio.file.*;
-import java.util.ArrayList;
-import javax.imageio.ImageIO;
+import java.util.*;
+import javax.imageio.*;
 import javax.swing.*;
 import gui.*;
 import tools.*;
@@ -54,25 +54,17 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.leftContainer = Box.createVerticalBox();
 		this.rightContainer = Box.createVerticalBox();
 		this.displayedContainer = Box.createVerticalBox();
-		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.selectedContainer = Box.createVerticalBox();
-		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.buttonsContainer = Box.createHorizontalBox();
-		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Once selected, an image can be removed from the case by simply clicking on it again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.refreshDisplayedThumbnails(0);
 		this.refreshSelectedThumbnails(0);
 		this.populateButtonsContainer();
-		this.leftContainer.add(this.displayedContainer);
-		this.leftContainer.add(Box.createVerticalStrut(30));
-		this.leftContainer.add(this.buttonsContainer);
-		this.rightContainer.add(this.selectedContainer);
-		this.innerContainer.add(this.leftContainer);
-		this.innerContainer.add(Box.createHorizontalStrut(100));
-		this.innerContainer.add(this.rightContainer);
-		this.mainContainer.add(Box.createVerticalStrut(20));
-		this.mainContainer.add(this.instructionsLabel);
-		this.mainContainer.add(Box.createVerticalStrut(30));
-		this.mainContainer.add(this.innerContainer);
+		this.populateLeftContainer();
+		this.populateRightContainer();
+		this.populateInnerContainer();
+		this.populateMainContainer();
 		this.add(this.mainContainer);
 		this.manager.setResizable(true);
 		this.manager.maximizeFrame();
@@ -85,7 +77,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	 *	             e - the event in question
 	 *                 1. attempts to load the next fifteen images from the camera within "displayedContainer"
 	 *                 2. attempts to load the previous fifteen images from the camera within "displayedContainer"
-	 *                 3. pushes the ScreenEdit JPanel into view, copies imported images to the proper case folder
+	 *                 3. displays a dialogue asking the user for his or her import preferences, copies files to proper directories, and pushes ScreenEdit
 	 *                 4. attempts to load the next three selected images within "selectedContainer"
 	 *                 5. attempts to load the previous three selected images within "selectedContainer"
 	 */
@@ -107,21 +99,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		}
 		else if (e.getSource() == this.finishButton)
 		{
-    		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        	for (int i = 0; i < this.selectedThumbnails.size(); i++)
-        	{
-				try 
-				{
-					Files.copy(Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt()), Paths.get("cases/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt()), StandardCopyOption.REPLACE_EXISTING);
-				} 
-				catch (IOException e1) 
-				{
-					System.out.println("Error - Unable to copy image files to new directory");
-					e1.printStackTrace();
-					return;
-				}
-        	}
-        	this.manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
+			this.manager.displayDeleteImportsDialogue(this);
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
@@ -193,6 +171,18 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	{
 		return;
 	}	
+	
+	/* deleteOptionSelected - called when the user chooses an option on ScreenDeleteImportsDialogue
+	 * 				 delete - boolean value indicating whether or not imported files should be deleted from the device
+	 */
+	public void deleteOptionSelected(boolean delete)
+	{
+		if (this.copyFiles(delete))
+		{
+			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			this.manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
+		}
+	}
 	
 	/* getThumbnails - fills the "thumbnails" ArrayList by importing images from the camera into memory
 	 */
@@ -274,11 +264,11 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	{
 		this.selectedTitleLabel = ComponentGenerator.generateLabel("Selected Images", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 	    this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
-		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Prev", this, CENTER_ALIGNMENT);
+		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Previous", this, CENTER_ALIGNMENT);
 		this.selectedContainer.removeAll();
 		this.selectedContainer.add(this.selectedTitleLabel);
-		this.selectedImagePlace = selectedImagePlace;
 		this.selectedContainer.add(this.loadPrevSelectedButton);
+		this.selectedImagePlace = selectedImagePlace;
 		for (int i = 0; i < 3; i++)
 		{
 			Box row = Box.createHorizontalBox();
@@ -307,7 +297,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.revalidate();
 		this.repaint();
 	}
-
+	
 	/* populateButtonsContainer - fills the "buttonsContainer" layout structure with the necessary components
 	 */
 	private void populateButtonsContainer()
@@ -322,6 +312,71 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.buttonsContainer.add(this.finishButton);
 		this.buttonsContainer.add(Box.createHorizontalStrut(100));
 		this.buttonsContainer.add(this.loadNextButton);
+	}
+	
+	/* populateLeftContainer - adds "displayedContainer" and "buttonsContainer" to "leftContainer"
+	 */
+	private void populateLeftContainer()
+	{
+		this.leftContainer.add(this.displayedContainer);
+		this.leftContainer.add(Box.createVerticalStrut(30));
+		this.leftContainer.add(this.buttonsContainer);
+	}
+	
+	/* populateRightContainer - adds "selectedContainer" to "rightContainer"
+	 */
+	private void populateRightContainer()
+	{
+		this.rightContainer.add(this.selectedContainer);
+	}
+	
+	/* populateInnerContainer - adds "leftContainer" and "rightContainer" to "innerContainer"
+	 */
+	private void populateInnerContainer()
+	{
+		this.innerContainer.add(this.leftContainer);
+		this.innerContainer.add(Box.createHorizontalStrut(100));
+		this.innerContainer.add(this.rightContainer);
+	}
+	
+	/* populateMainContainer - adds "instructionsLabel" and "innerContainer" to "mainContainer"
+	 */
+	private void populateMainContainer()
+	{
+		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Selected images will appear on the right, and can be removed from the case by simply clicking on them again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.mainContainer.add(Box.createVerticalStrut(20));
+		this.mainContainer.add(this.instructionsLabel);
+		this.mainContainer.add(Box.createVerticalStrut(30));
+		this.mainContainer.add(this.innerContainer);
+	}
+	
+	/* copyFiles - copies files from the camera to the "cases" and "backups" folders, and returns a boolean value determined by whether or not the copy was successful
+	 *	  delete - boolean value that determines whether original files should be deleted from the device as they are imported
+	 */
+	private boolean copyFiles(boolean delete)
+	{
+    	for (int i = 0; i < this.selectedThumbnails.size(); i++)
+    	{
+			Path currentPath = Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
+			Path casesPath = Paths.get("cases/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
+			Path backupsPath = Paths.get("backups/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
+			try 
+			{
+				Files.copy(currentPath, casesPath, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(currentPath, backupsPath, StandardCopyOption.REPLACE_EXISTING);
+				if (delete)
+				{
+					Files.delete(currentPath);
+				}
+			} 
+			catch (IOException e1) 
+			{
+				System.out.println("Error - Unable to copy image files to new directory");
+				e1.printStackTrace();
+				return false;
+			}
+    	}
+    	return true;
 	}
 		
 }
