@@ -340,6 +340,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = false;
 	}
 	
+	/* getCaseThumbnails - returns an ArrayList of Thumbnail objects read in from the currently selected case folder
+	 */
 	private ArrayList<Thumbnail> getCaseThumbnails()
 	{
 		ArrayList<Thumbnail> thumbnailList = new ArrayList<Thumbnail>();
@@ -372,6 +374,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	    return thumbnailList;
 	}
 	
+	/* refreshSelectedImage - refreshes "selectedImageLabel" so that it contains "selectedImage", resizing the label if the image is too large to fit on screen
+	 */
 	private void refreshSelectedImage()
 	{
 		this.selectedImageContainer.removeAll();
@@ -437,6 +441,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.repaint();
 	}
 	
+	/* loadFirstImage - loads the first image linked to in the "caseThumbnails" ArrayList immediately upon the JPanel loading
+	 */
 	private void loadFirstImage()
 	{
 		Thumbnail selectedThumbnail = this.caseThumbnails.get(0);
@@ -458,6 +464,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.refreshSelectedImage();
 	}
 	
+	/* populateMainContainer - adds "selectedImageContainer", "caseThumbnailContainer", and "continueButton" to "mainContainer"
+	 */
 	private void populateMainContainer()
 	{
 		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
@@ -468,6 +476,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.mainContainer.add(this.continueButton);
 	}
 	
+	/* constructMenuBar - creates and populates the JMenuBar displayed at the top of the JFrame
+	 */
 	private void constructMenuBar()
 	{
 		this.menuBar = new JMenuBar();
@@ -517,6 +527,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.menuBar.add(this.imageMenu);
 	}
 	
+	/* undo - undoes the most recent action applied by the user
+	 */
 	private void undo()
 	{
 		if (this.selectedImageHistorySaved.size() > 1)
@@ -528,6 +540,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 	}
 	
+	/* redo - redoes the most recent action undone by the user
+	 */
 	private void redo()
 	{
 		if (this.selectedImageHistoryUndone.size() > 0)
@@ -539,6 +553,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 	}
 	
+	/* antiAlias - applies an anti aliasing procedure to the image currently being edited
+	 */
 	private void antiAlias()
 	{
 		this.selectedImageHistoryUndone.clear();
@@ -548,6 +564,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = false;
 	}
 	
+	/* brighten - applies a brightening procedure to the image currently being edited
+	 */
 	private void brighten()
 	{
 		this.selectedImageHistoryUndone.clear();
@@ -557,6 +575,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = false;
 	}
 	
+	/* darken - applies a darkening procedure to the image currently being edited
+	 */
 	private void darken()
 	{  
 		this.selectedImageHistoryUndone.clear();
@@ -566,6 +586,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = false;
 	}
 	
+	/* grayscale - converts the image currently being edited to grayscale
+	 */
 	private void grayscale()
 	{
 		this.selectedImageHistoryUndone.clear();
@@ -575,12 +597,16 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = false;
 	}
 	
-	private void crop(Point locationA, Point locationB)
+	/* crop - crops the current image based on the Point objects passed in as parameters
+	 * locA - the first point selected by the user for the cropping procedure
+	 * locB - the second point selected by the user for the cropping procedure
+	 */
+	private void crop(Point locA, Point locB)
 	{
-		int x = (int)Math.min(locationA.getX(), locationB.getX());
-		int y = (int)Math.min(locationA.getY(), locationB.getY());
-		int width = (int)Math.abs(locationB.getX() - locationA.getX());
-		int height = (int)Math.abs(locationB.getY() - locationA.getY());
+		int x = (int)Math.min(locA.getX(), locB.getX());
+		int y = (int)Math.min(locA.getY(), locB.getY());
+		int width = (int)Math.abs(locB.getX() - locA.getX());
+		int height = (int)Math.abs(locB.getY() - locA.getY());
 		if (this.selectedImage.getWidth() != this.selectedImageLabel.getWidth() || this.selectedImage.getHeight() != this.selectedImageLabel.getHeight())
 		{
 			x = (this.selectedImage.getWidth() * x) / this.selectedImageLabel.getWidth();
@@ -598,6 +624,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.refreshSelectedImage();
 	}
 	
+	/* rotate90 - rotates the image currently being edited 90 degrees to the right
+	 */
 	private void rotate90()
 	{
 		this.selectedImageHistoryUndone.clear();
@@ -607,6 +635,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = false;
 	}
 	
+	/* rotate180 - rotates the image currently being edited 180 degrees to the right
+	 */
 	private void rotate180()
 	{
 		this.selectedImageHistoryUndone.clear();
@@ -616,6 +646,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = false;
 	}
 	
+	/* rotate270 - rotates the image currently being edited 270 degrees to the right
+	 */
 	private void rotate270()
 	{
 		this.selectedImageHistoryUndone.clear();
@@ -625,6 +657,9 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.saved = false;
 	}
 	
+	/* getImageFileType - returns the file format for an image based on its extension
+	 *        extension - the extension of said image (".png", ".jpg", etc.)
+	 */
 	private String getImageFileType(String extension)
 	{
 		if (extension.equalsIgnoreCase(".png"))
@@ -638,6 +673,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		return null;
 	}
 	
+	/* resetCropValues - resets the Point objects used in the cropping procedure
+	 */
 	private void resetCropValues()
 	{
 		this.cropVals = new Point[2];
