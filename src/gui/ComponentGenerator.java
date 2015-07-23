@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.*;
+import javax.swing.text.*;
 
 public class ComponentGenerator 
 {
@@ -234,5 +235,50 @@ public class ComponentGenerator
 		newMenuItem.setMnemonic(mnemonic);
 		return newMenuItem;
 	}
+	
+	public static JCheckBox generateCheckBox(String text, boolean selected)
+	{
+		JCheckBox newCheckBox = new JCheckBox(text, selected);
+		return newCheckBox;
+	}
+	
+	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX)
+	{
+		JCheckBox newCheckBox = new JCheckBox(text, selected);
+		newCheckBox.setAlignmentX(alignmentX);
+		return newCheckBox;
+	}
 
+	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX, float alignmentY)
+	{
+		JCheckBox newCheckBox = new JCheckBox(text, selected);
+		newCheckBox.setAlignmentX(alignmentX);
+		newCheckBox.setAlignmentY(alignmentY);
+		return newCheckBox;
+	}
+	
+	public static JFormattedTextField generateFormattedTextField(NumberFormatter formatter, Object value)
+	{
+		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
+		newFormattedTextField.setValue(value);
+		return newFormattedTextField;
+	}
+	
+	public static JFormattedTextField generateFormattedTextField(NumberFormatter formatter, Object value, float alignmentX)
+	{
+		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
+		newFormattedTextField.setValue(value);
+		newFormattedTextField.setAlignmentX(alignmentX);
+		return newFormattedTextField;
+	}
+	
+	public static JFormattedTextField generateFormattedTextField(NumberFormatter formatter, Object value, float alignmentX, float alignmentY)
+	{
+		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
+		newFormattedTextField.setValue(value);
+		newFormattedTextField.setAlignmentX(alignmentX);
+		newFormattedTextField.setAlignmentY(alignmentY);
+		return newFormattedTextField;
+	}
+	
 }

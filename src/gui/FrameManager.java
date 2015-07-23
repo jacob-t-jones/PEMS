@@ -13,13 +13,12 @@ public class FrameManager
 	
 	private Config configuration;
 	private JFrame mainFrame;
-	private JFrame renameDialogue;//
-	private JFrame resizeDialogue;//
-	private JFrame quitWarningDialogue;//
-	private JFrame removeWarningDialogue;//
-	private JFrame switchWarningDialogue;//
-	private JFrame continueWarningDialogue;//
-	private JFrame deleteImportsDialogue;//
+	private JFrame resizeDialogue;
+	private JFrame quitWarningDialogue;
+	private JFrame removeWarningDialogue;
+	private JFrame switchWarningDialogue;
+	private JFrame continueWarningDialogue;
+	private JFrame deleteImportsDialogue;
 	
 	public FrameManager()
 	{
@@ -39,28 +38,7 @@ public class FrameManager
 	{
 		return this.configuration;
 	}
-	
-	/* displayRenameDialogue - initializes and opens the JFrame for the rename image dialogue
-	 * 		   currentScreen - the instance of ScreenEdit calling this method 
-	 */
-	public void displayRenameDialogue(ScreenEdit currentScreen)
-	{
-        this.renameDialogue = new JFrame("Rename Image");
-        this.renameDialogue.getContentPane().add(new ScreenRenameDialogue(this, currentScreen));
-        this.renameDialogue.pack();
-        this.renameDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
-        this.renameDialogue.setResizable(false);
-        this.renameDialogue.setVisible(true);
-	}
-	
-	/* closeRenameDialogue - closes and disposes of "renameDialogue"
-	 */
-	public void closeRenameDialogue()
-	{
-		this.renameDialogue.setVisible(false);
-		this.renameDialogue.dispose();
-	}
-	
+
 	/* displayResizeDialogue - initializes and opens the JFrame for the resize image dialogue 
 	 * 		   currentScreen - the instance of ScreenEdit calling this method 
 	 * 		    currentWidth - the width of the image before resizing
