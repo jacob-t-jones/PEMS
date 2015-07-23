@@ -30,6 +30,23 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	private JButton loadNextThumbnails;
 	private JButton loadPrevThumbnails;
 	private JButton continueButton;
+	
+	//Editor Buttons on screen
+	private JButton removeButton;
+	private JButton antiAliasButton;
+	private JButton brightenButton;
+	private JButton darkenButton;
+	private JButton grayscaleButton;
+	private JButton resizeButton;
+	private JButton cropButton;
+	private JButton rotate90Button;
+	private JButton renameButton;
+	private JButton undoButton;
+	private JButton redoButton;
+	
+	//Editor box
+	private Box editorBox;
+	
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
 	private JMenu editMenu;
@@ -71,7 +88,9 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.mainContainer = Box.createVerticalBox();
 		this.selectedImageContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer = Box.createHorizontalBox();
+		this.editorBox = Box.createVerticalBox();
 		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.populateEditorBox();
 		this.resetCropValues();
 		this.refreshCaseThumbnails(0);
 		this.loadFirstImage();
@@ -140,44 +159,44 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 				this.manager.displayQuitWarningDialogue(this);
 			}
 		}
-		else if (e.getSource() == this.undoMenuItem)
+		else if (e.getSource() == this.undoMenuItem || e.getSource() == this.undoButton)
 		{
 			this.undo();
 		}
-		else if (e.getSource() == this.redoMenuItem)
+		else if (e.getSource() == this.redoMenuItem || e.getSource() == this.redoButton)
 		{
 			this.redo();
 		}
-		else if (e.getSource() == this.removeImageMenuItem)
+		else if (e.getSource() == this.removeImageMenuItem || e.getSource() == this.removeButton)
 		{
 			this.manager.displayRemoveWarningDialogue(this);
 		}
-	    else if (e.getSource() == this.antiAliasMenuItem)
+	    else if (e.getSource() == this.antiAliasMenuItem || e.getSource() == this.antiAliasButton)
 		{
 	    	this.antiAlias();
 		}
-		else if (e.getSource() == this.brightenMenuItem)
+		else if (e.getSource() == this.brightenMenuItem || e.getSource() == this.brightenButton)
 		{
 			this.brighten();
 		}
-		else if (e.getSource() == this.darkenMenuItem)
+		else if (e.getSource() == this.darkenMenuItem || e.getSource() == this.darkenButton)
 		{
 			this.darken();
 		}
-		else if (e.getSource() == this.grayscaleMenuItem)
+		else if (e.getSource() == this.grayscaleMenuItem || e.getSource() == this.grayscaleButton)
 		{
 			this.grayscale();
 		}
-		else if (e.getSource() == this.resizeMenuItem)
+		else if (e.getSource() == this.resizeMenuItem || e.getSource() == this.resizeButton)
 		{
 			this.manager.displayResizeDialogue(this, this.selectedImage.getWidth(), this.selectedImage.getHeight());
 		}
-		else if (e.getSource() == this.cropMenuItem)
+		else if (e.getSource() == this.cropMenuItem || e.getSource() == this.cropButton)
 		{
 			this.cropping = true;
 			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
-		else if (e.getSource() == this.rotate90MenuItem)
+		else if (e.getSource() == this.rotate90MenuItem || e.getSource() == this.rotate90Button)
 		{
 			this.rotate90();
 		}
@@ -193,7 +212,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		{
 			if (this.saved)
 			{
-				this.manager.removeMenuBar();
+				//this.manager.removeMenuBar();//?
 				try
 				{
 					this.manager.closeRenameDialogue();
@@ -201,6 +220,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 					this.manager.closeQuitWarningDialogue();
 					this.manager.closeRemoveWarningDialogue();
 					this.manager.closeSwitchWarningDialogue();
+					this.menuBar.removeAll(); ////not removing menu bar..
+					this.manager.removeMenuBar();
 				}
 				catch (Exception e1)
 				{
@@ -381,6 +402,39 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	    return thumbnailList;
 	}
 	
+	/* populateEditorBox - insert the buttons into the editor box
+	 */
+	private void populateEditorBox()
+	{
+		this.antiAliasButton = ComponentGenerator.generateButton("AntiAlias", this, CENTER_ALIGNMENT);
+		this.brightenButton = ComponentGenerator.generateButton("Brighten", this, CENTER_ALIGNMENT);
+		this.darkenButton = ComponentGenerator.generateButton("Darken", this, CENTER_ALIGNMENT);
+		this.cropButton = ComponentGenerator.generateButton("Crop", this, CENTER_ALIGNMENT);
+		this.grayscaleButton = ComponentGenerator.generateButton("Grayscale", this, CENTER_ALIGNMENT);
+		this.rotate90Button = ComponentGenerator.generateButton("Rotate 90", this, CENTER_ALIGNMENT);
+		this.resizeButton = ComponentGenerator.generateButton("Resize", this, CENTER_ALIGNMENT);
+		this.renameButton = ComponentGenerator.generateButton("Rename", this, CENTER_ALIGNMENT);
+		this.removeButton = ComponentGenerator.generateButton("Remove", this, CENTER_ALIGNMENT);
+		this.undoButton = ComponentGenerator.generateButton("undo", this, CENTER_ALIGNMENT);
+		this.redoButton = ComponentGenerator.generateButton("redo", this, CENTER_ALIGNMENT);
+		
+		//add images to the editor box
+		this.editorBox.add(antiAliasButton);
+		this.editorBox.add(brightenButton);
+		this.editorBox.add(darkenButton);
+		this.editorBox.add(Box.createVerticalStrut(30));
+		this.editorBox.add(cropButton);
+		this.editorBox.add(grayscaleButton);
+		this.editorBox.add(rotate90Button);
+		this.editorBox.add(resizeButton);
+		this.editorBox.add(renameButton);
+		this.editorBox.add(Box.createVerticalStrut(30));
+		this.editorBox.add(undoButton);
+		this.editorBox.add(redoButton);
+		this.editorBox.add(Box.createVerticalStrut(30));
+		this.editorBox.add(removeButton);
+	}
+	
 	/* refreshSelectedImage - refreshes "selectedImageLabel" so that it contains "selectedImage", resizing the label if the image is too large to fit on screen
 	 */
 	private void refreshSelectedImage()
@@ -408,6 +462,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.selectedImageContainer.add(this.selectedImageLabel);
 		this.selectedImageContainer.add(Box.createVerticalStrut(500));
 		this.selectedImageContainer.add(Box.createHorizontalGlue());
+		this.selectedImageContainer.add(this.editorBox);
 		this.revalidate();
 		this.repaint();
 	}
