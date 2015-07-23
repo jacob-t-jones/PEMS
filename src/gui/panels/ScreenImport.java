@@ -77,7 +77,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	 *	             e - the event in question
 	 *                 1. attempts to load the next fifteen images from the camera within "displayedContainer"
 	 *                 2. attempts to load the previous fifteen images from the camera within "displayedContainer"
-	 *                 3. pushes the ScreenEdit JPanel into view, copies imported images to the proper case folder
+	 *                 3. displays a dialogue asking the user for his or her import preferences, copies files to proper directories, and pushes ScreenEdit
 	 *                 4. attempts to load the next three selected images within "selectedContainer"
 	 *                 5. attempts to load the previous three selected images within "selectedContainer"
 	 */
@@ -99,11 +99,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		}
 		else if (e.getSource() == this.finishButton)
 		{
-			if (this.copyFiles())
-			{
-				this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				this.manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
-			}
+			this.manager.displayDeleteImportsDialogue(this);
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
@@ -175,6 +171,18 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	{
 		return;
 	}	
+	
+	/* deleteOptionSelected - called when the user chooses an option on ScreenDeleteImportsDialogue
+	 * 				 delete - boolean value indicating whether or not imported files should be deleted from the device
+	 */
+	public void deleteOptionSelected(boolean delete)
+	{
+		if (this.copyFiles(delete))
+		{
+			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			this.manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
+		}
+	}
 	
 	/* getThumbnails - fills the "thumbnails" ArrayList by importing images from the camera into memory
 	 */
@@ -343,8 +351,9 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	}
 	
 	/* copyFiles - copies files from the camera to the "cases" and "backups" folders, and returns a boolean value determined by whether or not the copy was successful
+	 *	  delete - boolean value that determines whether original files should be deleted from the device as they are imported
 	 */
-	private boolean copyFiles()
+	private boolean copyFiles(boolean delete)
 	{
     	for (int i = 0; i < this.selectedThumbnails.size(); i++)
     	{
@@ -355,6 +364,10 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 			{
 				Files.copy(currentPath, casesPath, StandardCopyOption.REPLACE_EXISTING);
 				Files.copy(currentPath, backupsPath, StandardCopyOption.REPLACE_EXISTING);
+				if (delete)
+				{
+					Files.delete(currentPath);
+				}
 			} 
 			catch (IOException e1) 
 			{

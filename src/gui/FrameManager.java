@@ -39,7 +39,8 @@ public class FrameManager
 		return this.configuration;
 	}
 	
-	/* displayRenameDialogue - initializes and opens the JFrame for the rename image dialogue 
+	/* displayRenameDialogue - initializes and opens the JFrame for the rename image dialogue
+	 * 		   currentScreen - the instance of ScreenEdit calling this method 
 	 */
 	public void displayRenameDialogue(ScreenEdit currentScreen)
 	{
@@ -60,6 +61,9 @@ public class FrameManager
 	}
 	
 	/* displayResizeDialogue - initializes and opens the JFrame for the resize image dialogue 
+	 * 		   currentScreen - the instance of ScreenEdit calling this method 
+	 * 		    currentWidth - the width of the image before resizing
+	 *         currentHeight - the height of the image before resizing
 	 */
 	public void displayResizeDialogue(ScreenEdit currentScreen, int currentWidth, int currentHeight)
 	{
@@ -80,6 +84,7 @@ public class FrameManager
 	}
 	
 	/* displayQuitWarningDialogue - initializes and opens the JFrame for the quit warning dialogue 
+	 * 		        currentScreen - the instance of ScreenEdit calling this method 
 	 */
 	public void displayQuitWarningDialogue(ScreenEdit currentScreen)
 	{
@@ -100,6 +105,7 @@ public class FrameManager
 	}
 	
 	/* displayRemoveWarningDialogue - initializes and opens the JFrame for the remove warning dialogue 
+	 * 		          currentScreen - the instance of ScreenEdit calling this method 
 	 */
 	public void displayRemoveWarningDialogue(ScreenEdit currentScreen)
 	{
@@ -120,6 +126,7 @@ public class FrameManager
 	}
 	
 	/* displaySwitchWarningDialogue - initializes and opens the JFrame for the switch warning dialogue 
+	 * 		          currentScreen - the instance of ScreenEdit calling this method 
 	 */
 	public void displaySwitchWarningDialogue(ScreenEdit currentScreen)
 	{
@@ -140,13 +147,15 @@ public class FrameManager
 	}
 	
 	/* displayDeleteImportsDialogue - initializes and opens the JFrame for the delete imports dialogue 
+	 *                currentScreen - the instance of ScreenImport calling this method 
 	 */
-	public void displayDeleteImportsDialogue(ScreenEdit currentScreen)
+	public void displayDeleteImportsDialogue(ScreenImport currentScreen)
 	{
         this.deleteImportsDialogue = new JFrame("Delete Imported Files");
-        //this.resizeDialogue.getContentPane().add();
+        this.deleteImportsDialogue.getContentPane().add(new ScreenDeleteImportsDialogue(this, currentScreen));
         this.deleteImportsDialogue.pack();
-        this.deleteImportsDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
+        this.deleteImportsDialogue.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.deleteImportsDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(15));
         this.deleteImportsDialogue.setResizable(false);
         this.deleteImportsDialogue.setVisible(true);
 	}
