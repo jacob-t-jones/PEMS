@@ -66,6 +66,7 @@ public class ScreenFinish extends JPanel implements ActionListener
 		if (e.getSource() == this.closeButton)
 		{
 			this.manager.closePanel();
+			Runtime.getRuntime().exit(0);
 		}
 		
 		if (e.getSource() == this.printButton)
