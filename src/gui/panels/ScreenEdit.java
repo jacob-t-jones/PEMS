@@ -6,20 +6,20 @@ package gui.panels;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import javax.imageio.ImageIO;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import javax.imageio.*;
 import javax.swing.*;
-import tools.ImageEditor;
+import tools.*;
 import gui.*;
 
 public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 {
 	
 	private FrameManager manager;
-	private ArrayList<Thumbnail> caseThumbnails;
 	private ArrayList<BufferedImage> selectedImageHistory;
+	private ArrayList<Thumbnail> caseThumbnails;
 	private BufferedImage selectedImage;
 	private Box mainContainer;
 	private Box selectedImageContainer;
@@ -57,22 +57,17 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 	public ScreenEdit(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
-		this.selectedImageHistory = new ArrayList<BufferedImage>();
 		this.caseNum = caseNum;
 		this.selectedImageHistoryIndex = 0;
 		this.caseThumbnailIndex = 0;
+		this.selectedImageHistory = new ArrayList<BufferedImage>();
+		this.caseThumbnails = this.getCaseThumbnails();
 		this.mainContainer = Box.createVerticalBox();
 		this.selectedImageContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
-		this.caseThumbnails = getCaseThumbnails();
 		this.refreshCaseThumbnails(0);
-		this.mainContainer.add(this.selectedImageContainer);
-		this.mainContainer.add(Box.createVerticalStrut(40));
-		this.mainContainer.add(this.caseThumbnailContainer);
-		this.mainContainer.add(Box.createVerticalStrut(20));
-		this.mainContainer.add(this.continueButton);
+		this.populateMainContainer();
 		this.add(this.mainContainer);
 		this.constructMenuBar();
 		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -98,21 +93,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.saveImageMenuItem)
 		{
-			String fileType = "jpg";
-			if (this.selectedImageExt.equalsIgnoreCase(".png"))
-			{
-				fileType = "png";
-			}
-			try 
-			{
-			    ImageIO.write(this.selectedImage, fileType, new File("cases/" + this.caseNum + "/" + this.selectedImageName + this.selectedImageExt));
-			} 
-			catch (IOException e1) 
-			{
-			    System.out.println("Error - Save failed");
-			    e1.printStackTrace();
-			    return;
-			}
+			this.saveImage();
 		}
 		else if (e.getSource() == this.renameImageMenuItem)
 		{
@@ -207,7 +188,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		else if (e.getSource() == this.continueButton)
 		{
 			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			this.manager.remMenuBar(menuBar);
+			this.manager.removeMenuBar();
 			this.mainContainer.removeAll();
 			this.removeAll();
 			this.clearForwardHistory();
@@ -380,6 +361,29 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.repaint();
 	}
 	
+	private String getImageFileType(String extension)
+	{
+		if (extension.equalsIgnoreCase(".png"))
+		{
+			return "png";
+		}
+		else if (extension.equalsIgnoreCase(".jpg") || extension.equalsIgnoreCase(".jpeg"))
+		{
+			return "jpg";
+		}
+		return null;
+	}
+	
+	private void populateMainContainer()
+	{
+		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
+		this.mainContainer.add(this.selectedImageContainer);
+		this.mainContainer.add(Box.createVerticalStrut(40));
+		this.mainContainer.add(this.caseThumbnailContainer);
+		this.mainContainer.add(Box.createVerticalStrut(20));
+		this.mainContainer.add(this.continueButton);
+	}
+	
 	private void constructMenuBar()
 	{
 		this.menuBar = new JMenuBar();
@@ -425,6 +429,37 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 		this.menuBar.add(this.caseMenu);
 		this.menuBar.add(this.imageMenu);
 		this.manager.setMenuBar(this.menuBar);
+	}
+	
+	private void saveImage()
+	{
+		int backupIncrement = 0;
+		if (Files.exists(Paths.get("backups/" + this.caseNum + "/" +  this.selectedImageName + this.selectedImageExt)))
+		{
+			backupIncrement++;
+			while (Files.exists(Paths.get("backups/" + this.caseNum + "/" +  this.selectedImageName + " (" + backupIncrement + ")" + this.selectedImageExt)))
+			{
+				backupIncrement++;
+			}
+		}
+		try 
+		{
+			if (backupIncrement == 0)
+			{
+				ImageIO.write(this.selectedImage, this.getImageFileType(this.selectedImageExt), new File("backups/" + this.caseNum + "/" + this.selectedImageName + this.selectedImageExt));
+			}
+			else
+			{
+				ImageIO.write(this.selectedImage, this.getImageFileType(this.selectedImageExt), new File("backups/" + this.caseNum + "/" + this.selectedImageName + " (" + backupIncrement + ")" + this.selectedImageExt));
+			}
+		    ImageIO.write(this.selectedImage, this.getImageFileType(this.selectedImageExt), new File("cases/" + this.caseNum + "/" + this.selectedImageName + this.selectedImageExt));
+		} 
+		catch (IOException e1) 
+		{
+		    System.out.println("Error - Save failed");
+		    e1.printStackTrace();
+		    return;
+		}
 	}
 
 }

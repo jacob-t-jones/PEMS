@@ -99,21 +99,11 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		}
 		else if (e.getSource() == this.finishButton)
 		{
-    		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        	for (int i = 0; i < this.selectedThumbnails.size(); i++)
-        	{
-				try 
-				{
-					Files.copy(Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt()), Paths.get("cases/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt()), StandardCopyOption.REPLACE_EXISTING);
-				} 
-				catch (IOException e1) 
-				{
-					System.out.println("Error - Unable to copy image files to new directory");
-					e1.printStackTrace();
-					return;
-				}
-        	}
-        	this.manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
+			if (this.copyFiles())
+			{
+				this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				this.manager.pushPanel(new ScreenEdit(manager, caseNum), "PEMS - Edit Photos");
+			}
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
@@ -350,6 +340,30 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 		this.mainContainer.add(this.instructionsLabel);
 		this.mainContainer.add(Box.createVerticalStrut(30));
 		this.mainContainer.add(this.innerContainer);
+	}
+	
+	/* copyFiles - copies files from the camera to the "cases" and "backups" folders, and returns a boolean value determined by whether or not the copy was successful
+	 */
+	private boolean copyFiles()
+	{
+    	for (int i = 0; i < this.selectedThumbnails.size(); i++)
+    	{
+			Path currentPath = Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
+			Path casesPath = Paths.get("cases/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
+			Path backupsPath = Paths.get("backups/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
+			try 
+			{
+				Files.copy(currentPath, casesPath, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(currentPath, backupsPath, StandardCopyOption.REPLACE_EXISTING);
+			} 
+			catch (IOException e1) 
+			{
+				System.out.println("Error - Unable to copy image files to new directory");
+				e1.printStackTrace();
+				return false;
+			}
+    	}
+    	return true;
 	}
 		
 }
