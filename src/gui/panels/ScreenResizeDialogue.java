@@ -4,9 +4,7 @@
 
 package gui.panels;
 import java.awt.event.*;
-import java.text.*;
 import javax.swing.*;
-import javax.swing.text.*;
 import gui.*;
 
 public class ScreenResizeDialogue extends JPanel implements ActionListener, FocusListener
@@ -43,36 +41,36 @@ public class ScreenResizeDialogue extends JPanel implements ActionListener, Focu
 	
 	public void actionPerformed(ActionEvent e) 
 	{
-
+		if (e.getSource() == this.applyButton)
+		{
+			this.currentScreen.resizeImage(Integer.parseInt(this.widthField.getValue().toString()), Integer.parseInt(this.widthField.getValue().toString()));
+			this.manager.closeResizeDialogue();
+		}
 	}
 	
 	public void focusGained(FocusEvent e) 
 	{
-		
+		return;
 	}
 
 	public void focusLost(FocusEvent e) 
 	{
-
-	}
-	
-	private NumberFormatter getIntegerOnlyFormatter()
-	{
-		NumberFormat format = NumberFormat.getInstance();
-		format.setGroupingUsed(false);
-		format.setMinimumIntegerDigits(0);
-	    NumberFormatter formatter = new NumberFormatter(format);
-	    formatter.setValueClass(Integer.class);
-	    formatter.setMaximum(Integer.MAX_VALUE);
-	    formatter.setAllowsInvalid(false);
-	    formatter.setCommitsOnValidEdit(true);
-	    return formatter;
+		if (e.getSource() == this.widthField && this.aspectRatio.isSelected())
+		{
+			int newHeight = (this.originalHeight * Integer.parseInt(this.widthField.getValue().toString())) / this.originalWidth;
+			this.heightField.setValue(new Integer(newHeight));
+		}
+		else if (e.getSource() == this.heightField && this.aspectRatio.isSelected())
+		{
+			int newWidth = (this.originalWidth * Integer.parseInt(this.heightField.getValue().toString())) / this.originalHeight;
+			this.widthField.setValue(new Integer(newWidth));
+		}
 	}
 	
 	private void populateWidthContainer()
 	{
 		this.widthLabel = ComponentGenerator.generateLabel("Width:", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR);
-		this.widthField = ComponentGenerator.generateFormattedTextField(this.getIntegerOnlyFormatter(), new Integer(this.originalWidth));
+		this.widthField = ComponentGenerator.generateIntegerOnlyTextField(new Integer(this.originalWidth), this, this);
 		this.widthContainer.add(this.widthLabel);
 		this.widthContainer.add(Box.createHorizontalStrut(20));
 		this.widthContainer.add(this.widthField);
@@ -81,7 +79,7 @@ public class ScreenResizeDialogue extends JPanel implements ActionListener, Focu
 	private void populateHeightContainer()
 	{
 		this.heightLabel = ComponentGenerator.generateLabel("Height:", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR);
-		this.heightField = ComponentGenerator.generateFormattedTextField(this.getIntegerOnlyFormatter(), new Integer(this.originalHeight));
+		this.heightField = ComponentGenerator.generateIntegerOnlyTextField(new Integer(this.originalHeight), this, this);
 		this.heightContainer.add(this.heightLabel);
 		this.heightContainer.add(Box.createHorizontalStrut(20));
 		this.heightContainer.add(this.heightField);
@@ -91,12 +89,13 @@ public class ScreenResizeDialogue extends JPanel implements ActionListener, Focu
 	{
 		this.aspectRatio = ComponentGenerator.generateCheckBox("Maintain Aspect Ratio", true);
 		this.applyButton = ComponentGenerator.generateButton("Apply Changes", this);
+		this.container.add(Box.createVerticalStrut(10));
 		this.container.add(this.widthContainer);
 		this.container.add(Box.createVerticalStrut(5));
 		this.container.add(this.heightContainer);
-		this.container.add(Box.createVerticalStrut(5));
+		this.container.add(Box.createVerticalStrut(10));
 		this.container.add(this.aspectRatio);
-		this.container.add(Box.createVerticalStrut(5));
+		this.container.add(Box.createVerticalStrut(10));
 		this.container.add(this.applyButton);
 	}
 	

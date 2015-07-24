@@ -6,8 +6,7 @@ package gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.text.ParseException;
-
+import java.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -276,68 +275,71 @@ public class ComponentGenerator
 	
 	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
 	 *                        value - the default value to place in the text field
+	 *                       action - the ActionListener for the text field
+	 *                        focus - the FocusListener for the text field
 	 */
-	public static JFormattedTextField generateIntegerOnlyTextField(Object value) 
+	public static JFormattedTextField generateIntegerOnlyTextField(Object value, FocusListener focus, ActionListener action) 
 	{
-		MaskFormatter formatter = null;
-		try 
-		{
-			formatter = new MaskFormatter("######");
-		} 
-		catch (ParseException e) 
-		{
-			System.out.println("Error - Invalid text format");
-			e.printStackTrace();
-			return null;
-		}
+		NumberFormat format = NumberFormat.getInstance();
+		format.setGroupingUsed(false);
+		NumberFormatter formatter = new NumberFormatter(format);
+		formatter.setValueClass(Integer.class);
+		formatter.setMinimum(0);
+		formatter.setMaximum(Integer.MAX_VALUE);
+		formatter.setAllowsInvalid(true);
+	    formatter.setCommitsOnValidEdit(true);
 		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
 		newFormattedTextField.setValue(value);
+		newFormattedTextField.addActionListener(action);
+		newFormattedTextField.addFocusListener(focus);
 		return newFormattedTextField;
 	}
 	
 	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
 	 *                        value - the default value to place in the text field
+	 *						 action - the ActionListener for the text field
+	 *                        focus - the FocusListener for the text field
 	 *                   alignmentX - the horizontal alignment of the text field
 	 */
-	public static JFormattedTextField generateIntegerOnlyTextField(Object value, float alignmentX)
+	public static JFormattedTextField generateIntegerOnlyTextField(Object value, ActionListener action, FocusListener focus, float alignmentX)
 	{
-		MaskFormatter formatter = null;
-		try 
-		{
-			formatter = new MaskFormatter("######");
-		} 
-		catch (ParseException e) 
-		{
-			System.out.println("Error - Invalid text format");
-			e.printStackTrace();
-			return null;
-		}
+		NumberFormat format = NumberFormat.getInstance();
+		format.setGroupingUsed(false);
+		NumberFormatter formatter = new NumberFormatter(format);
+		formatter.setValueClass(Integer.class);
+		formatter.setMinimum(0);
+		formatter.setMaximum(Integer.MAX_VALUE);
+		formatter.setAllowsInvalid(true);
+	    formatter.setCommitsOnValidEdit(true);
 		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
 		newFormattedTextField.setValue(value);
+		newFormattedTextField.addActionListener(action);
+		newFormattedTextField.addFocusListener(focus);
 		newFormattedTextField.setAlignmentX(alignmentX);
 		return newFormattedTextField;
 	}
 	
 	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
 	 *                        value - the default value to place in the text field
+	 *                       action - the ActionListener for the text field
+	 *                        focus - the FocusListener for the text field
 	 *                   alignmentX - the horizontal alignment of the text field
 	 *                   alignmentY - the vertical alignment of the text field
 	 */
-	public static JFormattedTextField generateIntegerOnlyTextField(Object value, float alignmentX, float alignmentY)
+	public static JFormattedTextField generateIntegerOnlyTextField(Object value, ActionListener action, FocusListener focus, float alignmentX, float alignmentY)
 	{
-		MaskFormatter formatter = null;
-		try 
-		{
-			formatter = new MaskFormatter("######");
-		} 
-		catch (ParseException e) 
-		{
-			System.out.println("Error - Invalid text format");
-			e.printStackTrace();
-			return null;
-		}
+		NumberFormat format = NumberFormat.getInstance();
+		format.setGroupingUsed(false);
+		NumberFormatter formatter = new NumberFormatter(format);
+		formatter.setValueClass(Integer.class);
+		formatter.setMinimum(0);
+		formatter.setMaximum(Integer.MAX_VALUE);
+		formatter.setAllowsInvalid(true);
+	    formatter.setCommitsOnValidEdit(true);
 		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
 		newFormattedTextField.setValue(value);
+		newFormattedTextField.addActionListener(action);
+		newFormattedTextField.addFocusListener(focus);
 		newFormattedTextField.setAlignmentX(alignmentX);
 		newFormattedTextField.setAlignmentY(alignmentY);
 		return newFormattedTextField;

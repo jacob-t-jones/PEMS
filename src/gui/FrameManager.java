@@ -49,7 +49,7 @@ public class FrameManager
         this.resizeDialogue = new JFrame("Resize Image");
         this.resizeDialogue.getContentPane().add(new ScreenResizeDialogue(this, currentScreen, currentWidth, currentHeight));
         this.resizeDialogue.pack();
-        this.resizeDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(30));
+        this.resizeDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(35), this.widthToPixels(40), this.heightToPixels(30));
         this.resizeDialogue.setResizable(false);
         this.resizeDialogue.setVisible(true);
 	}
@@ -155,7 +155,7 @@ public class FrameManager
         this.deleteImportsDialogue.getContentPane().add(new ScreenDeleteImportsDialogue(this, currentScreen));
         this.deleteImportsDialogue.pack();
         this.deleteImportsDialogue.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.deleteImportsDialogue.setBounds(this.widthToPixels(30), this.heightToPixels(0), this.widthToPixels(40), this.heightToPixels(15));
+        this.deleteImportsDialogue.setBounds(this.widthToPixels(25), this.heightToPixels(42), this.widthToPixels(50), this.heightToPixels(15));
         this.deleteImportsDialogue.setResizable(false);
         this.deleteImportsDialogue.setVisible(true);
 	}

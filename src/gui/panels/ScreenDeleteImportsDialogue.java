@@ -72,7 +72,7 @@ public class ScreenDeleteImportsDialogue extends JPanel implements ActionListene
 	 */
 	private void populateMainContainer()
 	{
-		this.questionLabel = ComponentGenerator.generateLabel("Would you like to delete the original copies of all imported files from the camera?", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.questionLabel = ComponentGenerator.generateLabel("Would you like to delete the original copies of all imported files from the camera?", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.mainContainer.add(this.questionLabel);
 		this.mainContainer.add(Box.createVerticalStrut(25));
 		this.mainContainer.add(this.buttonsContainer);
