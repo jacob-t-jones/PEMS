@@ -71,6 +71,8 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
 		this.instructionsLabel = ComponentGenerator.generateLabel("Please enter the case number below:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.errorLabel = ComponentGenerator.generateLabel("", ComponentGenerator.ERROR_TEXT_FONT, ComponentGenerator.ERROR_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.caseNumField = ComponentGenerator.generateTextField("Type here...", this, CENTER_ALIGNMENT);
+		this.caseNumField.setMaximumSize(new Dimension(250, 30));
+		this.caseNumField.setMinimumSize(new Dimension(250, 30));
 		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
 		this.container.add(Box.createVerticalStrut(20));
 		this.container.add(this.instructionsLabel);

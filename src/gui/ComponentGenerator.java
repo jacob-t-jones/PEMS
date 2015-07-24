@@ -237,17 +237,7 @@ public class ComponentGenerator
 		newMenuItem.setMnemonic(mnemonic);
 		return newMenuItem;
 	}
-	
-<<<<<<< HEAD
-	/*
-	 * 
-	 */
-	public static void generateRectangle(Graphics g, Point first, Point second)
-	{
-		Rectangle r = new Rectangle(first.x, first.y, second.x, second.y);
-		g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight()); 
-		//return r;
-=======
+
 	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
 	 *             text - the text displayed alongside the check box
 	 *         selected - boolean value indicating whether or not the check box should default to selected
@@ -268,7 +258,6 @@ public class ComponentGenerator
 		JCheckBox newCheckBox = new JCheckBox(text, selected);
 		newCheckBox.setAlignmentX(alignmentX);
 		return newCheckBox;
->>>>>>> origin/master
 	}
 
 	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
