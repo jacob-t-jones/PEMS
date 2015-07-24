@@ -7,8 +7,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
+
 import javax.imageio.*;
 import javax.swing.*;
+
 import gui.*;
 import tools.*;
 
@@ -67,7 +69,12 @@ public class ScreenStart extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.editCaseButton)
 		{
-			// TODO: this.manager.pushPanel(new ScreenAddToExisting(this.manager), "PEMS - Edit Existing Case");
+			try {
+				this.manager.pushPanel(new ScreenAddToExisting(this.manager), "PEMS - Edit Existing Case");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		else if (e.getSource() == this.settingsButton)
 		{

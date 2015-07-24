@@ -80,6 +80,8 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 	private boolean cropping;
 	private int caseThumbnailIndex;
 	
+	
+	
 	public ScreenEdit(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
@@ -87,15 +89,20 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		this.saved = true;
 		this.cropping = false;
 		this.caseThumbnailIndex = 0;
-		this.cropBox = new DrawRect(this.getGraphics(), null, null);
+		
+		this.cropBox = new DrawRect(this.getGraphics(), null);
 		this.cropContainer = Box.createHorizontalBox();
-		this.cropContainer.add(cropBox);
+		this.cropContainer.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+		
+		this.add(this.cropContainer);
+		
 		this.selectedImageHistorySaved = new Stack<BufferedImage>();
 		this.selectedImageHistoryUndone = new Stack<BufferedImage>();
 		this.caseThumbnails = this.getCaseThumbnails();
 		this.mainContainer = Box.createVerticalBox();
 		this.selectedImageContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer = Box.createHorizontalBox();
+		this.selectedImageContainer.add(this.cropBox);
 		this.editorBox = Box.createVerticalBox();
 		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.populateEditorBox();
@@ -151,6 +158,10 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		else if (e.getSource() == this.saveImageMenuItem)
 		{
 			this.saveImage();
+		}
+		else if (e.getSource() == this.renameImageMenuItem)
+		{
+			//this.manager.displayRenameDialogue(this);
 		}
 		else if (e.getSource() == this.quitMenuItem)
 		{
@@ -272,10 +283,21 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		else if (e.getSource() == this.selectedImageLabel && this.cropping)
 		{
 			System.out.println("cropVal[0]: " + this.cropVals[0]);
+			
 			if (this.cropVals[0] == null)
 			{
 				this.cropVals[0] = new Point();
 				this.cropVals[0].setLocation(e.getX(), e.getY());
+
+				this.mousePoint  = e.getLocationOnScreen();
+				this.drawRec(this.getGraphics(), this.mousePoint);
+				/*
+				this.cropBox = new DrawRect(this.getGraphics(), this.cropVals[0]);
+				this.cropBox.paint(this.getGraphics(), this.cropVals[0]);
+				this.cropContainer.add(this.cropBox);
+				this.revalidate();
+				this.repaint();*/
+				
 				return;
 			}
 			this.cropVals[1] = new Point();
@@ -285,13 +307,13 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 	}
 	
 	
-	
-	private void drawRec(Graphics g, Point initPoint, Point mousePoint)
+	private void drawRec(Graphics g, Point initPoint)
 	{
 		//this.remove(cropBox);
-		//this.cropBox = null;
-		
-		//g.fillRect(initPoint.x, initPoint.y, mousePoint.x-initPoint.x, mousePoint.y-initPoint.y);
+		cropBox = new DrawRect(this.getGraphics(), initPoint);
+		cropBox.paint(g, initPoint);
+		//this.revalidate();
+		this.cropBox.repaint();
 	}
 	
 	/* mouseMoved - detect when the mouse is moved and redraw the low alpha grey box on area to be cropped
@@ -299,20 +321,14 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 	 */
 	public void mouseMoved(MouseEvent e)
 	{
-		if(this.cropping && this.cropVals[0] != null && this.cropVals[1] == null){
-			
-			this.mousePoint = MouseInfo.getPointerInfo().getLocation();
-			this.cropContainer.removeAll();
-			//this.drawRec(this.getGraphics(), this.cropVals[0], this.mousePoint);
-			//cropBox = new DrawRect(this.getGraphics(), this.cropVals[0], this.mousePoint);
-			cropBox.paint(this.getGraphics(), this.cropVals[0], mousePoint);
-			this.repaint();
-			//this.revalidate();
-			//this.cropBox.repaint();
-			//this.cropBox = null;
+		if(this.cropping && this.cropVals[0] != null && this.cropVals[1] == null)
+		{
+			//this.mousePoint = MouseInfo.getPointerInfo().getLocation();
+			//this.drawRec(this.getGraphics(), this.cropVals[0]);
 			//this.cropBox = ComponentGenerator.generateRectangle(this.getGraphics(), this.cropVals[0] , this.mousePoint);
 		}
 	}
+
 	
 	
 	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
@@ -379,6 +395,16 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		    return;
 		}
 		this.saved = true;
+	}
+	
+	/* renameImage - renames the "cases" version of the image that is currently being edited
+	 * 	   newName - the new name of the file
+	 */
+	public void renameImage(String newName)
+	{
+		File oldFile = new File(this.selectedImagePath);
+		File newFile = new File("cases/" + this.caseNum + "/" + newName + this.selectedImageExt);
+		oldFile.renameTo(newFile);
 	}
 	
 	/* resizeImage - resizes the image that is currently being edited to the size specified in the paramaters
@@ -471,6 +497,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 500), CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
 			this.selectedImageLabel.addMouseMotionListener(this);
+
 		}
 		else if (this.selectedImage.getWidth() > 1000)
 		{
@@ -483,6 +510,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 			this.selectedImageLabel = ComponentGenerator.generateLabel(this.selectedImage, CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
 			this.selectedImageLabel.addMouseMotionListener(this);
+
 		}
 		this.selectedImageContainer.setMaximumSize(new Dimension(1000, 500));
 		this.selectedImageContainer.setMinimumSize(new Dimension(1000, 500));
@@ -779,5 +807,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }
