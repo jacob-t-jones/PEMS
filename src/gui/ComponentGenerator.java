@@ -237,7 +237,6 @@ public class ComponentGenerator
 		newMenuItem.setMnemonic(mnemonic);
 		return newMenuItem;
 	}
-<<<<<<< HEAD
 	
 	/*
 	 * 
@@ -248,9 +247,7 @@ public class ComponentGenerator
 		g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight()); 
 		//return r;
 	}
-=======
 
->>>>>>> origin/master
 	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
 	 *             text - the text displayed alongside the check box
 	 *         selected - boolean value indicating whether or not the check box should default to selected

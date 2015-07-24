@@ -104,10 +104,10 @@ public class ScreenAddToExisting extends JPanel implements ActionListener
 				{
 		        	
 		        	BufferedImage tempImg = new BufferedImage(1, 1, 1);
-		        	Thumbnail tempLabel = new Thumbnail(tempImg, filePath, "");
+		        	Thumbnail tempLabel = new Thumbnail(tempImg, filePath, "", ".png");
 		        	
 		        	try{
-			        	tempLabel = ComponentGenerator.generateThumbnail(ImageIO.read(new File("/Users/andrewrottier/Documents/Pictures/folder.png")), fileList[this.displayedImagePlace].getAbsolutePath(), "as");
+			        	tempLabel = ComponentGenerator.generateThumbnail(ImageIO.read(new File("/Users/andrewrottier/Documents/Pictures/folder.png")), fileList[this.displayedImagePlace].getAbsolutePath(), "filename", "");
 		        	}
 		        	catch(Exception e){
 		        		System.out.println("Error - the folder image does not exist in the folder");
