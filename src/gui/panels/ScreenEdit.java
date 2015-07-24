@@ -49,6 +49,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 	
 	//crop box stuff
 	private DrawRect cropBox;
+	private Box cropContainer;
 	private Point mousePoint;
 	
 	private JMenuBar menuBar;
@@ -86,7 +87,9 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		this.saved = true;
 		this.cropping = false;
 		this.caseThumbnailIndex = 0;
-		this.cropBox = new DrawRect(this.getGraphics(), mousePoint, mousePoint);
+		this.cropBox = new DrawRect(this.getGraphics(), null, null);
+		this.cropContainer = Box.createHorizontalBox();
+		this.cropContainer.add(cropBox);
 		this.selectedImageHistorySaved = new Stack<BufferedImage>();
 		this.selectedImageHistoryUndone = new Stack<BufferedImage>();
 		this.caseThumbnails = this.getCaseThumbnails();
@@ -289,11 +292,9 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 	
 	private void drawRec(Graphics g, Point initPoint, Point mousePoint)
 	{
-		this.remove(cropBox);
-		cropBox = new DrawRect(this.getGraphics(), initPoint, mousePoint);
-		cropBox.paint(g, initPoint, mousePoint);
-		//this.revalidate();
-		this.cropBox.repaint();
+		//this.remove(cropBox);
+		//this.cropBox = null;
+		
 		//g.fillRect(initPoint.x, initPoint.y, mousePoint.x-initPoint.x, mousePoint.y-initPoint.y);
 	}
 	
@@ -303,8 +304,16 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 	public void mouseMoved(MouseEvent e)
 	{
 		if(this.cropping && this.cropVals[0] != null && this.cropVals[1] == null){
+			
 			this.mousePoint = MouseInfo.getPointerInfo().getLocation();
-			this.drawRec(this.getGraphics(), this.cropVals[0], this.mousePoint);
+			this.cropContainer.removeAll();
+			//this.drawRec(this.getGraphics(), this.cropVals[0], this.mousePoint);
+			//cropBox = new DrawRect(this.getGraphics(), this.cropVals[0], this.mousePoint);
+			cropBox.paint(this.getGraphics(), this.cropVals[0], mousePoint);
+			this.repaint();
+			//this.revalidate();
+			//this.cropBox.repaint();
+			//this.cropBox = null;
 			//this.cropBox = ComponentGenerator.generateRectangle(this.getGraphics(), this.cropVals[0] , this.mousePoint);
 		}
 	}

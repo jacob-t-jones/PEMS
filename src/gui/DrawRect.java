@@ -18,6 +18,7 @@ public class DrawRect extends JComponent
 
 	public void paint(Graphics g, Point initPoint, Point mousePoint)
 	{
+		super.paintComponent(g);
 		g.fillRect(initPoint.x, initPoint.y, mousePoint.x-initPoint.x, mousePoint.y-initPoint.y);
 	}
 	
