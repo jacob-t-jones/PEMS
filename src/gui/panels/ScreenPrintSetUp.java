@@ -28,7 +28,6 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusListener
 {
-	
 	private FrameManager manager;
 	private ArrayList<Thumbnail> selectedThumbnails;
 	private ScreenEdit currentScreen;
@@ -42,10 +41,11 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	private Component mainContainer;
 	private Box buttonsContainer;
 	
-	public ScreenPrintSetUp(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails)
+	public ScreenPrintSetUp(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException
 	{
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;
+		this.generatePDF();
 		this.mainContainer = Box.createVerticalBox();
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.populateButtonsContainer();
