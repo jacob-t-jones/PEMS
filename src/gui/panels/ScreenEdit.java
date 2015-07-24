@@ -16,7 +16,7 @@ import javax.swing.*;
 import tools.*;
 import gui.*;
 
-public class ScreenEdit extends JPanel implements ActionListener, MouseListener, MouseMotionListener
+public class ScreenEdit extends JPanel implements ActionListener, MouseListener
 {
 	
 	private FrameManager manager;
@@ -291,12 +291,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 
 				this.mousePoint  = e.getLocationOnScreen();
 				this.drawRec(this.getGraphics(), this.mousePoint);
-				/*
-				this.cropBox = new DrawRect(this.getGraphics(), this.cropVals[0]);
-				this.cropBox.paint(this.getGraphics(), this.cropVals[0]);
-				this.cropContainer.add(this.cropBox);
-				this.revalidate();
-				this.repaint();*/
 				
 				return;
 			}
@@ -316,18 +310,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		this.cropBox.repaint();
 	}
 	
-	/* mouseMoved - detect when the mouse is moved and redraw the low alpha grey box on area to be cropped
-	 *  
-	 */
-	public void mouseMoved(MouseEvent e)
-	{
-		if(this.cropping && this.cropVals[0] != null && this.cropVals[1] == null)
-		{
-			//this.mousePoint = MouseInfo.getPointerInfo().getLocation();
-			//this.drawRec(this.getGraphics(), this.cropVals[0]);
-			//this.cropBox = ComponentGenerator.generateRectangle(this.getGraphics(), this.cropVals[0] , this.mousePoint);
-		}
-	}
 
 	
 	
@@ -496,21 +478,17 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		{
 			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 500), CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
-			this.selectedImageLabel.addMouseMotionListener(this);
 
 		}
 		else if (this.selectedImage.getWidth() > 1000)
 		{
 			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 1000), CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
-			this.selectedImageLabel.addMouseMotionListener(this);
 		}
 		else
 		{
 			this.selectedImageLabel = ComponentGenerator.generateLabel(this.selectedImage, CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
-			this.selectedImageLabel.addMouseMotionListener(this);
-
 		}
 		this.selectedImageContainer.setMaximumSize(new Dimension(1000, 500));
 		this.selectedImageContainer.setMinimumSize(new Dimension(1000, 500));
@@ -802,11 +780,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		this.cropVals[1] = null;
 	}
 
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 }

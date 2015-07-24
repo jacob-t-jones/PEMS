@@ -5,14 +5,13 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 
 public class DrawRect extends JComponent
 {
 	private Point initPoint;
 	
 	public DrawRect(Graphics graphics, Point initPoint) {
-		this.initPoint = initPoint;
+		//this.initPoint = initPoint;
 	}
 
 	public void paint(Graphics g, Point initPoint)
