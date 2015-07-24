@@ -152,10 +152,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		{
 			this.saveImage();
 		}
-		else if (e.getSource() == this.renameImageMenuItem)
-		{
-			this.manager.displayRenameDialogue(this);
-		}
 		else if (e.getSource() == this.quitMenuItem)
 		{
 			if (this.saved)
@@ -223,7 +219,7 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 				//this.manager.removeMenuBar();//?
 				try
 				{
-					this.manager.closeRenameDialogue();
+					//this.manager.closeRenameDialogue();
 					this.manager.closeResizeDialogue();
 					this.manager.closeQuitWarningDialogue();
 					this.manager.closeRemoveWarningDialogue();
@@ -383,16 +379,6 @@ public class ScreenEdit extends JPanel implements ActionListener, MouseListener,
 		    return;
 		}
 		this.saved = true;
-	}
-	
-	/* renameImage - renames the "cases" version of the image that is currently being edited
-	 * 	   newName - the new name of the file
-	 */
-	public void renameImage(String newName)
-	{
-		File oldFile = new File(this.selectedImagePath);
-		File newFile = new File("cases/" + this.caseNum + "/" + newName + this.selectedImageExt);
-		oldFile.renameTo(newFile);
 	}
 	
 	/* resizeImage - resizes the image that is currently being edited to the size specified in the paramaters

@@ -114,18 +114,18 @@ public class ScreenNewCase extends JPanel implements ActionListener, FocusListen
 		else
 		{
 			this.caseNumField.setText("");
-			this.errorLabel.setText("Error - Invalid case number. Please use only letters and numbers!");
+			this.errorLabel.setText("Error - Invalid case number. Please do not exceed ten characters. Use only letters and numbers.");
 			return false;
 		}
 	}
 	
-	/* isValidCaseNum - returns a boolean value indicating whether or not the given case number is valid (only letters and numbers, at least one character)
+	/* isValidCaseNum - returns a boolean value indicating whether or not the given case number is valid (only letters and numbers, at least one character, no more than ten characters)
 	 *        caseNum - the number to check, input by the user
 	 */
 	private boolean isValidCaseNum(String caseNum)
 	{
 		boolean valid = true;
-		if (caseNum.length() <= 0)
+		if (caseNum.length() <= 0 || caseNum.length() > 10)
 		{
 			valid = false;
 		}

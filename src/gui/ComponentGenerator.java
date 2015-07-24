@@ -6,7 +6,10 @@ package gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.text.ParseException;
+
 import javax.swing.*;
+import javax.swing.text.*;
 
 public class ComponentGenerator 
 {
@@ -236,6 +239,7 @@ public class ComponentGenerator
 		return newMenuItem;
 	}
 	
+<<<<<<< HEAD
 	/*
 	 * 
 	 */
@@ -244,6 +248,111 @@ public class ComponentGenerator
 		Rectangle r = new Rectangle(first.x, first.y, second.x, second.y);
 		g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight()); 
 		//return r;
+=======
+	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
+	 *             text - the text displayed alongside the check box
+	 *         selected - boolean value indicating whether or not the check box should default to selected
+	 */
+	public static JCheckBox generateCheckBox(String text, boolean selected)
+	{
+		JCheckBox newCheckBox = new JCheckBox(text, selected);
+		return newCheckBox;
+	}
+	
+	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
+	 *             text - the text displayed alongside the check box
+	 *         selected - boolean value indicating whether or not the check box should default to selected
+	 *       alignmentX - the horizontal alignment of the check box
+	 */
+	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX)
+	{
+		JCheckBox newCheckBox = new JCheckBox(text, selected);
+		newCheckBox.setAlignmentX(alignmentX);
+		return newCheckBox;
+>>>>>>> origin/master
 	}
 
+	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
+	 *             text - the text displayed alongside the check box
+	 *         selected - boolean value indicating whether or not the check box should default to selected
+	 *       alignmentX - the horizontal alignment of the check box
+	 *       alignmentY - the vertical alignment of the check box
+	 */
+	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX, float alignmentY)
+	{
+		JCheckBox newCheckBox = new JCheckBox(text, selected);
+		newCheckBox.setAlignmentX(alignmentX);
+		newCheckBox.setAlignmentY(alignmentY);
+		return newCheckBox;
+	}
+	
+	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
+	 *                        value - the default value to place in the text field
+	 */
+	public static JFormattedTextField generateIntegerOnlyTextField(Object value) 
+	{
+		MaskFormatter formatter = null;
+		try 
+		{
+			formatter = new MaskFormatter("######");
+		} 
+		catch (ParseException e) 
+		{
+			System.out.println("Error - Invalid text format");
+			e.printStackTrace();
+			return null;
+		}
+		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
+		newFormattedTextField.setValue(value);
+		return newFormattedTextField;
+	}
+	
+	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
+	 *                        value - the default value to place in the text field
+	 *                   alignmentX - the horizontal alignment of the text field
+	 */
+	public static JFormattedTextField generateIntegerOnlyTextField(Object value, float alignmentX)
+	{
+		MaskFormatter formatter = null;
+		try 
+		{
+			formatter = new MaskFormatter("######");
+		} 
+		catch (ParseException e) 
+		{
+			System.out.println("Error - Invalid text format");
+			e.printStackTrace();
+			return null;
+		}
+		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
+		newFormattedTextField.setValue(value);
+		newFormattedTextField.setAlignmentX(alignmentX);
+		return newFormattedTextField;
+	}
+	
+	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
+	 *                        value - the default value to place in the text field
+	 *                   alignmentX - the horizontal alignment of the text field
+	 *                   alignmentY - the vertical alignment of the text field
+	 */
+	public static JFormattedTextField generateIntegerOnlyTextField(Object value, float alignmentX, float alignmentY)
+	{
+		MaskFormatter formatter = null;
+		try 
+		{
+			formatter = new MaskFormatter("######");
+		} 
+		catch (ParseException e) 
+		{
+			System.out.println("Error - Invalid text format");
+			e.printStackTrace();
+			return null;
+		}
+		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
+		newFormattedTextField.setValue(value);
+		newFormattedTextField.setAlignmentX(alignmentX);
+		newFormattedTextField.setAlignmentY(alignmentY);
+		return newFormattedTextField;
+	}
+	
 }

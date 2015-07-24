@@ -44,7 +44,7 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.directoryName = "/Users/andrewrottier/Documents/Pictures/CrimePhotos";
+		this.directoryName = "/Users/Jacob/Documents/Pics";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.displayedThumbnails = this.getThumbnails();
@@ -358,8 +358,8 @@ public class ScreenImport extends JPanel implements ActionListener, MouseListene
     	for (int i = 0; i < this.selectedThumbnails.size(); i++)
     	{
 			Path currentPath = Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
-			Path casesPath = Paths.get("cases/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
-			Path backupsPath = Paths.get("backups/" + this.caseNum + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
+			Path casesPath = Paths.get("cases/" + this.caseNum + "/" + this.caseNum + "-" + i + this.selectedThumbnails.get(i).getFileExt());
+			Path backupsPath = Paths.get("backups/" + this.caseNum + "/" + this.caseNum + "-" + i + this.selectedThumbnails.get(i).getFileExt());
 			try 
 			{
 				Files.copy(currentPath, casesPath, StandardCopyOption.REPLACE_EXISTING);
