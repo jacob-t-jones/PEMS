@@ -1,9 +1,13 @@
+// PEMS (Police Evidence Management System) Version 0.1
+// Copyright 2015 - Jacob Jones and Andrew Rottier
+// ScreenStart.java
 package gui.panels;
 
 import gui.FrameManager;
 import gui.Thumbnail;
 
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -25,11 +29,14 @@ import org.apache.pdfbox.PDFBox;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
+
+import pdftools.contentPosition;
 
 public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusListener
 {
@@ -48,17 +55,19 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	private BufferedImage logoImage;
 	private PDXObjectImage pdfBadge;
 	private PDDocument document;
+	private Point pos; //replace with regular type point?
 	
 	public ScreenPrintSetUp(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException
 	{
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;
+		this.populateButtonsContainer();
+		this.populateMainContainer();
 		
 		this.generatePDF();
 		this.mainContainer = Box.createVerticalBox();
 		this.buttonsContainer = Box.createHorizontalBox();
-		this.populateButtonsContainer();
-		this.populateMainContainer();
+		
 		this.add(this.mainContainer);
 	}
 	
@@ -100,11 +109,18 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 
 		// Define a text content stream using the selected font, moving the cursor and drawing the text "Hello World"
 		contentStream.drawImage(pdfBadge, 300, 100);
+		
+		//Initialize margins
+		this.initializePDFTools(page);
+		
+		//Open up the content stream for text insertion
 		contentStream.beginText();
 		contentStream.setFont( font, 12 );
 		
-		contentStream.moveTextPositionByAmount( 100, 700 );
+		this.pos.setLocation(20, 20);
+		contentStream.moveTextPositionByAmount(pos.x, pos.y);
 		contentStream.drawString( "Plainville Police Department" );
+		//contentStream.newLineAtOffset();
 		contentStream.drawString("19 Neal Ct, Plainville, CT, (860) 747-1616");
 		contentStream.endText();
 
@@ -126,13 +142,26 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	
 	
 	
+	
+	/* initializeMargins - set up the margins to keep content on page 
+	 */
+	private void initializePDFTools(PDPage page) {
+		PDRectangle mediabox = page.findMediaBox();
+	    float margin = 72;
+	    float width = mediabox.getWidth() - margin;
+	    float startX = mediabox.getLowerLeftX() + margin;
+	    float startY = mediabox.getUpperRightY() - margin;
+	    
+	    this.pos = new Point(0, 0);
+	}
+
+	//Use to insert an image of the pdf generated
 	private void populateMainContainer() {
-		// TODO Auto-generated method stub
 		
 	}
 
 
-
+	//select how many images per page you would like
 	private void populateButtonsContainer() {
 		// TODO Auto-generated method stub
 		
