@@ -78,6 +78,7 @@ public class ScreenStart extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.settingsButton)
 		{
+			//temp use this to create a pdf
 			// TODO: On button press actions
 		}
 	}

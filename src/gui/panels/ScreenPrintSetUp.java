@@ -54,6 +54,7 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	}
 	
 	private PDDocument generatePDF() throws IOException{
+		System.out.println("Creating PDF");
 		// Create a document and add a page to it
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage();
