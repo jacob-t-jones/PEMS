@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libraries/imgscalr-lib-4.2.jar"/>
-	<classpathentry kind="lib" path="/Users/andrewrottier/Documents/Plainville Work IT/PEMS/pdfbox-app-1.8.10.jar"/>
+	<classpathentry kind="lib" path="libraries/pdfbox-app-1.8.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
