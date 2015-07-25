@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
+import java.util.ArrayList;
 
 import javax.imageio.*;
 import javax.swing.*;
@@ -79,6 +80,13 @@ public class ScreenStart extends JPanel implements ActionListener
 		else if (e.getSource() == this.settingsButton)
 		{
 			//temp use this to create a pdf
+			try {
+				this.manager.pushPanel(new ScreenPrintSetUp(this.manager, new ArrayList<Thumbnail>() ), "PEMS - PDF generator");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 			// TODO: On button press actions
 		}
 	}

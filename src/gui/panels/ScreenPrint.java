@@ -259,9 +259,16 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.finishButton)
 		{
-    		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        	this.printImages();
-        	this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS - Finish");
+    		//this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        	//OLD METHOD TO DO ONE PIC PER PAGE
+    		//this.printImages();
+        	//this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS - Finish");
+			try {
+				this.manager.pushPanel(new ScreenPrintSetUp(this.manager, selectedThumbnails), "PEMS - PDF generator");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{

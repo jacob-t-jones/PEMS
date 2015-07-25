@@ -8,9 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -25,6 +28,8 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
+import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 
 public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusListener
 {
@@ -40,11 +45,15 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	private int originalHeight;
 	private Component mainContainer;
 	private Box buttonsContainer;
+	private BufferedImage logoImage;
+	private PDXObjectImage pdfBadge;
+	private PDDocument document;
 	
 	public ScreenPrintSetUp(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException
 	{
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;
+		
 		this.generatePDF();
 		this.mainContainer = Box.createVerticalBox();
 		this.buttonsContainer = Box.createHorizontalBox();
@@ -53,13 +62,36 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 		this.add(this.mainContainer);
 	}
 	
+	/* importImages - reads all necessary images into memory
+	 */
+	private void importImages()
+	{
+		this.logoImage = null;
+	    try 
+	    {      
+	    	this.logoImage = ImageIO.read(new File("resources/logo.png"));
+	    	this.pdfBadge = new PDJpeg(this.document, logoImage);
+	    } 
+	    catch (IOException e)
+	    {
+			System.out.println("Error - Unable to import badge image");
+			e.printStackTrace();
+			return;
+	    }
+	    
+	    
+	}
+	
 	private PDDocument generatePDF() throws IOException{
 		System.out.println("Creating PDF");
 		// Create a document and add a page to it
-		PDDocument document = new PDDocument();
+		document = new PDDocument();
 		PDPage page = new PDPage();
 		document.addPage( page );
-
+		
+		//import and convert the badge image
+		this.importImages();
+		
 		// Create a new font object selecting one of the PDF base fonts
 		PDFont font = PDType1Font.HELVETICA_BOLD;
 
@@ -67,10 +99,13 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 		PDPageContentStream contentStream = new PDPageContentStream(document, page);
 
 		// Define a text content stream using the selected font, moving the cursor and drawing the text "Hello World"
+		contentStream.drawImage(pdfBadge, 300, 100);
 		contentStream.beginText();
 		contentStream.setFont( font, 12 );
+		
 		contentStream.moveTextPositionByAmount( 100, 700 );
-		contentStream.drawString( "Hello World" );
+		contentStream.drawString( "Plainville Police Department" );
+		contentStream.drawString("19 Neal Ct, Plainville, CT, (860) 747-1616");
 		contentStream.endText();
 
 		// Make sure that the content stream is closed:
