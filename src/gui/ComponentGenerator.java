@@ -3,10 +3,13 @@
 // ComponentGenerator.java
 
 package gui;
+import gui.img.ThumbnailImg;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.text.*;
+
 import javax.swing.*;
 import javax.swing.text.*;
 

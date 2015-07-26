@@ -5,8 +5,7 @@ package gui.panels;
 
 import gui.ComponentGenerator;
 import gui.FrameManager;
-import gui.Thumbnail;
-
+import gui.*;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -18,9 +17,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.*;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
