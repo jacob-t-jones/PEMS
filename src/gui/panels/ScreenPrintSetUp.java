@@ -108,18 +108,21 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 		PDPageContentStream contentStream = new PDPageContentStream(document, page);
 
 		// Define a text content stream using the selected font, moving the cursor and drawing the text "Hello World"
-		contentStream.drawImage(pdfBadge, 300, 100);
+		//contentStream.drawImage(pdfBadge, 300, 100);
+		
+		//place the thumbnails on the screen
+		this.displayImages(contentStream);
 		
 		//Initialize margins
 		this.initializePDFTools(page);
 		
 		//Open up the content stream for text insertion
 		contentStream.beginText();
-		contentStream.setFont( font, 12 );
+		contentStream.setFont(font, 12);
 		
 		this.pos.setLocation(20, 20);
 		contentStream.moveTextPositionByAmount(pos.x, pos.y);
-		contentStream.drawString( "Plainville Police Department" );
+		contentStream.drawString("Plainville Police Department");
 		//contentStream.newLineAtOffset();
 		contentStream.drawString("19 Neal Ct, Plainville, CT, (860) 747-1616");
 		contentStream.endText();
@@ -129,7 +132,7 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 
 		// Save the results and ensure that the document is properly closed:
 		try {
-			document.save( "Hello World.pdf");
+			document.save("Hello World.pdf");
 		} catch (COSVisitorException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -143,6 +146,29 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	
 	
 	
+	private void displayImages(PDPageContentStream contentStream) {
+		
+		BufferedImage tempImage = null;
+		PDXObjectImage tempPDFImage = null;
+		
+		for(int i = 0; i < selectedThumbnails.size(); i++)
+	    {
+	    	try 
+	    	{
+	    		tempImage = selectedThumbnails.get(i).getImage();
+	    		tempPDFImage = new PDJpeg(this.document, tempImage);
+	    		//add the image to the pdf file
+	    		contentStream.drawImage(tempPDFImage, 10, tempImage.getHeight()+(i*100));
+	    	} 
+	    	catch (IOException e) 
+	    	{   
+	    		System.out.println("error - file, " + selectedThumbnails.get(i).getFilePath() + ", could not be printed.");
+	    		e.printStackTrace();
+	    	}
+	    }
+		
+	}
+
 	/* initializeMargins - set up the margins to keep content on page 
 	 */
 	private void initializePDFTools(PDPage page) {

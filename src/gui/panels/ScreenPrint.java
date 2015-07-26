@@ -61,7 +61,7 @@ public class ScreenPrint extends JPanel implements ActionListener, MouseListener
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.directoryName = "/Users/andrewrottier/Documents/Pictures/Instagram/";
+		this.directoryName = "/Users/andrewrottier/Documents/Pictures/CrimePhotos/";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.displayedThumbnails = this.getThumbnails(); ////
