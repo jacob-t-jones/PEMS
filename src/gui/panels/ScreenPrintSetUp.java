@@ -3,8 +3,9 @@
 // ScreenStart.java
 package gui.panels;
 
-import gui.FrameManager;
+import exceptions.InvalidImgException;
 import gui.*;
+import gui.img.BaseImg;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -52,7 +53,7 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	private int originalHeight;
 	private Component mainContainer;
 	private Box buttonsContainer;
-	private BufferedImage logoImage;
+	private BaseImg logoImage;
 	private PDXObjectImage pdfBadge;
 	private PDDocument document;
 	private Point pos; //replace with regular type point?
@@ -73,13 +74,20 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	
 	/* importImages - reads all necessary images into memory
 	 */
-	private void importImages()
+	private void importBadgeImages()
 	{
-		this.logoImage = null;
+		try {
+			this.logoImage = new BaseImg("resources/logo.png");
+		} catch (InvalidImgException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	    try 
 	    {      
-	    	this.logoImage = ImageIO.read(new File("resources/logo.png"));
-	    	this.pdfBadge = new PDJpeg(this.document, logoImage);
+	    	this.logoImage.setImage(ImageIO.read(new File("resources/logo.png")));
+	    	this.logoImage.resizeImage(30);
+	    	this.pdfBadge = new PDJpeg(this.document, logoImage.getImage());
 	    } 
 	    catch (IOException e)
 	    {
@@ -87,8 +95,6 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 			e.printStackTrace();
 			return;
 	    }
-	    
-	    
 	}
 	
 	private PDDocument generatePDF() throws IOException{
@@ -96,36 +102,46 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 		// Create a document and add a page to it
 		document = new PDDocument();
 		PDPage page = new PDPage();
-		document.addPage( page );
+		document.addPage(page);
 		
 		//import and convert the badge image
-		this.importImages();
+		this.importBadgeImages();
 		
 		// Create a new font object selecting one of the PDF base fonts
 		PDFont font = PDType1Font.HELVETICA_BOLD;
 
 		// Start a new content stream which will "hold" the to be created content
 		PDPageContentStream contentStream = new PDPageContentStream(document, page);
-
-		// Define a text content stream using the selected font, moving the cursor and drawing the text "Hello World"
-		//contentStream.drawImage(pdfBadge, 300, 100);
-		
-		//place the thumbnails on the screen
-		this.displayImages(contentStream);
 		
 		//Initialize margins
 		this.initializePDFTools(page);
 		
-		//Open up the content stream for text insertion
+		// 1.) insert the badge logo at the top of the page
+		this.pos.setLocation(220, 740);
+		contentStream.drawImage(pdfBadge, pos.x, pos.y);
+		
+		
+		// 1.1.) Open up the content stream for text insertion
 		contentStream.beginText();
 		contentStream.setFont(font, 12);
-		
-		this.pos.setLocation(20, 20);
+		this.pos.setLocation(250, 760);
 		contentStream.moveTextPositionByAmount(pos.x, pos.y);
 		contentStream.drawString("Plainville Police Department");
-		//contentStream.newLineAtOffset();
+		
+		contentStream.setFont(font, 8);
+		//this.pos = this.nextLine(pos, contentStream);
+		contentStream.moveTextPositionByAmount(0, -12);
 		contentStream.drawString("19 Neal Ct, Plainville, CT, (860) 747-1616");
+		this.pos = this.nextLine(pos, contentStream);
+		contentStream.moveTextPositionByAmount(0, -12);
+		contentStream.drawString("Plainville, CT");
+		this.pos = this.nextLine(pos, contentStream);
+		contentStream.moveTextPositionByAmount(0, -12);
+		contentStream.drawString("(860) 747-1616");
 		contentStream.endText();
+		
+		//place the thumbnails on the screen
+		this.displayImages(contentStream);
 
 		// Make sure that the content stream is closed:
 		contentStream.close();
@@ -143,7 +159,11 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 		
 	}
 	
-	
+	private Point nextLine(Point p, PDPageContentStream contentStream)
+	{
+		p.setLocation(p.getX(), p.getY()-15);
+		return p;
+	}
 	
 	
 	private void displayImages(PDPageContentStream contentStream) {

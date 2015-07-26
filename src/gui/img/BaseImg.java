@@ -40,6 +40,12 @@ public class BaseImg extends JLabel
 		return this.image;
 	}
 	
+	public void setImage(BufferedImage img)
+	{
+		this.image = img;
+		return;
+	}
+	
 	public String getFilePath()
 	{
 		return this.filePath;
