@@ -3,16 +3,17 @@
 // Config.java
 
 package tools;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
-import java.util.List;
+import java.util.*;
 
 public class Config 
 {
 	
 	private String departmentName;
 	private boolean setupStatus;
+	private boolean persistence;
 	
 	public Config()
 	{
@@ -31,6 +32,13 @@ public class Config
 	public boolean getSetupStatus()
 	{
 		return this.setupStatus;
+	}
+	
+	/* getPersistence - returns a boolean value indicating whether the program should exit normally or run in the background at all times
+	 */
+	public boolean getPersistence()
+	{
+		return this.persistence;
 	}
 	
 	/* parseConfigFile - parses config.pems line by line and puts acquired values into their respective instance fields
@@ -61,6 +69,10 @@ public class Config
 				else if (line.contains("setupstatus"))
 				{
 					this.setupStatus = Boolean.parseBoolean(value);
+				}
+				else if (line.contains("persistence"))
+				{
+					this.persistence = Boolean.parseBoolean(value);
 				}
 			}
 		}

@@ -4,7 +4,7 @@
 package gui.panels;
 
 import gui.FrameManager;
-import gui.Thumbnail;
+import gui.img.ThumbnailImg;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -41,7 +41,7 @@ import pdftools.contentPosition;
 public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusListener
 {
 	private FrameManager manager;
-	private ArrayList<Thumbnail> selectedThumbnails;
+	private ArrayList<ThumbnailImg> selectedThumbnails;
 	private ScreenEdit currentScreen;
 	private Box container;
 	private Box widthContainer;
@@ -57,7 +57,11 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	private PDDocument document;
 	private Point pos; //replace with regular type point?
 	
+<<<<<<< Updated upstream
 	public ScreenPrintSetUp(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException
+=======
+	public ScreenPrintSetUp(FrameManager manager, ArrayList<ThumbnailImg> selectedThumbnails)
+>>>>>>> Stashed changes
 	{
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;

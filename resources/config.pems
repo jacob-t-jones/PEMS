@@ -1,4 +1,5 @@
 <config>
 	<field="departmentname" value="Plainville Police Department" />
 	<field="setupstatus"    value="true" />
+	<field="persistence"    value="true" />
 </config>
