@@ -9,7 +9,6 @@ import java.awt.image.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-
 import javax.imageio.*;
 import javax.swing.*;
 import gui.*;

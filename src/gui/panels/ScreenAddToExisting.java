@@ -27,7 +27,6 @@ import javax.swing.JTextField;
 
 import tools.ImageEditor;
 import gui.*;
-import gui.img.Thumbnail;
 
 public class ScreenAddToExisting extends JPanel implements ActionListener
 {
