@@ -4,7 +4,7 @@
 package gui.panels;
 
 import gui.FrameManager;
-import gui.Thumbnail;
+import gui.*;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -56,7 +56,7 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	private PDXObjectImage pdfBadge;
 	private PDDocument document;
 	private Point pos; //replace with regular type point?
-	
+
 	public ScreenPrintSetUp(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException
 	{
 		this.manager = manager;
