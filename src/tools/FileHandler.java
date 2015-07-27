@@ -5,10 +5,37 @@
 package tools;
 import java.io.*;
 import java.nio.file.*;
+import java.util.*;
 
 public class FileHandler 
 {
 
+	private OSType os;
+	private ArrayList<File> peripheralFiles;
+	
+	public FileHandler()
+	{
+		this.os = this.retrieveOS();
+		this.peripheralFiles = new ArrayList<File>();
+		this.retrievePeripheralFiles();
+		for (int i = 0; i < this.peripheralFiles.size(); i++)
+		{
+			System.out.println(this.peripheralFiles.get(i).getName());
+		}
+	}
+	
+	public enum OSType
+	{
+		WINDOWS, OSX, OTHER
+	}
+	
+	/* getOS - returns "os", an OSType enum value representing the operating system that the JVM is currently being run on
+	 */
+	public OSType getOS()
+	{
+		return this.os;
+	}
+	
 	/* createCase - attempts to create directories in both "cases" and "backups" for the specified case number, returns a boolean value indicating success
 	 *    caseNum - the case number to try
 	 */
@@ -61,6 +88,71 @@ public class FileHandler
 			}
 		}
 		return true;
+	}
+	
+	public OSType retrieveOS()
+	{
+		String osPropertyValue = System.getProperty("os.name").toLowerCase();
+		if (osPropertyValue.indexOf("win") >= 0)
+		{
+			return OSType.WINDOWS;
+		}
+		else if (osPropertyValue.indexOf("mac") >= 0)
+		{
+			return OSType.OSX;
+		}
+		else
+		{
+			return OSType.OTHER;
+		}
+	}
+	
+	public void retrievePeripheralFiles()
+	{
+		if (this.os == OSType.WINDOWS)
+		{
+			/*for (int i = 0; i < File.listRoots().length; i++)
+			{
+				File currentFile = File.listRoots()[i];
+				if (currentFile.isDirectory() && currentFile.getTotalSpace() < 200000000000L)
+				{
+					this.retrievePeripheralFiles(currentFile);
+				}
+			}*/
+		}
+		else if (this.os == OSType.OSX)
+		{
+			File drives = new File("/Volumes/");
+			for (int i = 0; i < drives.listFiles().length; i++)
+			{
+				File currentFile = drives.listFiles()[i];
+				if (currentFile.isDirectory() && currentFile.getTotalSpace() < 3000000000L)
+				{
+					System.out.println(currentFile.getName());
+					this.retrievePeripheralFiles(currentFile);
+				}
+			}
+		}
+	}
+	
+	public void retrievePeripheralFiles(File directory)
+	{
+		for (int i = 0; i < directory.listFiles().length; i++)
+		{
+			File currentFile = directory.listFiles()[i];
+			if (currentFile.isDirectory())
+			{
+				this.retrievePeripheralFiles(currentFile);
+			}
+			else if (currentFile.getName().contains("."))
+			{
+				String currentExt = currentFile.getName().substring(currentFile.getName().indexOf('.')).toLowerCase();
+				if (currentExt.equals(".png") || currentExt.equals(".jpg") || currentExt.equals(".jpeg"))
+				{
+					this.peripheralFiles.add(currentFile);
+				}
+			}
+		}
 	}
 	
 }
