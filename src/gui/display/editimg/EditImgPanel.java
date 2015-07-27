@@ -83,7 +83,6 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	private int caseThumbnailIndex;
 	
 	
-	
 	public EditImgPanel(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
@@ -404,7 +403,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	private ArrayList<Thumbnail> getCaseThumbnails()
 	{
 		ArrayList<Thumbnail> thumbnailList = new ArrayList<Thumbnail>();
-	    File directory = new File("cases", "/" + this.caseNum + "/");
+	    File directory = new File("cases" + "/" + this.caseNum + "/");
 		String[] fileNames = directory.list();
 		for (int i = 0; i < fileNames.length; i++)
 		{
@@ -430,6 +429,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 			    thumbnailList.add(currentThumb);
 			}
 		}
+		System.out.println("case Number: " + caseNum);
+		System.out.println("thumb list: " + thumbnailList);
 	    return thumbnailList;
 	}
 	

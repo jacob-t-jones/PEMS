@@ -39,7 +39,7 @@ public class DeleteSelectedDialogue extends JPanel implements ActionListener
 	 *                 1. informs ScreenEdit that originals should be deleted and removes this dialogue from view
 	 *                 2. informs ScreenEdit that originals should not be deleted and removes this dialogue from view
 	 *                 3. removes this dialogue from view
-	 */
+	 *//*
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == this.yesButton)
@@ -56,7 +56,7 @@ public class DeleteSelectedDialogue extends JPanel implements ActionListener
 		{
 			this.manager.closeDeleteImportsDialogue();
 		}
-	}
+	}*/
 	
 	/* populateButtonsContainer - adds "yesButton", "noButton", and "cancelButton" to "buttonsContainer"
 	 */
@@ -80,6 +80,12 @@ public class DeleteSelectedDialogue extends JPanel implements ActionListener
 		this.mainContainer.add(this.questionLabel);
 		this.mainContainer.add(Box.createVerticalStrut(25));
 		this.mainContainer.add(this.buttonsContainer);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

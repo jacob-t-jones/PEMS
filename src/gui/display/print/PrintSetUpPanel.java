@@ -5,14 +5,9 @@ package gui.display.print;
 
 import exceptions.InvalidImgException;
 import gui.*;
-<<<<<<< HEAD:src/gui/panels/ScreenPrintSetUp.java
-import gui.img.BaseImg;
-import gui.img.ThumbnailImg;
-=======
 import gui.components.img.Img;
 import gui.display.FrameManager;
 import gui.display.editimg.EditImgPanel;
->>>>>>> origin/master:src/gui/display/print/PrintSetUpPanel.java
 
 import java.awt.Component;
 import java.awt.Point;
@@ -62,11 +57,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	private int originalHeight;
 	private Component mainContainer;
 	private Box buttonsContainer;
-<<<<<<< HEAD:src/gui/panels/ScreenPrintSetUp.java
-	private BufferedImage logoImage; /// was baseimg
-=======
-	private Img logoImage;
->>>>>>> origin/master:src/gui/display/print/PrintSetUpPanel.java
+	private Img logoImage; /// was baseimg /buff
+	//private Img logoImage;
 	private PDXObjectImage pdfBadge;
 	private PDDocument document;
 	private Point pos; 
@@ -90,8 +82,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	 */
 	private void importBadgeImages()
 	{
-<<<<<<< HEAD:src/gui/panels/ScreenPrintSetUp.java
-
+/*
 		try 
 		{
 			this.logoImage = ImageEditor.resizeImage((ImageIO.read(new File("resources/templogo.png"))), 55, 55);
@@ -99,29 +90,28 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 
 		} 
 		catch (IOException e) {
-=======
 		try {
 			this.logoImage = new Img("resources/logo.png");
 		} catch (InvalidImgException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
+		}*/
 		
 	    try 
 	    {      
 	    	this.logoImage.setImage(ImageIO.read(new File("resources/logo.png")));
+	    	
 	    	this.logoImage.resizeImage(Scalr.Method.ULTRA_QUALITY, 30);
 	    	this.pdfBadge = new PDJpeg(this.document, logoImage.getImage());
 	    } 
 	    catch (IOException e)
 	    {
->>>>>>> origin/master:src/gui/display/print/PrintSetUpPanel.java
 			System.out.println("Error - Unable to import badge image");
 			e.printStackTrace();
 		} 
 		try 
 		{
-			this.pdfBadge = new PDJpeg(this.document, this.logoImage);
+			this.pdfBadge = new PDJpeg(this.document, this.logoImage.getImage());
 		} 
 		catch (IOException e) {
 			System.out.println("Error - Unable to import badge image");
