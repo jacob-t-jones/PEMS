@@ -211,7 +211,7 @@ public class Img extends JLabel
 	{
 		if (this.filePath.contains("."))
 		{
-			return this.filePath.substring(this.filePath.indexOf('.'), this.filePath.length());
+			return this.filePath.substring(this.filePath.indexOf('.'));
 		}
 		else
 		{
