@@ -6,6 +6,7 @@ package gui.panels;
 import exceptions.InvalidImgException;
 import gui.*;
 import gui.img.BaseImg;
+import gui.img.ThumbnailImg;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -38,6 +39,7 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 
 import pdftools.contentPosition;
+import tools.ImageEditor;
 
 public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusListener
 {
@@ -53,10 +55,11 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	private int originalHeight;
 	private Component mainContainer;
 	private Box buttonsContainer;
-	private BaseImg logoImage;
+	private BufferedImage logoImage; /// was baseimg
 	private PDXObjectImage pdfBadge;
 	private PDDocument document;
-	private Point pos; //replace with regular type point?
+	private Point pos; 
+	//private ThumbnailImg logoThumb;
 
 	public ScreenPrintSetUp(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException
 	{
@@ -76,27 +79,31 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 	 */
 	private void importBadgeImages()
 	{
-		try {
-			this.logoImage = new BaseImg("resources/logo.png");
-		} catch (InvalidImgException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-	    try 
-	    {      
-	    	this.logoImage.setImage(ImageIO.read(new File("resources/logo.png")));
-	    	this.logoImage.resizeImage(30);
-	    	this.pdfBadge = new PDJpeg(this.document, logoImage.getImage());
-	    } 
-	    catch (IOException e)
-	    {
+
+		try 
+		{
+			this.logoImage = ImageEditor.resizeImage((ImageIO.read(new File("resources/templogo.png"))), 55, 55);
+			//this.logoImage = (ImageIO.read(new File("resources/templogo.png")));
+
+		} 
+		catch (IOException e) {
 			System.out.println("Error - Unable to import badge image");
 			e.printStackTrace();
-			return;
-	    }
+		} 
+		try 
+		{
+			this.pdfBadge = new PDJpeg(this.document, this.logoImage);
+		} 
+		catch (IOException e) {
+			System.out.println("Error - Unable to import badge image");
+			e.printStackTrace();
+		}
+		
+	 
 	}
 	
+	/* generatePDF - generates a PDF document for police evidence
+	 */
 	private PDDocument generatePDF() throws IOException{
 		System.out.println("Creating PDF");
 		// Create a document and add a page to it
@@ -117,8 +124,8 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 		this.initializePDFTools(page);
 		
 		// 1.) insert the badge logo at the top of the page
-		this.pos.setLocation(220, 740);
-		contentStream.drawImage(pdfBadge, pos.x, pos.y);
+		this.pos.setLocation(190, 720);
+		contentStream.drawImage(this.pdfBadge, pos.x, pos.y);
 		
 		
 		// 1.1.) Open up the content stream for text insertion
@@ -129,13 +136,11 @@ public class ScreenPrintSetUp extends JPanel implements ActionListener, FocusLis
 		contentStream.drawString("Plainville Police Department");
 		
 		contentStream.setFont(font, 8);
-		//this.pos = this.nextLine(pos, contentStream);
 		contentStream.moveTextPositionByAmount(0, -12);
 		contentStream.drawString("19 Neal Ct, Plainville, CT, (860) 747-1616");
-		this.pos = this.nextLine(pos, contentStream);
 		contentStream.moveTextPositionByAmount(0, -12);
 		contentStream.drawString("Plainville, CT");
-		this.pos = this.nextLine(pos, contentStream);
+		//this.pos = this.nextLine(pos, contentStream);
 		contentStream.moveTextPositionByAmount(0, -12);
 		contentStream.drawString("(860) 747-1616");
 		contentStream.endText();
