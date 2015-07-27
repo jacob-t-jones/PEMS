@@ -2,7 +2,7 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // PEMS.java
 
-import gui.*;
+import gui.display.*;
 
 public class PEMS 
 {
