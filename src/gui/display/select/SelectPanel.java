@@ -48,7 +48,7 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.directoryName = "/Users/andrewrottier/Documents/Pictures/CrimePhotos";
+		this.directoryName = "/Users/Jacob/Documents/Pics/";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.displayedThumbnails = this.getThumbnails();
@@ -103,6 +103,7 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.finishButton)
 		{
+			this.copyFiles(false);
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			this.manager.getMainWindow().pushPanel(new EditImgPanel(manager, caseNum), "PEMS - Edit Photos");
 		}

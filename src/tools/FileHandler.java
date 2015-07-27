@@ -18,10 +18,6 @@ public class FileHandler
 		this.os = this.retrieveOS();
 		this.peripheralFiles = new ArrayList<File>();
 		this.retrievePeripheralFiles();
-		for (int i = 0; i < this.peripheralFiles.size(); i++)
-		{
-			System.out.println(this.peripheralFiles.get(i).getName());
-		}
 	}
 	
 	public enum OSType
@@ -90,7 +86,9 @@ public class FileHandler
 		return true;
 	}
 	
-	public OSType retrieveOS()
+	/* retrieveOS - determines what operating system PEMS is currently being run on, and returns a correponding OSType enum value
+	 */
+	private OSType retrieveOS()
 	{
 		String osPropertyValue = System.getProperty("os.name").toLowerCase();
 		if (osPropertyValue.indexOf("win") >= 0)
@@ -107,18 +105,20 @@ public class FileHandler
 		}
 	}
 	
-	public void retrievePeripheralFiles()
+	/* retrievePeripheralFiles - OS dependent method that attempts to load all image files located on currently attached peripheral devices into memory
+	 */
+	private void retrievePeripheralFiles()
 	{
 		if (this.os == OSType.WINDOWS)
 		{
-			/*for (int i = 0; i < File.listRoots().length; i++)
+			for (int i = 0; i < File.listRoots().length; i++)
 			{
 				File currentFile = File.listRoots()[i];
-				if (currentFile.isDirectory() && currentFile.getTotalSpace() < 200000000000L)
+				if (currentFile.isDirectory() && currentFile.getTotalSpace() < 128000000000L)
 				{
 					this.retrievePeripheralFiles(currentFile);
 				}
-			}*/
+			}
 		}
 		else if (this.os == OSType.OSX)
 		{
@@ -126,30 +126,35 @@ public class FileHandler
 			for (int i = 0; i < drives.listFiles().length; i++)
 			{
 				File currentFile = drives.listFiles()[i];
-				if (currentFile.isDirectory() && currentFile.getTotalSpace() < 3000000000L)
+				if (currentFile.isDirectory() && currentFile.getTotalSpace() < 128000000000L)
 				{
-					System.out.println(currentFile.getName());
 					this.retrievePeripheralFiles(currentFile);
 				}
 			}
 		}
 	}
 	
-	public void retrievePeripheralFiles(File directory)
+	/* retrievePeripheralFiles - recursive implementation of the method, used to trace through directories on the peripheral devices and find valid image files
+	 *               directory - the directory currently being looked at
+	 */
+	private void retrievePeripheralFiles(File directory)
 	{
 		for (int i = 0; i < directory.listFiles().length; i++)
 		{
 			File currentFile = directory.listFiles()[i];
-			if (currentFile.isDirectory())
+			if (!currentFile.isHidden())
 			{
-				this.retrievePeripheralFiles(currentFile);
-			}
-			else if (currentFile.getName().contains("."))
-			{
-				String currentExt = currentFile.getName().substring(currentFile.getName().indexOf('.')).toLowerCase();
-				if (currentExt.equals(".png") || currentExt.equals(".jpg") || currentExt.equals(".jpeg"))
+				if (currentFile.isDirectory())
 				{
-					this.peripheralFiles.add(currentFile);
+					this.retrievePeripheralFiles(currentFile);
+				}
+				else if (currentFile.getName().contains("."))
+				{
+					String currentExt = currentFile.getName().substring(currentFile.getName().indexOf('.')).toLowerCase();
+					if (currentExt.equals(".png") || currentExt.equals(".jpg") || currentExt.equals(".jpeg"))
+					{
+						this.peripheralFiles.add(currentFile);
+					}
 				}
 			}
 		}
