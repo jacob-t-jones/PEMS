@@ -48,7 +48,7 @@ public class ResizeDialogue extends JPanel implements ActionListener, FocusListe
 		if (e.getSource() == this.applyButton)
 		{
 			this.currentScreen.resizeImage(Integer.parseInt(this.widthField.getValue().toString()), Integer.parseInt(this.widthField.getValue().toString()));
-			this.manager.closeResizeDialogue();
+			this.manager.closeDialogue();
 		}
 	}
 	
