@@ -114,8 +114,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.populateMainContainer();
 		this.add(this.mainContainer);
 		this.constructMenuBar();
-		this.manager.setMenuBar(this.menuBar);
-		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setJMenuBar(this.menuBar);
+		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();
 	}
@@ -173,7 +173,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 			}
 			else
 			{
-				this.manager.displayQuitWarningDialogue(this);
+				//this.manager.displayQuitWarningDialogue(this);
 			}
 		}
 		else if (e.getSource() == this.undoMenuItem || e.getSource() == this.undoButton)
@@ -186,7 +186,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 		else if (e.getSource() == this.removeImageMenuItem || e.getSource() == this.removeButton)
 		{
-			this.manager.displayRemoveWarningDialogue(this);
+			//this.manager.displayRemoveWarningDialogue(this);
 		}
 	    else if (e.getSource() == this.antiAliasMenuItem || e.getSource() == this.antiAliasButton)
 		{
@@ -206,12 +206,12 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 		else if (e.getSource() == this.resizeMenuItem || e.getSource() == this.resizeButton)
 		{
-			this.manager.displayResizeDialogue(this, this.selectedImage.getWidth(), this.selectedImage.getHeight());
+			//this.manager.displayResizeDialogue(this, this.selectedImage.getWidth(), this.selectedImage.getHeight());
 		}
 		else if (e.getSource() == this.cropMenuItem || e.getSource() == this.cropButton)
 		{
 			this.cropping = true;
-			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
 		else if (e.getSource() == this.rotate90MenuItem || e.getSource() == this.rotate90Button)
 		{
@@ -233,22 +233,17 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 				try
 				{
 					//this.manager.closeRenameDialogue();
-					this.manager.closeResizeDialogue();
-					this.manager.closeQuitWarningDialogue();
-					this.manager.closeRemoveWarningDialogue();
-					this.manager.closeSwitchWarningDialogue();
 					this.menuBar.removeAll(); ////not removing menu bar..
-					this.manager.removeMenuBar();
 				}
 				catch (Exception e1)
 				{
 					System.out.println("error - no dialogue panels open");
 				}
-		    	this.manager.pushPanel(new FinishPanel(manager, caseNum), "PEMS - Finish");
+		    	this.manager.getMainWindow().pushPanel(new FinishPanel(manager, caseNum), "PEMS - Finish");
 			}
 			else
 			{
-				this.manager.displayContinueWarningDialogue(this);
+				//this.manager.displayContinueWarningDialogue(this);
 			}
 		}
 	}
@@ -717,7 +712,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.saved = false;
 		this.cropping = false;
 		this.resetCropValues();
-		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.selectedImageHistoryUndone.clear();
 		this.selectedImage = ImageEditor.cropImage(this.selectedImage, x, y, width, height);
 		this.selectedImageHistorySaved.push(this.selectedImage);

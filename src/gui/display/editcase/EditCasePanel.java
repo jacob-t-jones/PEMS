@@ -30,6 +30,7 @@ import gui.*;
 import gui.display.FrameManager;
 //import gui.img.Thumbnail;
 import gui.display.select.SelectPanel;
+import gui.display.start.StartPanel;
 
 public class EditCasePanel extends JPanel implements ActionListener
 {
@@ -62,7 +63,7 @@ public class EditCasePanel extends JPanel implements ActionListener
 		directory = new File("/Users/andrewrottier/Documents/Pictures/");
 		this.displayedImagePlace = 0;
 		this.populateContainer();
-		this.manager.setResizable(true);
+		this.manager.getMainWindow().setResizable(true);;
 	}
 	
 	/* populateContainer - adds components  to the container before displaying it
@@ -164,7 +165,7 @@ public class EditCasePanel extends JPanel implements ActionListener
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) 
 			{
-				manager.pushPanel(new SelectPanel(manager, folderThumbnail.getFilePath()), "PEMS - Import Images");
+				manager.getMainWindow().pushPanel(new SelectPanel(manager, folderThumbnail.getFilePath()), "PEMS - Import Images");
 			}
 
 			@Override
@@ -225,7 +226,7 @@ public class EditCasePanel extends JPanel implements ActionListener
 		}
 		else if(e.getSource() == this.backButton)
 		{
-			manager.pushPanel(new StartPanel(manager), "PEMS (Police Evidence Management System) Version 0.1");
+			manager.getMainWindow().pushPanel(new StartPanel(manager), "PEMS (Police Evidence Management System) Version 0.1");
 		}
 	
 	}

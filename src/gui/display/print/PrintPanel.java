@@ -89,9 +89,9 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener
 		this.mainContainer.add(Box.createVerticalStrut(30));
 		this.mainContainer.add(this.innerContainer);
 		this.add(this.mainContainer);
-		this.manager.setResizable(true);
-		this.manager.maximizeFrame();
-		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setResizable(true);
+		this.manager.getMainWindow().setMaximized();
+		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();
 	}
@@ -265,7 +265,7 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener
     		//this.printImages();
         	//this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS - Finish");
 			try {
-				this.manager.pushPanel(new PrintSetUpPanel(this.manager, selectedThumbnails), "PEMS - PDF generator");
+				this.manager.getMainWindow().pushPanel(new PrintSetUpPanel(this.manager, selectedThumbnails), "PEMS - PDF generator");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

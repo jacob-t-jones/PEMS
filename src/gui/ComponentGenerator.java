@@ -3,15 +3,15 @@
 // ComponentGenerator.java
 
 package gui;
-import gui.img.ThumbnailImg;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.text.*;
-
 import javax.swing.*;
 import javax.swing.text.*;
+import exceptions.*;
+import gui.components.*;
+import gui.components.img.*;
 
 public class ComponentGenerator 
 {
@@ -71,39 +71,6 @@ public class ComponentGenerator
 		newButton.setAlignmentX(alignmentX);
 		newButton.setAlignmentY(alignmentY);
 		return newButton;
-	}
-	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *         image - the image displayed in the label
-	 */
-	public static JLabel generateLabel(BufferedImage image)
-	{
-		JLabel newLabel = new JLabel(new ImageIcon(image));
-		return newLabel;
-	}
-	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *         image - the image displayed in the label
-	 *    alignmentX - the horizontal alignment of the label
-	 */
-	public static JLabel generateLabel(BufferedImage image, float alignmentX)
-	{
-		JLabel newLabel = new JLabel(new ImageIcon(image));
-		newLabel.setAlignmentX(alignmentX);
-		return newLabel;
-	}
-	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *         image - the image displayed in the label
-	 *    alignmentX - the horizontal alignment of the label
-	 *    alignmentY - the vertical alignment of the label
-	 */
-	public static JLabel generateLabel(BufferedImage image, float alignmentX, float alignmentY)
-	{
-		JLabel newLabel = new JLabel(new ImageIcon(image));
-		newLabel.setAlignmentX(alignmentX);
-		newLabel.setAlignmentY(alignmentY);
-		return newLabel;
 	}
 	
 	/* generateLabel - creates and returns a JLabel that complies with the parameters
@@ -190,16 +157,260 @@ public class ComponentGenerator
 		return newTextField;
 	}
 	
-	/* generateThumbnail - creates and returns an instance of our custom Thumbnail object, which inherits from JLabel
-	 *             image - the image represented by the Thumbnail
-	 *          filePath - the full file system path name of the aforementioned image
-	 *          fileName - the shorthand file name of the aforementioned image
-	 *           fileExt - the file extension (".png", ".jpg", etc.) for the image
+	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
+	 *             text - the text displayed alongside the check box
+	 *         selected - boolean value indicating whether or not the check box should default to selected
 	 */
-	public static Thumbnail generateThumbnail(BufferedImage image, String filePath, String fileName, String fileExt)
+	public static JCheckBox generateCheckBox(String text, boolean selected)
 	{
-		Thumbnail newThumb = new Thumbnail(image, filePath, fileName, fileExt);
-		return newThumb;
+		JCheckBox newCheckBox = new JCheckBox(text, selected);
+		return newCheckBox;
+	}
+	
+	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
+	 *             text - the text displayed alongside the check box
+	 *         selected - boolean value indicating whether or not the check box should default to selected
+	 *       alignmentX - the horizontal alignment of the check box
+	 */
+	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX)
+	{
+		JCheckBox newCheckBox = new JCheckBox(text, selected);
+		newCheckBox.setAlignmentX(alignmentX);
+		return newCheckBox;
+	}
+
+	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
+	 *             text - the text displayed alongside the check box
+	 *         selected - boolean value indicating whether or not the check box should default to selected
+	 *       alignmentX - the horizontal alignment of the check box
+	 *       alignmentY - the vertical alignment of the check box
+	 */
+	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX, float alignmentY)
+	{
+		JCheckBox newCheckBox = new JCheckBox(text, selected);
+		newCheckBox.setAlignmentX(alignmentX);
+		newCheckBox.setAlignmentY(alignmentY);
+		return newCheckBox;
+	}
+	
+	/* generateStringField - creates and returns a StringField that complies with the parameters
+	 * 	              text - the default text displayed in the field
+	 */
+	public static StringField generateStringField(String text)
+	{
+		StringField newStringField = new StringField(text);
+		return newStringField;
+	}
+	
+	/* generateStringField - creates and returns a StringField that complies with the parameters
+	 * 	              text - the default text displayed in the field
+	 *          alignmentX - the horizontal alignment of the field
+	 */
+	public static StringField generateStringField(String text, float alignmentX)
+	{
+		StringField newStringField = new StringField(text);
+		newStringField.setAlignmentX(alignmentX);
+		return newStringField;
+	}
+	
+	/* generateStringField - creates and returns a StringField that complies with the parameters
+	 * 	              text - the default text displayed in the field
+	 *          alignmentX - the horizontal alignment of the field
+	 *          alignmentY - the vertical alignment of the field
+	 */
+	public static StringField generateStringField(String text, float alignmentX, float alignmentY)
+	{
+		StringField newStringField = new StringField(text);
+		newStringField.setAlignmentX(alignmentX);
+		newStringField.setAlignmentY(alignmentY);
+		return newStringField;
+	}
+	
+	/* generateNumericField - creates and returns a NumericField that complies with the parameters
+	 *                value - the default value displayed in the field
+	 *                focus - the FocusListener for the field
+	 */
+	public static NumericField generateNumericField(int value, FocusListener focus)
+	{
+		NumericField newNumericField = new NumericField(value);
+		newNumericField.addFocusListener(focus);
+		return newNumericField;
+	}
+	
+	/* generateNumericField - creates and returns a NumericField that complies with the parameters
+	 *                value - the default value displayed in the field
+	 *                focus - the FocusListener for the field
+	 *           alignmentX - the horizontal alignment of the field
+	 */
+	public static NumericField generateNumericField(int value, FocusListener focus, float alignmentX)
+	{
+		NumericField newNumericField = new NumericField(value);
+		newNumericField.addFocusListener(focus);
+		newNumericField.setAlignmentX(alignmentX);
+		return newNumericField;
+	}
+	
+	/* generateNumericField - creates and returns a NumericField that complies with the parameters
+	 *                value - the default value displayed in the field
+	 *                focus - the FocusListener for the field
+	 *           alignmentX - the horizontal alignment of the field
+	 *           alignmentY - the vertical alignment of the field
+	 */
+	public static NumericField generateNumericField(int value, FocusListener focus, float alignmentX, float alignmentY)
+	{
+		NumericField newNumericField = new NumericField(value);
+		newNumericField.addFocusListener(focus);
+		newNumericField.setAlignmentX(alignmentX);
+		newNumericField.setAlignmentY(alignmentY);
+		return newNumericField;
+	}
+	
+	/* generateImg - creates and returns an Img that complies with the parameters
+	 *    filePath - the directory path the image will be loaded from
+	 *             * throws InvalidImgException if the image cannot be loaded into memory
+	 */
+	public static Img generateImg(String filePath) throws InvalidImgException
+	{
+		Img newImg = new Img(filePath);
+		return newImg;
+	}
+	
+	/* generateImg - creates and returns an Img that complies with the parameters
+	 *    filePath - the directory path the image will be loaded from
+	 *  alignmentX - the horizontal alignment of the image
+	 *             * throws InvalidImgException if the image cannot be loaded into memory
+	 */
+	public static Img generateImg(String filePath, float alignmentX) throws InvalidImgException
+	{
+		Img newImg = new Img(filePath);
+		newImg.setAlignmentX(alignmentX);
+		return newImg;
+	}
+	
+	/* generateImg - creates and returns an Img that complies with the parameters
+	 *    filePath - the directory path the image will be loaded from
+	 *  alignmentX - the horizontal alignment of the image
+	 *  alignmentY - the vertical alignment of the image
+	 *             * throws InvalidImgException if the image cannot be loaded into memory
+	 */
+	public static Img generateImg(String filePath, float alignmentX, float alignmentY) throws InvalidImgException
+	{
+		Img newImg = new Img(filePath);
+		newImg.setAlignmentX(alignmentX);
+		newImg.setAlignmentY(alignmentY);
+		return newImg;
+	}
+	
+	/* generateEditedImg - creates and returns an EditedImg that complies with the parameters
+	 *          filePath - the directory path the image will be loaded from
+	 *           		 * throws InvalidImgException if the image cannot be loaded into memory
+	 */
+	public static EditedImg generateEditedImg(String filePath) throws InvalidImgException
+	{
+		EditedImg newEditedImg = new EditedImg(filePath);
+		return newEditedImg;
+	}
+	
+	/* generateEditedImg - creates and returns an EditedImg that complies with the parameters
+	 *          filePath - the directory path the image will be loaded from
+	 *        alignmentX - the horizontal alignment of the image
+	 *           		 * throws InvalidImgException if the image cannot be loaded into memory
+	 */
+	public static EditedImg generateEditedImg(String filePath, float alignmentX) throws InvalidImgException
+	{
+		EditedImg newEditedImg = new EditedImg(filePath);
+		newEditedImg.setAlignmentX(alignmentX);
+		return newEditedImg;
+	}
+	
+	/* generateEditedImg - creates and returns an EditedImg that complies with the parameters
+	 *          filePath - the directory path the image will be loaded from
+	 *        alignmentX - the horizontal alignment of the image
+	 *        alignmentY - the vertical alignment of the image
+	 *           		 * throws InvalidImgException if the image cannot be loaded into memory
+	 */
+	public static EditedImg generateEditedImg(String filePath, float alignmentX, float alignmentY) throws InvalidImgException
+	{
+		EditedImg newEditedImg = new EditedImg(filePath);
+		newEditedImg.setAlignmentX(alignmentX);
+		newEditedImg.setAlignmentY(alignmentY);
+		return newEditedImg;
+	}
+	
+	/* generateThumbnailImg - creates and returns a ThumbnailImg that complies with the parameters
+	 *             filePath - the directory path the image will be loaded from
+	 *                 size - the new size of the image
+	 *           		    * throws InvalidImgException if the image cannot be loaded into memory
+	 */
+	public static ThumbnailImg generateThumbnailImg(String filePath, int size) throws InvalidImgException
+	{
+		ThumbnailImg newThumbnailImg = new ThumbnailImg(filePath, size);
+		return newThumbnailImg;
+	}
+	
+	/* generateThumbnailImg - creates and returns a ThumbnailImg that complies with the parameters
+	 *             filePath - the directory path the image will be loaded from
+	 *                 size - the new size of the image
+	 *           alignmentX - the horizontal alignment of the image
+	 *           		    * throws InvalidImgException if the image cannot be loaded into memory
+	 */
+	public static ThumbnailImg generateThumbnailImg(String filePath, int size, float alignmentX) throws InvalidImgException
+	{
+		ThumbnailImg newThumbnailImg = new ThumbnailImg(filePath, size);
+		newThumbnailImg.setAlignmentX(alignmentX);
+		return newThumbnailImg;
+	}
+	
+	/* generateThumbnailImg - creates and returns a ThumbnailImg that complies with the parameters
+	 *             filePath - the directory path the image will be loaded from
+	 *                 size - the new size of the image
+	 *           alignmentX - the horizontal alignment of the image
+	 *           alignmentY - the vertical alignment of the image
+	 *                      * throws InvalidImgException if the image cannot be loaded into memory
+	 */
+	public static ThumbnailImg generateThumbnailImg(String filePath, int size, float alignmentX, float alignmentY) throws InvalidImgException
+	{
+		ThumbnailImg newThumbnailImg = new ThumbnailImg(filePath, size);
+		newThumbnailImg.setAlignmentX(alignmentX);
+		newThumbnailImg.setAlignmentY(alignmentY);
+		return newThumbnailImg;
+	}
+
+	/*
+	 * BEGIN WORK AREA
+	 */
+	
+	/* generateLabel - creates and returns a JLabel that complies with the parameters
+	 *         image - the image displayed in the label
+	 */
+	public static JLabel generateLabel(BufferedImage image)
+	{
+		JLabel newLabel = new JLabel(new ImageIcon(image));
+		return newLabel;
+	}
+	
+	/* generateLabel - creates and returns a JLabel that complies with the parameters
+	 *         image - the image displayed in the label
+	 *    alignmentX - the horizontal alignment of the label
+	 */
+	public static JLabel generateLabel(BufferedImage image, float alignmentX)
+	{
+		JLabel newLabel = new JLabel(new ImageIcon(image));
+		newLabel.setAlignmentX(alignmentX);
+		return newLabel;
+	}
+	
+	/* generateLabel - creates and returns a JLabel that complies with the parameters
+	 *         image - the image displayed in the label
+	 *    alignmentX - the horizontal alignment of the label
+	 *    alignmentY - the vertical alignment of the label
+	 */
+	public static JLabel generateLabel(BufferedImage image, float alignmentX, float alignmentY)
+	{
+		JLabel newLabel = new JLabel(new ImageIcon(image));
+		newLabel.setAlignmentX(alignmentX);
+		newLabel.setAlignmentY(alignmentY);
+		return newLabel;
 	}
 	
 	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
@@ -240,53 +451,7 @@ public class ComponentGenerator
 		newMenuItem.setMnemonic(mnemonic);
 		return newMenuItem;
 	}
-	
-	/*
-	 * 
-	 */
-	public static void generateRectangle(Graphics g, Point first, Point second)
-	{
-		Rectangle r = new Rectangle(first.x, first.y, second.x, second.y);
-		g.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight()); 
-		//return r;
-	}
 
-	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
-	 *             text - the text displayed alongside the check box
-	 *         selected - boolean value indicating whether or not the check box should default to selected
-	 */
-	public static JCheckBox generateCheckBox(String text, boolean selected)
-	{
-		JCheckBox newCheckBox = new JCheckBox(text, selected);
-		return newCheckBox;
-	}
-	
-	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
-	 *             text - the text displayed alongside the check box
-	 *         selected - boolean value indicating whether or not the check box should default to selected
-	 *       alignmentX - the horizontal alignment of the check box
-	 */
-	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX)
-	{
-		JCheckBox newCheckBox = new JCheckBox(text, selected);
-		newCheckBox.setAlignmentX(alignmentX);
-		return newCheckBox;
-	}
-
-	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
-	 *             text - the text displayed alongside the check box
-	 *         selected - boolean value indicating whether or not the check box should default to selected
-	 *       alignmentX - the horizontal alignment of the check box
-	 *       alignmentY - the vertical alignment of the check box
-	 */
-	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX, float alignmentY)
-	{
-		JCheckBox newCheckBox = new JCheckBox(text, selected);
-		newCheckBox.setAlignmentX(alignmentX);
-		newCheckBox.setAlignmentY(alignmentY);
-		return newCheckBox;
-	}
-	
 	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
 	 *                        value - the default value to place in the text field
 	 *                       action - the ActionListener for the text field
@@ -357,6 +522,18 @@ public class ComponentGenerator
 		newFormattedTextField.setAlignmentX(alignmentX);
 		newFormattedTextField.setAlignmentY(alignmentY);
 		return newFormattedTextField;
+	}
+	
+	/* generateThumbnail - creates and returns an instance of our custom Thumbnail object, which inherits from JLabel
+	 *             image - the image represented by the Thumbnail
+	 *          filePath - the full file system path name of the aforementioned image
+	 *          fileName - the shorthand file name of the aforementioned image
+	 *           fileExt - the file extension (".png", ".jpg", etc.) for the image
+	 */
+	public static Thumbnail generateThumbnail(BufferedImage image, String filePath, String fileName, String fileExt)
+	{
+		Thumbnail newThumb = new Thumbnail(image, filePath, fileName, fileExt);
+		return newThumb;
 	}
 	
 }

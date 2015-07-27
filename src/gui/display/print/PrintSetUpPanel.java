@@ -5,9 +5,9 @@ package gui.display.print;
 
 import exceptions.InvalidImgException;
 import gui.*;
+import gui.components.img.Img;
 import gui.display.FrameManager;
 import gui.display.editimg.EditImgPanel;
-import gui.img.BaseImg;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -38,6 +38,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
+import org.imgscalr.Scalr;
 
 import pdftools.contentPosition;
 
@@ -55,7 +56,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	private int originalHeight;
 	private Component mainContainer;
 	private Box buttonsContainer;
-	private BaseImg logoImage;
+	private Img logoImage;
 	private PDXObjectImage pdfBadge;
 	private PDDocument document;
 	private Point pos; //replace with regular type point?
@@ -79,7 +80,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	private void importBadgeImages()
 	{
 		try {
-			this.logoImage = new BaseImg("resources/logo.png");
+			this.logoImage = new Img("resources/logo.png");
 		} catch (InvalidImgException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -88,7 +89,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	    try 
 	    {      
 	    	this.logoImage.setImage(ImageIO.read(new File("resources/logo.png")));
-	    	this.logoImage.resizeImage(30);
+	    	this.logoImage.resizeImage(Scalr.Method.ULTRA_QUALITY, 30);
 	    	this.pdfBadge = new PDJpeg(this.document, logoImage.getImage());
 	    } 
 	    catch (IOException e)

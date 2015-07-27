@@ -35,7 +35,7 @@ public class FinishPanel extends JPanel implements ActionListener
 		this.populateBox();
 		this.revalidate();
 		this.repaint();
-		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		
 	}
 	
@@ -66,14 +66,13 @@ public class FinishPanel extends JPanel implements ActionListener
 		
 		if (e.getSource() == this.closeButton)
 		{
-			this.manager.closePanel();
 			Runtime.getRuntime().exit(0);
 		}
 		
 		if (e.getSource() == this.printButton)
 		{
-			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			manager.pushPanel(new PrintPanel(manager, this.caseNum), "PEMS - Print Images");
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			manager.getMainWindow().pushPanel(new PrintPanel(manager, this.caseNum), "PEMS - Print Images");
 		}
 		
 		if (e.getSource() == this.openInDirButton)

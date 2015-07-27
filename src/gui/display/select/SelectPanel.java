@@ -70,9 +70,9 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.populateInnerContainer();
 		this.populateMainContainer();
 		this.add(this.mainContainer);
-		this.manager.setResizable(true);
-		this.manager.maximizeFrame();
-		this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setResizable(true);
+		this.manager.getMainWindow().setMaximized();
+		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();
 	}
@@ -103,7 +103,8 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.finishButton)
 		{
-			this.manager.displayDeleteImportsDialogue(this);
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			this.manager.getMainWindow().pushPanel(new EditImgPanel(manager, caseNum), "PEMS - Edit Photos");
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
@@ -176,17 +177,6 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		return;
 	}	
 	
-	/* deleteOptionSelected - called when the user chooses an option on ScreenDeleteImportsDialogue
-	 * 				 delete - boolean value indicating whether or not imported files should be deleted from the device
-	 */
-	public void deleteOptionSelected(boolean delete)
-	{
-		if (this.copyFiles(delete))
-		{
-			this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			this.manager.pushPanel(new EditImgPanel(manager, caseNum), "PEMS - Edit Photos");
-		}
-	}
 	
 	/* getThumbnails - fills the "thumbnails" ArrayList by importing images from the camera into memory
 	 */
