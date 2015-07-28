@@ -2,7 +2,7 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // NumericField.java
 
-package gui.components;
+package gui.components.field;
 import java.text.*;
 import javax.swing.*;
 import javax.swing.text.*;

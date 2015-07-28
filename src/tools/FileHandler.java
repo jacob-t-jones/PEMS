@@ -3,9 +3,13 @@
 // FileHandler.java
 
 package tools;
+import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import exceptions.*;
+import gui.*;
+import gui.components.img.*;
 
 public class FileHandler 
 {
@@ -30,6 +34,30 @@ public class FileHandler
 	public OSType getOS()
 	{
 		return this.os;
+	}
+	
+	/* getPeripheralThumbnails - creates and returns an ArrayList of ThumbnailImg objects representing all of the image files currently on external media devices
+	 * 				      size - the size of the new thumbnails
+	 *                   mouse - the MouseListener for the new thumbnails
+	 */
+	public ArrayList<ThumbnailImg> getPeripheralThumbnails(int size, MouseListener mouse)
+	{
+		ArrayList<ThumbnailImg> peripheralThumbnails = new ArrayList<ThumbnailImg>();
+		for (int i = 0; i < this.peripheralFiles.size(); i++)
+		{
+			try 
+			{
+				ThumbnailImg newThumbnail = ComponentGenerator.generateThumbnailImg(this.peripheralFiles.get(i).getPath(), size);
+				newThumbnail.addMouseListener(mouse);
+				peripheralThumbnails.add(newThumbnail);
+			} 
+			catch (InvalidImgException e) 
+			{
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		return peripheralThumbnails;
 	}
 	
 	/* createCase - attempts to create directories in both "cases" and "backups" for the specified case number, returns a boolean value indicating success
@@ -114,7 +142,7 @@ public class FileHandler
 			for (int i = 0; i < File.listRoots().length; i++)
 			{
 				File currentFile = File.listRoots()[i];
-				if (currentFile.isDirectory() && currentFile.getTotalSpace() < 128000000000L)
+				if (currentFile.isDirectory() && !currentFile.isHidden() && currentFile.getTotalSpace() < 128000000000L)
 				{
 					this.retrievePeripheralFiles(currentFile);
 				}
@@ -126,7 +154,7 @@ public class FileHandler
 			for (int i = 0; i < drives.listFiles().length; i++)
 			{
 				File currentFile = drives.listFiles()[i];
-				if (currentFile.isDirectory() && currentFile.getTotalSpace() < 128000000000L)
+				if (currentFile.isDirectory() && !currentFile.isHidden() && currentFile.getTotalSpace() < 128000000000L)
 				{
 					this.retrievePeripheralFiles(currentFile);
 				}

@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import gui.*;
-import gui.components.*;
+import gui.components.field.*;
 import gui.display.*;
 import gui.display.select.*;
 
@@ -66,6 +66,9 @@ public class NewCasePanel extends JPanel implements ActionListener
 		this.container.add(this.continueButton);
 	}
 	
+	/* attemptCaseCreation - attempts to create a new case with the given number, checking for edge cases in the process, and returns a boolean value indicating the success of said creation
+	 *             caseNum - the case number for the newly created case
+	 */
 	private boolean attemptCaseCreation(String caseNum)
 	{
 		if (!this.manager.getFileHandler().validCaseNum(caseNum))

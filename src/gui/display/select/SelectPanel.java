@@ -5,25 +5,21 @@
 package gui.display.select;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-
-import javax.imageio.*;
 import javax.swing.*;
-
 import gui.*;
-import gui.display.FrameManager;
-import gui.display.editimg.EditImgPanel;
-import tools.*;
+import gui.components.img.*;
+import gui.display.*;
+import gui.display.editimg.*;
 
 public class SelectPanel extends JPanel implements ActionListener, MouseListener
 {
 
 	private FrameManager manager;
-	private ArrayList<Thumbnail> displayedThumbnails;
-	private ArrayList<Thumbnail> selectedThumbnails;
+	private ArrayList<ThumbnailImg> displayedThumbnails;
+	private ArrayList<ThumbnailImg> selectedThumbnails;
 	private Box mainContainer;
 	private Box innerContainer;
 	private Box leftContainer;
@@ -48,11 +44,10 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.directoryName = "/Users/Jacob/Documents/Pics/";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
-		this.displayedThumbnails = this.getThumbnails();
-		this.selectedThumbnails = new ArrayList<Thumbnail>();
+		this.displayedThumbnails = this.manager.getFileHandler().getPeripheralThumbnails(120, this);
+		this.selectedThumbnails = new ArrayList<ThumbnailImg>();
 		this.mainContainer = Box.createVerticalBox();
 		this.innerContainer = Box.createHorizontalBox();
 		this.leftContainer = Box.createVerticalBox();
@@ -105,7 +100,7 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		{
 			this.copyFiles(false);
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			this.manager.getMainWindow().pushPanel(new EditImgPanel(manager, caseNum), "PEMS - Edit Photos");
+			this.manager.getMainWindow().pushPanel(new EditImgPanel(this.manager, this.caseNum), "PEMS - Edit Photos");
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
@@ -132,14 +127,14 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	{
 		if (this.selectedThumbnails.contains(e.getSource()))
 		{
-			this.displayedThumbnails.add((Thumbnail)e.getSource());
+			this.displayedThumbnails.add((ThumbnailImg)e.getSource());
 			this.selectedThumbnails.remove(e.getSource());
 			this.refreshDisplayedThumbnails(this.displayedImagePlace);
 			this.refreshSelectedThumbnails(this.selectedImagePlace);
 		}
 		else if (displayedThumbnails.contains(e.getSource()))
 		{
-			this.selectedThumbnails.add((Thumbnail)e.getSource());
+			this.selectedThumbnails.add((ThumbnailImg)e.getSource());
 			this.displayedThumbnails.remove(e.getSource());
 			this.refreshDisplayedThumbnails(this.displayedImagePlace);
 			this.refreshSelectedThumbnails(this.selectedImagePlace);
@@ -177,46 +172,12 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	{
 		return;
 	}	
-	
-	
-	/* getThumbnails - fills the "thumbnails" ArrayList by importing images from the camera into memory
-	 */
-	private ArrayList<Thumbnail> getThumbnails()
-	{ 
-		ArrayList<Thumbnail> thumbnailList = new ArrayList<Thumbnail>();
-	    File directory = new File(this.directoryName);
-		String[] fileNames = directory.list();
-		for (int i = 0; i < fileNames.length; i++)
-		{
-			String currentFileName = fileNames[i].substring(0, fileNames[i].indexOf('.')).toLowerCase();
-			String currentExtension = fileNames[i].substring(fileNames[i].indexOf('.'), fileNames[i].length()).toLowerCase();
-			if (currentExtension.equalsIgnoreCase(".png") || currentExtension.equalsIgnoreCase(".jpg") || currentExtension.equalsIgnoreCase(".jpeg"))
-			{
-				BufferedImage currentImage = null;
-				String currentPath = this.directoryName + "/" + fileNames[i];
-			    try 
-			    {   
-			    	 currentImage = ImageIO.read(new File(currentPath));
-			    }
-			    catch (IOException e)
-			    {
-			    	System.out.println("Error - Unable to read image into memory");
-			    	e.printStackTrace();
-				    return null;
-			    }	    	
-			    Thumbnail currentThumb = ComponentGenerator.generateThumbnail(ImageEditor.resizeThumbnail(currentImage, 120), currentPath, currentFileName, currentExtension);
-			    currentThumb.addMouseListener(this);
-			    thumbnailList.add(currentThumb);
-			} 
-		}
-	    return thumbnailList;
-	}
 
 	/* refreshDisplayedThumbnails - refreshes the Thumbnails for images not yet selected by the user
 	 */
 	private void refreshDisplayedThumbnails(int displayedImagePlace)
 	{
-		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images Detected on Camera", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images Detected on External Devices", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.displayedImagePlace = displayedImagePlace;
 		this.displayedContainer.removeAll();
 		this.displayedContainer.add(this.displayedTitleLabel);
@@ -352,9 +313,9 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	{
     	for (int i = 0; i < this.selectedThumbnails.size(); i++)
     	{
-			Path currentPath = Paths.get(this.directoryName + "/" + this.selectedThumbnails.get(i).getFileName() + this.selectedThumbnails.get(i).getFileExt());
-			Path casesPath = Paths.get("cases/" + this.caseNum + "/" + this.caseNum + "-" + i + this.selectedThumbnails.get(i).getFileExt());
-			Path backupsPath = Paths.get("backups/" + this.caseNum + "/" + this.caseNum + "-" + i + this.selectedThumbnails.get(i).getFileExt());
+			Path currentPath = Paths.get(this.selectedThumbnails.get(i).getFilePath());
+			Path casesPath = Paths.get("cases/" + this.caseNum + "/" + this.caseNum + " (" + i + ")" + this.selectedThumbnails.get(i).getFileExt());
+			Path backupsPath = Paths.get("backups/" + this.caseNum + "/" + this.caseNum + " (" + i + "-" + 0 + ")" + this.selectedThumbnails.get(i).getFileExt());
 			try 
 			{
 				Files.copy(currentPath, casesPath, StandardCopyOption.REPLACE_EXISTING);
