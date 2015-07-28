@@ -4,12 +4,11 @@
 package pdftools;
 
 public class contentPosition {
-	
+
 	private int x;
 	private int y;
-	
-	public contentPosition(int x, int y)
-	{
+
+	public contentPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}

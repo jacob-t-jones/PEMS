@@ -3,6 +3,7 @@
 // ScreenDeleteImportsDialogue.java
 
 package gui.display.dialogues;
+
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -11,9 +12,8 @@ import gui.*;
 import gui.display.FrameManager;
 import gui.display.select.SelectPanel;
 
-public class DeleteSelectedDialogue extends JPanel implements ActionListener
-{
-	
+public class DeleteSelectedDialogue extends JPanel implements ActionListener {
+
 	private FrameManager manager;
 	private SelectPanel currentScreen;
 	private Box mainContainer;
@@ -23,8 +23,7 @@ public class DeleteSelectedDialogue extends JPanel implements ActionListener
 	private JButton noButton;
 	private JButton cancelButton;
 
-	public DeleteSelectedDialogue(FrameManager manager, SelectPanel currentScreen)
-	{
+	public DeleteSelectedDialogue(FrameManager manager, SelectPanel currentScreen) {
 		this.manager = manager;
 		this.currentScreen = currentScreen;
 		this.mainContainer = Box.createVerticalBox();
@@ -33,35 +32,29 @@ public class DeleteSelectedDialogue extends JPanel implements ActionListener
 		this.populateMainContainer();
 		this.add(this.mainContainer);
 	}
-	
-	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
-	 *	             e - the event in question
-	 *                 1. informs ScreenEdit that originals should be deleted and removes this dialogue from view
-	 *                 2. informs ScreenEdit that originals should not be deleted and removes this dialogue from view
-	 *                 3. removes this dialogue from view
+
+	/*
+	 * actionPerformed - mandatory for any class implementing ActionListener,
+	 * checks the source of the ActionEvent and executes the appropriate code e
+	 * - the event in question 1. informs ScreenEdit that originals should be
+	 * deleted and removes this dialogue from view 2. informs ScreenEdit that
+	 * originals should not be deleted and removes this dialogue from view 3.
+	 * removes this dialogue from view
 	 *//*
-	public void actionPerformed(ActionEvent e) 
-	{
-		if (e.getSource() == this.yesButton)
-		{
-			this.currentScreen.deleteOptionSelected(true);
-			this.manager.closeDeleteImportsDialogue();
-		}
-		else if (e.getSource() == this.noButton)
-		{
-			this.currentScreen.deleteOptionSelected(false);
-			this.manager.closeDeleteImportsDialogue();
-		}
-		else if (e.getSource() == this.cancelButton)
-		{
-			this.manager.closeDeleteImportsDialogue();
-		}
-	}*/
-	
-	/* populateButtonsContainer - adds "yesButton", "noButton", and "cancelButton" to "buttonsContainer"
+		 * public void actionPerformed(ActionEvent e) { if (e.getSource() ==
+		 * this.yesButton) { this.currentScreen.deleteOptionSelected(true);
+		 * this.manager.closeDeleteImportsDialogue(); } else if (e.getSource()
+		 * == this.noButton) { this.currentScreen.deleteOptionSelected(false);
+		 * this.manager.closeDeleteImportsDialogue(); } else if (e.getSource()
+		 * == this.cancelButton) { this.manager.closeDeleteImportsDialogue(); }
+		 * }
+		 */
+
+	/*
+	 * populateButtonsContainer - adds "yesButton", "noButton", and
+	 * "cancelButton" to "buttonsContainer"
 	 */
-	private void populateButtonsContainer()
-	{
+	private void populateButtonsContainer() {
 		this.yesButton = ComponentGenerator.generateButton("Yes", this);
 		this.noButton = ComponentGenerator.generateButton("No", this);
 		this.cancelButton = ComponentGenerator.generateButton("Cancel", this);
@@ -71,12 +64,15 @@ public class DeleteSelectedDialogue extends JPanel implements ActionListener
 		this.buttonsContainer.add(Box.createHorizontalStrut(20));
 		this.buttonsContainer.add(this.cancelButton);
 	}
-	
-	/* populateMainContainer - adds "questionLabel" and "buttonsContainer" to "mainContainer"
+
+	/*
+	 * populateMainContainer - adds "questionLabel" and "buttonsContainer" to
+	 * "mainContainer"
 	 */
-	private void populateMainContainer()
-	{
-		this.questionLabel = ComponentGenerator.generateLabel("Would you like to delete the original copies of all imported files from the camera?", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+	private void populateMainContainer() {
+		this.questionLabel = ComponentGenerator.generateLabel(
+				"Would you like to delete the original copies of all imported files from the camera?",
+				ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.mainContainer.add(this.questionLabel);
 		this.mainContainer.add(Box.createVerticalStrut(25));
 		this.mainContainer.add(this.buttonsContainer);
@@ -85,7 +81,7 @@ public class DeleteSelectedDialogue extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
