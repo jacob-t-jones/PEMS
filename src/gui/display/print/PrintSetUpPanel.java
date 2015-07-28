@@ -185,43 +185,24 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 				Img[][] content = {{null}} ;
 		}
 		else if(selectedThumbnails.size() == 2){
-			try {
-				Img[][] content = {{new Img(null)},  
-								   {new Img(null)}};
-			} catch (InvalidImgException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Img[][] content = {{null},  
+							   {null}};
 		}
 		else if(selectedThumbnails.size() == 3){
-			try {
-				Img[][] content = {{new Img(null)},  
-						   	       {new Img(null)},
-							       {new Img(null)}};
-			} catch (InvalidImgException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Img[][] content = {{null},  
+						   	   {null},
+							   {null}};
 		}
 		else if(selectedThumbnails.size() == 4){
-			try {
-				Img[][] content = {{new Img(null), new Img(null)},  
-								   {new Img(null), new Img(null)}};
-			} catch (InvalidImgException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Img[][] content = {{null, null},  
+							   {null, null}};
+			
 		}
 		else if(selectedThumbnails.size() == 8){
-			try {
-				Img[][] content = {{new Img(null), new Img(null)},  
-						           {new Img(null), new Img(null)},
-								   {new Img(null), new Img(null)},  
-				                   {new Img(null), new Img(null)}};
-			} catch (InvalidImgException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Img[][] content = {{null, null},  
+						       {null, null},
+						       {null, null},  
+				               {null, null}}; 
 		}
 		return content;
 	}
