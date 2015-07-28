@@ -430,6 +430,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 				currentThumb.setAlignmentX(CENTER_ALIGNMENT);
 			    currentThumb.addMouseListener(this);
 			    thumbnailList.add(currentThumb);
+			    System.out.println(thumbnailList.size());
 			}
 		}
 		//System.out.println("files in directory: "+ fileNames);
