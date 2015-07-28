@@ -44,10 +44,7 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-<<<<<<< HEAD
 		this.directoryName = "/Users/andrewrottier/Documents/Pictures/CrimePhotos";
-=======
->>>>>>> origin/master
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.displayedThumbnails = this.manager.getFileHandler().getPeripheralThumbnails(120, this);
