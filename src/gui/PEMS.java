@@ -2,6 +2,7 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // PEMS.java
 
+package gui;
 import gui.display.*;
 
 public class PEMS 
@@ -9,6 +10,7 @@ public class PEMS
 
 	public static void main(String[] args)
 	{
+		@SuppressWarnings("unused")
 		FrameManager frame = new FrameManager();
 	}
 	

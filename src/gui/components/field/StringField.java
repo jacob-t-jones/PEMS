@@ -2,7 +2,7 @@
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // StringField.java
 
-package gui.components;
+package gui.components.field;
 import java.awt.event.*;
 import javax.swing.*;
 

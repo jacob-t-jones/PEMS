@@ -10,7 +10,7 @@ import java.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import exceptions.*;
-import gui.components.*;
+import gui.components.field.*;
 import gui.components.img.*;
 
 public class ComponentGenerator 
@@ -118,44 +118,7 @@ public class ComponentGenerator
 		return newLabel;
 	}
 	
-	/* generateTextField - creates and returns a JTextField that complies with the parameters
-	 *              text - the default text displayed in the field
-	 *             focus - the FocusListener for the field
-	 */
-	public static JTextField generateTextField(String text, FocusListener focus)
-	{
-		JTextField newTextField = new JTextField(text);
-		newTextField.addFocusListener(focus);
-		return newTextField;
-	}
 	
-	/* generateTextField - creates and returns a JTextField that complies with the parameters
-	 *              text - the default text displayed in the field
-	 *             focus - the FocusListener for the field
-	 *        alignmentX - the horizontal alignment of the field
-	 */
-	public static JTextField generateTextField(String text, FocusListener focus, float alignmentX)
-	{
-		JTextField newTextField = new JTextField(text);
-		newTextField.addFocusListener(focus);
-		newTextField.setAlignmentX(alignmentX);
-		return newTextField;
-	}
-	
-	/* generateTextField - creates and returns a JTextField that complies with the parameters
-	 *              text - the default text displayed in the field
-	 *             focus - the FocusListener for the field
-	 *        alignmentX - the horizontal alignment of the field
-	 *        alignmentY - the vertical alignment of the field
-	 */
-	public static JTextField generateTextField(String text, FocusListener focus, float alignmentX, float alignmentY)
-	{
-		JTextField newTextField = new JTextField(text);
-		newTextField.addFocusListener(focus);
-		newTextField.setAlignmentX(alignmentX);
-		newTextField.setAlignmentY(alignmentY);
-		return newTextField;
-	}
 	
 	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
 	 *             text - the text displayed alongside the check box
@@ -379,6 +342,45 @@ public class ComponentGenerator
 	/*
 	 * BEGIN WORK AREA
 	 */
+	
+	/* generateTextField - creates and returns a JTextField that complies with the parameters
+	 *              text - the default text displayed in the field
+	 *             focus - the FocusListener for the field
+	 */
+	public static JTextField generateTextField(String text, FocusListener focus)
+	{
+		JTextField newTextField = new JTextField(text);
+		newTextField.addFocusListener(focus);
+		return newTextField;
+	}
+	
+	/* generateTextField - creates and returns a JTextField that complies with the parameters
+	 *              text - the default text displayed in the field
+	 *             focus - the FocusListener for the field
+	 *        alignmentX - the horizontal alignment of the field
+	 */
+	public static JTextField generateTextField(String text, FocusListener focus, float alignmentX)
+	{
+		JTextField newTextField = new JTextField(text);
+		newTextField.addFocusListener(focus);
+		newTextField.setAlignmentX(alignmentX);
+		return newTextField;
+	}
+	
+	/* generateTextField - creates and returns a JTextField that complies with the parameters
+	 *              text - the default text displayed in the field
+	 *             focus - the FocusListener for the field
+	 *        alignmentX - the horizontal alignment of the field
+	 *        alignmentY - the vertical alignment of the field
+	 */
+	public static JTextField generateTextField(String text, FocusListener focus, float alignmentX, float alignmentY)
+	{
+		JTextField newTextField = new JTextField(text);
+		newTextField.addFocusListener(focus);
+		newTextField.setAlignmentX(alignmentX);
+		newTextField.setAlignmentY(alignmentY);
+		return newTextField;
+	}
 	
 	/* generateLabel - creates and returns a JLabel that complies with the parameters
 	 *         image - the image displayed in the label
