@@ -299,10 +299,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	
 	private void drawRec(Graphics g, Point initPoint)
 	{
-		//this.remove(cropBox);
 		cropBox = new DrawRect(this.getGraphics(), initPoint);
 		cropBox.paint(g, initPoint);
-		//this.revalidate();
 		this.cropBox.repaint();
 	}
 	
@@ -408,7 +406,6 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 
 		for (int i = 0; i < fileNames.length; i++)//never gets in loop
 		{
-			System.out.println("files in directory: "+ fileNames[i]);
 			String currentFileName = fileNames[i].substring(0, fileNames[i].indexOf('.')).toLowerCase();
 			String currentExtension = fileNames[i].substring(fileNames[i].indexOf('.'), fileNames[i].length()).toLowerCase();
 			if ((currentExtension.equalsIgnoreCase(".png") || currentExtension.equalsIgnoreCase(".jpg") || currentExtension.equalsIgnoreCase(".jpeg")))
@@ -433,10 +430,6 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 			    System.out.println(thumbnailList.size());
 			}
 		}
-		//System.out.println("files in directory: "+ fileNames);
-		System.out.println("length of list: "+ thumbnailList.size());
-		System.out.println("case Number: " + caseNum);
-		System.out.println("thumb list: " + thumbnailList);
 	    return thumbnailList;
 	}
 	

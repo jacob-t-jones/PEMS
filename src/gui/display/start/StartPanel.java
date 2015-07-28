@@ -5,13 +5,19 @@
 package gui.display.start;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.swing.*;
+
 import org.imgscalr.*;
+
 import exceptions.*;
 import gui.*;
 import gui.components.img.*;
 import gui.display.*;
 import gui.display.newcase.*;
+import gui.display.print.PrintSetUpPanel;
 
 public class StartPanel extends JPanel implements ActionListener
 {
@@ -63,12 +69,12 @@ public class StartPanel extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.settingsButton)
 		{
-			/*//temp use this to create a pdf
+			//temp use this to create a pdf
 			try {
 				this.manager.getMainWindow().pushPanel(new PrintSetUpPanel(this.manager, new ArrayList<Thumbnail>() ), "PEMS - PDF generator");
 			} catch (IOException e1) {
 				e1.printStackTrace();
-			}*/
+			}
 		}
 	}
 	

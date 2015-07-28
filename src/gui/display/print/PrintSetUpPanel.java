@@ -38,9 +38,9 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
+import org.apache.pdfbox.pdfviewer.*;
 import org.imgscalr.Scalr;
 
-import pdftools.contentPosition;
 import tools.ImageEditor;
 
 public class PrintSetUpPanel extends JPanel implements ActionListener, FocusListener
@@ -62,7 +62,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	private PDXObjectImage pdfBadge;
 	private PDDocument document;
 	private Point pos; 
-	//private ThumbnailImg logoThumb;
+	private Img[][] content;
 
 	public PrintSetUpPanel(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException
 	{
@@ -82,29 +82,16 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	 */
 	private void importBadgeImages()
 	{
-/*
-		try 
-		{
-			this.logoImage = ImageEditor.resizeImage((ImageIO.read(new File("resources/templogo.png"))), 55, 55);
-			//this.logoImage = (ImageIO.read(new File("resources/templogo.png")));
-
-		} 
-		catch (IOException e) {
-		try {
-			this.logoImage = new Img("resources/logo.png");
-		} catch (InvalidImgException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
 		
 	    try 
 	    {      
-	    	this.logoImage.setImage(ImageIO.read(new File("resources/logo.png")));
+	    	this.logoImage = ComponentGenerator.generateImg("resources/logo.png", CENTER_ALIGNMENT); 
+	    			//setImage(ImageIO.read(new File("resources/logo.png")));
 	    	
-	    	this.logoImage.resizeImage(Scalr.Method.ULTRA_QUALITY, 30);
+	    	this.logoImage.resizeImage(Scalr.Method.ULTRA_QUALITY, 50);
 	    	this.pdfBadge = new PDJpeg(this.document, logoImage.getImage());
 	    } 
-	    catch (IOException e)
+	    catch (IOException | InvalidImgException e)
 	    {
 			System.out.println("Error - Unable to import badge image");
 			e.printStackTrace();
@@ -156,7 +143,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 		
 		contentStream.setFont(font, 8);
 		contentStream.moveTextPositionByAmount(0, -12);
-		contentStream.drawString("19 Neal Ct, Plainville, CT, (860) 747-1616");
+		contentStream.drawString("19 Neal Ct");
 		contentStream.moveTextPositionByAmount(0, -12);
 		contentStream.drawString("Plainville, CT");
 		//this.pos = this.nextLine(pos, contentStream);
@@ -166,9 +153,16 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 		
 		//place the thumbnails on the screen
 		this.displayImages(contentStream);
-
+		
+		//decide which layout to use based on what is selected
+		content = this.getFormat();
+		
+		
+		drawTable(page, contentStream, 700, 100, content);
+		
 		// Make sure that the content stream is closed:
 		contentStream.close();
+		
 
 		// Save the results and ensure that the document is properly closed:
 		try {
@@ -181,6 +175,112 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 		
 		return null;
 		
+	}
+	
+
+	/* getFormat - chooses how many images the user would like to print on one page
+	 */
+	private Img[][] getFormat() {
+		if(selectedThumbnails.size() == 1){
+				Img[][] content = {{null}} ;
+		}
+		else if(selectedThumbnails.size() == 2){
+			try {
+				Img[][] content = {{new Img(null)},  
+								   {new Img(null)}};
+			} catch (InvalidImgException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else if(selectedThumbnails.size() == 3){
+			try {
+				Img[][] content = {{new Img(null)},  
+						   	       {new Img(null)},
+							       {new Img(null)}};
+			} catch (InvalidImgException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else if(selectedThumbnails.size() == 4){
+			try {
+				Img[][] content = {{new Img(null), new Img(null)},  
+								   {new Img(null), new Img(null)}};
+			} catch (InvalidImgException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else if(selectedThumbnails.size() == 8){
+			try {
+				Img[][] content = {{new Img(null), new Img(null)},  
+						           {new Img(null), new Img(null)},
+								   {new Img(null), new Img(null)},  
+				                   {new Img(null), new Img(null)}};
+			} catch (InvalidImgException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return content;
+	}
+
+	/**
+	 * @param page
+	 * @param contentStream
+	 * @param y the y-coordinate of the first row
+	 * @param margin the padding on left and right of table
+	 * @param content a 2d array containing the table data
+	 * @throws IOException
+	 */
+	public  void drawTable(PDPage page, PDPageContentStream contentStream, float y, float margin, Img[][] content) throws IOException {
+	    int rows = content.length;
+	    int cols = content[0].length;
+	    float rowHeight = 20f;
+	    float tableWidth = page.findMediaBox().getWidth() - margin - margin;
+	    float tableHeight = rowHeight * rows;
+	    float colWidth = tableWidth/(float)cols;
+	    float cellMargin=5f;
+
+	    //draw the rows
+	    float nexty = y ;
+	    for (int i = 0; i <= rows; i++) {
+	        contentStream.drawLine(margin, nexty, margin+tableWidth, nexty);
+	        nexty-= rowHeight;
+	    }
+
+	    //draw the columns
+	    float nextx = margin;
+	    for (int i = 0; i <= cols; i++) {
+	        contentStream.drawLine(nextx, y, nextx, y-tableHeight);
+	        nextx += colWidth;
+	    }
+
+	    //now add the text        
+	    //contentStream.setFont( PDType1Font.HELVETICA_BOLD , 12 );        
+
+	    float textx = margin+cellMargin;
+	    float texty = y-15;        
+	    for(int i = 0; i < content.length; i++){
+	        for(int j = 0 ; j < content[i].length; j++){
+	            BufferedImage pic = content[i][j].getImage();
+	            contentStream.beginText();
+	            contentStream.moveTextPositionByAmount(textx,texty);
+	            
+	            PDXObjectImage tempPDFImage = null;
+	            tempPDFImage = new PDJpeg(this.document, pic);
+	    		//add the image to the pdf file
+	    		contentStream.drawImage(tempPDFImage, textx, texty);
+	            
+	            //contentStream.drawImage(pic);
+	            //System.out.println(i + "  coord  x:" + textx + " y:" + texty + "   content: "+ pic);
+	            contentStream.endText();
+	            textx += colWidth;
+	        }
+	        texty-=rowHeight;
+	        textx = margin+cellMargin;
+	    }
 	}
 	
 	private Point nextLine(Point p, PDPageContentStream contentStream)
