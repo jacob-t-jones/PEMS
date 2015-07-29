@@ -56,6 +56,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 	private PDDocument document;
 	private Point pos;
 	private Img[][] content;
+	private int format;
+	private boolean printable;
 
 	public PrintSetUpPanel(FrameManager manager,
 			ArrayList<Thumbnail> selectedThumbnails) throws IOException {
@@ -63,6 +65,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		this.selectedThumbnails = selectedThumbnails;
 		this.populateButtonsContainer();
 		this.populateMainContainer();
+		
+		this.checkConditions();
 
 		this.generatePDF();
 		this.mainContainer = Box.createVerticalBox();
@@ -71,8 +75,21 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		this.add(this.mainContainer);
 	}
 
-	/*
-	 * importImages - reads all necessary images into memory
+	/* Check to see if all conditions are met before generating a PDF, otherwise it will exit the program
+	 */
+	private void checkConditions() {
+		if(selectedThumbnails.size() == 0)
+		{
+			System.out.println("No images have been selected!");
+			Runtime.getRuntime().exit(1);
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	/* importImages - reads all necessary images into memory
 	 */
 	private void importBadgeImages() {
 
@@ -96,8 +113,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 
 	}
 
-	/*
-	 * generatePDF - generates a PDF document for police evidence
+	/* generatePDF - generates a PDF document for police evidence
 	 */
 	private PDDocument generatePDF() throws IOException {
 		System.out.println("Creating PDF");
@@ -112,10 +128,15 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		// Create a new font object selecting one of the PDF base fonts
 		PDFont font = PDType1Font.HELVETICA_BOLD;
 
+<<<<<<< HEAD
+		// Start a new content stream which will "hold" the to be created content
+		PDPageContentStream contentStream = new PDPageContentStream(document, page);
+=======
 		// Start a new content stream which will "hold" the to be created
 		// content
 		PDPageContentStream contentStream = new PDPageContentStream(document,
 				page);
+>>>>>>> origin/master
 
 		// Initialize margins
 		this.initializePDFTools(page);
@@ -136,7 +157,6 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		contentStream.drawString("19 Neal Ct");
 		contentStream.moveTextPositionByAmount(0, -12);
 		contentStream.drawString("Plainville, CT");
-		// this.pos = this.nextLine(pos, contentStream);
 		contentStream.moveTextPositionByAmount(0, -12);
 		contentStream.drawString("(860) 747-1616");
 		contentStream.endText();
@@ -145,9 +165,10 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		// this.displayImages(contentStream);
 
 		// decide which layout to use based on what is selected
+		format = 0;
 		this.content = this.getFormat();
 
-		drawTable(page, contentStream, 420, 50, this.content);
+		drawTable(page, contentStream, 420, 50, this.content, format);
 
 		// Make sure that the content stream is closed:
 		contentStream.close();
@@ -171,20 +192,44 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 	 */
 	private Img[][] getFormat() {
 		Img[][] newContent;
-		if (selectedThumbnails.size() == 1) {
+		if (selectedThumbnails.size() == 1)
+		{
 			newContent = new Img[][] { { null } };
-		} else if (selectedThumbnails.size() == 2) {
+			this.format = 1;
+		} 
+		else if (selectedThumbnails.size() == 2)
+		{
 			newContent = new Img[][] { { null }, { null } };
-		} else if (selectedThumbnails.size() == 3) {
+			this.format = 2;
+		}
+		else if (selectedThumbnails.size() == 3)
+		{
 			newContent = new Img[][] { { null }, { null }, { null } };
-		} else if (selectedThumbnails.size() == 4) {
+			this.format = 3;
+		} 
+		else if (selectedThumbnails.size() == 4) 
+		{
 			newContent = new Img[][] { { null, null }, { null, null } };
+<<<<<<< HEAD
+			this.format = 4;
+		} 
+		else if (selectedThumbnails.size() == 8)
+		{
+			newContent = new Img[][] { { null, null }, { null, null }, { null, null }, { null, null } };
+			this.format = 8;
+		}
+		else
+		{
+=======
 
 		} else if (selectedThumbnails.size() == 8) {
 			newContent = new Img[][] { { null, null }, { null, null },
 					{ null, null }, { null, null } };
 		} else {
+>>>>>>> origin/master
 			newContent = new Img[][] { { null } };
+			this.format = 0;
+			System.out.println("You have no selected images!");
 		}
 
 		return newContent;
@@ -201,11 +246,15 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 	 *            a 2d array containing the table data
 	 * @throws IOException
 	 */
+<<<<<<< HEAD
+	public void drawTable(PDPage page, PDPageContentStream contentStream, float y, float margin, Img[][] content, int formatLayout)
+			throws IOException {
+=======
 	public void drawTable(PDPage page, PDPageContentStream contentStream,
 			float y, float margin, Img[][] content) throws IOException {
+>>>>>>> origin/master
 		int rows = content.length;
 		int cols = content[0].length;
-		float currentY = y;
 		float rowHeight = 20f;
 		float tableWidth = page.findMediaBox().getWidth() - margin - margin;
 		float tableHeight = rowHeight * rows;
@@ -235,11 +284,17 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		int imgCounter = 0;
 		for (int i = 0; i < content.length; i++) {
 			for (int j = 0; j < content[i].length; j++) {
+<<<<<<< HEAD
+				//BufferedImage pic = content[i][j].getImage();//just empty...
+				//BufferedImage pic = ImageIO.read(new File(selectedThumbnails.get(imgCounter).getFilePath()));
+				
+=======
 
 				// BufferedImage pic = content[i][j].getImage();//just empty...
 				BufferedImage pic = ImageIO.read(new File(selectedThumbnails
 						.get(imgCounter).getFilePath()));
 
+>>>>>>> origin/master
 				Img imgpic = null;
 				try {
 					imgpic = new Img(selectedThumbnails.get(imgCounter)
@@ -248,8 +303,34 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+<<<<<<< HEAD
+				
+				//depending on what layout we have chosen will determine what scale size we use
+				if(formatLayout == 0)
+				{
+					contentStream.beginText();
+					contentStream.moveTextPositionByAmount(60, texty-12);
+					contentStream.drawString("You have no images selected!");
+					contentStream.endText();
+				}
+				else if(formatLayout == 1 || formatLayout == 2)
+				{
+					imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 400);
+				}
+				else if(formatLayout == 4)
+				{
+					imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 250);
+				}
+				else if(formatLayout == 8)
+				{
+					imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 150);
+				}
+				//imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 400);
+				
+=======
 				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 400);
 
+>>>>>>> origin/master
 				texty = y;
 
 				PDXObjectImage tempPDFImage = null;

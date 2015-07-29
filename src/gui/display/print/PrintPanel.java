@@ -5,6 +5,7 @@ package gui.display.print;
 
 import gui.*;
 import gui.display.FrameManager;
+import gui.display.warning.WarningPanel;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -259,8 +260,27 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 			if (this.displayedImagePlace >= 15) {
 				this.refreshDisplayedThumbnails(this.displayedImagePlace - 15);
 			}
-		} else if (e.getSource() == this.finishButton) {
+		} else if (e.getSource() == this.finishButton) 
+		{
 			// this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+<<<<<<< HEAD
+			// Add a pop-up box if the number of images selected is 0
+			if(this.selectedThumbnails.size() == 0)
+			{
+				WarningPanel wp = new WarningPanel( this.manager,  this);
+				this.manager.openDialogue("Warning", wp, 40, 40);
+				//this.manager.getMainWindow().pushPanel  WarningPanel(this.manager, this);
+			}
+			else 
+			{
+				try {
+					this.manager.getMainWindow().pushPanel(new PrintSetUpPanel(this.manager, selectedThumbnails),
+							"PEMS - PDF generator");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+=======
 			// OLD METHOD TO DO ONE PIC PER PAGE
 			// this.printImages();
 			// this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS
@@ -272,13 +292,21 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+>>>>>>> origin/master
 			}
-		} else if (e.getSource() == this.loadNextSelectedButton) {
-			if (this.selectedImagePlace + 3 < this.selectedThumbnails.size()) {
+			
+		} 
+		else if (e.getSource() == this.loadNextSelectedButton) 
+		{
+			if (this.selectedImagePlace + 3 < this.selectedThumbnails.size())
+			{
 				this.refreshSelectedThumbnails(this.selectedImagePlace + 3);
 			}
-		} else if (e.getSource() == this.loadPrevSelectedButton) {
-			if (this.selectedImagePlace >= 3) {
+		} 
+		else if (e.getSource() == this.loadPrevSelectedButton) 
+		{
+			if (this.selectedImagePlace >= 3) 
+			{
 				this.refreshSelectedThumbnails(this.selectedImagePlace - 3);
 			}
 		}
