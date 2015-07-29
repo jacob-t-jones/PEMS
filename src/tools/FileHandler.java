@@ -60,6 +60,32 @@ public class FileHandler
 		return peripheralThumbnails;
 	}
 	
+	public boolean copyFiles(boolean delete, String caseNum, ArrayList<ThumbnailImg> selectedThumbnails)
+	{
+    	for (int i = 0; i < selectedThumbnails.size(); i++)
+    	{
+			Path currentPath = Paths.get(selectedThumbnails.get(i).getFilePath());
+			Path casesPath = Paths.get("cases/" + caseNum + "/" + caseNum + " (" + i + ")" + selectedThumbnails.get(i).getFileExt());
+			Path backupsPath = Paths.get("backups/" + caseNum + "/" + caseNum + " (" + i + "-" + 0 + ")" + selectedThumbnails.get(i).getFileExt());
+			try 
+			{
+				Files.copy(currentPath, casesPath, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(currentPath, backupsPath, StandardCopyOption.REPLACE_EXISTING);
+				if (delete)
+				{
+					Files.delete(currentPath);
+				}
+			} 
+			catch (IOException e) 
+			{
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				return false;
+			}
+    	}
+    	return true;
+	}
+	
 	/* createCase - attempts to create directories in both "cases" and "backups" for the specified case number, returns a boolean value indicating success
 	 *    caseNum - the case number to try
 	 */
