@@ -3,7 +3,6 @@
 // FileHandler.java
 
 package tools;
-
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
@@ -12,159 +11,181 @@ import exceptions.*;
 import gui.*;
 import gui.components.img.*;
 
-public class FileHandler {
+public class FileHandler 
+{
 
 	private OSType os;
 	private ArrayList<File> peripheralFiles;
-
-	public FileHandler() {
+	
+	public FileHandler()
+	{
 		this.os = this.retrieveOS();
 		this.peripheralFiles = new ArrayList<File>();
-		//this.retrievePeripheralFiles();
+		this.retrievePeripheralFiles();
 	}
-
-	public enum OSType {
+	
+	public enum OSType
+	{
 		WINDOWS, OSX, OTHER
 	}
-
-	/*
-	 * getOS - returns "os", an OSType enum value representing the operating
-	 * system that the JVM is currently being run on
+	
+	/* getOS - returns "os", an OSType enum value representing the operating system that the JVM is currently being run on
 	 */
-	public OSType getOS() {
+	public OSType getOS()
+	{
 		return this.os;
 	}
-
-	/*
-	 * getPeripheralThumbnails - creates and returns an ArrayList of
-	 * ThumbnailImg objects representing all of the image files currently on
-	 * external media devices size - the size of the new thumbnails mouse - the
-	 * MouseListener for the new thumbnails
+	
+	/* getPeripheralThumbnails - creates and returns an ArrayList of ThumbnailImg objects representing all of the image files currently on external media devices
+	 * 				      size - the size of the new thumbnails
+	 *                   mouse - the MouseListener for the new thumbnails
 	 */
-	public ArrayList<ThumbnailImg> getPeripheralThumbnails(int size, MouseListener mouse) {
+	public ArrayList<ThumbnailImg> getPeripheralThumbnails(int size, MouseListener mouse)
+	{
 		ArrayList<ThumbnailImg> peripheralThumbnails = new ArrayList<ThumbnailImg>();
-		for (int i = 0; i < this.peripheralFiles.size(); i++) {
-			try {
-				ThumbnailImg newThumbnail = ComponentGenerator
-						.generateThumbnailImg(this.peripheralFiles.get(i).getPath(), size);
+		for (int i = 0; i < this.peripheralFiles.size(); i++)
+		{
+			try 
+			{
+				ThumbnailImg newThumbnail = ComponentGenerator.generateThumbnailImg(this.peripheralFiles.get(i).getPath(), size);
 				newThumbnail.addMouseListener(mouse);
 				peripheralThumbnails.add(newThumbnail);
-			} catch (InvalidImgException e) {
+			} 
+			catch (InvalidImgException e) 
+			{
 				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 		}
 		return peripheralThumbnails;
 	}
-
-	/*
-	 * createCase - attempts to create directories in both "cases" and "backups"
-	 * for the specified case number, returns a boolean value indicating success
-	 * caseNum - the case number to try
+	
+	/* createCase - attempts to create directories in both "cases" and "backups" for the specified case number, returns a boolean value indicating success
+	 *    caseNum - the case number to try
 	 */
-	public boolean createCase(String caseNum) {
-		try {
+	public boolean createCase(String caseNum) 
+	{
+		try 
+		{
 			Files.createDirectory(Paths.get("cases/" + caseNum + "/"));
 			Files.createDirectory(Paths.get("backups/" + caseNum + "/"));
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
-
-	/*
-	 * caseExists - returns a boolean value indicating whether or not a given
-	 * case has already been created caseNum - the case number to check
+	
+	/* caseExists - returns a boolean value indicating whether or not a given case has already been created
+	 *    caseNum - the case number to check
 	 */
-	public boolean caseExists(String caseNum) {
-		if (Files.isDirectory(Paths.get("cases/" + caseNum + "/"))
-				|| Files.isDirectory(Paths.get("backups/" + caseNum + "/"))) {
+	public boolean caseExists(String caseNum)
+	{
+		if (Files.isDirectory(Paths.get("cases/" + caseNum + "/")) || Files.isDirectory(Paths.get("backups/" + caseNum + "/")))
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
-
-	/*
-	 * validCaseNum - returns a boolean value indicating whether or not a given
-	 * case number is valid (only letters and numbers, at least one character,
-	 * no more than ten characters) caseNum - the case number to check
+	
+	/* validCaseNum - returns a boolean value indicating whether or not a given case number is valid (only letters and numbers, at least one character, no more than ten characters)
+	 *      caseNum - the case number to check
 	 */
-	public boolean validCaseNum(String caseNum) {
-		if (caseNum.length() <= 0 || caseNum.length() > 10) {
+	public boolean validCaseNum(String caseNum)
+	{
+		if (caseNum.length() <= 0 || caseNum.length() > 10)
+		{
 			return false;
 		}
-		for (int i = 0; i < caseNum.length(); i++) {
-			int charVal = caseNum.charAt(i);
-			if (charVal < 48 || charVal > 122 || (charVal > 57 && charVal < 65) || (charVal > 90 && charVal < 97)) {
+		for (int i = 0; i < caseNum.length(); i++)
+		{
+			int charVal = (int)caseNum.charAt(i);
+			if (charVal < 48 || charVal > 122 || (charVal > 57 && charVal < 65) || (charVal > 90 && charVal < 97))
+			{
 				return false;
 			}
 		}
 		return true;
 	}
-
-	/*
-	 * retrieveOS - determines what operating system PEMS is currently being run
-	 * on, and returns a correponding OSType enum value
+	
+	/* retrieveOS - determines what operating system PEMS is currently being run on, and returns a correponding OSType enum value
 	 */
-	private OSType retrieveOS() {
+	private OSType retrieveOS()
+	{
 		String osPropertyValue = System.getProperty("os.name").toLowerCase();
-		if (osPropertyValue.indexOf("win") >= 0) {
+		if (osPropertyValue.indexOf("win") >= 0)
+		{
 			return OSType.WINDOWS;
-		} else if (osPropertyValue.indexOf("mac") >= 0) {
+		}
+		else if (osPropertyValue.indexOf("mac") >= 0)
+		{
 			return OSType.OSX;
-		} else {
+		}
+		else
+		{
 			return OSType.OTHER;
 		}
 	}
-
-	/*
-	 * retrievePeripheralFiles - OS dependent method that attempts to load all
-	 * image files located on currently attached peripheral devices into memory
+	
+	/* retrievePeripheralFiles - OS dependent method that attempts to load all image files located on currently attached peripheral devices into memory
 	 */
-	private void retrievePeripheralFiles() {
-		if (this.os == OSType.WINDOWS) {
-			for (int i = 0; i < File.listRoots().length; i++) {
+	private void retrievePeripheralFiles()
+	{
+		if (this.os == OSType.WINDOWS)
+		{
+			for (int i = 0; i < File.listRoots().length; i++)
+			{
 				File currentFile = File.listRoots()[i];
-				if (currentFile.isDirectory() && !currentFile.isHidden()
-						&& currentFile.getTotalSpace() < 128000000000L) {
+				if (currentFile.isDirectory() && !currentFile.isHidden() && currentFile.getTotalSpace() < 128000000000L)
+				{
 					this.retrievePeripheralFiles(currentFile);
 				}
 			}
-		} else if (this.os == OSType.OSX) {
+		}
+		else if (this.os == OSType.OSX)
+		{
 			File drives = new File("/Volumes/");
-			for (int i = 0; i < drives.listFiles().length; i++) {
+			for (int i = 0; i < drives.listFiles().length; i++)
+			{
 				File currentFile = drives.listFiles()[i];
-				if (currentFile.isDirectory() && !currentFile.isHidden()
-						&& currentFile.getTotalSpace() < 128000000000L) {
+				if (currentFile.isDirectory() && !currentFile.isHidden() && currentFile.getTotalSpace() < 128000000000L)
+				{
 					this.retrievePeripheralFiles(currentFile);
 				}
 			}
 		}
 	}
-
-	/*
-	 * retrievePeripheralFiles - recursive implementation of the method, used to
-	 * trace through directories on the peripheral devices and find valid image
-	 * files directory - the directory currently being looked at
+	
+	/* retrievePeripheralFiles - recursive implementation of the method, used to trace through directories on the peripheral devices and find valid image files
+	 *               directory - the directory currently being looked at
 	 */
-	private void retrievePeripheralFiles(File directory) {
-		for (int i = 0; i < directory.listFiles().length; i++) {
+	private void retrievePeripheralFiles(File directory)
+	{
+		for (int i = 0; i < directory.listFiles().length; i++)
+		{
 			File currentFile = directory.listFiles()[i];
-			if (!currentFile.isHidden()) {
-				if (currentFile.isDirectory()) {
+			if (!currentFile.isHidden())
+			{
+				if (currentFile.isDirectory())
+				{
 					this.retrievePeripheralFiles(currentFile);
-				} else if (currentFile.getName().contains(".")) {
-					String currentExt = currentFile.getName().substring(currentFile.getName().indexOf('.'))
-							.toLowerCase();
-					if (currentExt.equals(".png") || currentExt.equals(".jpg") || currentExt.equals(".jpeg")) {
+				}
+				else if (currentFile.getName().contains("."))
+				{
+					String currentExt = currentFile.getName().substring(currentFile.getName().indexOf('.')).toLowerCase();
+					if (currentExt.equals(".png") || currentExt.equals(".jpg") || currentExt.equals(".jpeg"))
+					{
 						this.peripheralFiles.add(currentFile);
 					}
 				}
 			}
 		}
 	}
-
+	
 }

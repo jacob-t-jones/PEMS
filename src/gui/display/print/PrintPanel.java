@@ -59,20 +59,25 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 		this.directoryName = "/Users/andrewrottier/Documents/Pictures/CrimePhotos/";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
-		this.displayedThumbnails = this.getThumbnails(); ////
+		this.displayedThumbnails = this.getThumbnails(); // //
 		this.selectedThumbnails = new ArrayList<Thumbnail>();
 		this.mainContainer = Box.createVerticalBox();
 		this.innerContainer = Box.createHorizontalBox();
 		this.leftContainer = Box.createVerticalBox();
 		this.rightContainer = Box.createVerticalBox();
 		this.displayedContainer = Box.createVerticalBox();
-		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.displayedContainer.setBorder(BorderFactory
+				.createLineBorder(Color.black));
 		this.selectedContainer = Box.createVerticalBox();
-		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.selectedContainer.setBorder(BorderFactory
+				.createLineBorder(Color.black));
 		this.buttonsContainer = Box.createHorizontalBox();
-		this.instructionsLabel = ComponentGenerator.generateLabel(
-				"Select the images you would like to print. Once selected, an image can be removed from the case by simply clicking on it again in the selected box.",
-				ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.instructionsLabel = ComponentGenerator
+				.generateLabel(
+						"Select the images you would like to print. Once selected, an image can be removed from the case by simply clicking on it again in the selected box.",
+						ComponentGenerator.STANDARD_TEXT_FONT_ITALIC,
+						ComponentGenerator.STANDARD_TEXT_COLOR,
+						CENTER_ALIGNMENT);
 		this.refreshDisplayedThumbnails(0);
 		this.refreshSelectedThumbnails(0);
 		this.populateButtonsContainer();
@@ -90,7 +95,8 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 		this.add(this.mainContainer);
 		this.manager.getMainWindow().setResizable(true);
 		this.manager.getMainWindow().setMaximized();
-		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setCursor(
+				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();
 	}
@@ -107,19 +113,22 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 			String currentFileName = fileNames[i];
 			if (this.validateExtension(currentFileName)) {
 				BufferedImage currentImage = null;
-				String currentLocation = this.directoryName + "/" + fileNames[i];
+				String currentLocation = this.directoryName + "/"
+						+ fileNames[i];
 				// Check this line of code
-				String currentThumbExt = fileNames[i].substring(fileNames[i].length() - 3, fileNames[i].length());
+				String currentThumbExt = fileNames[i].substring(
+						fileNames[i].length() - 3, fileNames[i].length());
 				try {
 					currentImage = ImageIO.read(new File(currentLocation));
 				} catch (IOException e) {
-					System.out.println("Error - Unable to read image into memory");
+					System.out
+							.println("Error - Unable to read image into memory");
 					e.printStackTrace();
 					return null;
 				}
 				Thumbnail currentThumb = ComponentGenerator.generateThumbnail(
-						ImageEditor.resizeThumbnail(currentImage, 120), currentLocation, currentFileName,
-						currentThumbExt);
+						ImageEditor.resizeThumbnail(currentImage, 120),
+						currentLocation, currentFileName, currentThumbExt);
 				currentThumb.addMouseListener(this);
 				thumbnailList.add(currentThumb);
 			}
@@ -132,8 +141,10 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 	 * selected by the user
 	 */
 	private void refreshDisplayedThumbnails(int displayedImagePlace) {
-		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images in case file",
-				ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.displayedTitleLabel = ComponentGenerator.generateLabel(
+				"Images in case file",
+				ComponentGenerator.STANDARD_TEXT_FONT_BOLD,
+				ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.displayedImagePlace = displayedImagePlace;
 		this.displayedContainer.removeAll();
 		this.displayedContainer.add(this.displayedTitleLabel);
@@ -146,7 +157,8 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 				if (this.displayedImagePlace < this.displayedThumbnails.size()) {
 					col.add(Box.createHorizontalGlue());
 					col.add(Box.createVerticalStrut(150));
-					col.add(this.displayedThumbnails.get(this.displayedImagePlace));
+					col.add(this.displayedThumbnails
+							.get(this.displayedImagePlace));
 					col.add(Box.createVerticalStrut(150));
 					col.add(Box.createHorizontalGlue());
 				} else {
@@ -172,9 +184,12 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 	 */
 	private boolean validateExtension(String fileName) {
 		if (fileName.length() > 4) {
-			String threeLetterExt = fileName.substring(fileName.length() - 4, fileName.length());
-			String fourLetterExt = fileName.substring(fileName.length() - 5, fileName.length());
-			if (threeLetterExt.equalsIgnoreCase(".png") || threeLetterExt.equalsIgnoreCase(".jpg")
+			String threeLetterExt = fileName.substring(fileName.length() - 4,
+					fileName.length());
+			String fourLetterExt = fileName.substring(fileName.length() - 5,
+					fileName.length());
+			if (threeLetterExt.equalsIgnoreCase(".png")
+					|| threeLetterExt.equalsIgnoreCase(".jpg")
 					|| fourLetterExt.equalsIgnoreCase(".jpeg")) {
 				return true;
 			}
@@ -187,10 +202,13 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 	 * "selectedContainer" by the user
 	 */
 	private void refreshSelectedThumbnails(int selectedImagePlace) {
-		this.selectedTitleLabel = ComponentGenerator.generateLabel("Selected Images",
-				ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
-		this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
-		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Prev", this, CENTER_ALIGNMENT);
+		this.selectedTitleLabel = ComponentGenerator.generateLabel(
+				"Selected Images", ComponentGenerator.STANDARD_TEXT_FONT_BOLD,
+				ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.loadNextSelectedButton = ComponentGenerator.generateButton("Next",
+				this, CENTER_ALIGNMENT);
+		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Prev",
+				this, CENTER_ALIGNMENT);
 		this.selectedContainer.removeAll();
 		this.selectedContainer.add(this.selectedTitleLabel);
 		this.selectedImagePlace = selectedImagePlace;
@@ -248,7 +266,8 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 			// this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS
 			// - Finish");
 			try {
-				this.manager.getMainWindow().pushPanel(new PrintSetUpPanel(this.manager, selectedThumbnails),
+				this.manager.getMainWindow().pushPanel(
+						new PrintSetUpPanel(this.manager, selectedThumbnails),
 						"PEMS - PDF generator");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -270,9 +289,12 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 	 * with the necessary components
 	 */
 	private void populateButtonsContainer() {
-		this.loadNextButton = ComponentGenerator.generateButton("Load Next Images   >", this);
-		this.loadPrevButton = ComponentGenerator.generateButton("<   Load Previous Images", this);
-		this.finishButton = ComponentGenerator.generateButton("Print Selected", this);
+		this.loadNextButton = ComponentGenerator.generateButton(
+				"Load Next Images   >", this);
+		this.loadPrevButton = ComponentGenerator.generateButton(
+				"<   Load Previous Images", this);
+		this.finishButton = ComponentGenerator.generateButton("Print Selected",
+				this);
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.buttonsContainer.setAlignmentX(CENTER_ALIGNMENT);
 		this.buttonsContainer.add(this.loadPrevButton);
@@ -337,8 +359,9 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 			try {
 				desktop.print(new File(selectedThumbnails.get(i).getFilePath()));
 			} catch (IOException e) {
-				System.out.println(
-						"error - file, " + selectedThumbnails.get(i).getFilePath() + ", could not be printed.");
+				System.out.println("error - file, "
+						+ selectedThumbnails.get(i).getFilePath()
+						+ ", could not be printed.");
 				e.printStackTrace();
 			}
 		}

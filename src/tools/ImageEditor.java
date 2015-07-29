@@ -20,7 +20,8 @@ public class ImageEditor {
 	 * RGB value for the color of the padding green - green RGB value for the
 	 * color of the padding blue - blue RGB value for the color of the padding
 	 */
-	public static BufferedImage addPadding(BufferedImage image, int size, int red, int green, int blue) {
+	public static BufferedImage addPadding(BufferedImage image, int size,
+			int red, int green, int blue) {
 		return Scalr.pad(image, size, new Color(red, green, blue));
 	}
 
@@ -46,7 +47,8 @@ public class ImageEditor {
 	 * - the y coordinate to begin the crop at width - the width of the crop
 	 * height - the height of the crop
 	 */
-	public static BufferedImage cropImage(BufferedImage image, int x, int y, int width, int height) {
+	public static BufferedImage cropImage(BufferedImage image, int x, int y,
+			int width, int height) {
 		return Scalr.crop(image, x, y, width, height, Scalr.OP_ANTIALIAS);
 	}
 
@@ -64,7 +66,8 @@ public class ImageEditor {
 	 * size of the image
 	 */
 	public static BufferedImage resizeImage(BufferedImage image, int size) {
-		return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, size, Scalr.OP_ANTIALIAS);
+		return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, size,
+				Scalr.OP_ANTIALIAS);
 	}
 
 	/*
@@ -72,8 +75,10 @@ public class ImageEditor {
 	 * parameters image - the image in question width - the new width of the
 	 * image height - the new height of the image
 	 */
-	public static BufferedImage resizeImage(BufferedImage image, int width, int height) {
-		return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, width, height, Scalr.OP_ANTIALIAS);
+	public static BufferedImage resizeImage(BufferedImage image, int width,
+			int height) {
+		return Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, width, height,
+				Scalr.OP_ANTIALIAS);
 	}
 
 	/*
@@ -82,7 +87,8 @@ public class ImageEditor {
 	 * size - the new size of the image
 	 */
 	public static BufferedImage resizeThumbnail(BufferedImage image, int size) {
-		return Scalr.resize(image, Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
+		return Scalr
+				.resize(image, Scalr.Method.SPEED, size, Scalr.OP_ANTIALIAS);
 	}
 
 	/*
