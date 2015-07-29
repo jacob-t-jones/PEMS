@@ -35,7 +35,7 @@ public class Img extends JLabel {
 		this.refreshIcon();
 	}
 
-	public String getDate() {
+	public String getDate() { 
 		// find path / property of the date in the image in the camera
 		return "12/12/12";
 	}
