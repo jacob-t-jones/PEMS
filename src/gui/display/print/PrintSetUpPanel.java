@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -36,7 +39,7 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.imgscalr.Scalr;
 
-public class PrintSetUpPanel extends JPanel implements ActionListener,
+public class PrintSetUpPanel extends JPanel implements ActionListener, MouseListener,
 		FocusListener {
 	private FrameManager manager;
 	private ArrayList<Thumbnail> selectedThumbnails;
@@ -44,7 +47,12 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 	private Box container;
 	private Box widthContainer;
 	private Box heightContainer;
-	private JLabel widthLabel;
+	private JButton printButton;
+	private JButton layout1;
+	private JButton layout2;
+	private JButton layout4;
+	private JButton layout8;
+	private JLabel instructionsLabel;
 	private JLabel heightLabel;
 	private int originalWidth;
 	private int originalHeight;
@@ -58,21 +66,142 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 	private Img[][] content;
 	private int format;
 	private boolean printable;
+	private Box displayContainer;
+	private Img layoutImg;
 
-	public PrintSetUpPanel(FrameManager manager,
-			ArrayList<Thumbnail> selectedThumbnails) throws IOException {
+	public PrintSetUpPanel(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException {
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;
+		this.container = Box.createVerticalBox();
+		this.buttonsContainer = Box.createVerticalBox();
+		this.displayContainer = Box.createHorizontalBox();
+		Img firstImg = this.getInitLayoutImg();
 		this.populateButtonsContainer();
-		this.populateMainContainer();
+		//this.populateDisplayContainer(getInitLayoutImg());
+		this.populateContainer(firstImg);
+		
 		
 		this.checkConditions();
+		//this.generatePDF(); //move to print button
 
-		this.generatePDF();
-		this.mainContainer = Box.createVerticalBox();
-		this.buttonsContainer = Box.createHorizontalBox();
+		this.add(this.container);
+	}
+	
+	/* getInitLayoutImg - grabs the first layout image for 1 image on a page
+	 */
+	private Img getInitLayoutImg()
+	{
+		layoutImg = null;
+		try 
+		{
+			this.layoutImg = ComponentGenerator.generateImg("resources/layout1.png", CENTER_ALIGNMENT);
+		} 
+		catch(Exception ie)
+		{
+			System.out.println("error - could not find layout image");
+		}
+		return layoutImg;
+	}
+	
+	private void populateDisplayContainer(Img layoutImage) {
+		this.displayContainer.removeAll();
+		this.displayContainer.add(buttonsContainer);
+		this.displayContainer.add(layoutImage);
+		return;
+	}
+	
+	private void populateButtonsContainer() {
+		this.layout1 = ComponentGenerator.generateButton("  1  ", this);
+		this.layout2 = ComponentGenerator.generateButton("  2  ", this);
+		this.layout4 = ComponentGenerator.generateButton("  4  ", this);
+		this.layout8 = ComponentGenerator.generateButton("  8  ", this);
+		this.buttonsContainer.add(this.layout1);
+		this.container.add(Box.createVerticalStrut(10));
+		this.buttonsContainer.add(this.layout2);
+		this.container.add(Box.createVerticalStrut(10));
+		this.buttonsContainer.add(this.layout4);
+		this.container.add(Box.createVerticalStrut(10));
+		this.buttonsContainer.add(this.layout8);
+		
+		this.buttonsContainer.add(Box.createHorizontalStrut(20));
+	}
 
-		this.add(this.mainContainer);
+	private void populateContainer(Img img) {
+		this.container.removeAll();
+		this.instructionsLabel = ComponentGenerator.generateLabel("Select the format you wish to use:", ComponentGenerator.STANDARD_TEXT_FONT_BOLD,
+				ComponentGenerator.STANDARD_TEXT_COLOR);
+		this.container.add(this.instructionsLabel);
+		this.container.add(Box.createVerticalStrut(20));
+		
+		this.populateDisplayContainer(img);
+		this.container.add(Box.createVerticalStrut(20));
+		this.container.add(this.displayContainer);
+		
+		this.printButton = ComponentGenerator.generateButton("Print", this);
+		this.container.add(Box.createVerticalStrut(10));
+		this.container.add(this.printButton);
+		
+		this.revalidate();
+		this.repaint();
+	}
+	
+	/* mouseClicked - display the layout image based on which button was selected
+	 */
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == this.layout1) {
+			try 
+			{
+				this.layoutImg = ComponentGenerator.generateImg("resources/layout1.png", CENTER_ALIGNMENT);
+			} 
+			catch(Exception ie)
+			{
+				System.out.println("error - could not find layout image");
+			}
+		}
+		else if (e.getSource() == this.layout2) {
+			try 
+			{
+				System.out.println("1");
+				this.layoutImg = ComponentGenerator.generateImg("resources/layout2.png", CENTER_ALIGNMENT);
+			} 
+			catch(Exception ie)
+			{
+				System.out.println("error - could not find layout image");
+			}
+		}
+		else if (e.getSource() == this.layout4) {
+			try 
+			{
+				this.layoutImg = ComponentGenerator.generateImg("resources/layout4.png", CENTER_ALIGNMENT);
+			} 
+			catch(Exception ie)
+			{
+				System.out.println("error - could not find layout image");
+			}
+		}
+		else if (e.getSource() == this.layout8) {
+			try 
+			{
+				this.layoutImg = ComponentGenerator.generateImg("resources/layout8.png", CENTER_ALIGNMENT);
+			} 
+			catch(Exception ie)
+			{
+				System.out.println("error - could not find layout image");
+			}
+		}
+		else if (e.getSource() == this.printButton)
+		{
+			try {
+				this.generatePDF();
+				System.out.println("Generated PDF");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		this.populateContainer(this.layoutImg);
+		//this.populateDisplayContainer(layoutImg);
+		return;
 	}
 
 	/* Check to see if all conditions are met before generating a PDF, otherwise it will exit the program
@@ -128,15 +257,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		// Create a new font object selecting one of the PDF base fonts
 		PDFont font = PDType1Font.HELVETICA_BOLD;
 
-<<<<<<< HEAD
 		// Start a new content stream which will "hold" the to be created content
 		PDPageContentStream contentStream = new PDPageContentStream(document, page);
-=======
-		// Start a new content stream which will "hold" the to be created
-		// content
-		PDPageContentStream contentStream = new PDPageContentStream(document,
-				page);
->>>>>>> origin/master
 
 		// Initialize margins
 		this.initializePDFTools(page);
@@ -210,7 +332,6 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		else if (selectedThumbnails.size() == 4) 
 		{
 			newContent = new Img[][] { { null, null }, { null, null } };
-<<<<<<< HEAD
 			this.format = 4;
 		} 
 		else if (selectedThumbnails.size() == 8)
@@ -218,15 +339,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 			newContent = new Img[][] { { null, null }, { null, null }, { null, null }, { null, null } };
 			this.format = 8;
 		}
-		else
-		{
-=======
-
-		} else if (selectedThumbnails.size() == 8) {
-			newContent = new Img[][] { { null, null }, { null, null },
-					{ null, null }, { null, null } };
-		} else {
->>>>>>> origin/master
+		
+		else {
 			newContent = new Img[][] { { null } };
 			this.format = 0;
 			System.out.println("You have no selected images!");
@@ -246,13 +360,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 	 *            a 2d array containing the table data
 	 * @throws IOException
 	 */
-<<<<<<< HEAD
 	public void drawTable(PDPage page, PDPageContentStream contentStream, float y, float margin, Img[][] content, int formatLayout)
 			throws IOException {
-=======
-	public void drawTable(PDPage page, PDPageContentStream contentStream,
-			float y, float margin, Img[][] content) throws IOException {
->>>>>>> origin/master
 		int rows = content.length;
 		int cols = content[0].length;
 		float rowHeight = 20f;
@@ -284,17 +393,12 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		int imgCounter = 0;
 		for (int i = 0; i < content.length; i++) {
 			for (int j = 0; j < content[i].length; j++) {
-<<<<<<< HEAD
 				//BufferedImage pic = content[i][j].getImage();//just empty...
 				//BufferedImage pic = ImageIO.read(new File(selectedThumbnails.get(imgCounter).getFilePath()));
-				
-=======
 
 				// BufferedImage pic = content[i][j].getImage();//just empty...
-				BufferedImage pic = ImageIO.read(new File(selectedThumbnails
-						.get(imgCounter).getFilePath()));
+				BufferedImage pic = ImageIO.read(new File(selectedThumbnails.get(imgCounter).getFilePath()));
 
->>>>>>> origin/master
 				Img imgpic = null;
 				try {
 					imgpic = new Img(selectedThumbnails.get(imgCounter)
@@ -303,7 +407,6 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-<<<<<<< HEAD
 				
 				//depending on what layout we have chosen will determine what scale size we use
 				if(formatLayout == 0)
@@ -325,12 +428,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 				{
 					imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 150);
 				}
-				//imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 400);
-				
-=======
 				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 400);
 
->>>>>>> origin/master
 				texty = y;
 
 				PDXObjectImage tempPDFImage = null;
@@ -395,16 +494,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 		this.pos = new Point(0, 0);
 	}
 
-	// Use to insert an image of the pdf generated
-	private void populateMainContainer() {
 
-	}
-
-	// select how many images per page you would like
-	private void populateButtonsContainer() {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void focusGained(FocusEvent e) {
@@ -419,9 +509,33 @@ public class PrintSetUpPanel extends JPanel implements ActionListener,
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

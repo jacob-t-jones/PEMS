@@ -21,7 +21,7 @@ public class FileHandler
 	{
 		this.os = this.retrieveOS();
 		this.peripheralFiles = new ArrayList<File>();
-		this.retrievePeripheralFiles();
+		//this.retrievePeripheralFiles();
 	}
 	
 	public enum OSType

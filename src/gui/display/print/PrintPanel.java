@@ -262,8 +262,6 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 			}
 		} else if (e.getSource() == this.finishButton) 
 		{
-			// this.manager.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-<<<<<<< HEAD
 			// Add a pop-up box if the number of images selected is 0
 			if(this.selectedThumbnails.size() == 0)
 			{
@@ -280,19 +278,6 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-=======
-			// OLD METHOD TO DO ONE PIC PER PAGE
-			// this.printImages();
-			// this.manager.pushPanel(new ScreenFinish(manager, caseNum), "PEMS
-			// - Finish");
-			try {
-				this.manager.getMainWindow().pushPanel(
-						new PrintSetUpPanel(this.manager, selectedThumbnails),
-						"PEMS - PDF generator");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
->>>>>>> origin/master
 			}
 			
 		} 
