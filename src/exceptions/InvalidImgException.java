@@ -4,13 +4,16 @@
 
 package exceptions;
 
-public class InvalidImgException extends Exception {
+public class InvalidImgException extends Exception 
+{
 
-	public InvalidImgException(String message) {
+	public InvalidImgException(String message) 
+	{
 		super("InvalidImgException - " + message);
 	}
 
-	public InvalidImgException(String message, Throwable cause) {
+	public InvalidImgException(String message, Throwable cause) 
+	{
 		super(message, cause);
 	}
 

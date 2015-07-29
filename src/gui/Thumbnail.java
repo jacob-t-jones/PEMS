@@ -14,7 +14,8 @@ public class Thumbnail extends JLabel {
 	private String fileName;
 	private String fileExt;
 
-	public Thumbnail(BufferedImage image, String filePath, String fileName, String fileExt) {
+	public Thumbnail(BufferedImage image, String filePath, String fileName,
+			String fileExt) {
 		super(new ImageIcon(image));
 		this.image = image;
 		this.filePath = filePath;

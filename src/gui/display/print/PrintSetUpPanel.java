@@ -36,7 +36,8 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.imgscalr.Scalr;
 
-public class PrintSetUpPanel extends JPanel implements ActionListener, FocusListener {
+public class PrintSetUpPanel extends JPanel implements ActionListener,
+		FocusListener {
 	private FrameManager manager;
 	private ArrayList<Thumbnail> selectedThumbnails;
 	private EditImgPanel currentScreen;
@@ -49,7 +50,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	private int originalHeight;
 	private Component mainContainer;
 	private Box buttonsContainer;
-	private Img logoImage; /// was baseimg /buff
+	private Img logoImage; // / was baseimg /buff
 	// private Img logoImage;
 	private PDXObjectImage pdfBadge;
 	private PDDocument document;
@@ -58,7 +59,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	private int format;
 	private boolean printable;
 
-	public PrintSetUpPanel(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException {
+	public PrintSetUpPanel(FrameManager manager,
+			ArrayList<Thumbnail> selectedThumbnails) throws IOException {
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;
 		this.populateButtonsContainer();
@@ -92,7 +94,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	private void importBadgeImages() {
 
 		try {
-			this.logoImage = ComponentGenerator.generateImg("resources/logo.png", CENTER_ALIGNMENT);
+			this.logoImage = ComponentGenerator.generateImg(
+					"resources/logo.png", CENTER_ALIGNMENT);
 			// setImage(ImageIO.read(new File("resources/logo.png")));
 
 			this.logoImage.resizeImage(Scalr.Method.ULTRA_QUALITY, 50);
@@ -125,8 +128,15 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 		// Create a new font object selecting one of the PDF base fonts
 		PDFont font = PDType1Font.HELVETICA_BOLD;
 
+<<<<<<< HEAD
 		// Start a new content stream which will "hold" the to be created content
 		PDPageContentStream contentStream = new PDPageContentStream(document, page);
+=======
+		// Start a new content stream which will "hold" the to be created
+		// content
+		PDPageContentStream contentStream = new PDPageContentStream(document,
+				page);
+>>>>>>> origin/master
 
 		// Initialize margins
 		this.initializePDFTools(page);
@@ -152,7 +162,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 		contentStream.endText();
 
 		// place the thumbnails on the screen
-		//this.displayImages(contentStream);
+		// this.displayImages(contentStream);
 
 		// decide which layout to use based on what is selected
 		format = 0;
@@ -200,6 +210,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 		else if (selectedThumbnails.size() == 4) 
 		{
 			newContent = new Img[][] { { null, null }, { null, null } };
+<<<<<<< HEAD
 			this.format = 4;
 		} 
 		else if (selectedThumbnails.size() == 8)
@@ -209,11 +220,18 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 		}
 		else
 		{
+=======
+
+		} else if (selectedThumbnails.size() == 8) {
+			newContent = new Img[][] { { null, null }, { null, null },
+					{ null, null }, { null, null } };
+		} else {
+>>>>>>> origin/master
 			newContent = new Img[][] { { null } };
 			this.format = 0;
 			System.out.println("You have no selected images!");
 		}
-		
+
 		return newContent;
 	}
 
@@ -228,8 +246,13 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 	 *            a 2d array containing the table data
 	 * @throws IOException
 	 */
+<<<<<<< HEAD
 	public void drawTable(PDPage page, PDPageContentStream contentStream, float y, float margin, Img[][] content, int formatLayout)
 			throws IOException {
+=======
+	public void drawTable(PDPage page, PDPageContentStream contentStream,
+			float y, float margin, Img[][] content) throws IOException {
+>>>>>>> origin/master
 		int rows = content.length;
 		int cols = content[0].length;
 		float rowHeight = 20f;
@@ -237,19 +260,19 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 		float tableHeight = rowHeight * rows;
 		float colWidth = tableWidth / cols;
 		float cellMargin = 5f;
-		
 
 		// draw the rows
 		float nexty = y;
 		for (int i = 0; i <= rows; i++) {
-			//contentStream.drawLine(margin, nexty, margin + tableWidth, nexty);
+			// contentStream.drawLine(margin, nexty, margin + tableWidth,
+			// nexty);
 			nexty -= rowHeight;
 		}
 
 		// draw the columns
 		float nextx = margin;
 		for (int i = 0; i <= cols; i++) {
-			//contentStream.drawLine(nextx, y, nextx, y - tableHeight);
+			// contentStream.drawLine(nextx, y, nextx, y - tableHeight);
 			nextx += colWidth;
 		}
 
@@ -261,16 +284,26 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 		int imgCounter = 0;
 		for (int i = 0; i < content.length; i++) {
 			for (int j = 0; j < content[i].length; j++) {
+<<<<<<< HEAD
 				//BufferedImage pic = content[i][j].getImage();//just empty...
 				//BufferedImage pic = ImageIO.read(new File(selectedThumbnails.get(imgCounter).getFilePath()));
 				
+=======
+
+				// BufferedImage pic = content[i][j].getImage();//just empty...
+				BufferedImage pic = ImageIO.read(new File(selectedThumbnails
+						.get(imgCounter).getFilePath()));
+
+>>>>>>> origin/master
 				Img imgpic = null;
 				try {
-					imgpic = new Img(selectedThumbnails.get(imgCounter).getFilePath());
+					imgpic = new Img(selectedThumbnails.get(imgCounter)
+							.getFilePath());
 				} catch (InvalidImgException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+<<<<<<< HEAD
 				
 				//depending on what layout we have chosen will determine what scale size we use
 				if(formatLayout == 0)
@@ -294,22 +327,25 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 				}
 				//imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 400);
 				
+=======
+				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 400);
+
+>>>>>>> origin/master
 				texty = y;
 
 				PDXObjectImage tempPDFImage = null;
 				tempPDFImage = new PDJpeg(this.document, imgpic.getImage());
-				
+
 				// add the image to the pdf file
 				contentStream.drawImage(tempPDFImage, textx, texty);
-				
-				
-				//Add the date below the image
+
+				// Add the date below the image
 				contentStream.beginText();
-				contentStream.moveTextPositionByAmount(60, texty-12);
+				contentStream.moveTextPositionByAmount(60, texty - 12);
 				contentStream.drawString(imgpic.getDate());
 				contentStream.endText();
-				
-				//increment variables
+
+				// increment variables
 				textx += colWidth;
 				y -= imgpic.getImage().getHeight() - 40;
 				imgCounter++;
@@ -334,10 +370,12 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, FocusList
 				tempImage = selectedThumbnails.get(i).getImage();
 				tempPDFImage = new PDJpeg(this.document, tempImage);
 				// add the image to the pdf file
-				contentStream.drawImage(tempPDFImage, 10, tempImage.getHeight() + (i * 100));
+				contentStream.drawImage(tempPDFImage, 10, tempImage.getHeight()
+						+ (i * 100));
 			} catch (IOException e) {
-				System.out.println(
-						"error - file, " + selectedThumbnails.get(i).getFilePath() + ", could not be printed.");
+				System.out.println("error - file, "
+						+ selectedThumbnails.get(i).getFilePath()
+						+ ", could not be printed.");
 				e.printStackTrace();
 			}
 		}

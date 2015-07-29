@@ -3,42 +3,41 @@
 // StringField.java
 
 package gui.components.field;
-
 import java.awt.event.*;
 import javax.swing.*;
 
-public class StringField extends JTextField implements FocusListener {
-
+public class StringField extends JTextField implements FocusListener
+{
+	
 	private String defaultText;
-
-	public StringField(String text) {
+	
+	public StringField(String text)
+	{
 		super(text);
 		super.addFocusListener(this);
 		this.defaultText = text;
 	}
 
-	/*
-	 * focusGained - mandatory for any class implementing FocusListener, checks
-	 * the source of the FocusEvent and executes the appropriate code e - the
-	 * event in question 1. clears the text field if it still contains
-	 * "defaultText" at the time of focus being gained
+	/* focusGained - mandatory for any class implementing FocusListener, checks the source of the FocusEvent and executes the appropriate code 
+	 *           e - the event in question
+	 *			   1. clears the text field if it still contains "defaultText" at the time of focus being gained
 	 */
-	@Override
-	public void focusGained(FocusEvent e) {
-		if (super.getText().equals(defaultText)) {
+	public void focusGained(FocusEvent e) 
+	{
+		if (super.getText().equals(defaultText))
+		{
 			super.setText("");
 		}
 	}
 
-	/*
-	 * focusLost - mandatory for any class implementing FocusListener, checks
-	 * the source of the FocusEvent and executes the appropriate code e - the
-	 * event in question 1. returns "defaultText" to the text field if it is
-	 * empty at the time of focus being lost
+	/* focusLost - mandatory for any class implementing FocusListener, checks the source of the FocusEvent and executes the appropriate code 
+	 *         e - the event in question
+	 *			 1. returns "defaultText" to the text field if it is empty at the time of focus being lost
 	 */
-	@Override
-	public void focusLost(FocusEvent e) {
-		if (super.getText().replaceAll("\\s", "").isEmpty()) {
+	public void focusLost(FocusEvent e)
+	{
+		if (super.getText().replaceAll("\\s", "").isEmpty())
+		{
 			super.setText(this.defaultText);
 		}
 	}

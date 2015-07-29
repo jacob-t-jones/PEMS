@@ -33,15 +33,19 @@ public class FinishPanel extends JPanel implements ActionListener {
 		this.populateBox();
 		this.revalidate();
 		this.repaint();
-		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setCursor(
+				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 	}
 
 	private void populateBox() {
 		this.container.add(Box.createVerticalStrut(250));
-		this.openInDirButton = ComponentGenerator.generateButton("Open in Directory", this, CENTER_ALIGNMENT);
-		this.printButton = ComponentGenerator.generateButton("Print Image", this, CENTER_ALIGNMENT);
-		this.closeButton = ComponentGenerator.generateButton("Exit", this, CENTER_ALIGNMENT);
+		this.openInDirButton = ComponentGenerator.generateButton(
+				"Open in Directory", this, CENTER_ALIGNMENT);
+		this.printButton = ComponentGenerator.generateButton("Print Image",
+				this, CENTER_ALIGNMENT);
+		this.closeButton = ComponentGenerator.generateButton("Exit", this,
+				CENTER_ALIGNMENT);
 
 		this.optionsBox.add(openInDirButton);
 		this.optionsBox.add(printButton);
@@ -65,8 +69,11 @@ public class FinishPanel extends JPanel implements ActionListener {
 		}
 
 		if (e.getSource() == this.printButton) {
-			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			manager.getMainWindow().pushPanel(new PrintPanel(manager, this.caseNum), "PEMS - Print Images");
+			this.manager.getMainWindow().setCursor(
+					Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			manager.getMainWindow().pushPanel(
+					new PrintPanel(manager, this.caseNum),
+					"PEMS - Print Images");
 		}
 
 		if (e.getSource() == this.openInDirButton) {
@@ -81,14 +88,17 @@ public class FinishPanel extends JPanel implements ActionListener {
 					// Runtime.getRuntime().exec("open
 					// /Users/andrewrottier/Documents/Pictures/");
 				} catch (IOException e1) {
-					System.out.println("error - could not locate the directory");
+					System.out
+							.println("error - could not locate the directory");
 					e1.printStackTrace();
 				}
 			} else if (OSname == "mac") {
 				try {
-					Runtime.getRuntime().exec("open /Users/andrewrottier/Documents/Pictures/");
+					Runtime.getRuntime().exec(
+							"open /Users/andrewrottier/Documents/Pictures/");
 				} catch (IOException e1) {
-					System.out.println("error - could not locate the directory");
+					System.out
+							.println("error - could not locate the directory");
 					e1.printStackTrace();
 				}
 

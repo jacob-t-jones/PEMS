@@ -3,15 +3,15 @@
 // PEMS.java
 
 package gui;
-
 import gui.display.*;
 
-public class PEMS {
+public class PEMS 
+{
 
-	public static void main(String[] args) {
-		System.out.println("1");
+	public static void main(String[] args)
+	{
 		@SuppressWarnings("unused")
 		FrameManager frame = new FrameManager();
 	}
-
+	
 }

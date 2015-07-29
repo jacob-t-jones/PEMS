@@ -71,15 +71,18 @@ public class EditCasePanel extends JPanel implements ActionListener {
 		this.displayedImages.removeAll();
 		this.displayedContainer.removeAll();
 		this.titleBox.removeAll();
-		this.displayedCasesLabel = ComponentGenerator.generateLabel("Choose a case",
-				ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.displayedCasesLabel = ComponentGenerator.generateLabel(
+				"Choose a case", ComponentGenerator.STANDARD_TEXT_FONT,
+				ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.displayedImagePlace = displayedImagePlace;
 		this.fileList = this.getFileList(); // get list of files
 
 		// add components to the title container
 		this.titleBox.add(this.displayedCasesLabel);
-		this.loadPrevButton = ComponentGenerator.generateButton("Prev", this, CENTER_ALIGNMENT);
-		this.loadNextButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
+		this.loadPrevButton = ComponentGenerator.generateButton("Prev", this,
+				CENTER_ALIGNMENT);
+		this.loadNextButton = ComponentGenerator.generateButton("Next", this,
+				CENTER_ALIGNMENT);
 		this.titleBox.add(loadPrevButton);
 		this.titleBox.add(loadNextButton);
 
@@ -94,39 +97,53 @@ public class EditCasePanel extends JPanel implements ActionListener {
 				if (this.displayedImagePlace < this.fileList.length) {
 
 					BufferedImage tempImg = new BufferedImage(1, 1, 1);
-					Thumbnail tempLabel = new Thumbnail(tempImg, filePath, "", ".png");
+					Thumbnail tempLabel = new Thumbnail(tempImg, filePath, "",
+							".png");
 
 					try {
-						tempLabel = ComponentGenerator.generateThumbnail(
-								ImageIO.read(new File("/Users/andrewrottier/Documents/Pictures/folder.png")),
-								fileList[this.displayedImagePlace].getAbsolutePath(), "filename", "");
+						tempLabel = ComponentGenerator
+								.generateThumbnail(
+										ImageIO.read(new File(
+												"/Users/andrewrottier/Documents/Pictures/folder.png")),
+										fileList[this.displayedImagePlace]
+												.getAbsolutePath(), "filename",
+										"");
 					} catch (Exception e) {
-						System.out.println("Error - the folder image does not exist in the folder");
+						System.out
+								.println("Error - the folder image does not exist in the folder");
 					}
-					tempLabel.setImage(ImageEditor.resizeImage(tempLabel.getImage(), 20));
+					tempLabel.setImage(ImageEditor.resizeImage(
+							tempLabel.getImage(), 20));
 
 					// truncate off the beginning of the path so more
 					// directories can fit the screen
 					int endOfCase = tempLabel.getFilePath().length();
-					int startOfCase = tempLabel.getFilePath().indexOf("Pictures/") + 9; // replace
-																						// with
-																						// cases
-																						// once
-																						// on
-																						// police
-																						// computers!!!!!
-					String displayCaseName = tempLabel.getFilePath().substring(startOfCase, endOfCase);
-					System.out.println("end: " + endOfCase + " ... start: " + startOfCase + " ... displayCaseName: "
-							+ displayCaseName + " ... filepath: " + tempLabel.getFilePath());
+					int startOfCase = tempLabel.getFilePath().indexOf(
+							"Pictures/") + 9; // replace
+												// with
+												// cases
+												// once
+												// on
+												// police
+												// computers!!!!!
+					String displayCaseName = tempLabel.getFilePath().substring(
+							startOfCase, endOfCase);
+					System.out.println("end: " + endOfCase + " ... start: "
+							+ startOfCase + " ... displayCaseName: "
+							+ displayCaseName + " ... filepath: "
+							+ tempLabel.getFilePath());
 
 					this.fileButtons.add(tempLabel);
 
-					col.addMouseListener(this.generateThumbnailListener(tempLabel)); // make
-																						// buttons
+					col.addMouseListener(this
+							.generateThumbnailListener(tempLabel)); // make
+																	// buttons
 					// create the row and add elements to it
 
-					col.add(ComponentGenerator.generateLabel(tempLabel.getImage()));
-					col.add(ComponentGenerator.generateLabel(displayCaseName, ComponentGenerator.STANDARD_TEXT_FONT,
+					col.add(ComponentGenerator.generateLabel(tempLabel
+							.getImage()));
+					col.add(ComponentGenerator.generateLabel(displayCaseName,
+							ComponentGenerator.STANDARD_TEXT_FONT,
 							ComponentGenerator.STANDARD_TEXT_COLOR));
 
 					col.setAlignmentX(LEFT_ALIGNMENT);
@@ -141,7 +158,8 @@ public class EditCasePanel extends JPanel implements ActionListener {
 		}
 
 		this.displayedContainer.add(displayedImages);
-		this.backButton = ComponentGenerator.generateButton("Back", this, CENTER_ALIGNMENT);
+		this.backButton = ComponentGenerator.generateButton("Back", this,
+				CENTER_ALIGNMENT);
 		this.displayedContainer.add(backButton);
 		// this.displayedContainer.add(Box.createVerticalStrut(750));
 		this.displayedImagePlace = displayedImagePlace;
@@ -156,12 +174,16 @@ public class EditCasePanel extends JPanel implements ActionListener {
 	 * user specified case number caseNumFocus - clears the text within
 	 * "caseNumField" upon said component coming into focus
 	 */
-	private MouseListener generateThumbnailListener(final Thumbnail folderThumbnail) {
+	private MouseListener generateThumbnailListener(
+			final Thumbnail folderThumbnail) {
 		MouseListener thumbnailListener = new MouseListener() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
-				manager.getMainWindow().pushPanel(new SelectPanel(manager, folderThumbnail.getFilePath()),
-						"PEMS - Import Images");
+				manager.getMainWindow()
+						.pushPanel(
+								new SelectPanel(manager,
+										folderThumbnail.getFilePath()),
+								"PEMS - Import Images");
 			}
 
 			@Override

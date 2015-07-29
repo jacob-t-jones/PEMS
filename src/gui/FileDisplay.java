@@ -47,7 +47,8 @@ public class FileDisplay extends Box {
 	 */
 	private void initializeDisplayInfo() {
 		try {
-			this.filejpg = ImageIO.read(new File("/Users/andrewrottier/Documents/Pictures/folder.png"));
+			this.filejpg = ImageIO.read(new File(
+					"/Users/andrewrottier/Documents/Pictures/folder.png"));
 			filejpg = ImageEditor.resizeImage(filejpg, 15);
 			try {
 				directoryName = "/Users/andrewrottier/Documents/Pictures/";

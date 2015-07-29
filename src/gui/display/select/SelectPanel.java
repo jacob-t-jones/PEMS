@@ -15,7 +15,8 @@ import gui.components.img.*;
 import gui.display.*;
 import gui.display.editimg.*;
 
-public class SelectPanel extends JPanel implements ActionListener, MouseListener {
+public class SelectPanel extends JPanel implements ActionListener,
+		MouseListener {
 
 	private FrameManager manager;
 	private ArrayList<ThumbnailImg> displayedThumbnails;
@@ -46,7 +47,8 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.directoryName = "/Users/andrewrottier/Documents/Pictures/CrimePhotos";
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
-		this.displayedThumbnails = this.manager.getFileHandler().getPeripheralThumbnails(120, this);
+		this.displayedThumbnails = this.manager.getFileHandler()
+				.getPeripheralThumbnails(120, this);
 		this.selectedThumbnails = new ArrayList<ThumbnailImg>();
 		this.mainContainer = Box.createVerticalBox();
 		this.innerContainer = Box.createHorizontalBox();
@@ -55,8 +57,10 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.displayedContainer = Box.createVerticalBox();
 		this.selectedContainer = Box.createVerticalBox();
 		this.buttonsContainer = Box.createHorizontalBox();
-		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.displayedContainer.setBorder(BorderFactory
+				.createLineBorder(Color.black));
+		this.selectedContainer.setBorder(BorderFactory
+				.createLineBorder(Color.black));
 		this.refreshDisplayedThumbnails(0);
 		this.refreshSelectedThumbnails(0);
 		this.populateButtonsContainer();
@@ -67,7 +71,8 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.add(this.mainContainer);
 		this.manager.getMainWindow().setResizable(true);
 		this.manager.getMainWindow().setMaximized();
-		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setCursor(
+				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();
 	}
@@ -95,8 +100,11 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 			}
 		} else if (e.getSource() == this.finishButton) {
 			this.copyFiles(false);
-			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			this.manager.getMainWindow().pushPanel(new EditImgPanel(this.manager, this.caseNum), "PEMS - Edit Photos");
+			this.manager.getMainWindow().setCursor(
+					Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			this.manager.getMainWindow().pushPanel(
+					new EditImgPanel(this.manager, this.caseNum),
+					"PEMS - Edit Photos");
 		} else if (e.getSource() == this.loadNextSelectedButton) {
 			if (this.selectedImagePlace + 3 < this.selectedThumbnails.size()) {
 				this.refreshSelectedThumbnails(this.selectedImagePlace + 3);
@@ -176,8 +184,10 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	 * selected by the user
 	 */
 	private void refreshDisplayedThumbnails(int displayedImagePlace) {
-		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images Detected on External Devices",
-				ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.displayedTitleLabel = ComponentGenerator.generateLabel(
+				"Images Detected on External Devices",
+				ComponentGenerator.STANDARD_TEXT_FONT_BOLD,
+				ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.displayedImagePlace = displayedImagePlace;
 		this.displayedContainer.removeAll();
 		this.displayedContainer.add(this.displayedTitleLabel);
@@ -190,7 +200,8 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 				if (this.displayedImagePlace < this.displayedThumbnails.size()) {
 					col.add(Box.createHorizontalGlue());
 					col.add(Box.createVerticalStrut(150));
-					col.add(this.displayedThumbnails.get(this.displayedImagePlace));
+					col.add(this.displayedThumbnails
+							.get(this.displayedImagePlace));
 					col.add(Box.createVerticalStrut(150));
 					col.add(Box.createHorizontalGlue());
 				} else {
@@ -214,10 +225,13 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	 * "selectedContainer" by the user
 	 */
 	private void refreshSelectedThumbnails(int selectedImagePlace) {
-		this.selectedTitleLabel = ComponentGenerator.generateLabel("Selected Images",
-				ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
-		this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
-		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Previous", this, CENTER_ALIGNMENT);
+		this.selectedTitleLabel = ComponentGenerator.generateLabel(
+				"Selected Images", ComponentGenerator.STANDARD_TEXT_FONT_BOLD,
+				ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.loadNextSelectedButton = ComponentGenerator.generateButton("Next",
+				this, CENTER_ALIGNMENT);
+		this.loadPrevSelectedButton = ComponentGenerator.generateButton(
+				"Previous", this, CENTER_ALIGNMENT);
 		this.selectedContainer.removeAll();
 		this.selectedContainer.add(this.selectedTitleLabel);
 		this.selectedContainer.add(this.loadPrevSelectedButton);
@@ -252,9 +266,12 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	 * with the necessary components
 	 */
 	private void populateButtonsContainer() {
-		this.loadNextButton = ComponentGenerator.generateButton("Load Next Images   >", this);
-		this.loadPrevButton = ComponentGenerator.generateButton("<   Load Previous Images", this);
-		this.finishButton = ComponentGenerator.generateButton("Finish Importing", this);
+		this.loadNextButton = ComponentGenerator.generateButton(
+				"Load Next Images   >", this);
+		this.loadPrevButton = ComponentGenerator.generateButton(
+				"<   Load Previous Images", this);
+		this.finishButton = ComponentGenerator.generateButton(
+				"Finish Importing", this);
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.buttonsContainer.setAlignmentX(CENTER_ALIGNMENT);
 		this.buttonsContainer.add(this.loadPrevButton);
@@ -296,9 +313,12 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	 * "mainContainer"
 	 */
 	private void populateMainContainer() {
-		this.instructionsLabel = ComponentGenerator.generateLabel(
-				"Click on any of the images below to import them into the current case. Selected images will appear on the right, and can be removed from the case by simply clicking on them again.",
-				ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.instructionsLabel = ComponentGenerator
+				.generateLabel(
+						"Click on any of the images below to import them into the current case. Selected images will appear on the right, and can be removed from the case by simply clicking on them again.",
+						ComponentGenerator.STANDARD_TEXT_FONT_ITALIC,
+						ComponentGenerator.STANDARD_TEXT_COLOR,
+						CENTER_ALIGNMENT);
 		this.mainContainer.add(Box.createVerticalStrut(20));
 		this.mainContainer.add(this.instructionsLabel);
 		this.mainContainer.add(Box.createVerticalStrut(30));
@@ -313,19 +333,25 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	 */
 	private boolean copyFiles(boolean delete) {
 		for (int i = 0; i < this.selectedThumbnails.size(); i++) {
-			Path currentPath = Paths.get(this.selectedThumbnails.get(i).getFilePath());
-			Path casesPath = Paths.get("cases/" + this.caseNum + "/" + this.caseNum + " (" + i + ")"
+			Path currentPath = Paths.get(this.selectedThumbnails.get(i)
+					.getFilePath());
+			Path casesPath = Paths.get("cases/" + this.caseNum + "/"
+					+ this.caseNum + " (" + i + ")"
 					+ this.selectedThumbnails.get(i).getFileExt());
-			Path backupsPath = Paths.get("backups/" + this.caseNum + "/" + this.caseNum + " (" + i + "-" + 0 + ")"
+			Path backupsPath = Paths.get("backups/" + this.caseNum + "/"
+					+ this.caseNum + " (" + i + "-" + 0 + ")"
 					+ this.selectedThumbnails.get(i).getFileExt());
 			try {
-				Files.copy(currentPath, casesPath, StandardCopyOption.REPLACE_EXISTING);
-				Files.copy(currentPath, backupsPath, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(currentPath, casesPath,
+						StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(currentPath, backupsPath,
+						StandardCopyOption.REPLACE_EXISTING);
 				if (delete) {
 					Files.delete(currentPath);
 				}
 			} catch (IOException e1) {
-				System.out.println("Error - Unable to copy image files to new directory");
+				System.out
+						.println("Error - Unable to copy image files to new directory");
 				e1.printStackTrace();
 				return false;
 			}

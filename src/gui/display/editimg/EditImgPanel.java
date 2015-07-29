@@ -19,7 +19,8 @@ import gui.*;
 import gui.display.FrameManager;
 import gui.display.finish.FinishPanel;
 
-public class EditImgPanel extends JPanel implements ActionListener, MouseListener {
+public class EditImgPanel extends JPanel implements ActionListener,
+		MouseListener {
 
 	private FrameManager manager;
 	private Stack<BufferedImage> selectedImageHistorySaved;
@@ -91,7 +92,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 
 		this.cropBox = new DrawRect(this.getGraphics(), null);
 		this.cropContainer = Box.createHorizontalBox();
-		this.cropContainer.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+		this.cropContainer.setBorder(BorderFactory
+				.createLineBorder(Color.WHITE));
 
 		this.add(this.cropContainer);
 
@@ -103,7 +105,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.caseThumbnailContainer = Box.createHorizontalBox();
 		this.selectedImageContainer.add(this.cropBox);
 		this.editorBox = Box.createVerticalBox();
-		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.caseThumbnailContainer.setBorder(BorderFactory
+				.createLineBorder(Color.black));
 		this.populateEditorBox();
 		this.resetCropValues();
 		this.refreshCaseThumbnails(0);
@@ -112,7 +115,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.add(this.mainContainer);
 		this.constructMenuBar();
 		this.manager.getMainWindow().setJMenuBar(this.menuBar);
-		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setCursor(
+				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();
 	}
@@ -153,27 +157,38 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 			} else {
 				// this.manager.displayQuitWarningDialogue(this);
 			}
-		} else if (e.getSource() == this.undoMenuItem || e.getSource() == this.undoButton) {
+		} else if (e.getSource() == this.undoMenuItem
+				|| e.getSource() == this.undoButton) {
 			this.undo();
-		} else if (e.getSource() == this.redoMenuItem || e.getSource() == this.redoButton) {
+		} else if (e.getSource() == this.redoMenuItem
+				|| e.getSource() == this.redoButton) {
 			this.redo();
-		} else if (e.getSource() == this.removeImageMenuItem || e.getSource() == this.removeButton) {
+		} else if (e.getSource() == this.removeImageMenuItem
+				|| e.getSource() == this.removeButton) {
 			// this.manager.displayRemoveWarningDialogue(this);
-		} else if (e.getSource() == this.antiAliasMenuItem || e.getSource() == this.antiAliasButton) {
+		} else if (e.getSource() == this.antiAliasMenuItem
+				|| e.getSource() == this.antiAliasButton) {
 			this.antiAlias();
-		} else if (e.getSource() == this.brightenMenuItem || e.getSource() == this.brightenButton) {
+		} else if (e.getSource() == this.brightenMenuItem
+				|| e.getSource() == this.brightenButton) {
 			this.brighten();
-		} else if (e.getSource() == this.darkenMenuItem || e.getSource() == this.darkenButton) {
+		} else if (e.getSource() == this.darkenMenuItem
+				|| e.getSource() == this.darkenButton) {
 			this.darken();
-		} else if (e.getSource() == this.grayscaleMenuItem || e.getSource() == this.grayscaleButton) {
+		} else if (e.getSource() == this.grayscaleMenuItem
+				|| e.getSource() == this.grayscaleButton) {
 			this.grayscale();
-		} else if (e.getSource() == this.resizeMenuItem || e.getSource() == this.resizeButton) {
+		} else if (e.getSource() == this.resizeMenuItem
+				|| e.getSource() == this.resizeButton) {
 			// this.manager.displayResizeDialogue(this,
 			// this.selectedImage.getWidth(), this.selectedImage.getHeight());
-		} else if (e.getSource() == this.cropMenuItem || e.getSource() == this.cropButton) {
+		} else if (e.getSource() == this.cropMenuItem
+				|| e.getSource() == this.cropButton) {
 			this.cropping = true;
-			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-		} else if (e.getSource() == this.rotate90MenuItem || e.getSource() == this.rotate90Button) {
+			this.manager.getMainWindow().setCursor(
+					Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		} else if (e.getSource() == this.rotate90MenuItem
+				|| e.getSource() == this.rotate90Button) {
 			this.rotate90();
 		} else if (e.getSource() == this.rotate180MenuItem) {
 			this.rotate180();
@@ -184,11 +199,12 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 				// this.manager.removeMenuBar();//?
 				try {
 					// this.manager.closeRenameDialogue();
-					this.menuBar.removeAll(); //// not removing menu bar..
+					this.menuBar.removeAll(); // // not removing menu bar..
 				} catch (Exception e1) {
 					System.out.println("error - no dialogue panels open");
 				}
-				this.manager.getMainWindow().pushPanel(new FinishPanel(manager, caseNum), "PEMS - Finish");
+				this.manager.getMainWindow().pushPanel(
+						new FinishPanel(manager, caseNum), "PEMS - Finish");
 			} else {
 				// this.manager.displayContinueWarningDialogue(this);
 			}
@@ -209,7 +225,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 			Thumbnail selectedThumbnail = (Thumbnail) e.getSource();
 			this.selectedImage = null;
 			try {
-				this.selectedImage = ImageIO.read(new File(selectedThumbnail.getFilePath()));
+				this.selectedImage = ImageIO.read(new File(selectedThumbnail
+						.getFilePath()));
 			} catch (IOException e1) {
 				System.out.println("Error - Unable to import selected image");
 				e1.printStackTrace();
@@ -293,24 +310,34 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 */
 	public void saveImage() {
 		int backupIncrement = 0;
-		if (Files.exists(Paths.get("backups/" + this.caseNum + "/" + this.selectedImageName + this.selectedImageExt))) {
+		if (Files.exists(Paths.get("backups/" + this.caseNum + "/"
+				+ this.selectedImageName + this.selectedImageExt))) {
 			backupIncrement++;
-			while (Files.exists(Paths.get("backups/" + this.caseNum + "/" + this.selectedImageName + " ("
-					+ backupIncrement + ")" + this.selectedImageExt))) {
+			while (Files.exists(Paths.get("backups/" + this.caseNum + "/"
+					+ this.selectedImageName + " (" + backupIncrement + ")"
+					+ this.selectedImageExt))) {
 				backupIncrement++;
 			}
 		}
 		try {
 			if (backupIncrement == 0) {
-				ImageIO.write(this.selectedImage, this.getImageFileType(this.selectedImageExt),
-						new File("backups/" + this.caseNum + "/" + this.selectedImageName + this.selectedImageExt));
-			} else {
-				ImageIO.write(this.selectedImage, this.getImageFileType(this.selectedImageExt),
-						new File("backups/" + this.caseNum + "/" + this.selectedImageName + " (" + backupIncrement + ")"
+				ImageIO.write(this.selectedImage, this
+						.getImageFileType(this.selectedImageExt), new File(
+						"backups/" + this.caseNum + "/"
+								+ this.selectedImageName
 								+ this.selectedImageExt));
+			} else {
+				ImageIO.write(
+						this.selectedImage,
+						this.getImageFileType(this.selectedImageExt),
+						new File("backups/" + this.caseNum + "/"
+								+ this.selectedImageName + " ("
+								+ backupIncrement + ")" + this.selectedImageExt));
 			}
-			ImageIO.write(this.selectedImage, this.getImageFileType(this.selectedImageExt),
-					new File("cases/" + this.caseNum + "/" + this.selectedImageName + this.selectedImageExt));
+			ImageIO.write(this.selectedImage, this
+					.getImageFileType(this.selectedImageExt), new File("cases/"
+					+ this.caseNum + "/" + this.selectedImageName
+					+ this.selectedImageExt));
 		} catch (IOException e) {
 			System.out.println("Error - Save failed");
 			e.printStackTrace();
@@ -325,7 +352,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 */
 	public void renameImage(String newName) {
 		File oldFile = new File(this.selectedImagePath);
-		File newFile = new File("cases/" + this.caseNum + "/" + newName + this.selectedImageExt);
+		File newFile = new File("cases/" + this.caseNum + "/" + newName
+				+ this.selectedImageExt);
 		oldFile.renameTo(newFile);
 	}
 
@@ -336,7 +364,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 */
 	public void resizeImage(int newWidth, int newHeight) {
 		this.selectedImageHistoryUndone.clear();
-		this.selectedImage = ImageEditor.resizeImage(this.selectedImage, newWidth, newHeight);
+		this.selectedImage = ImageEditor.resizeImage(this.selectedImage,
+				newWidth, newHeight);
 		this.selectedImageHistorySaved.push(this.selectedImage);
 		this.refreshSelectedImage();
 		this.saved = false;
@@ -355,23 +384,29 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 
 		for (int i = 0; i < fileNames.length; i++)// never gets in loop
 		{
-			String currentFileName = fileNames[i].substring(0, fileNames[i].indexOf('.')).toLowerCase();
-			String currentExtension = fileNames[i].substring(fileNames[i].indexOf('.'), fileNames[i].length())
+			String currentFileName = fileNames[i].substring(0,
+					fileNames[i].indexOf('.')).toLowerCase();
+			String currentExtension = fileNames[i].substring(
+					fileNames[i].indexOf('.'), fileNames[i].length())
 					.toLowerCase();
-			if ((currentExtension.equalsIgnoreCase(".png") || currentExtension.equalsIgnoreCase(".jpg")
-					|| currentExtension.equalsIgnoreCase(".jpeg"))) {
+			if ((currentExtension.equalsIgnoreCase(".png")
+					|| currentExtension.equalsIgnoreCase(".jpg") || currentExtension
+						.equalsIgnoreCase(".jpeg"))) {
 				BufferedImage currentImage = null;
-				String currentPath = "cases/" + this.caseNum + "/" + fileNames[i];
+				String currentPath = "cases/" + this.caseNum + "/"
+						+ fileNames[i];
 				System.out.println("directory: " + currentPath);
 				try {
 					currentImage = ImageIO.read(new File(currentPath));
 				} catch (IOException e) {
-					System.out.println("Error - Unable to read image into memory");
+					System.out
+							.println("Error - Unable to read image into memory");
 					e.printStackTrace();
 					return null;
 				}
 				Thumbnail currentThumb = ComponentGenerator.generateThumbnail(
-						ImageEditor.resizeThumbnail(currentImage, 80), currentPath, currentFileName, currentExtension);
+						ImageEditor.resizeThumbnail(currentImage, 80),
+						currentPath, currentFileName, currentExtension);
 				currentThumb.setAlignmentX(CENTER_ALIGNMENT);
 				currentThumb.addMouseListener(this);
 				thumbnailList.add(currentThumb);
@@ -385,17 +420,28 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 * populateEditorBox - insert the buttons into the editor box
 	 */
 	private void populateEditorBox() {
-		this.antiAliasButton = ComponentGenerator.generateButton("AntiAlias", this, CENTER_ALIGNMENT);
-		this.brightenButton = ComponentGenerator.generateButton("Brighten", this, CENTER_ALIGNMENT);
-		this.darkenButton = ComponentGenerator.generateButton("Darken", this, CENTER_ALIGNMENT);
-		this.cropButton = ComponentGenerator.generateButton("Crop", this, CENTER_ALIGNMENT);
-		this.grayscaleButton = ComponentGenerator.generateButton("Grayscale", this, CENTER_ALIGNMENT);
-		this.rotate90Button = ComponentGenerator.generateButton("Rotate 90", this, CENTER_ALIGNMENT);
-		this.resizeButton = ComponentGenerator.generateButton("Resize", this, CENTER_ALIGNMENT);
-		this.renameButton = ComponentGenerator.generateButton("Rename", this, CENTER_ALIGNMENT);
-		this.removeButton = ComponentGenerator.generateButton("Remove", this, CENTER_ALIGNMENT);
-		this.undoButton = ComponentGenerator.generateButton("undo", this, CENTER_ALIGNMENT);
-		this.redoButton = ComponentGenerator.generateButton("redo", this, CENTER_ALIGNMENT);
+		this.antiAliasButton = ComponentGenerator.generateButton("AntiAlias",
+				this, CENTER_ALIGNMENT);
+		this.brightenButton = ComponentGenerator.generateButton("Brighten",
+				this, CENTER_ALIGNMENT);
+		this.darkenButton = ComponentGenerator.generateButton("Darken", this,
+				CENTER_ALIGNMENT);
+		this.cropButton = ComponentGenerator.generateButton("Crop", this,
+				CENTER_ALIGNMENT);
+		this.grayscaleButton = ComponentGenerator.generateButton("Grayscale",
+				this, CENTER_ALIGNMENT);
+		this.rotate90Button = ComponentGenerator.generateButton("Rotate 90",
+				this, CENTER_ALIGNMENT);
+		this.resizeButton = ComponentGenerator.generateButton("Resize", this,
+				CENTER_ALIGNMENT);
+		this.renameButton = ComponentGenerator.generateButton("Rename", this,
+				CENTER_ALIGNMENT);
+		this.removeButton = ComponentGenerator.generateButton("Remove", this,
+				CENTER_ALIGNMENT);
+		this.undoButton = ComponentGenerator.generateButton("undo", this,
+				CENTER_ALIGNMENT);
+		this.redoButton = ComponentGenerator.generateButton("redo", this,
+				CENTER_ALIGNMENT);
 
 		// add images to the editor box
 		this.editorBox.add(antiAliasButton);
@@ -422,16 +468,19 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	private void refreshSelectedImage() {
 		this.selectedImageContainer.removeAll();
 		if (this.selectedImage.getHeight() > 500) {
-			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 500),
+			this.selectedImageLabel = ComponentGenerator.generateLabel(
+					ImageEditor.resizeImage(this.selectedImage, 500),
 					CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
 
 		} else if (this.selectedImage.getWidth() > 1000) {
-			this.selectedImageLabel = ComponentGenerator
-					.generateLabel(ImageEditor.resizeImage(this.selectedImage, 1000), CENTER_ALIGNMENT);
+			this.selectedImageLabel = ComponentGenerator.generateLabel(
+					ImageEditor.resizeImage(this.selectedImage, 1000),
+					CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
 		} else {
-			this.selectedImageLabel = ComponentGenerator.generateLabel(this.selectedImage, CENTER_ALIGNMENT);
+			this.selectedImageLabel = ComponentGenerator.generateLabel(
+					this.selectedImage, CENTER_ALIGNMENT);
 			this.selectedImageLabel.addMouseListener(this);
 		}
 		this.selectedImageContainer.setMaximumSize(new Dimension(1000, 500));
@@ -447,8 +496,10 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	}
 
 	private void refreshCaseThumbnails(int caseThumbnailIndex) {
-		this.loadNextThumbnails = ComponentGenerator.generateButton("Next     >", this);
-		this.loadPrevThumbnails = ComponentGenerator.generateButton("<     Prev", this);
+		this.loadNextThumbnails = ComponentGenerator.generateButton(
+				"Next     >", this);
+		this.loadPrevThumbnails = ComponentGenerator.generateButton(
+				"<     Prev", this);
 		this.caseThumbnailContainer.removeAll();
 		this.caseThumbnailIndex = caseThumbnailIndex;
 		this.caseThumbnailContainer.add(this.loadPrevThumbnails);
@@ -485,7 +536,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		Thumbnail selectedThumbnail = this.caseThumbnails.get(0);
 		this.selectedImage = null;
 		try {
-			this.selectedImage = ImageIO.read(new File(selectedThumbnail.getFilePath()));
+			this.selectedImage = ImageIO.read(new File(selectedThumbnail
+					.getFilePath()));
 		} catch (IOException e) {
 			System.out.println("Error - Unable to import selected image");
 			e.printStackTrace();
@@ -503,7 +555,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 * "caseThumbnailContainer", and "continueButton" to "mainContainer"
 	 */
 	private void populateMainContainer() {
-		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
+		this.continueButton = ComponentGenerator.generateButton("Continue",
+				this, CENTER_ALIGNMENT);
 		this.mainContainer.add(this.selectedImageContainer);
 		this.mainContainer.add(Box.createVerticalStrut(40));
 		this.mainContainer.add(this.caseThumbnailContainer);
@@ -521,25 +574,37 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.editMenu = new JMenu("Edit");
 		this.caseMenu = new JMenu("Case");
 		this.imageMenu = new JMenu("Image");
-		this.saveImageMenuItem = ComponentGenerator.generateMenuItem("Save Image", this,
+		this.saveImageMenuItem = ComponentGenerator.generateMenuItem(
+				"Save Image", this,
 				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-		this.renameImageMenuItem = ComponentGenerator.generateMenuItem("Rename Image", this);
+		this.renameImageMenuItem = ComponentGenerator.generateMenuItem(
+				"Rename Image", this);
 		this.quitMenuItem = ComponentGenerator.generateMenuItem("Quit", this,
 				KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 		this.undoMenuItem = ComponentGenerator.generateMenuItem("Undo", this,
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 		this.redoMenuItem = ComponentGenerator.generateMenuItem("Redo", this,
 				KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
-		this.removeImageMenuItem = ComponentGenerator.generateMenuItem("Remove Image from Case", this);
-		this.antiAliasMenuItem = ComponentGenerator.generateMenuItem("Apply Anti Aliasing", this);
-		this.brightenMenuItem = ComponentGenerator.generateMenuItem("Brighten by 10%", this);
-		this.darkenMenuItem = ComponentGenerator.generateMenuItem("Darken by 10%", this);
-		this.grayscaleMenuItem = ComponentGenerator.generateMenuItem("Convert to Grayscale", this);
-		this.resizeMenuItem = ComponentGenerator.generateMenuItem("Resize Image", this);
-		this.cropMenuItem = ComponentGenerator.generateMenuItem("Crop Image", this);
-		this.rotate90MenuItem = ComponentGenerator.generateMenuItem("Rotate Image 90\u00b0 Right", this);
-		this.rotate180MenuItem = ComponentGenerator.generateMenuItem("Rotate Image 180\u00b0 Right", this);
-		this.rotate270MenuItem = ComponentGenerator.generateMenuItem("Rotate Image 270\u00b0 Right", this);
+		this.removeImageMenuItem = ComponentGenerator.generateMenuItem(
+				"Remove Image from Case", this);
+		this.antiAliasMenuItem = ComponentGenerator.generateMenuItem(
+				"Apply Anti Aliasing", this);
+		this.brightenMenuItem = ComponentGenerator.generateMenuItem(
+				"Brighten by 10%", this);
+		this.darkenMenuItem = ComponentGenerator.generateMenuItem(
+				"Darken by 10%", this);
+		this.grayscaleMenuItem = ComponentGenerator.generateMenuItem(
+				"Convert to Grayscale", this);
+		this.resizeMenuItem = ComponentGenerator.generateMenuItem(
+				"Resize Image", this);
+		this.cropMenuItem = ComponentGenerator.generateMenuItem("Crop Image",
+				this);
+		this.rotate90MenuItem = ComponentGenerator.generateMenuItem(
+				"Rotate Image 90\u00b0 Right", this);
+		this.rotate180MenuItem = ComponentGenerator.generateMenuItem(
+				"Rotate Image 180\u00b0 Right", this);
+		this.rotate270MenuItem = ComponentGenerator.generateMenuItem(
+				"Rotate Image 270\u00b0 Right", this);
 		this.fileMenu.add(this.saveImageMenuItem);
 		this.fileMenu.add(this.renameImageMenuItem);
 		this.fileMenu.addSeparator();
@@ -572,7 +637,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 */
 	private void undo() {
 		if (this.selectedImageHistorySaved.size() > 1) {
-			this.selectedImageHistoryUndone.push(this.selectedImageHistorySaved.pop());
+			this.selectedImageHistoryUndone.push(this.selectedImageHistorySaved
+					.pop());
 			this.selectedImage = this.selectedImageHistorySaved.peek();
 			this.refreshSelectedImage();
 			this.saved = false;
@@ -584,7 +650,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 */
 	private void redo() {
 		if (this.selectedImageHistoryUndone.size() > 0) {
-			this.selectedImageHistorySaved.push(this.selectedImageHistoryUndone.pop());
+			this.selectedImageHistorySaved.push(this.selectedImageHistoryUndone
+					.pop());
 			this.selectedImage = this.selectedImageHistorySaved.peek();
 			this.refreshSelectedImage();
 			this.saved = false;
@@ -651,18 +718,25 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		int width = (int) Math.abs(locB.getX() - locA.getX());
 		int height = (int) Math.abs(locB.getY() - locA.getY());
 		if (this.selectedImage.getWidth() != this.selectedImageLabel.getWidth()
-				|| this.selectedImage.getHeight() != this.selectedImageLabel.getHeight()) {
-			x = (this.selectedImage.getWidth() * x) / this.selectedImageLabel.getWidth();
-			y = (this.selectedImage.getHeight() * y) / this.selectedImageLabel.getHeight();
-			width = (this.selectedImage.getWidth() * width) / this.selectedImageLabel.getWidth();
-			height = (this.selectedImage.getHeight() * height) / this.selectedImageLabel.getHeight();
+				|| this.selectedImage.getHeight() != this.selectedImageLabel
+						.getHeight()) {
+			x = (this.selectedImage.getWidth() * x)
+					/ this.selectedImageLabel.getWidth();
+			y = (this.selectedImage.getHeight() * y)
+					/ this.selectedImageLabel.getHeight();
+			width = (this.selectedImage.getWidth() * width)
+					/ this.selectedImageLabel.getWidth();
+			height = (this.selectedImage.getHeight() * height)
+					/ this.selectedImageLabel.getHeight();
 		}
 		this.saved = false;
 		this.cropping = false;
 		this.resetCropValues();
-		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.manager.getMainWindow().setCursor(
+				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.selectedImageHistoryUndone.clear();
-		this.selectedImage = ImageEditor.cropImage(this.selectedImage, x, y, width, height);
+		this.selectedImage = ImageEditor.cropImage(this.selectedImage, x, y,
+				width, height);
 		this.selectedImageHistorySaved.push(this.selectedImage);
 		this.refreshSelectedImage();
 	}
@@ -710,7 +784,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	private String getImageFileType(String extension) {
 		if (extension.equalsIgnoreCase(".png")) {
 			return "png";
-		} else if (extension.equalsIgnoreCase(".jpg") || extension.equalsIgnoreCase(".jpeg")) {
+		} else if (extension.equalsIgnoreCase(".jpg")
+				|| extension.equalsIgnoreCase(".jpeg")) {
 			return "jpg";
 		}
 		return null;
