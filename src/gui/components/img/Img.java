@@ -32,14 +32,9 @@ public class Img extends JLabel
 		this.date = this.getDate();
 		this.refreshIcon();
 	}
-<<<<<<< HEAD
-
-	public String getDate() { 
-=======
 	
 	public String getDate() 
 	{
->>>>>>> origin/master
 		// find path / property of the date in the image in the camera
 		return "12/12/12";
 	}
