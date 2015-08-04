@@ -31,6 +31,9 @@ public class EditedImg extends Img
 		return this.saved;
 	}
 	
+	/* setSaved - sets "saved" to be the boolean value passed in as a parameter
+	 *    saved - the true or false value that "saved" will be set to
+	 */
 	public void setSaved(boolean saved)
 	{
 		this.saved = saved;
@@ -79,7 +82,7 @@ public class EditedImg extends Img
 		super.resizeImage(Scalr.Method.ULTRA_QUALITY, width, height);
 	}
 	
-	/* refreshIcon - calls the parent version of this method, clears "undoneHistorySequence", adds to "currentHistorySequence", and sets "saved" to false
+	/* refreshIcon - calls the parent version of this method, clears "undoneHistorySequence", adds to "currentHistorySequence", sets "saved" to false, and repaints the image
 	 */
 	protected void refreshIcon()
 	{
