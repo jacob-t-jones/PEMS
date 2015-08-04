@@ -1,17 +1,19 @@
 // PEMS (Police Evidence Management System) Version 0.1
 // Copyright 2015 - Jacob Jones and Andrew Rottier
-// ScreenImport.java
+// SelectPanel.java
 
 package gui.display.select;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import org.imgscalr.*;
+import exceptions.*;
 import gui.*;
 import gui.components.img.*;
 import gui.display.*;
-import gui.display.dialogues.*;
 import gui.display.editimg.*;
+import tools.FileHandler.*;
 
 public class SelectPanel extends JPanel implements ActionListener, MouseListener 
 {
@@ -24,8 +26,10 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	private Box leftContainer;
 	private Box rightContainer;
 	private Box displayedContainer;
+	private Box displayedTopContainer;
 	private Box selectedContainer;
 	private Box buttonsContainer;
+	private Img refreshImg;
 	private JLabel instructionsLabel;
 	private JLabel displayedTitleLabel;
 	private JLabel selectedTitleLabel;
@@ -44,17 +48,19 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.caseNum = caseNum;
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
-		this.displayedThumbnails = this.manager.getFileHandler().getPeripheralThumbnails(120, this);
+		this.displayedThumbnails = this.generateThumbnails();
 		this.selectedThumbnails = new ArrayList<ThumbnailImg>();
 		this.mainContainer = Box.createVerticalBox();
 		this.innerContainer = Box.createHorizontalBox();
 		this.leftContainer = Box.createVerticalBox();
 		this.rightContainer = Box.createVerticalBox();
 		this.displayedContainer = Box.createVerticalBox();
+		this.displayedTopContainer = Box.createHorizontalBox();
 		this.selectedContainer = Box.createVerticalBox();
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.populateDisplayedTopContainer();
 		this.refreshDisplayedThumbnails(0);
 		this.refreshSelectedThumbnails(0);
 		this.populateButtonsContainer();
@@ -74,7 +80,7 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	 *	             e - the event in question
 	 *                 1. attempts to load the next fifteen images from the camera within "displayedContainer"
 	 *                 2. attempts to load the previous fifteen images from the camera within "displayedContainer"
-	 *                 3. displays a dialogue asking the user for his or her import preferences, copies files to proper directories, and pushes ScreenEdit
+	 *                 3. displays a dialogue asking the user for his or her import preferences
 	 *                 4. attempts to load the next three selected images within "selectedContainer"
 	 *                 5. attempts to load the previous three selected images within "selectedContainer"
 	 */
@@ -96,7 +102,33 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.finishButton)
 		{	
-			this.manager.openDialogue("Delete Selected Files", new DeleteSelectedDialogue(this.manager, this), 50, 15);
+			if (this.selectedThumbnails.isEmpty())
+			{
+				if (this.displayedThumbnails.isEmpty())
+				{
+					JOptionPane.showMessageDialog(this.manager.getMainWindow(), "Unable to locate any images on external drives. Please disconnect and reconnect all cameras and devices, restart the program, and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(this.manager.getMainWindow(), "You must select at least one image to import into the newly created case!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			else
+			{
+				int selection = JOptionPane.showConfirmDialog(this.manager.getMainWindow(), "Would you like to delete the original copies of all imported files from the camera?", "Delete Selected Files", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (selection == JOptionPane.YES_OPTION)
+				{
+					this.attemptCopying(true);
+				}
+				else if (selection == JOptionPane.NO_OPTION)
+				{
+					this.attemptCopying(false);
+				}
+				else if (selection == JOptionPane.CANCEL_OPTION)
+				{
+					return;
+				}
+			}
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
@@ -121,7 +153,30 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
-		if (this.selectedThumbnails.contains(e.getSource()))
+		if (e.getSource() == this.refreshImg)
+		{
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			this.manager.getFileHandler().refreshPeripheralFiles();
+			this.displayedThumbnails = this.generateThumbnails();
+			for (int i = 0; i < this.selectedThumbnails.size(); i++)
+			{
+				ThumbnailImg currentSelectedThumbnail = this.selectedThumbnails.get(i);
+				if (this.displayedThumbnails.contains(currentSelectedThumbnail));
+				{
+					for (int j = 0; j < this.displayedThumbnails.size(); j++)
+					{
+						ThumbnailImg currentDisplayedThumbnail = this.displayedThumbnails.get(j);
+						if (currentSelectedThumbnail.getFilePath().equalsIgnoreCase(currentDisplayedThumbnail.getFilePath()))
+						{
+							this.displayedThumbnails.remove(j);
+						}
+					}
+				}
+			}
+			this.refreshDisplayedThumbnails(0);
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		}
+		else if (this.selectedThumbnails.contains(e.getSource()))
 		{
 			this.displayedThumbnails.add((ThumbnailImg)e.getSource());
 			this.selectedThumbnails.remove(e.getSource());
@@ -168,24 +223,15 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	{
 		return;
 	}	
-	
-	public void attemptCopying(boolean delete)
-	{
-		if (this.manager.getFileHandler().copyFiles(delete, this.caseNum, this.selectedThumbnails))
-		{
-			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			this.manager.getMainWindow().pushPanel(new EditImgPanel(this.manager, this.caseNum), "PEMS - Edit Photos");
-		}
-	}
 
 	/* refreshDisplayedThumbnails - refreshes the ThumbnailImgs for images not yet selected by the user
 	 */
 	private void refreshDisplayedThumbnails(int displayedImagePlace)
 	{
-		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images Detected on External Devices", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.displayedImagePlace = displayedImagePlace;
 		this.displayedContainer.removeAll();
-		this.displayedContainer.add(this.displayedTitleLabel);
+		this.displayedContainer.add(Box.createVerticalStrut(5));
+		this.displayedContainer.add(this.displayedTopContainer);
 		for (int i = 0; i < 3; i++)
 		{
 			Box row = Box.createHorizontalBox();
@@ -258,6 +304,27 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.revalidate();
 		this.repaint();
 	}
+	
+	private void populateDisplayedTopContainer()
+	{
+		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images Detected on External Devices", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		try 
+		{
+			this.refreshImg = ComponentGenerator.generateImg("resources/refresh.png");
+			this.refreshImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 30);
+			this.refreshImg.addMouseListener(this);
+			this.displayedTopContainer.add(Box.createHorizontalStrut(5));
+			this.displayedTopContainer.add(this.refreshImg);
+		} 
+		catch (InvalidImgException e) 
+		{
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		this.displayedTopContainer.add(Box.createHorizontalGlue());
+		this.displayedTopContainer.add(this.displayedTitleLabel);
+		this.displayedTopContainer.add(Box.createHorizontalGlue());
+	}
 
 	/* populateButtonsContainer - fills the "buttonsContainer" layout structure with the necessary components
 	 */
@@ -309,6 +376,45 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.mainContainer.add(this.instructionsLabel);
 		this.mainContainer.add(Box.createVerticalStrut(30));
 		this.mainContainer.add(this.innerContainer);
+	}
+	
+	/* generateThumbnails - returns an ArrayList of ThumbnailImg objects generated from the peripheral image files detected by the global instance of FileHandler
+	 */
+	private ArrayList<ThumbnailImg> generateThumbnails()
+	{
+		ArrayList<ThumbnailImg> thumbnails = new ArrayList<ThumbnailImg>();
+		for (int i = 0; i < this.manager.getFileHandler().getPeripheralFiles().size(); i++)
+		{
+			try 
+			{
+				ThumbnailImg newThumbnail = ComponentGenerator.generateThumbnailImg(this.manager.getFileHandler().getPeripheralFiles().get(i).getPath(), 120);
+				newThumbnail.addMouseListener(this);
+				thumbnails.add(newThumbnail);
+			} 
+			catch (InvalidImgException e) 
+			{
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		return thumbnails;
+	}
+	
+	/* attemptCopying - attempts to copy the selected image files into the local file system, where they can be managed by the program
+	 * 	       delete - boolean value indicating whether or not the user wishes to delete the original copies of the image files that he or she is importing
+	 */
+	private void attemptCopying(boolean delete)
+	{
+		CopyFilesResult result = this.manager.getFileHandler().copyFiles(delete, this.caseNum, this.selectedThumbnails);
+		if (result == CopyFilesResult.COPY_FAILED)
+		{
+			JOptionPane.showMessageDialog(this.manager.getMainWindow(), "Importation of the selected image files has unexpectedly failed!\nPlease disconnect and reconnect all cameras and devices, restart the program, and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else
+		{
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			this.manager.getMainWindow().pushPanel(new EditImgPanel(this.manager, this.caseNum), "PEMS - Edit Photos");
+		}
 	}
 
 }

@@ -3,12 +3,10 @@
 // FileHandler.java
 
 package tools;
-import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-import exceptions.*;
-import gui.*;
+import javax.imageio.*;
 import gui.components.img.*;
 
 public class FileHandler 
@@ -20,8 +18,7 @@ public class FileHandler
 	public FileHandler()
 	{
 		this.os = this.retrieveOS();
-		this.peripheralFiles = new ArrayList<File>();
-		//this.retrievePeripheralFiles();
+		this.peripheralFiles = this.retrievePeripheralFiles();
 	}
 	
 	public enum OSType
@@ -29,49 +26,93 @@ public class FileHandler
 		WINDOWS, OSX, OTHER
 	}
 	
-	/* getOS - returns "os", an OSType enum value representing the operating system that the JVM is currently being run on
+	public enum CaseCreationResult
+	{
+		CASE_ALREADY_EXISTS, DIRECTORY_CREATION_FAILED, INVALID_CASE_NUMBER, SUCCESS
+	}
+	
+	public enum CopyFilesResult
+	{
+		COPY_FAILED, SUCCESS
+	}
+	
+	public enum DeleteFileResult
+	{
+		DELETION_FAILED, SUCCESS
+	}
+	
+	public enum SaveFileResult
+	{
+		SAVE_FAILED, SUCCESS
+	}
+	
+	/* getOS - returns "os", an OSType enum value indicating which operating system the JVM is currently running on
 	 */
 	public OSType getOS()
 	{
 		return this.os;
 	}
-	
-	/* getPeripheralThumbnails - creates and returns an ArrayList of ThumbnailImg objects representing all of the image files currently on external media devices
-	 * 				      size - the size of the new thumbnails
-	 *                   mouse - the MouseListener for the new thumbnails
+
+	/* getPeripheralFiles - returns "peripheralFiles", an ArrayList of File objects, each one referencing an image file detected on an external device
 	 */
-	public ArrayList<ThumbnailImg> getPeripheralThumbnails(int size, MouseListener mouse)
+	public ArrayList<File> getPeripheralFiles()
 	{
-		ArrayList<ThumbnailImg> peripheralThumbnails = new ArrayList<ThumbnailImg>();
-		for (int i = 0; i < this.peripheralFiles.size(); i++)
+		return this.peripheralFiles;
+	}
+	
+	/* createCase - attempts to initialize a case with the specified case number by creating directories for it in the file system, and returns a CaseCreationResult enum value indicating whether or not this operation was successful 
+	 *    caseNum - the case number to try
+	 */
+	public CaseCreationResult createCase(String caseNum) 
+	{
+		if (!this.isValidCaseNum(caseNum))
+		{
+			return CaseCreationResult.INVALID_CASE_NUMBER;
+		}
+		else if (this.caseExists(caseNum))
+		{
+			return CaseCreationResult.CASE_ALREADY_EXISTS;
+		}
+		else
 		{
 			try 
 			{
-				ThumbnailImg newThumbnail = ComponentGenerator.generateThumbnailImg(this.peripheralFiles.get(i).getPath(), size);
-				newThumbnail.addMouseListener(mouse);
-				peripheralThumbnails.add(newThumbnail);
+				Files.createDirectory(Paths.get("cases/" + caseNum + "/"));
+				Files.createDirectory(Paths.get("backups/" + caseNum + "/"));
 			} 
-			catch (InvalidImgException e) 
+			catch (IOException e) 
 			{
 				System.out.println(e.getMessage());
 				e.printStackTrace();
+				return CaseCreationResult.DIRECTORY_CREATION_FAILED;
 			}
+			return CaseCreationResult.SUCCESS;
 		}
-		return peripheralThumbnails;
 	}
 	
-	/* copyFiles - copies selected image files from their original locations on external devices to the local folders managed by PEMS, returns boolean value indicating success of operation
-	 *    delete - boolean value indicating whether or not the image files should be deleted from the external devices as they are copied 
-	 *   caseNum - the case number for the image files being copied
-	 *  selected - an ArrayList of ThumbnailImg objects representing the image files that must be copied
+	/* copyFiles - copies image files from their original location on a peripheral drive to the managed folder on the local file system
+	 *    delete - boolean value indicating whether the original copies of the image files should be deleted or retained
+	 *   caseNum - the case that the image files will be added to
 	 */
-	public boolean copyFiles(boolean delete, String caseNum, ArrayList<ThumbnailImg> selected)
+	public CopyFilesResult copyFiles(boolean delete, String caseNum, ArrayList<ThumbnailImg> selected)
 	{
+		int fileIndex = 0;
+		File caseDirectory = new File("backups", "/" + caseNum + "/");
+		for (int i = 0; i < caseDirectory.list().length; i++)
+		{
+			String currentFileName = caseDirectory.list()[i];
+			int currentFileIndex = Integer.parseInt(currentFileName.substring(currentFileName.indexOf('(') + 1, currentFileName.indexOf('-')));
+			if (currentFileIndex > fileIndex)
+			{
+				fileIndex = currentFileIndex;
+			}
+		}
     	for (int i = 0; i < selected.size(); i++)
     	{
+    		fileIndex++;
 			Path currentPath = Paths.get(selected.get(i).getFilePath());
-			Path casesPath = Paths.get("cases/" + caseNum + "/" + caseNum + " (" + i + ")" + selected.get(i).getFileExt());
-			Path backupsPath = Paths.get("backups/" + caseNum + "/" + caseNum + " (" + i + "-" + 0 + ")" + selected.get(i).getFileExt());
+			Path casesPath = Paths.get("cases/" + caseNum + "/" + caseNum + " (" + fileIndex + ")" + selected.get(i).getFileExt());
+			Path backupsPath = Paths.get("backups/" + caseNum + "/" + caseNum + " (" + fileIndex + "-" + 0 + ")" + selected.get(i).getFileExt());
 			try 
 			{
 				Files.copy(currentPath, casesPath, StandardCopyOption.REPLACE_EXISTING);
@@ -85,67 +126,55 @@ public class FileHandler
 			{
 				System.out.println(e.getMessage());
 				e.printStackTrace();
-				return false;
+				return CopyFilesResult.COPY_FAILED;
 			}
     	}
-    	return true;
+    	return CopyFilesResult.SUCCESS;
 	}
 	
-	/* createCase - attempts to create directories in both "cases" and "backups" for the specified case number, returns a boolean value indicating success
-	 *    caseNum - the case number to try
-	 */
-	public boolean createCase(String caseNum) 
+	public DeleteFileResult deleteFile(EditedImg img) 
 	{
 		try 
 		{
-			Files.createDirectory(Paths.get("cases/" + caseNum + "/"));
-			Files.createDirectory(Paths.get("backups/" + caseNum + "/"));
-		} 
+			Files.delete(Paths.get(img.getFilePath()));
+		}
 		catch (IOException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			return false;
+			return DeleteFileResult.DELETION_FAILED;
 		}
-		return true;
+		return DeleteFileResult.SUCCESS;
 	}
 	
-	/* caseExists - returns a boolean value indicating whether or not a given case has already been created
-	 *    caseNum - the case number to check
-	 */
-	public boolean caseExists(String caseNum)
+	public SaveFileResult saveFile(String caseNum, EditedImg img)
 	{
-		if (Files.isDirectory(Paths.get("cases/" + caseNum + "/")) || Files.isDirectory(Paths.get("backups/" + caseNum + "/")))
+	    int imageNum = Integer.parseInt(img.getFileName().substring(img.getFileName().indexOf('(') + 1, img.getFileName().indexOf(')')));
+		int versionNum = 0;
+		while (Files.exists(Paths.get("backups/" + caseNum + "/" +  caseNum + " (" + imageNum + "-" + versionNum + ")" + img.getFileExt())))
 		{
-			return true;
+			versionNum++;
 		}
-		else
+		try 
 		{
-			return false;
+			ImageIO.write(img.getImage(), img.getFileType(), new File("backups/" + caseNum + "/" + caseNum + " (" + imageNum + "-" + versionNum + ")" + img.getFileExt()));
+		    ImageIO.write(img.getImage(), img.getFileType(), new File("cases/" + caseNum + "/" + caseNum + " (" + imageNum + ")" + img.getFileExt()));
+		} 
+		catch (IOException e) 
+		{
+		    System.out.println(e.getMessage());
+		    e.printStackTrace();
+		    return SaveFileResult.SAVE_FAILED;
 		}
+		return SaveFileResult.SUCCESS;
 	}
 	
-	/* validCaseNum - returns a boolean value indicating whether or not a given case number is valid (only letters and numbers, at least one character, no more than ten characters)
-	 *      caseNum - the case number to check
-	 */
-	public boolean validCaseNum(String caseNum)
+	public void refreshPeripheralFiles()
 	{
-		if (caseNum.length() <= 0 || caseNum.length() > 10)
-		{
-			return false;
-		}
-		for (int i = 0; i < caseNum.length(); i++)
-		{
-			int charVal = (int)caseNum.charAt(i);
-			if (charVal < 48 || charVal > 122 || (charVal > 57 && charVal < 65) || (charVal > 90 && charVal < 97))
-			{
-				return false;
-			}
-		}
-		return true;
+		this.peripheralFiles = this.retrievePeripheralFiles();
 	}
 	
-	/* retrieveOS - determines what operating system PEMS is currently being run on, and returns a correponding OSType enum value
+	/* retrieveOS - determines which operating system is currently being used by pulling the os.name system property value
 	 */
 	private OSType retrieveOS()
 	{
@@ -164,59 +193,100 @@ public class FileHandler
 		}
 	}
 	
-	/* retrievePeripheralFiles - OS dependent method that attempts to load all image files located on currently attached peripheral devices into memory
+	/* retrievePeripheralFiles - operating system dependent method that populates "peripheralFiles" by reading image files from external devices
+	 *                         * computer is running Windows => the root directory is searched for external drives
+	 *                         * computer is running Mac OSX => the "/volumes/" directory is searched for external drives
 	 */
-	private void retrievePeripheralFiles()
+	private ArrayList<File> retrievePeripheralFiles()
 	{
+		ArrayList<File> peripheralFiles = new ArrayList<File>();
 		if (this.os == OSType.WINDOWS)
 		{
 			for (int i = 0; i < File.listRoots().length; i++)
 			{
 				File currentFile = File.listRoots()[i];
-				if (currentFile.isDirectory() && !currentFile.isHidden() && currentFile.getTotalSpace() < 128000000000L)
+				if (currentFile.canRead() && currentFile.isDirectory() && !currentFile.isHidden() && currentFile.getTotalSpace() < 128000000000L)
 				{
-					this.retrievePeripheralFiles(currentFile);
+					peripheralFiles = this.retrievePeripheralFiles(currentFile, peripheralFiles);
 				}
 			}
 		}
 		else if (this.os == OSType.OSX)
 		{
-			File drives = new File("/Volumes/");
+			File drives = new File("/volumes/");
 			for (int i = 0; i < drives.listFiles().length; i++)
 			{
 				File currentFile = drives.listFiles()[i];
-				if (currentFile.isDirectory() && !currentFile.isHidden() && currentFile.getTotalSpace() < 128000000000L)
+				if (currentFile.canRead() && currentFile.isDirectory() && !currentFile.isHidden() && currentFile.getTotalSpace() < 128000000000L)
 				{
-					this.retrievePeripheralFiles(currentFile);
+					peripheralFiles = this.retrievePeripheralFiles(currentFile, peripheralFiles);
 				}
 			}
 		}
+		return peripheralFiles;
 	}
 	
-	/* retrievePeripheralFiles - recursive implementation of the method, used to trace through directories on the peripheral devices and find valid image files
-	 *               directory - the directory currently being looked at
+	/* retrievePeripheralFiles - recursive version of the above method that traces through the passed in directory in search of valid image files (.png, .jpg, etc.)
+	 *               directory - the file system directory to search
+	 *         peripheralFiles - the current list of valid image files on peripheral devices
 	 */
-	private void retrievePeripheralFiles(File directory)
+	private ArrayList<File> retrievePeripheralFiles(File directory, ArrayList<File> peripheralFiles)
 	{
 		for (int i = 0; i < directory.listFiles().length; i++)
 		{
 			File currentFile = directory.listFiles()[i];
-			if (!currentFile.isHidden())
+			if (currentFile.canRead() && !currentFile.isHidden())
 			{
 				if (currentFile.isDirectory())
 				{
-					this.retrievePeripheralFiles(currentFile);
+					this.retrievePeripheralFiles(currentFile, peripheralFiles);
 				}
 				else if (currentFile.getName().contains("."))
 				{
 					String currentExt = currentFile.getName().substring(currentFile.getName().indexOf('.')).toLowerCase();
 					if (currentExt.equals(".png") || currentExt.equals(".jpg") || currentExt.equals(".jpeg"))
 					{
-						this.peripheralFiles.add(currentFile);
+						peripheralFiles.add(currentFile);
 					}
 				}
 			}
 		}
+		return peripheralFiles;
 	}
+	
+	/* caseExists - returns a boolean value indicating whether or not a case with the specified number already exists in the file system
+	 *    caseNum - the case number to try
+	 */
+	private boolean caseExists(String caseNum)
+	{
+		if (Files.isDirectory(Paths.get("cases/" + caseNum + "/")) || Files.isDirectory(Paths.get("backups/" + caseNum + "/")))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/* isValidCaseNum - returns a boolean value indicating whether or not a given case number is valid (at least one character, no more than ten characters, only letters and numbers)
+	 *        caseNum - the case number to try
+	 */
+	private boolean isValidCaseNum(String caseNum)
+	{
+		if (caseNum.length() <= 0 || caseNum.length() > 10)
+		{
+			return false;
+		}
+		for (int i = 0; i < caseNum.length(); i++)
+		{
+			int charVal = (int)caseNum.charAt(i);
+			if (charVal < 48 || charVal > 122 || (charVal > 57 && charVal < 65) || (charVal > 90 && charVal < 97))
+			{
+				return false;
+			}
+		}
+		return true;
+	}	
 	
 }

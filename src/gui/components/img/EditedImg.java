@@ -31,6 +31,11 @@ public class EditedImg extends Img
 		return this.saved;
 	}
 	
+	public void setSaved(boolean saved)
+	{
+		this.saved = saved;
+	}
+	
 	/* undo - undoes the most recent change to the image by popping a value from "currentHistorySequence" and pushing it to "undoneHistorySequence"
 	 */
 	public void undo()
@@ -82,6 +87,8 @@ public class EditedImg extends Img
 		this.undoneHistorySequence.clear();
 		this.currentHistorySequence.push(super.getImage());
 		this.saved = false;
+		this.revalidate();
+		this.repaint();
 	}
 
 }

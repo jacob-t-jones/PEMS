@@ -10,6 +10,7 @@ import gui.*;
 import gui.components.field.*;
 import gui.display.*;
 import gui.display.select.*;
+import tools.FileHandler.*;
 
 public class NewCasePanel extends JPanel implements ActionListener
 {
@@ -71,19 +72,20 @@ public class NewCasePanel extends JPanel implements ActionListener
 	 */
 	private boolean attemptCaseCreation(String caseNum)
 	{
-		if (!this.manager.getFileHandler().validCaseNum(caseNum))
+		CaseCreationResult result = this.manager.getFileHandler().createCase(caseNum);
+		if (result == CaseCreationResult.INVALID_CASE_NUMBER)
 		{
 			this.caseNumField.setText("");
 			this.errorLabel.setText("Error - Invalid case number! Please do not exceed ten characters. Use only letters and numbers.");
 			return false;
 		}
-		else if (this.manager.getFileHandler().caseExists(caseNum))
+		else if (result == CaseCreationResult.CASE_ALREADY_EXISTS)
 		{
 			this.caseNumField.setText("");
 			this.errorLabel.setText("Error - A case with that number already exists!");
 			return false;
 		}
-		else if (!this.manager.getFileHandler().createCase(caseNum))
+		else if (result == CaseCreationResult.DIRECTORY_CREATION_FAILED)
 		{
 			this.caseNumField.setText("");
 			this.errorLabel.setText("Error - Case creation failed. Please try again!");

@@ -12,7 +12,6 @@ import gui.*;
 import gui.components.img.*;
 import gui.display.*;
 import gui.display.newcase.*;
-import gui.display.print.*;
 
 public class StartPanel extends JPanel implements ActionListener
 {
@@ -64,7 +63,7 @@ public class StartPanel extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.settingsButton)
 		{
-			this.manager.getMainWindow().pushPanel(new PrintPanel(this.manager, "CrimePhotos/"), "PEMS - PDF generator");
+			//this.manager.getMainWindow().pushPanel(new PrintPanel(this.manager, "CrimePhotos/"), "PEMS - PDF generator");
 		}
 	}
 	

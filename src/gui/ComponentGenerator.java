@@ -6,9 +6,7 @@ package gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.text.*;
 import javax.swing.*;
-import javax.swing.text.*;
 import exceptions.*;
 import gui.components.field.*;
 import gui.components.img.*;
@@ -23,6 +21,7 @@ public class ComponentGenerator
 	public static final Font STANDARD_TEXT_FONT_ITALIC = new Font("Georgia", Font.ITALIC, 14);
 	public static final Font ERROR_TEXT_FONT = new Font("Georgia", Font.ITALIC, 12);
 	public static final Font SMALL_TEXT_FONT = new Font ("Georgia", Font.PLAIN, 10);
+	public static final Font MINI_TEXT_FONT = new Font("Georgia", Font.PLAIN, 8);
 	public static final Color TITLE_COLOR = new Color(46, 46, 46);
 	public static final Color SUBTITLE_COLOR = new Color(2, 2, 123);
 	public static final Color STANDARD_TEXT_COLOR = new Color(44, 29, 29);
@@ -154,6 +153,45 @@ public class ComponentGenerator
 		return newCheckBox;
 	}
 	
+	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
+	 *             text - the text displayed on the menu item
+	 *           action - the ActionListener for the menu item
+	 */
+	public static JMenuItem generateMenuItem(String text, ActionListener action)
+	{
+		JMenuItem newMenuItem = new JMenuItem(text);
+		newMenuItem.addActionListener(action);
+		return newMenuItem;
+	}
+	
+	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
+	 *             text - the text displayed on the menu item
+	 *           action - the ActionListener for the menu item
+	 *      accelerator - the KeyStroke to set the accelerator to (see: normal keyboard shortcut)
+	 */
+	public static JMenuItem generateMenuItem(String text, ActionListener action, KeyStroke accelerator)
+	{
+		JMenuItem newMenuItem = new JMenuItem(text);
+		newMenuItem.addActionListener(action);
+		newMenuItem.setAccelerator(accelerator);
+		return newMenuItem;
+	}
+	
+	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
+	 *             text - the text displayed on the menu item
+	 *           action - the ActionListener for the menu item
+	 *      accelerator - the KeyStroke to set the menu item accelerator to (see: normal keyboard shortcut)
+	 *         mnemonic - the integer representation of the menu item mnemonic (see: stupid weird keyboard shortcut)
+	 */
+	public static JMenuItem generateMenuItem(String text, ActionListener action, KeyStroke accelerator, int mnemonic)
+	{
+		JMenuItem newMenuItem = new JMenuItem(text);
+		newMenuItem.addActionListener(action);
+		newMenuItem.setAccelerator(accelerator);
+		newMenuItem.setMnemonic(mnemonic);
+		return newMenuItem;
+	}
+	
 	/* generateStringField - creates and returns a StringField that complies with the parameters
 	 * 	              text - the default text displayed in the field
 	 */
@@ -187,43 +225,82 @@ public class ComponentGenerator
 		return newStringField;
 	}
 	
-	/* generateNumericField - creates and returns a NumericField that complies with the parameters
+	/* generateDecimalField - creates and returns a DecimalField that complies with the parameters
 	 *                value - the default value displayed in the field
 	 *                focus - the FocusListener for the field
 	 */
-	public static NumericField generateNumericField(int value, FocusListener focus)
+	public static DecimalField generateDecimalField(double value, FocusListener focus)
 	{
-		NumericField newNumericField = new NumericField(value);
-		newNumericField.addFocusListener(focus);
-		return newNumericField;
+		DecimalField newDecimalField = new DecimalField(value);
+		newDecimalField.addFocusListener(focus);
+		return newDecimalField;
 	}
 	
-	/* generateNumericField - creates and returns a NumericField that complies with the parameters
+	/* generateDecimalField - creates and returns a DecimalField that complies with the parameters
 	 *                value - the default value displayed in the field
 	 *                focus - the FocusListener for the field
 	 *           alignmentX - the horizontal alignment of the field
 	 */
-	public static NumericField generateNumericField(int value, FocusListener focus, float alignmentX)
+	public static DecimalField generateDecimalField(double value, FocusListener focus, float alignmentX)
 	{
-		NumericField newNumericField = new NumericField(value);
-		newNumericField.addFocusListener(focus);
-		newNumericField.setAlignmentX(alignmentX);
-		return newNumericField;
+		DecimalField newDecimalField = new DecimalField(value);
+		newDecimalField.addFocusListener(focus);
+		newDecimalField.setAlignmentX(alignmentX);
+		return newDecimalField;
 	}
 	
-	/* generateNumericField - creates and returns a NumericField that complies with the parameters
+	/* generateDecimalField - creates and returns a DecimalField that complies with the parameters
 	 *                value - the default value displayed in the field
 	 *                focus - the FocusListener for the field
 	 *           alignmentX - the horizontal alignment of the field
 	 *           alignmentY - the vertical alignment of the field
 	 */
-	public static NumericField generateNumericField(int value, FocusListener focus, float alignmentX, float alignmentY)
+	public static DecimalField generateDecimalField(double value, FocusListener focus, float alignmentX, float alignmentY)
 	{
-		NumericField newNumericField = new NumericField(value);
-		newNumericField.addFocusListener(focus);
-		newNumericField.setAlignmentX(alignmentX);
-		newNumericField.setAlignmentY(alignmentY);
-		return newNumericField;
+		DecimalField newDecimalField = new DecimalField(value);
+		newDecimalField.addFocusListener(focus);
+		newDecimalField.setAlignmentX(alignmentX);
+		newDecimalField.setAlignmentY(alignmentY);
+		return newDecimalField;
+	}
+	
+	/* generateIntegerField - creates and returns a IntegerField that complies with the parameters
+	 *                value - the default value displayed in the field
+	 *                focus - the FocusListener for the field
+	 */
+	public static IntegerField generateIntegerField(int value, FocusListener focus)
+	{
+		IntegerField newIntegerField = new IntegerField(value);
+		newIntegerField.addFocusListener(focus);
+		return newIntegerField;
+	}
+	
+	/* generateIntegerField - creates and returns a IntegerField that complies with the parameters
+	 *                value - the default value displayed in the field
+	 *                focus - the FocusListener for the field
+	 *           alignmentX - the horizontal alignment of the field
+	 */
+	public static IntegerField generateIntegerField(int value, FocusListener focus, float alignmentX)
+	{
+		IntegerField newIntegerField = new IntegerField(value);
+		newIntegerField.addFocusListener(focus);
+		newIntegerField.setAlignmentX(alignmentX);
+		return newIntegerField;
+	}
+	
+	/* generateIntegerField - creates and returns a IntegerField that complies with the parameters
+	 *                value - the default value displayed in the field
+	 *                focus - the FocusListener for the field
+	 *           alignmentX - the horizontal alignment of the field
+	 *           alignmentY - the vertical alignment of the field
+	 */
+	public static IntegerField generateIntegerField(int value, FocusListener focus, float alignmentX, float alignmentY)
+	{
+		IntegerField newIntegerField = new IntegerField(value);
+		newIntegerField.addFocusListener(focus);
+		newIntegerField.setAlignmentX(alignmentX);
+		newIntegerField.setAlignmentY(alignmentY);
+		return newIntegerField;
 	}
 	
 	/* generateImg - creates and returns an Img that complies with the parameters
@@ -411,129 +488,6 @@ public class ComponentGenerator
 		newLabel.setAlignmentX(alignmentX);
 		newLabel.setAlignmentY(alignmentY);
 		return newLabel;
-	}
-	
-	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
-	 *             text - the text displayed on the menu item
-	 *           action - the ActionListener for the menu item
-	 */
-	public static JMenuItem generateMenuItem(String text, ActionListener action)
-	{
-		JMenuItem newMenuItem = new JMenuItem(text);
-		newMenuItem.addActionListener(action);
-		return newMenuItem;
-	}
-	
-	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
-	 *             text - the text displayed on the menu item
-	 *           action - the ActionListener for the menu item
-	 *      accelerator - the KeyStroke to set the accelerator to (see: normal keyboard shortcut)
-	 */
-	public static JMenuItem generateMenuItem(String text, ActionListener action, KeyStroke accelerator)
-	{
-		JMenuItem newMenuItem = new JMenuItem(text);
-		newMenuItem.addActionListener(action);
-		newMenuItem.setAccelerator(accelerator);
-		return newMenuItem;
-	}
-	
-	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
-	 *             text - the text displayed on the menu item
-	 *           action - the ActionListener for the menu item
-	 *      accelerator - the KeyStroke to set the menu item accelerator to (see: normal keyboard shortcut)
-	 *         mnemonic - the integer representation of the menu item mnemonic (see: stupid weird keyboard shortcut)
-	 */
-	public static JMenuItem generateMenuItem(String text, ActionListener action, KeyStroke accelerator, int mnemonic)
-	{
-		JMenuItem newMenuItem = new JMenuItem(text);
-		newMenuItem.addActionListener(action);
-		newMenuItem.setAccelerator(accelerator);
-		newMenuItem.setMnemonic(mnemonic);
-		return newMenuItem;
-	}
-
-	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
-	 *                        value - the default value to place in the text field
-	 *                       action - the ActionListener for the text field
-	 *                        focus - the FocusListener for the text field
-	 */
-	public static JFormattedTextField generateIntegerOnlyTextField(Object value, FocusListener focus, ActionListener action) 
-	{
-		NumberFormat format = NumberFormat.getInstance();
-		format.setGroupingUsed(false);
-		NumberFormatter formatter = new NumberFormatter(format);
-		formatter.setValueClass(Integer.class);
-		formatter.setMinimum(0);
-		formatter.setMaximum(Integer.MAX_VALUE);
-		formatter.setAllowsInvalid(true);
-	    formatter.setCommitsOnValidEdit(true);
-		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
-		newFormattedTextField.setValue(value);
-		newFormattedTextField.addActionListener(action);
-		newFormattedTextField.addFocusListener(focus);
-		return newFormattedTextField;
-	}
-	
-	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
-	 *                        value - the default value to place in the text field
-	 *						 action - the ActionListener for the text field
-	 *                        focus - the FocusListener for the text field
-	 *                   alignmentX - the horizontal alignment of the text field
-	 */
-	public static JFormattedTextField generateIntegerOnlyTextField(Object value, ActionListener action, FocusListener focus, float alignmentX)
-	{
-		NumberFormat format = NumberFormat.getInstance();
-		format.setGroupingUsed(false);
-		NumberFormatter formatter = new NumberFormatter(format);
-		formatter.setValueClass(Integer.class);
-		formatter.setMinimum(0);
-		formatter.setMaximum(Integer.MAX_VALUE);
-		formatter.setAllowsInvalid(true);
-	    formatter.setCommitsOnValidEdit(true);
-		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
-		newFormattedTextField.setValue(value);
-		newFormattedTextField.addActionListener(action);
-		newFormattedTextField.addFocusListener(focus);
-		newFormattedTextField.setAlignmentX(alignmentX);
-		return newFormattedTextField;
-	}
-	
-	/* generateIntegerOnlyTextField - creates and returns a JFormattedTextField that only accepts integer values
-	 *                        value - the default value to place in the text field
-	 *                       action - the ActionListener for the text field
-	 *                        focus - the FocusListener for the text field
-	 *                   alignmentX - the horizontal alignment of the text field
-	 *                   alignmentY - the vertical alignment of the text field
-	 */
-	public static JFormattedTextField generateIntegerOnlyTextField(Object value, ActionListener action, FocusListener focus, float alignmentX, float alignmentY)
-	{
-		NumberFormat format = NumberFormat.getInstance();
-		format.setGroupingUsed(false);
-		NumberFormatter formatter = new NumberFormatter(format);
-		formatter.setValueClass(Integer.class);
-		formatter.setMinimum(0);
-		formatter.setMaximum(Integer.MAX_VALUE);
-		formatter.setAllowsInvalid(true);
-	    formatter.setCommitsOnValidEdit(true);
-		JFormattedTextField newFormattedTextField = new JFormattedTextField(formatter);
-		newFormattedTextField.setValue(value);
-		newFormattedTextField.addActionListener(action);
-		newFormattedTextField.addFocusListener(focus);
-		newFormattedTextField.setAlignmentX(alignmentX);
-		newFormattedTextField.setAlignmentY(alignmentY);
-		return newFormattedTextField;
-	}
-	
-	/* generateThumbnail - creates and returns an instance of our custom Thumbnail object, which inherits from JLabel
-	 *             image - the image represented by the Thumbnail
-	 *          filePath - the full file system path name of the aforementioned image
-	 *          fileName - the shorthand file name of the aforementioned image
-	 *           fileExt - the file extension (".png", ".jpg", etc.) for the image
-	 */
-	public static Thumbnail generateThumbnail(BufferedImage image, String filePath, String fileName, String fileExt)
-	{
-		Thumbnail newThumb = new Thumbnail(image, filePath, fileName, fileExt);
-		return newThumb;
 	}
 	
 }

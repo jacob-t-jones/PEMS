@@ -1,19 +1,29 @@
 // PEMS (Police Evidence Management System) Version 0.1
 // Copyright 2015 - Jacob Jones and Andrew Rottier
-// NumericField.java
+// IntegerField.java
 
 package gui.components.field;
 import java.text.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-public class NumericField extends JFormattedTextField
+public class IntegerField extends JFormattedTextField
 {
 	
-	public NumericField(int defaultValue)
+	public IntegerField(int defaultValue)
 	{
 		super(new Integer(defaultValue));
-		super.setFormatter(this.generateFormatter());
+		super.setFormatterFactory(new DefaultFormatterFactory(this.generateFormatter()));
+	}
+	
+	public int getVal()
+	{
+		return (int)super.getValue();
+	}
+	
+	public void setVal(int newValue)
+	{
+		super.setValue(new Integer(newValue));
 	}
 	
 	/* generateFormatter - returns a NumberFormatter instance that only accepts positive integer values and allows users to temporarily make invalid inputs
@@ -24,7 +34,7 @@ public class NumericField extends JFormattedTextField
 		formatter.setValueClass(Integer.class);
 		formatter.setMinimum(0);
 		formatter.setMaximum(Integer.MAX_VALUE);
-		formatter.setAllowsInvalid(true);
+		formatter.setAllowsInvalid(false);
 	    formatter.setCommitsOnValidEdit(true);
 	    return formatter;
 	}
@@ -33,7 +43,7 @@ public class NumericField extends JFormattedTextField
 	 */
 	private NumberFormat generateFormat()
 	{
-		NumberFormat format = NumberFormat.getInstance();
+		NumberFormat format = NumberFormat.getIntegerInstance();
 		format.setGroupingUsed(false);
 		return format;
 	}
