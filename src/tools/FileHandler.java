@@ -60,13 +60,18 @@ public class FileHandler
 		return peripheralThumbnails;
 	}
 	
-	public boolean copyFiles(boolean delete, String caseNum, ArrayList<ThumbnailImg> selectedThumbnails)
+	/* copyFiles - copies selected image files from their original locations on external devices to the local folders managed by PEMS, returns boolean value indicating success of operation
+	 *    delete - boolean value indicating whether or not the image files should be deleted from the external devices as they are copied 
+	 *   caseNum - the case number for the image files being copied
+	 *  selected - an ArrayList of ThumbnailImg objects representing the image files that must be copied
+	 */
+	public boolean copyFiles(boolean delete, String caseNum, ArrayList<ThumbnailImg> selected)
 	{
-    	for (int i = 0; i < selectedThumbnails.size(); i++)
+    	for (int i = 0; i < selected.size(); i++)
     	{
-			Path currentPath = Paths.get(selectedThumbnails.get(i).getFilePath());
-			Path casesPath = Paths.get("cases/" + caseNum + "/" + caseNum + " (" + i + ")" + selectedThumbnails.get(i).getFileExt());
-			Path backupsPath = Paths.get("backups/" + caseNum + "/" + caseNum + " (" + i + "-" + 0 + ")" + selectedThumbnails.get(i).getFileExt());
+			Path currentPath = Paths.get(selected.get(i).getFilePath());
+			Path casesPath = Paths.get("cases/" + caseNum + "/" + caseNum + " (" + i + ")" + selected.get(i).getFileExt());
+			Path backupsPath = Paths.get("backups/" + caseNum + "/" + caseNum + " (" + i + "-" + 0 + ")" + selected.get(i).getFileExt());
 			try 
 			{
 				Files.copy(currentPath, casesPath, StandardCopyOption.REPLACE_EXISTING);

@@ -1,6 +1,6 @@
 // PEMS (Police Evidence Management System) Version 0.1
 // Copyright 2015 - Jacob Jones and Andrew Rottier
-// ScreenDeleteImportsDialogue.java
+// DeleteSelectedDialogue.java
 
 package gui.display.dialogues;
 import java.awt.event.*;
@@ -56,7 +56,6 @@ public class DeleteSelectedDialogue extends JPanel implements ActionListener
 		}
 	}
 	
-
 	/* populateButtonsContainer - adds "yesButton", "noButton", and "cancelButton" to "buttonsContainer"
 	 */
 	private void populateButtonsContainer()
