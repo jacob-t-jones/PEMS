@@ -90,7 +90,7 @@ public class FileHandler
 		}
 	}
 	
-	/* copyFiles - copies image files from their original location on a peripheral drive to the managed folder on the local file system
+	/* copyFiles - attempts to copy image files from their original location on a peripheral drive to the managed folder on the local file system, and returns a CopyFilesResult enum value indicating whether or not this operation was successful
 	 *    delete - boolean value indicating whether the original copies of the image files should be deleted or retained
 	 *   caseNum - the case that the image files will be added to
 	 *  selected - ArrayList of ThumbnailImg objects representing the peripheral image files that need to be copied over
@@ -133,6 +133,9 @@ public class FileHandler
     	return CopyFilesResult.SUCCESS;
 	}
 	
+	/* deleteFile - attempts to delete an image file from its location in "cases" (leaving the backup copies in "backups"), and returns a DeleteFileResult enum value indicating whether or not this operation was successful
+	 *        img - an EditedImg object representing the image file that should be deleted
+	 */
 	public DeleteFileResult deleteFile(EditedImg img) 
 	{
 		try 
@@ -148,6 +151,10 @@ public class FileHandler
 		return DeleteFileResult.SUCCESS;
 	}
 	
+	/* saveFile - attempts to save an edited image file, overwriting the current version in "cases" and creating a new version in "backups", and returns a SaveFileResult enum value indicating whether or not this operation was successful
+	 *  caseNum - the number of the case that the image in question is located in
+	 *      img - an EditedImg object representing the image file that should be saved
+	 */
 	public SaveFileResult saveFile(String caseNum, EditedImg img)
 	{
 	    int imageNum = Integer.parseInt(img.getFileName().substring(img.getFileName().indexOf('(') + 1, img.getFileName().indexOf(')')));
@@ -170,6 +177,8 @@ public class FileHandler
 		return SaveFileResult.SUCCESS;
 	}
 	
+	/* refreshPeripheralFiles - reloads "peripheralFiles", scanning peripheral devices and cameras for image files once again
+	 */
 	public void refreshPeripheralFiles()
 	{
 		this.peripheralFiles = this.retrievePeripheralFiles();

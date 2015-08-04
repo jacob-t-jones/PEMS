@@ -26,7 +26,7 @@ public class Window extends JFrame
 	 */
 	public void setBounds(int width, int height)
 	{
-		super.setBounds(this.widthToPixels(width) / 2, this.heightToPixels(height) / 2, this.widthToPixels(width), this.heightToPixels(height));
+		super.setBounds(this.widthToPixels((100 - width) / 2), this.heightToPixels((100 - height) / 2), this.widthToPixels(width), this.heightToPixels(height));
 	}
 	
 	/* setMaximized - maximizes the JFrame

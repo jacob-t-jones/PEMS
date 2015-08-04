@@ -5,7 +5,6 @@
 package gui;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
 import javax.swing.*;
 import exceptions.*;
 import gui.components.field.*;
@@ -412,82 +411,6 @@ public class ComponentGenerator
 		newThumbnailImg.setAlignmentX(alignmentX);
 		newThumbnailImg.setAlignmentY(alignmentY);
 		return newThumbnailImg;
-	}
-
-	/*
-	 * BEGIN WORK AREA
-	 */
-	
-	/* generateTextField - creates and returns a JTextField that complies with the parameters
-	 *              text - the default text displayed in the field
-	 *             focus - the FocusListener for the field
-	 */
-	public static JTextField generateTextField(String text, FocusListener focus)
-	{
-		JTextField newTextField = new JTextField(text);
-		newTextField.addFocusListener(focus);
-		return newTextField;
-	}
-	
-	/* generateTextField - creates and returns a JTextField that complies with the parameters
-	 *              text - the default text displayed in the field
-	 *             focus - the FocusListener for the field
-	 *        alignmentX - the horizontal alignment of the field
-	 */
-	public static JTextField generateTextField(String text, FocusListener focus, float alignmentX)
-	{
-		JTextField newTextField = new JTextField(text);
-		newTextField.addFocusListener(focus);
-		newTextField.setAlignmentX(alignmentX);
-		return newTextField;
-	}
-	
-	/* generateTextField - creates and returns a JTextField that complies with the parameters
-	 *              text - the default text displayed in the field
-	 *             focus - the FocusListener for the field
-	 *        alignmentX - the horizontal alignment of the field
-	 *        alignmentY - the vertical alignment of the field
-	 */
-	public static JTextField generateTextField(String text, FocusListener focus, float alignmentX, float alignmentY)
-	{
-		JTextField newTextField = new JTextField(text);
-		newTextField.addFocusListener(focus);
-		newTextField.setAlignmentX(alignmentX);
-		newTextField.setAlignmentY(alignmentY);
-		return newTextField;
-	}
-	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *         image - the image displayed in the label
-	 */
-	public static JLabel generateLabel(BufferedImage image)
-	{
-		JLabel newLabel = new JLabel(new ImageIcon(image));
-		return newLabel;
-	}
-	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *         image - the image displayed in the label
-	 *    alignmentX - the horizontal alignment of the label
-	 */
-	public static JLabel generateLabel(BufferedImage image, float alignmentX)
-	{
-		JLabel newLabel = new JLabel(new ImageIcon(image));
-		newLabel.setAlignmentX(alignmentX);
-		return newLabel;
-	}
-	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *         image - the image displayed in the label
-	 *    alignmentX - the horizontal alignment of the label
-	 *    alignmentY - the vertical alignment of the label
-	 */
-	public static JLabel generateLabel(BufferedImage image, float alignmentX, float alignmentY)
-	{
-		JLabel newLabel = new JLabel(new ImageIcon(image));
-		newLabel.setAlignmentX(alignmentX);
-		newLabel.setAlignmentY(alignmentY);
-		return newLabel;
 	}
 	
 }

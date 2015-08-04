@@ -4,8 +4,11 @@
 
 package gui.window;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import gui.display.*;
+import gui.display.start.StartPanel;
 
 public class MainWindow extends Window implements WindowListener
 {
@@ -38,6 +41,11 @@ public class MainWindow extends Window implements WindowListener
 		if (super.getManager().getConfiguration().getPersistence())
 		{
 			super.setExtendedState(ICONIFIED);
+			super.setResizable(true);
+			super.setBounds(50, 50);
+			super.setResizable(false);
+			this.pushPanel(new StartPanel(super.getManager()), "PEMS (Police Evidence Management System) Version 0.1");
+			this.setWindowListener(this);
 		}
 		else
 		{
