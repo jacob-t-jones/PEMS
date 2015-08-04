@@ -20,6 +20,7 @@ public class Img extends JLabel
 	private String fileName;
 	private String fileExt;
 	private String fileType;
+	private String date;
 
 	public Img(String filePath) throws InvalidImgException
 	{
@@ -28,7 +29,23 @@ public class Img extends JLabel
 		this.fileName = retrieveFileName();
 		this.fileExt = retrieveFileExt();
 		this.fileType = retrieveFileType();
+		this.date = this.getDate();
 		super.setIcon(new ImageIcon(this.image));
+	}
+	
+	public String getDate() 
+	{
+		// find path / property of the date in the image in the camera
+		return "12/12/12";
+	}
+
+	public void displayDate(Graphics g) 
+	{
+		super.paint(g);
+		g.setFont(g.getFont().deriveFont(30f));
+		g.drawString(this.getDate(), 10, 10);
+		g.dispose();
+		this.refreshIcon();
 	}
 	
 	/* getImage - returns "image", the raw BufferedImage stored by this class
