@@ -4,6 +4,8 @@
 package gui.display.print;
 
 import gui.*;
+import gui.components.img.Img;
+import gui.components.img.ThumbnailImg;
 import gui.display.FrameManager;
 import gui.display.warning.WarningPanel;
 
@@ -27,13 +29,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import tools.ImageEditor;
+import exceptions.InvalidImgException;
 
 public class PrintPanel extends JPanel implements ActionListener, MouseListener {
 
 	private FrameManager manager;
-	private ArrayList<Thumbnail> displayedThumbnails;
-	private ArrayList<Thumbnail> selectedThumbnails;
+	private ArrayList<ThumbnailImg> displayedThumbnails;
+	private ArrayList<ThumbnailImg> selectedThumbnails;
 	private Box mainContainer;
 	private Box innerContainer;
 	private Box leftContainer;
@@ -61,7 +63,7 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 		this.displayedImagePlace = 0;
 		this.selectedImagePlace = 0;
 		this.displayedThumbnails = this.getThumbnails(); // //
-		this.selectedThumbnails = new ArrayList<Thumbnail>();
+		this.selectedThumbnails = new ArrayList<ThumbnailImg>();
 		this.mainContainer = Box.createVerticalBox();
 		this.innerContainer = Box.createHorizontalBox();
 		this.leftContainer = Box.createVerticalBox();
@@ -106,30 +108,26 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 	 * getThumbnails - fills the "thumbnails" ArrayList by importing images from
 	 * the camera into memory
 	 */
-	private ArrayList<Thumbnail> getThumbnails() {
-		ArrayList<Thumbnail> thumbnailList = new ArrayList<Thumbnail>();
+	private ArrayList<ThumbnailImg> getThumbnails() {
+		ArrayList<ThumbnailImg> thumbnailList = new ArrayList<ThumbnailImg>();
 		File directory = new File(this.directoryName);
 		String[] fileNames = directory.list();
 		for (int i = 0; i < fileNames.length; i++) {
 			String currentFileName = fileNames[i];
 			if (this.validateExtension(currentFileName)) {
-				BufferedImage currentImage = null;
+				Img currentImage = null;
 				String currentLocation = this.directoryName + "/"
 						+ fileNames[i];
 				// Check this line of code
 				String currentThumbExt = fileNames[i].substring(
 						fileNames[i].length() - 3, fileNames[i].length());
+				ThumbnailImg currentThumb = null;
 				try {
-					currentImage = ImageIO.read(new File(currentLocation));
-				} catch (IOException e) {
-					System.out
-							.println("Error - Unable to read image into memory");
+					currentThumb = ComponentGenerator.generateThumbnailImg(currentLocation, 120);
+				} catch (InvalidImgException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
-					return null;
 				}
-				Thumbnail currentThumb = ComponentGenerator.generateThumbnail(
-						ImageEditor.resizeThumbnail(currentImage, 120),
-						currentLocation, currentFileName, currentThumbExt);
 				currentThumb.addMouseListener(this);
 				thumbnailList.add(currentThumb);
 			}

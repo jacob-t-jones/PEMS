@@ -6,6 +6,7 @@ package gui.display.print;
 import exceptions.InvalidImgException;
 import gui.*;
 import gui.components.img.Img;
+import gui.components.img.ThumbnailImg;
 import gui.display.FrameManager;
 import gui.display.editimg.EditImgPanel;
 
@@ -42,7 +43,7 @@ import org.imgscalr.Scalr;
 public class PrintSetUpPanel extends JPanel implements ActionListener, MouseListener,
 		FocusListener {
 	private FrameManager manager;
-	private ArrayList<Thumbnail> selectedThumbnails;
+	private ArrayList<ThumbnailImg> selectedThumbnails;
 	private EditImgPanel currentScreen;
 	private Box container;
 	private Box widthContainer;
@@ -68,7 +69,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 	private Box displayContainer;
 	private Img layoutImg;
 
-	public PrintSetUpPanel(FrameManager manager, ArrayList<Thumbnail> selectedThumbnails) throws IOException {
+	public PrintSetUpPanel(FrameManager manager, ArrayList<ThumbnailImg> selectedThumbnails) throws IOException {
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;
 		this.container = Box.createVerticalBox();
@@ -392,14 +393,14 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		float texty = y - 15;
 		int imgCounter = 0;
 		for (int i = 0; i < content.length; i++) {
-			Img imgpic = null;
+			ThumbnailImg imgpic = null;
 			for (int j = 0; j < content[i].length; j++) {
 				
 				try {
-					imgpic = new Img(selectedThumbnails.get(imgCounter).getFilePath());
+					imgpic = ComponentGenerator.generateThumbnailImg(selectedThumbnails.get(imgCounter).getFilePath(), 250);
 				} catch (InvalidImgException e) {
 					try {
-						imgpic = ComponentGenerator.generateImg("resources/blankimage.png", CENTER_ALIGNMENT);
+						imgpic = ComponentGenerator.generateThumbnailImg("resources/blankimage.png", 250);
 					} catch (InvalidImgException ie) {
 						ie.printStackTrace();
 					}
