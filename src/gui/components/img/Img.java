@@ -38,6 +38,12 @@ public class Img extends JLabel
 		// find path / property of the date in the image in the camera
 		return "12/12/12";
 	}
+	
+	public void setDate(String newDate) 
+	{
+		this.date = newDate;
+		return;
+	}
 
 	public void displayDate(Graphics g) 
 	{

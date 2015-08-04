@@ -326,12 +326,12 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (this.selectedThumbnails.contains(e.getSource())) {
-			this.displayedThumbnails.add((Thumbnail) e.getSource());
+			this.displayedThumbnails.add((ThumbnailImg) e.getSource());
 			this.selectedThumbnails.remove(e.getSource());
 			this.refreshDisplayedThumbnails(this.displayedImagePlace);
 			this.refreshSelectedThumbnails(this.selectedImagePlace);
 		} else if (displayedThumbnails.contains(e.getSource())) {
-			this.selectedThumbnails.add((Thumbnail) e.getSource());
+			this.selectedThumbnails.add((ThumbnailImg) e.getSource());
 			this.displayedThumbnails.remove(e.getSource());
 			this.refreshDisplayedThumbnails(this.displayedImagePlace);
 			this.refreshSelectedThumbnails(this.selectedImagePlace);

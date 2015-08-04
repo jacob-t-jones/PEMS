@@ -14,10 +14,9 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import tools.ImageEditor;
 import gui.*;
+import gui.components.img.ThumbnailImg;
 import gui.display.FrameManager;
-//import gui.img.Thumbnail;
 import gui.display.select.SelectPanel;
 import gui.display.start.StartPanel;
 
@@ -36,7 +35,7 @@ public class EditCasePanel extends JPanel implements ActionListener {
 	private JButton loadPrevButton;
 	private JButton backButton;
 	private ActionListener continueAction;
-	private ArrayList<Thumbnail> fileButtons = new ArrayList<Thumbnail>();
+	private ArrayList<ThumbnailImg> fileButtons = new ArrayList<ThumbnailImg>();
 	private static String folderImageLocation = "/Users/andrewrottier/Documents/Pictures/folder.pgn";
 
 	private JLabel selectedCase;
@@ -97,23 +96,14 @@ public class EditCasePanel extends JPanel implements ActionListener {
 				if (this.displayedImagePlace < this.fileList.length) {
 
 					BufferedImage tempImg = new BufferedImage(1, 1, 1);
-					Thumbnail tempLabel = new Thumbnail(tempImg, filePath, "",
-							".png");
+					ThumbnailImg tempLabel = null;
 
 					try {
-						tempLabel = ComponentGenerator
-								.generateThumbnail(
-										ImageIO.read(new File(
-												"/Users/andrewrottier/Documents/Pictures/folder.png")),
-										fileList[this.displayedImagePlace]
-												.getAbsolutePath(), "filename",
-										"");
+						tempLabel = ComponentGenerator.generateThumbnailImg("/Users/andrewrottier/Documents/Pictures/folder.png", 20);
 					} catch (Exception e) {
 						System.out
 								.println("Error - the folder image does not exist in the folder");
 					}
-					tempLabel.setImage(ImageEditor.resizeImage(
-							tempLabel.getImage(), 20));
 
 					// truncate off the beginning of the path so more
 					// directories can fit the screen
@@ -135,8 +125,7 @@ public class EditCasePanel extends JPanel implements ActionListener {
 
 					this.fileButtons.add(tempLabel);
 
-					col.addMouseListener(this
-							.generateThumbnailListener(tempLabel)); // make
+					col.addMouseListener(this.generateThumbnailListener(tempLabel)); // make
 																	// buttons
 					// create the row and add elements to it
 
@@ -175,14 +164,14 @@ public class EditCasePanel extends JPanel implements ActionListener {
 	 * "caseNumField" upon said component coming into focus
 	 */
 	private MouseListener generateThumbnailListener(
-			final Thumbnail folderThumbnail) {
+			final ThumbnailImg tempLabel) {
 		MouseListener thumbnailListener = new MouseListener() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				manager.getMainWindow()
 						.pushPanel(
 								new SelectPanel(manager,
-										folderThumbnail.getFilePath()),
+										tempLabel.getFilePath()),
 								"PEMS - Import Images");
 			}
 

@@ -5,13 +5,17 @@
 package gui.display.start;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 import org.imgscalr.*;
 import exceptions.*;
 import gui.*;
 import gui.components.img.*;
 import gui.display.*;
+import gui.display.editcase.EditCasePanel;
 import gui.display.newcase.*;
+import gui.display.print.PrintPanel;
 
 public class StartPanel extends JPanel implements ActionListener
 {
@@ -55,15 +59,15 @@ public class StartPanel extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.editCaseButton)
 		{
-			/*try {
+			try {
 				this.manager.getMainWindow().pushPanel(new EditCasePanel(this.manager), "PEMS - Edit Existing Case");
 			} catch (IOException e1) {
 				e1.printStackTrace();
-			}*/
+			}
 		}
 		else if (e.getSource() == this.settingsButton)
 		{
-			//this.manager.getMainWindow().pushPanel(new PrintPanel(this.manager, "CrimePhotos/"), "PEMS - PDF generator");
+			this.manager.getMainWindow().pushPanel(new PrintPanel(this.manager, "CrimePhotos/"), "PEMS - PDF generator");
 		}
 	}
 	

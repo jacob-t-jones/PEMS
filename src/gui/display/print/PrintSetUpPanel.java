@@ -371,65 +371,82 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		float colWidth = tableWidth / cols;
 		float cellMargin = 5f;
 
-		// draw the rows
-		float nexty = y;
-		for (int i = 0; i <= rows; i++) {
-			// contentStream.drawLine(margin, nexty, margin + tableWidth,
-			// nexty);
-			nexty -= rowHeight;
+		float texty = y;
+		if(formatLayout ==  1 || formatLayout == 2 || formatLayout ==  4)
+		{
+			texty = y - 15;
+			System.out.println("1 2 or 4 layout texty:" + texty);
 		}
-
-		// draw the columns
-		float nextx = margin;
-		for (int i = 0; i <= cols; i++) {
-			// contentStream.drawLine(nextx, y, nextx, y - tableHeight);
-			nextx += colWidth;
+		else if(formatLayout ==  8)
+		{
+			texty = y + 140;
+			System.out.println("8 layout texty:" + texty);
 		}
-
-		// now add the text
-		// contentStream.setFont( PDType1Font.HELVETICA_BOLD , 12 );
 
 		float textx = margin + cellMargin;
-		float texty = y - 15;
 		int imgCounter = 0;
+		y = texty;
+		
 		for (int i = 0; i < content.length; i++) {
-			ThumbnailImg imgpic = null;
+			Img imgpic = null;
 			for (int j = 0; j < content[i].length; j++) {
-				
-				try {
-					imgpic = ComponentGenerator.generateThumbnailImg(selectedThumbnails.get(imgCounter).getFilePath(), 250);
-				} catch (InvalidImgException e) {
+				//attach image from the selected list
+				if(selectedThumbnails.size() > imgCounter)
+				{
 					try {
-						imgpic = ComponentGenerator.generateThumbnailImg("resources/blankimage.png", 250);
+						imgpic = ComponentGenerator.generateImg(selectedThumbnails.get(imgCounter).getFilePath());
+					} catch (InvalidImgException e) {
+						
+						e.printStackTrace();
+					}
+				}
+				//Otherwise attach a blank photo as a place holder
+				else
+				{
+					try {
+						imgpic = ComponentGenerator.generateImg("resources/blankimage.png");
+						imgpic.setDate(""); // will only work when we make true getter method for img
 					} catch (InvalidImgException ie) {
 						ie.printStackTrace();
 					}
-					e.printStackTrace();
 				}
-				//Otherwise attach a blank photo as a place holder
 				
-				
-				//depending on what layout we have chosen will determine what scale size we use
-				if(formatLayout == 0)
+				//Re-scale the images to fit the formats
+				if(formatLayout == 1 || formatLayout == 2)
 				{
-					contentStream.beginText(); //Will never enter here, added check on screen before this
-					contentStream.moveTextPositionByAmount(60, texty-12);
-					contentStream.drawString("You have no images selected!");
-					contentStream.endText();
-				}
-				else if(formatLayout == 1 || formatLayout == 2)
-				{
-					imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 400);
+					if (imgpic.getImage().getHeight() > 400)
+					{
+						int newWidth = (imgpic.getImage().getWidth() * 400) / imgpic.getImage().getHeight();
+						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 400);
+					}
 				}
 				else if(formatLayout == 4)
 				{
-					imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 250);
+					if (imgpic.getImage().getHeight() > 230)
+					{
+						int newWidth = (imgpic.getImage().getWidth() * 230) / imgpic.getImage().getHeight();
+						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 230);
+					}
+					if (imgpic.getImage().getWidth() > 230)
+					{
+						int newHeight = (imgpic.getImage().getHeight() * 230) / imgpic.getImage().getWidth();
+						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 230, newHeight);
+					}
+					
 				}
 				else if(formatLayout == 8)
 				{
-					imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 150);
+					if (imgpic.getImage().getHeight() > 125)
+					{
+						int newWidth = (imgpic.getImage().getWidth() * 125) / imgpic.getImage().getHeight();
+						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 125);
+					}
+					 if (imgpic.getImage().getWidth() > 125)
+					{
+						int newHeight = (imgpic.getImage().getHeight() * 125) / imgpic.getImage().getWidth();
+						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 125, newHeight);
+					}
 				}
-
 				texty = y;
 
 				//convert to a pdf readable image
@@ -438,6 +455,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 
 				// add the image to the pdf file
 				contentStream.drawImage(tempPDFImage, textx, texty);
+				System.out.println(" texty after attach image num imgCounter " + imgCounter + ": " + texty);
 
 				// Add the date below the image
 				contentStream.beginText();
@@ -450,7 +468,19 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 				//y -= (imgpic.getImage().getHeight() + 40);
 				imgCounter++;
 			}
-			y -= (imgpic.getImage().getHeight() + 40);
+			if(formatLayout ==  1 || formatLayout == 2)
+			{
+				y -= (400 + 30);
+			}
+			else if(formatLayout ==  4)
+			{
+				y -= (230 + 30);
+			}
+			else if(formatLayout ==  8)
+			{
+				y -= (125 + 30);
+			}
+			//y -= (imgpic.getImage().getHeight() + 40);
 			//texty -= (imgpic.getImage().getHeight() + 40);
 			textx = margin + cellMargin;
 		}
