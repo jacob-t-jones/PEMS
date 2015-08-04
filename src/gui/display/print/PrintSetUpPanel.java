@@ -65,7 +65,6 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 	private Point pos;
 	private Img[][] content;
 	private int format;
-	private boolean printable;
 	private Box displayContainer;
 	private Img layoutImg;
 
@@ -145,13 +144,14 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		this.repaint();
 	}
 	
-	/* mouseClicked - display the layout image based on which button was selected
+	/* actionPerformed - display the layout image based on which button was selected
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.layout1) {
 			try 
 			{
 				this.layoutImg = ComponentGenerator.generateImg("resources/layout1.png", CENTER_ALIGNMENT);
+				this.format = 1;
 			} 
 			catch(Exception ie)
 			{
@@ -161,8 +161,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		else if (e.getSource() == this.layout2) {
 			try 
 			{
-				System.out.println("1");
 				this.layoutImg = ComponentGenerator.generateImg("resources/layout2.png", CENTER_ALIGNMENT);
+				this.format = 2;
 			} 
 			catch(Exception ie)
 			{
@@ -173,6 +173,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 			try 
 			{
 				this.layoutImg = ComponentGenerator.generateImg("resources/layout4.png", CENTER_ALIGNMENT);
+				this.format = 4;
 			} 
 			catch(Exception ie)
 			{
@@ -183,6 +184,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 			try 
 			{
 				this.layoutImg = ComponentGenerator.generateImg("resources/layout8.png", CENTER_ALIGNMENT);
+				this.format = 8;
 			} 
 			catch(Exception ie)
 			{
@@ -248,6 +250,9 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		System.out.println("Creating PDF");
 		// Create a document and add a page to it
 		document = new PDDocument();
+		
+		//Determine how many pages are needed to print the document
+		//this.createPages(); divide total selected into number to be displayed per page + 1 page if there is remainder
 		PDPage page = new PDPage();
 		document.addPage(page);
 
@@ -287,8 +292,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		// this.displayImages(contentStream);
 
 		// decide which layout to use based on what is selected
-		format = 0;
-		this.content = this.getFormat();
+		this.content = this.getFormat(this.format);
 
 		drawTable(page, contentStream, 420, 50, this.content, format);
 
@@ -312,34 +316,29 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 	 * getFormat - chooses how many images the user would like to print on one
 	 * page
 	 */
-	private Img[][] getFormat() {
+	private Img[][] getFormat(int formatNum) {
 		Img[][] newContent;
-		if (selectedThumbnails.size() == 1)
+		if (formatNum == 1)
 		{
 			newContent = new Img[][] { { null } };
 			this.format = 1;
 		} 
-		else if (selectedThumbnails.size() == 2)
+		else if (formatNum == 2)
 		{
 			newContent = new Img[][] { { null }, { null } };
 			this.format = 2;
 		}
-		else if (selectedThumbnails.size() == 3)
-		{
-			newContent = new Img[][] { { null }, { null }, { null } };
-			this.format = 3;
-		} 
-		else if (selectedThumbnails.size() == 4) 
+		
+		else if (formatNum == 4) 
 		{
 			newContent = new Img[][] { { null, null }, { null, null } };
 			this.format = 4;
 		} 
-		else if (selectedThumbnails.size() == 8)
+		else if (formatNum == 8)
 		{
 			newContent = new Img[][] { { null, null }, { null, null }, { null, null }, { null, null } };
 			this.format = 8;
 		}
-		
 		else {
 			newContent = new Img[][] { { null } };
 			this.format = 0;
@@ -349,9 +348,10 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		return newContent;
 	}
 
-	/**
-	 * @param page
-	 * @param contentStream
+	
+	/* drawTable - constructs the main contents of the PDF (images and dates) based on selected format
+	 *      page - The page in which the contents are added
+	 * contentStream - the stream which contents will be added to 
 	 * @param y
 	 *            the y-coordinate of the first row
 	 * @param margin
@@ -392,26 +392,26 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		float texty = y - 15;
 		int imgCounter = 0;
 		for (int i = 0; i < content.length; i++) {
+			Img imgpic = null;
 			for (int j = 0; j < content[i].length; j++) {
-				//BufferedImage pic = content[i][j].getImage();//just empty...
-				//BufferedImage pic = ImageIO.read(new File(selectedThumbnails.get(imgCounter).getFilePath()));
-
-				// BufferedImage pic = content[i][j].getImage();//just empty...
-				BufferedImage pic = ImageIO.read(new File(selectedThumbnails.get(imgCounter).getFilePath()));
-
-				Img imgpic = null;
+				
 				try {
-					imgpic = new Img(selectedThumbnails.get(imgCounter)
-							.getFilePath());
+					imgpic = new Img(selectedThumbnails.get(imgCounter).getFilePath());
 				} catch (InvalidImgException e) {
-					// TODO Auto-generated catch block
+					try {
+						imgpic = ComponentGenerator.generateImg("resources/blankimage.png", CENTER_ALIGNMENT);
+					} catch (InvalidImgException ie) {
+						ie.printStackTrace();
+					}
 					e.printStackTrace();
 				}
+				//Otherwise attach a blank photo as a place holder
+				
 				
 				//depending on what layout we have chosen will determine what scale size we use
 				if(formatLayout == 0)
 				{
-					contentStream.beginText();
+					contentStream.beginText(); //Will never enter here, added check on screen before this
 					contentStream.moveTextPositionByAmount(60, texty-12);
 					contentStream.drawString("You have no images selected!");
 					contentStream.endText();
@@ -428,10 +428,10 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 				{
 					imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 150);
 				}
-				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 400);
 
 				texty = y;
 
+				//convert to a pdf readable image
 				PDXObjectImage tempPDFImage = null;
 				tempPDFImage = new PDJpeg(this.document, imgpic.getImage());
 
@@ -440,20 +440,22 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 
 				// Add the date below the image
 				contentStream.beginText();
-				contentStream.moveTextPositionByAmount(60, texty - 12);
+				contentStream.moveTextPositionByAmount(textx + margin, texty - 12);
 				contentStream.drawString(imgpic.getDate());
 				contentStream.endText();
 
 				// increment variables
 				textx += colWidth;
-				y -= imgpic.getImage().getHeight() - 40;
+				//y -= (imgpic.getImage().getHeight() + 40);
 				imgCounter++;
 			}
-			texty -= rowHeight;
+			y -= (imgpic.getImage().getHeight() + 40);
+			//texty -= (imgpic.getImage().getHeight() + 40);
 			textx = margin + cellMargin;
 		}
 	}
 
+	
 	private Point nextLine(Point p, PDPageContentStream contentStream) {
 		p.setLocation(p.getX(), p.getY() - 15);
 		return p;
