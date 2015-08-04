@@ -93,6 +93,7 @@ public class FileHandler
 	/* copyFiles - copies image files from their original location on a peripheral drive to the managed folder on the local file system
 	 *    delete - boolean value indicating whether the original copies of the image files should be deleted or retained
 	 *   caseNum - the case that the image files will be added to
+	 *  selected - ArrayList of ThumbnailImg objects representing the peripheral image files that need to be copied over
 	 */
 	public CopyFilesResult copyFiles(boolean delete, String caseNum, ArrayList<ThumbnailImg> selected)
 	{
