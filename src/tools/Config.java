@@ -52,9 +52,9 @@ public class Config
 		}
 		catch (IOException e)
 		{
-			System.out.println("Error - Unable to read configuration file");
+			System.out.println(e.getMessage());
 			e.printStackTrace();
-			return;
+			System.exit(0);
 		}
 		for (int i = 0; i < configFile.size(); i++)
 		{

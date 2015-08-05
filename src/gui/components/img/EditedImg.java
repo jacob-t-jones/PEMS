@@ -3,10 +3,12 @@
 // EditedImg.java
 
 package gui.components.img;
+import java.awt.*;
 import java.awt.image.*;
 import java.util.*;
 import org.imgscalr.*;
 import exceptions.*;
+import gui.*;
  
 public class EditedImg extends Img
 {
@@ -63,6 +65,22 @@ public class EditedImg extends Img
 			super.setImage(this.currentHistorySequence.peek());
 			super.refreshIcon();
 		}
+	}
+	
+	/* drawCropBox - draws a rectangle on the image based on the coordinates passed in as parameters
+	 *           a - Point object that serves as one corner of the rectangle
+	 *           b - Point object that serves as the other corner of the rectangle
+	 */
+	public void drawCropBox(Point a, Point b)
+	{
+		Graphics2D g = (Graphics2D)this.getGraphics();
+		super.update(g);
+		g.setColor(ComponentGenerator.CROPBOX_COLOR);
+		g.setStroke(new BasicStroke(3));
+		g.drawLine((int)a.getX(), (int)a.getY(), (int)a.getX(), (int)b.getY());
+		g.drawLine((int)a.getX(), (int)a.getY(), (int)b.getX(), (int)a.getY());
+	    g.drawLine((int)b.getX(), (int)b.getY(), (int)b.getX(), (int)a.getY());
+		g.drawLine((int)b.getX(), (int)b.getY(), (int)a.getX(), (int)b.getY());
 	}
 	
 	/* resizeImage - resizes "image" to the specified size using the ULTRA_QUALITY setting

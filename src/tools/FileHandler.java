@@ -102,10 +102,13 @@ public class FileHandler
 		for (int i = 0; i < caseDirectory.list().length; i++)
 		{
 			String currentFileName = caseDirectory.list()[i];
-			int currentFileIndex = Integer.parseInt(currentFileName.substring(currentFileName.indexOf('(') + 1, currentFileName.indexOf('-')));
-			if (currentFileIndex > fileIndex)
+			if (currentFileName.contains("(") && currentFileName.contains("-") && currentFileName.contains(")"))
 			{
-				fileIndex = currentFileIndex;
+				int currentFileIndex = Integer.parseInt(currentFileName.substring(currentFileName.indexOf('(') + 1, currentFileName.indexOf('-')));
+				if (currentFileIndex > fileIndex)
+				{
+					fileIndex = currentFileIndex;
+				}
 			}
 		}
     	for (int i = 0; i < selected.size(); i++)
@@ -133,7 +136,7 @@ public class FileHandler
     	return CopyFilesResult.SUCCESS;
 	}
 	
-	/* deleteFile - attempts to delete an image file from its location in "cases" (leaving the backup copies in "backups"), and returns a DeleteFileResult enum value indicating whether or not this operation was successful
+	/* deleteFile - attempts to delete an image file from its location in "cases" (leaving "backups" untouched), and returns a DeleteFileResult enum value indicating whether or not this operation was successful
 	 *        img - an EditedImg object representing the image file that should be deleted
 	 */
 	public DeleteFileResult deleteFile(EditedImg img) 
@@ -152,7 +155,7 @@ public class FileHandler
 	}
 	
 	/* saveFile - attempts to save an edited image file, overwriting the current version in "cases" and creating a new version in "backups", and returns a SaveFileResult enum value indicating whether or not this operation was successful
-	 *  caseNum - the number of the case that the image in question is located in
+	 *  caseNum - the case number for the image
 	 *      img - an EditedImg object representing the image file that should be saved
 	 */
 	public SaveFileResult saveFile(String caseNum, EditedImg img)

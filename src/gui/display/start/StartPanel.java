@@ -5,17 +5,16 @@
 package gui.display.start;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-
+import java.io.*;
 import javax.swing.*;
 import org.imgscalr.*;
 import exceptions.*;
 import gui.*;
 import gui.components.img.*;
 import gui.display.*;
-import gui.display.editcase.EditCasePanel;
+import gui.display.editcase.*;
 import gui.display.newcase.*;
-import gui.display.print.PrintPanel;
+import gui.display.print.*;
 
 public class StartPanel extends JPanel implements ActionListener
 {

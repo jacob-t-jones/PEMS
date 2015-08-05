@@ -16,15 +16,16 @@ import gui.display.dialogues.*;
 import gui.display.finish.*;
 import tools.FileHandler.*;
 
-public class EditImgPanel extends JPanel implements ActionListener, MouseListener, WindowListener
+public class EditImgPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener, WindowListener
 {
 	
 	private FrameManager manager;
 	private ArrayList<ThumbnailImg> caseThumbnails;
-	private EditedImg selectedImage;
+	private Point[] cropCoords;
 	private EditImgMenuBar menuBar;
+	private EditedImg selectedImg;
 	private Box mainContainer;
-	private Box selectedImageContainer;
+	private Box selectedImgContainer;
 	private Box caseThumbnailContainer;
 	private JButton loadNextThumbnails;
 	private JButton loadPrevThumbnails;
@@ -33,23 +34,6 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	private int caseThumbnailIndex;
 	private boolean cropping;
 	
-	/*private Point[] cropVals;
-	private JButton removeButton;
-	private JButton antiAliasButton;
-	private JButton brightenButton;
-	private JButton darkenButton;
-	private JButton grayscaleButton;
-	private JButton resizeButton;
-	private JButton cropButton;
-	private JButton rotate90Button;
-	private JButton renameButton;
-	private JButton undoButton;
-	private JButton redoButton;
-	private Box editorBox;
-	private DrawRect cropBox;
-	private Box cropContainer;
-	private Point mousePoint;*/
-	
 	public EditImgPanel(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
@@ -57,9 +41,10 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.caseThumbnailIndex = 0;
 		this.cropping = false;
 		this.caseThumbnails = this.getCaseThumbnails();
+		this.cropCoords = new Point[2];
 		this.menuBar = new EditImgMenuBar(this);
 		this.mainContainer = Box.createVerticalBox();
-		this.selectedImageContainer = Box.createHorizontalBox();
+		this.selectedImgContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.refreshCaseThumbnails(0);
@@ -72,6 +57,12 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.repaint();
 	}
 	
+	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
+	 *	             e - the event in question
+	 *                 1. attempts to load the next eight images in "caseThumbnailContainer"
+	 *                 2. attempts to load the previous eight images in "caseThumbnailContainer"
+	 *                 3. displays a dialogue prompting the user to save, pushes FinishPanel to the JFrame
+	 */
 	public void actionPerformed(ActionEvent e)
 	{ 
 		if (e.getSource() == this.loadNextThumbnails)
@@ -90,7 +81,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 		else if (e.getSource() == this.continueButton)
 		{
-			if (!this.selectedImage.getSaved())
+			if (!this.selectedImg.getSaved())
 			{
 				int selection = JOptionPane.showConfirmDialog(this.manager.getMainWindow(), "Would you like to save the currently selected image before proceeding to the next step? All unsaved changes will be lost.", "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (selection == JOptionPane.YES_OPTION)
@@ -106,11 +97,17 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 	}
 	
+	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 *              1. displays a dialogue prompting the user to save before pushing the selected thumbnail into the editing area
+	 *              2. if the user is currently cropping and he or she right clicks, the cropping procedure is canceled
+	 *              3. if the user clicks on "selectedImg" while he or she is cropping, the coordinates of the click are recorded and used in the procedure
+	 */
 	public void mouseClicked(MouseEvent e) 
 	{
 		if (e.getSource() instanceof ThumbnailImg)
 		{
-			if (!this.selectedImage.getSaved())
+			if (!this.selectedImg.getSaved())
 			{
 				int selection = JOptionPane.showConfirmDialog(this.manager.getMainWindow(), "Would you like to save the currently selected image before editing a new one? All unsaved changes will be lost.", "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (selection == JOptionPane.YES_OPTION)
@@ -125,7 +122,9 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 			ThumbnailImg selectedThumbnail = (ThumbnailImg)e.getSource();
 			try 
 			{
-				this.selectedImage = ComponentGenerator.generateEditedImg(selectedThumbnail.getFilePath(), CENTER_ALIGNMENT);
+				this.selectedImg = ComponentGenerator.generateEditedImg(selectedThumbnail.getFilePath(), CENTER_ALIGNMENT);
+				this.selectedImg.addMouseListener(this);
+				this.selectedImg.addMouseMotionListener(this);
 			} 
 			catch (InvalidImgException e1) 
 			{
@@ -133,84 +132,161 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 				e1.printStackTrace();
 				return;
 			}
-			this.selectedImageContainer.removeAll();
-			this.selectedImageContainer.add(this.selectedImage);
+			this.selectedImgContainer.removeAll();
+			this.selectedImgContainer.add(this.selectedImg);
 			this.revalidate();
 			this.repaint();
 		}
+		else if (SwingUtilities.isRightMouseButton(e) && this.cropping)
+		{
+			this.cropping = false;
+			this.cropCoords = new Point[2];
+			this.selectedImg.repaint();
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		}
+		else if (e.getSource() == this.selectedImg && this.cropping)
+		{
+			if (this.cropCoords[0] == null)
+			{
+				this.cropCoords[0] = e.getPoint();
+			}
+			else if (this.cropCoords[1] == null)
+			{
+				this.cropCoords[1] = e.getPoint();
+				this.applyCrop();
+			}
+		}
 	}
 	
+	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
 	public void mousePressed(MouseEvent e) 
 	{
 		return;
 	}
 	
+	/* mouseReleased - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	           e - the event in question
+	 */
 	public void mouseReleased(MouseEvent e) 
 	{
 		return;
 	}
 	
+	/* mouseEntered - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
 	public void mouseEntered(MouseEvent e) 
 	{
 		return;
 	}
 
+	/* mouseExited - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	         e - the event in question
+	 */
 	public void mouseExited(MouseEvent e) 
 	{
 		return;
 	}
 	
+	/* mouseDragged - mandatory for any class implementing MouseMotionListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
+	public void mouseDragged(MouseEvent e) 
+	{
+		return;
+	}
+
+	/* mouseMoved - mandatory for any class implementing MouseMotionListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	        e - the event in question
+	 *            1. if the user moves the mouse over "selectedImg" while he or she is cropping, a red box is drawn over the area that he or she has selected
+	 */
+	public void mouseMoved(MouseEvent e) 
+	{
+		if (e.getSource() == this.selectedImg && this.cropping && this.cropCoords[0] != null && this.cropCoords[1] == null)
+		{
+			this.selectedImg.drawCropBox(this.cropCoords[0], e.getPoint());
+		}
+	}
+	
+	/* windowOpened - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
 	public void windowOpened(WindowEvent e) 
 	{
 		return;
 	}
 
+	/* windowClosing - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
+	 *	           e - the event in question
+	 *               1. calls the quit() method
+	 */
 	public void windowClosing(WindowEvent e) 
 	{
 		this.quit();
 	}
 
+	/* windowClosed - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
 	public void windowClosed(WindowEvent e) 
 	{
 		return;
 	}
 
+	/* windowIconified - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
+	 *	             e - the event in question
+	 */
 	public void windowIconified(WindowEvent e) 
 	{
 		return;
 	}
 
+	/* windowDeiconified - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
+	 *	               e - the event in question
+	 */
 	public void windowDeiconified(WindowEvent e) 
 	{
 		return;
 	}
 
+	/* windowActivated - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
+	 *	             e - the event in question
+	 */
 	public void windowActivated(WindowEvent e) 
 	{
 		return;
 	}
 
+	/* windowDeactivated - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
+	 *	               e - the event in question
+	 */
 	public void windowDeactivated(WindowEvent e) 
 	{
 		return;
 	}
 
+	/* saveImg - attempts to save the image currently being edited by the user
+	 */
 	public void saveImg()
 	{
-		SaveFileResult result = this.manager.getFileHandler().saveFile(this.caseNum, this.selectedImage);
+		SaveFileResult result = this.manager.getFileHandler().saveFile(this.caseNum, this.selectedImg);
 		if (result == SaveFileResult.SAVE_FAILED)
 		{
 			JOptionPane.showMessageDialog(this.manager.getMainWindow(), "Save unexpectedly failed! Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		else
 		{
-			this.selectedImage.setSaved(true);
+			this.selectedImg.setSaved(true);
 		}
 	}
 	
+	/* quit - displays a dialogue prompting the user to save his or her changes before proceeding, and then executes the appropriate exit procedure
+	 */
 	public void quit()
 	{
-		if (!this.selectedImage.getSaved())
+		if (!this.selectedImg.getSaved())
 		{
 			int selection = JOptionPane.showConfirmDialog(this.manager.getMainWindow(), "Would you like to save the currently selected image before exiting the program?", "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (selection == JOptionPane.YES_OPTION)
@@ -232,22 +308,28 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 	}
 	
+	/* undo - undoes the action most recently taken by the user
+	 */
 	public void undo()
 	{
-		this.selectedImage.undo();
+		this.selectedImg.undo();
 	}
 	
+	/* redo - redoes the action most recently undone by the user
+	 */
 	public void redo()
 	{
-		this.selectedImage.redo();
+		this.selectedImg.redo();
 	}
 	
+	/* removeImg - attempts to remove the currently selected image from the "cases" folder, leaving a copy of the file in the "backups" directory 
+	 */
 	public void removeImg()
 	{
 		int selection = JOptionPane.showConfirmDialog(this.manager.getMainWindow(), "Are you sure you would like to remove this image from the case?", "Remove Image", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 		if (selection == JOptionPane.YES_OPTION)
 		{
-			DeleteFileResult result = this.manager.getFileHandler().deleteFile(this.selectedImage);
+			DeleteFileResult result = this.manager.getFileHandler().deleteFile(this.selectedImg);
 			if (result == DeleteFileResult.DELETION_FAILED)
 			{
 				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "File deletion unexpectedly failed! Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -263,57 +345,95 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 	}
 	
+	/* antiAlias - applies an anti aliasing procedure to "selectedImg"
+	 */
 	public void antiAlias()
 	{
-		this.selectedImage.applyAntiAliasing();
+		this.selectedImg.applyAntiAliasing();
 	}
 	
+	/* brighten - brightens "selectedImg" by 10%
+	 */
 	public void brighten()
 	{
-		this.selectedImage.brightenImage();
+		this.selectedImg.brightenImage();
 	}
 	
+	/* darken - darkens "selectedImg" by 10%
+	 */
 	public void darken()
 	{  
-		this.selectedImage.darkenImage();
+		this.selectedImg.darkenImage();
 	}
 	
+	/* grayscale - converts "selectedImg" to grayscale format
+	 */
 	public void grayscale()
 	{
-		this.selectedImage.toGrayscale();
+		this.selectedImg.toGrayscale();
 	}
 	
+	/* resizeImg - initializes and displays the resize image dialogue
+	 */
 	public void resizeImg()
 	{
-		this.manager.openDialogue("Resize Image", new ResizeDialogue(this.manager, this, this.selectedImage.getImage().getWidth(), this.selectedImage.getImage().getHeight()), 40, 30);
+		this.manager.openDialogue("Resize Image", new ResizeDialogue(this.manager, this, this.selectedImg.getImage().getWidth(), this.selectedImg.getImage().getHeight()), 40, 30);
 	}
 	
+	/* resizeImg - applies the image resizing procedure to "selectedImg"
+	 *  newWidth - the new width of the image in pixels
+	 * newHeight - the new height of the image in pixels
+	 */
 	public void resizeImg(int newWidth, int newHeight)
 	{
-		this.selectedImage.resizeImage(newWidth, newHeight);
+		this.selectedImg.resizeImage(newWidth, newHeight);
 	}
 	
+	/* crop - initializes the cropping procedure for "selectedImg"
+	 */
 	public void crop()
 	{
 		this.cropping = true;
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 	}
 	
+	/* rotate90 - rotates "selectedImg" 90 degrees to the right
+	 */
 	public void rotate90()
 	{
-		this.selectedImage.rotateRight90();
+		this.selectedImg.rotateRight90();
 	}
 	
+	/* rotate180 - rotates "selectedImg" 180 degrees to the right
+	 */
 	public void rotate180()
 	{
-		this.selectedImage.rotateRight180();
+		this.selectedImg.rotateRight180();
 	}
 	
+	/* rotate270 - rotates "selectedImg" 270 degrees to the right
+	 */
 	public void rotate270()
 	{
-		this.selectedImage.rotateRight270();
+		this.selectedImg.rotateRight270();
 	}
 	
+	/* applyCrop - uses the Point values stored in "cropCoords" to apply a cropping procedure to "selectedImg"
+	 */
+	private void applyCrop()
+	{
+		int x = (int)Math.min(this.cropCoords[0].getX(), this.cropCoords[1].getX());
+		int y = (int)Math.min(this.cropCoords[0].getY(), this.cropCoords[1].getY());
+		int width = (int)Math.abs(this.cropCoords[1].getX() - this.cropCoords[0].getX());
+		int height = (int)Math.abs(this.cropCoords[1].getY() - this.cropCoords[0].getY());
+		this.cropping = false;
+		this.cropCoords = new Point[2];
+		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.selectedImg.cropImage(x, y, width, height);
+	}
+	
+	/* getCaseThumbnails - returns an ArrayList of ThumbnailImg objects representing all of the image files that are a part of the currently selected case
+	 */
 	private ArrayList<ThumbnailImg> getCaseThumbnails()
 	{
 		ArrayList<ThumbnailImg> thumbnailList = new ArrayList<ThumbnailImg>();
@@ -340,6 +460,9 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	    return thumbnailList;
 	}
 	
+	/* refreshCaseThumbnails - refreshes the ThumbnailImg objects contained within "caseThumbnailContainer"
+	 *    caseThumbnailIndex - the index within "caseThumbnails" of the first image to be displayed
+	 */
 	private void refreshCaseThumbnails(int caseThumbnailIndex)
 	{
 		this.loadNextThumbnails = ComponentGenerator.generateButton("Next     >", this);
@@ -376,150 +499,28 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.repaint();
 	}
 	
+	/* populateMainContainer - populates "mainContainer" with the necessary components
+	 */
 	private void populateMainContainer()
 	{
 		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
 		try 
 		{
-			this.selectedImage = ComponentGenerator.generateEditedImg(this.caseThumbnails.get(0).getFilePath(), CENTER_ALIGNMENT);
-			this.selectedImageContainer.add(this.selectedImage);
+			this.selectedImg = ComponentGenerator.generateEditedImg(this.caseThumbnails.get(0).getFilePath(), CENTER_ALIGNMENT);
+			this.selectedImg.addMouseListener(this);
+			this.selectedImg.addMouseMotionListener(this);
+			this.selectedImgContainer.add(this.selectedImg);
 		} 
 		catch (InvalidImgException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-		this.mainContainer.add(this.selectedImageContainer);
+		this.mainContainer.add(this.selectedImgContainer);
 		this.mainContainer.add(Box.createVerticalStrut(40));
 		this.mainContainer.add(this.caseThumbnailContainer);
 		this.mainContainer.add(Box.createVerticalStrut(10));
 		this.mainContainer.add(this.continueButton);
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*private void drawRec(Graphics g, Point initPoint)
-	{
-		//this.remove(cropBox);
-		cropBox = new DrawRect(this.getGraphics(), initPoint);
-		cropBox.paint(g, initPoint);
-		//this.revalidate();
-		this.cropBox.repaint();
-	}
-
-	private void populateEditorBox()
-	{
-		this.antiAliasButton = ComponentGenerator.generateButton("AntiAlias", this, CENTER_ALIGNMENT);
-		this.brightenButton = ComponentGenerator.generateButton("Brighten", this, CENTER_ALIGNMENT);
-		this.darkenButton = ComponentGenerator.generateButton("Darken", this, CENTER_ALIGNMENT);
-		this.cropButton = ComponentGenerator.generateButton("Crop", this, CENTER_ALIGNMENT);
-		this.grayscaleButton = ComponentGenerator.generateButton("Grayscale", this, CENTER_ALIGNMENT);
-		this.rotate90Button = ComponentGenerator.generateButton("Rotate 90", this, CENTER_ALIGNMENT);
-		this.resizeButton = ComponentGenerator.generateButton("Resize", this, CENTER_ALIGNMENT);
-		this.renameButton = ComponentGenerator.generateButton("Rename", this, CENTER_ALIGNMENT);
-		this.removeButton = ComponentGenerator.generateButton("Remove", this, CENTER_ALIGNMENT);
-		this.undoButton = ComponentGenerator.generateButton("undo", this, CENTER_ALIGNMENT);
-		this.redoButton = ComponentGenerator.generateButton("redo", this, CENTER_ALIGNMENT);
-		this.editorBox.add(antiAliasButton);
-		this.editorBox.add(brightenButton);
-		this.editorBox.add(darkenButton);
-		this.editorBox.add(Box.createVerticalStrut(30));
-		this.editorBox.add(cropButton);
-		this.editorBox.add(grayscaleButton);
-		this.editorBox.add(rotate90Button);
-		this.editorBox.add(resizeButton);
-		this.editorBox.add(renameButton);
-		this.editorBox.add(Box.createVerticalStrut(30));
-		this.editorBox.add(undoButton);
-		this.editorBox.add(redoButton);
-		this.editorBox.add(Box.createVerticalStrut(30));
-		this.editorBox.add(removeButton);
-	}
-
-	private void refreshSelectedImage()
-	{
-		this.selectedImageContainer.removeAll();
-		if (this.selectedImage.getHeight() > 500)
-		{
-			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 500), CENTER_ALIGNMENT);
-			this.selectedImageLabel.addMouseListener(this);
-
-		}
-		else if (this.selectedImage.getWidth() > 1000)
-		{
-			this.selectedImageLabel = ComponentGenerator.generateLabel(ImageEditor.resizeImage(this.selectedImage, 1000), CENTER_ALIGNMENT);
-			this.selectedImageLabel.addMouseListener(this);
-		}
-		else
-		{
-			this.selectedImageLabel = ComponentGenerator.generateLabel(this.selectedImage, CENTER_ALIGNMENT);
-			this.selectedImageLabel.addMouseListener(this);
-		}
-		this.selectedImageContainer.setMaximumSize(new Dimension(1000, 500));
-		this.selectedImageContainer.setMinimumSize(new Dimension(1000, 500));
-		this.selectedImageContainer.add(Box.createHorizontalGlue());
-		this.selectedImageContainer.add(Box.createVerticalStrut(500));
-		this.selectedImageContainer.add(this.selectedImageLabel);
-		this.selectedImageContainer.add(Box.createVerticalStrut(500));
-		this.selectedImageContainer.add(Box.createHorizontalGlue());
-		this.selectedImageContainer.add(this.editorBox);
-		this.revalidate();
-		this.repaint();
-	}
-
-	private void loadFirstImage()
-	{
-		Thumbnail selectedThumbnail = this.caseThumbnails.get(0);
-		this.selectedImage = null;
-		try 
-		{      
-			this.selectedImage = ImageIO.read(new File(selectedThumbnail.getFilePath()));
-		} 
-		catch (IOException e)
-		{
-			System.out.println("Error - Unable to import selected image");
-			e.printStackTrace();
-			return;
-		}
-		this.selectedImagePath = selectedThumbnail.getFilePath();
-		this.selectedImageName = selectedThumbnail.getFileName();
-		this.selectedImageExt = selectedThumbnail.getFileExt();
-		this.selectedImageHistorySaved.push(this.selectedImage);
-		this.refreshSelectedImage();
-	}
-
-	private void crop(Point locA, Point locB)
-	{
-		int x = (int)Math.min(locA.getX(), locB.getX());
-		int y = (int)Math.min(locA.getY(), locB.getY());
-		int width = (int)Math.abs(locB.getX() - locA.getX());
-		int height = (int)Math.abs(locB.getY() - locA.getY());
-		if (this.selectedImage.getWidth() != this.selectedImageLabel.getWidth() || this.selectedImage.getHeight() != this.selectedImageLabel.getHeight())
-		{
-			x = (this.selectedImage.getWidth() * x) / this.selectedImageLabel.getWidth();
-			y = (this.selectedImage.getHeight() * y) / this.selectedImageLabel.getHeight();
-			width = (this.selectedImage.getWidth() * width) / this.selectedImageLabel.getWidth();
-			height = (this.selectedImage.getHeight() * height) / this.selectedImageLabel.getHeight();
-		}
-		this.cropping = false;
-		this.resetCropValues();
-		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		this.selectedImage.cropImage(x, y, width, height);
-	}
-	
-	private void resetCropValues()
-	{
-		this.cropVals = new Point[2];
-		this.cropVals[0] = null;
-		this.cropVals[1] = null;
-	}*/
 	
 }
