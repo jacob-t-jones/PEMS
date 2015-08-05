@@ -25,7 +25,7 @@ public class ComponentGenerator
 	public static final Color SUBTITLE_COLOR = new Color(2, 2, 123);
 	public static final Color STANDARD_TEXT_COLOR = new Color(44, 29, 29);
 	public static final Color ERROR_TEXT_COLOR = new Color(202, 12, 12);
-	public static final Color CROPBOX_COLOR = new Color(1, 1, 1);
+	public static final Color CROPBOX_COLOR = new Color(250, 40, 25);
 	
 	public ComponentGenerator()
 	{

@@ -4,11 +4,9 @@
 
 package gui.window;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import gui.display.*;
-import gui.display.start.StartPanel;
+import gui.display.start.*;
 
 public class MainWindow extends Window implements WindowListener
 {

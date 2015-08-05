@@ -9,6 +9,8 @@ import java.io.*;
 import java.nio.file.*;
 import javax.imageio.*;
 import javax.swing.*;
+import org.apache.sanselan.*;
+import org.apache.sanselan.common.*;
 import org.imgscalr.*;
 import exceptions.*;
 
@@ -16,11 +18,12 @@ public class Img extends JLabel
 {
 	
 	private BufferedImage image;
+	private IImageMetadata metadata;
 	private String filePath;
 	private String fileName;
 	private String fileExt;
 	private String fileType;
-	private String date;
+	private String timestamp;
 
 	public Img(String filePath) throws InvalidImgException
 	{
@@ -29,29 +32,8 @@ public class Img extends JLabel
 		this.fileName = retrieveFileName();
 		this.fileExt = retrieveFileExt();
 		this.fileType = retrieveFileType();
-		this.date = this.getDate();
+		this.timestamp = this.retrieveTimestamp();
 		super.setIcon(new ImageIcon(this.image));
-	}
-	
-	public String getDate() 
-	{
-		// find path / property of the date in the image in the camera
-		return "12/12/12";
-	}
-	
-	public void setDate(String newDate) 
-	{
-		this.date = newDate;
-		return;
-	}
-
-	public void displayDate(Graphics g) 
-	{
-		super.paint(g);
-		g.setFont(g.getFont().deriveFont(30f));
-		g.drawString(this.getDate(), 10, 10);
-		g.dispose();
-		this.refreshIcon();
 	}
 	
 	/* getImage - returns "image", the raw BufferedImage stored by this class
@@ -95,6 +77,13 @@ public class Img extends JLabel
 	public String getFileType()
 	{
 		return this.fileType;
+	}
+	
+	/* getTimestamp - returns "timestamp", the date/time value retrieved from the EXIF data of the image
+	 */
+	public String getTimestamp() 
+	{
+		return this.timestamp;
 	}
 	
 	/* addPadding - adds padding around "image" on all four sides
@@ -212,11 +201,17 @@ public class Img extends JLabel
 	{    
 		try
 		{
-			return ImageIO.read(new File(this.filePath));
+			File imageFile = new File(this.filePath);
+			this.metadata = Sanselan.getMetadata(imageFile);
+			return ImageIO.read(imageFile);
 		}
 		catch (IOException e)
 		{
 			throw new InvalidImgException("Unable to read image into memory", e);
+		}
+		catch(ImageReadException e)
+		{
+			throw new InvalidImgException("Unable to read image metadata", e);
 		}
 	}
 	
@@ -259,6 +254,29 @@ public class Img extends JLabel
 		{
 			throw new InvalidImgException("Invalid image file type");
 		}
+	}
+	
+	/* retrieveTimestamp - attepts to retrieve and return the timestamp of the image from its EXIF metadata, returns "DATE NOT FOUND" if this fails
+	 */
+	private String retrieveTimestamp()
+	{
+		if (this.metadata != null)
+		{
+			String exifData = this.metadata.toString();
+			if (exifData.contains("Date Time Original"))
+			{
+				return exifData.substring(exifData.indexOf("Date Time Original") + 21, exifData.indexOf("'", exifData.indexOf("Date Time Original") + 21));
+			}
+			if (exifData.contains("Create Date"))
+			{
+				return exifData.substring(exifData.indexOf("Create Date") + 14, exifData.indexOf("'", exifData.indexOf("Create Date") + 14));
+			}
+			else if (exifData.contains("Modify Date"))
+			{
+				return exifData.substring(exifData.indexOf("Modify Date") + 14, exifData.indexOf("'", exifData.indexOf("Modify Date") + 14));
+			}
+		}
+		return "DATE NOT FOUND";
 	}
 	
 }

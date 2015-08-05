@@ -148,8 +148,9 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 
 	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
 	 *	          e - the event in question
-	 *              1. removes the source ThumbnailImg from "selectedThumbnails" and adds it to "displayedThumbnails"
-	 *              2. removes the source ThumbnailImg from "displayedThumbnails" and adds it to "selectedThumbnails"
+	 *              1. refreshes the thumbnails in "displayedContainer" by once again scanning peripheral devices for images files 
+	 *              2. removes the source ThumbnailImg from "selectedThumbnails" and adds it to "displayedThumbnails"
+	 *              3. removes the source ThumbnailImg from "displayedThumbnails" and adds it to "selectedThumbnails"
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
@@ -161,15 +162,12 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 			for (int i = 0; i < this.selectedThumbnails.size(); i++)
 			{
 				ThumbnailImg currentSelectedThumbnail = this.selectedThumbnails.get(i);
-				if (this.displayedThumbnails.contains(currentSelectedThumbnail));
+				for (int j = 0; j < this.displayedThumbnails.size(); j++)
 				{
-					for (int j = 0; j < this.displayedThumbnails.size(); j++)
+					ThumbnailImg currentDisplayedThumbnail = this.displayedThumbnails.get(j);
+					if (currentSelectedThumbnail.getFilePath().equalsIgnoreCase(currentDisplayedThumbnail.getFilePath()))
 					{
-						ThumbnailImg currentDisplayedThumbnail = this.displayedThumbnails.get(j);
-						if (currentSelectedThumbnail.getFilePath().equalsIgnoreCase(currentDisplayedThumbnail.getFilePath()))
-						{
-							this.displayedThumbnails.remove(j);
-						}
+						this.displayedThumbnails.remove(j);
 					}
 				}
 			}
@@ -225,6 +223,7 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	}	
 
 	/* refreshDisplayedThumbnails - refreshes the ThumbnailImgs for images not yet selected by the user
+	 *        displayedImagePlace - the index within "displayedThumbnails" of the first image to be displayed
 	 */
 	private void refreshDisplayedThumbnails(int displayedImagePlace)
 	{
@@ -266,6 +265,7 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	}
 
 	/* refreshSelectedThumbnails - refreshes the ThumbnailImgs placed in "selectedContainer" by the user
+	 *        selectedImagePlace - the index within "selectedThumbnails" of the first image to be displayed
 	 */
 	private void refreshSelectedThumbnails(int selectedImagePlace)
 	{
@@ -305,6 +305,8 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.repaint();
 	}
 	
+	/* populateDisplayedTopContainer() - fills the "displayedTopContainer" layout structure with the necessary components
+	 */
 	private void populateDisplayedTopContainer()
 	{
 		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images Detected on External Devices", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
