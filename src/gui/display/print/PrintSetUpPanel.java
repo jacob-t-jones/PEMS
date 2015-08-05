@@ -255,7 +255,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		//Determine how many pages are needed to print the document
 		//this.createPages(); divide total selected into number to be displayed per page + 1 page if there is remainder
 		PDPage page = new PDPage();
-		document.addPage(page);
+		//PDPage[] pages = this.generatePages(document);
+		document.addPage(page);  // -moved to function above
 
 		// import and convert the badge image
 		this.importBadgeImages();
@@ -313,9 +314,28 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 
 	}
 	
-	private PDPage[][] generatePages(){
-		return null;
+	/*generatePages - creates the number of pages needed to print all of the images selected
+	 *                to a PDF document
+	 */
+	private PDPage[] generatePages(PDDocument doc){
+		//find number of pages needed to generate
+		int numPages = Math.floorDiv(selectedThumbnails.size(), format);
+		//add an extra page if there is remaining images
+		boolean hasExtra = false;
+		if(selectedThumbnails.size()%format != 0)
+			hasExtra = true;
+		if(hasExtra)
+			numPages += 1;
 		
+		//create an array of pages needed for the pdf
+		PDPage[] pageList = new PDPage[numPages];
+		for(int i = 0; i < numPages; i++)
+		{
+			PDPage tempPage = new PDPage();
+			pageList[i] = tempPage;
+			doc.addPage(tempPage);
+		}
+		return pageList;
 	}
 
 	/*
@@ -374,31 +394,73 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		float tableWidth = page.findMediaBox().getWidth() - margin - margin;
 		float tableHeight = rowHeight * rows;
 		float colWidth = tableWidth / cols;
-		float cellMargin = 5f;
+		float cellMargin = 5f; 
+		int numPicsOnPage = 0;
+		boolean pageFull = false;
+		
+		//find number of pages needed to generate
+		int numPages = Math.floorDiv(selectedThumbnails.size(), format);
+		//add an extra page if there is remaining images
+		boolean hasExtra = false;
+		if(selectedThumbnails.size()%format != 0)
+			hasExtra = true;
+		if(hasExtra)
+			numPages += 1;
+		
+		PDPageContentStream tempContentStream = null;
+		//initial page to work on
+		//PDPageContentStream tempContentStream = new PDPageContentStream(document, pageList[0]);
+		//PDPageContentStream contentStream = new PDPageContentStream(document, pages[0]);
 
 		float texty = y;
 		if(formatLayout ==  1 || formatLayout == 2 || formatLayout ==  4)
 		{
 			texty = y - 15;
-			System.out.println("1 2 or 4 layout texty:" + texty);
+			//System.out.println("1 2 or 4 layout texty:" + texty);
 		}
 		else if(formatLayout ==  8)
 		{
 			texty = y + 140;
-			System.out.println("8 layout texty:" + texty);
+			//System.out.println("8 layout texty:" + texty);
 		}
 
 		float textx = margin + cellMargin;
-		int imgCounter = 0;
 		y = texty;
 		
-		for (int i = 0; i < content.length; i++) {
+		int imgCounter = 0;
+		int pageCounter = 0;
+		PDPage tempPage = new PDPage();
+		PDPageContentStream newContentStream = null;
+		for (int i = 0; i < content.length; i++) 
+		{
 			Img imgpic = null;
-			for (int j = 0; j < content[i].length; j++) {
+			for (int j = 0; j < content[i].length; j++) 
+			{
+				numPicsOnPage += 1;
+				
+				System.out.println("imagenum: " + imgCounter);
+				//check to see what page we are working on
+				if(imgCounter % formatLayout == 0 || imgCounter == 0)
+				{
+					tempPage = new PDPage();
+					//pageList[i] = tempPage;
+					//document.addPage(tempPage); //move to below adding stuff
+					
+					// newContentStream = new PDPageContentStream(document, tempPage);
+					//page = new PDPage(PDPage.PAGE_SIZE_LETTER);
+					//document.addPage(tempPage);
+					//contentStream = new PDPageContentStream(document, page);
+					System.out.println("temp page: " + tempPage);
+				}
+				contentStream.beginText();
+				contentStream.drawString("penis777penis777penis");
+				contentStream.endText();
+				
 				//attach image from the selected list
 				if(selectedThumbnails.size() > imgCounter)
 				{
 					try {
+						System.out.println("an image");
 						imgpic = ComponentGenerator.generateImg(selectedThumbnails.get(imgCounter).getFilePath());
 					} catch (InvalidImgException e) {
 						
@@ -409,6 +471,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 				else
 				{
 					try {
+						System.out.println("blank image");
 						imgpic = ComponentGenerator.generateImg("resources/blankimage.png");
 						imgpic.setDate(""); // will only work when we make true getter method for img
 					} catch (InvalidImgException ie) {
@@ -419,10 +482,15 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 				//Re-scale the images to fit the formats
 				if(formatLayout == 1 || formatLayout == 2)
 				{
-					if (imgpic.getImage().getHeight() > 400)
+					if (imgpic.getImage().getHeight() > 270)
 					{
-						int newWidth = (imgpic.getImage().getWidth() * 400) / imgpic.getImage().getHeight();
-						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 400);
+						int newWidth = (imgpic.getImage().getWidth() * 270) / imgpic.getImage().getHeight();
+						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 270);
+					}
+					if (imgpic.getImage().getWidth() > 270)
+					{
+						int newHeight = (imgpic.getImage().getHeight() * 270) / imgpic.getImage().getWidth();
+						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 270, newHeight);
 					}
 				}
 				else if(formatLayout == 4)
@@ -460,7 +528,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 
 				// add the image to the pdf file
 				contentStream.drawImage(tempPDFImage, textx, texty);
-				System.out.println(" texty after attach image num imgCounter " + imgCounter + ": " + texty);
+				//System.out.println(" texty after attach image num imgCounter " + imgCounter + ": " + texty);
 
 				// Add the date below the image
 				contentStream.beginText();
@@ -468,11 +536,23 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 				contentStream.drawString(imgpic.getDate());
 				contentStream.endText();
 
+				//Check to see if the current page is full of content
+				if(numPicsOnPage == formatLayout)
+				{
+					pageFull = true;
+					numPicsOnPage = 0;
+				}
+				if(pageFull)
+				{
+					System.out.println("added page to doc");
+					document.addPage(tempPage); 
+					pageFull = false;
+				}
+				
 				// increment variables
 				textx += colWidth;
-				//y -= (imgpic.getImage().getHeight() + 40);
 				imgCounter++;
-			}
+			}//END OF FIRST
 			if(formatLayout ==  1 || formatLayout == 2)
 			{
 				y -= (400 + 30);
@@ -485,10 +565,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 			{
 				y -= (125 + 30);
 			}
-			//y -= (imgpic.getImage().getHeight() + 40);
-			//texty -= (imgpic.getImage().getHeight() + 40);
 			textx = margin + cellMargin;
-		}
+		}// END OF SECOND
 	}
 
 	
