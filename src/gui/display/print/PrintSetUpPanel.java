@@ -312,6 +312,11 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		return null;
 
 	}
+	
+	private PDPage[][] generatePages(){
+		return null;
+		
+	}
 
 	/*
 	 * getFormat - chooses how many images the user would like to print on one
