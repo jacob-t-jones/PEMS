@@ -72,7 +72,6 @@ public class NewCasePanel extends JPanel implements ActionListener
 		this.container.add(Box.createVerticalStrut(50));
 		this.container.add(this.caseNumField);
 		this.container.add(Box.createVerticalStrut(80));
-		
 		this.buttonsBox.add(backButton);
 		this.buttonsBox.add(Box.createHorizontalStrut(80));
 		this.buttonsBox.add(this.continueButton);

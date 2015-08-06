@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 
-import tools.ImageEditor;
+//import tools.ImageEditor;
 
 public class FileDisplay extends Box {
 
