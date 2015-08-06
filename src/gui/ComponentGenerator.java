@@ -6,6 +6,7 @@ package gui;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import org.imgscalr.*;
 import exceptions.*;
 import gui.components.field.*;
 import gui.components.img.*;
@@ -425,6 +426,26 @@ public class ComponentGenerator
 		newThumbnailImg.setAlignmentX(alignmentX);
 		newThumbnailImg.setAlignmentY(alignmentY);
 		return newThumbnailImg;
+	}
+	
+	/* fitImageToScreen - returns a version of a given EditedImg that is shrunk down in order to fit EditImgPanel properly
+	 *              img - the EditedImg to resize
+	 */
+	public static EditedImg fitImageToScreen(EditedImg img) throws InvalidImgException
+	{
+		EditedImg fittedImg = new EditedImg(img.getFilePath());
+		if (fittedImg.getImage().getHeight() > 500)
+		{
+			fittedImg.clearLastHistoryEntry();
+			fittedImg.resizeImage(Scalr.Method.QUALITY, 500);
+		}
+		else if (fittedImg.getImage().getWidth() > 1200)
+		{
+			fittedImg.clearLastHistoryEntry();
+			fittedImg.resizeImage(Scalr.Method.QUALITY, 1200);
+
+		}
+		return fittedImg;
 	}
 	
 }

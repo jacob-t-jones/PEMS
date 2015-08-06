@@ -22,8 +22,8 @@ public class EditedImg extends Img
 		super(filePath);
 		this.currentHistorySequence = new Stack<BufferedImage>();
 		this.undoneHistorySequence = new Stack<BufferedImage>();
-		this.saved = true;
 		this.currentHistorySequence.push(super.getImage());
+		this.saved = true;
 	}
 	
 	/* getSaved - returns "saved", a boolean value indicating whether or not the image has been saved since the most recent change
@@ -98,6 +98,13 @@ public class EditedImg extends Img
 	public void resizeImage(int width, int height)
 	{
 		super.resizeImage(Scalr.Method.ULTRA_QUALITY, width, height);
+	}
+	
+	/* clearLastHistoryEntry - removes the last item added to "currentHistorySequence"
+	 */
+	public void clearLastHistoryEntry()
+	{
+		this.currentHistorySequence.pop();
 	}
 	
 	/* refreshIcon - calls the parent version of this method, clears "undoneHistorySequence", adds to "currentHistorySequence", sets "saved" to false, and repaints the image
