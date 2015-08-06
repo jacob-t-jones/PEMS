@@ -5,6 +5,8 @@
 package gui;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
 import javax.swing.*;
 import org.imgscalr.*;
 import exceptions.*;
@@ -98,6 +100,7 @@ public class ComponentGenerator
 		newLabel.setAlignmentX(alignmentX);
 		return newLabel;
 	}
+	
 	
 	/* generateLabel - creates and returns a JLabel that complies with the parameters
 	 *          text - the text displayed in the label

@@ -390,6 +390,8 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 			try 
 			{
 				ThumbnailImg newThumbnail = ComponentGenerator.generateThumbnailImg(this.manager.getFileHandler().getPeripheralFiles().get(i).getPath(), 120);
+				//ThumbnailImg newThumbnail = ComponentGenerator.generateThumbnailImg("/Users/andrewrottier/Documents/Pictures/folder.png", 120);
+
 				newThumbnail.addMouseListener(this);
 				thumbnails.add(newThumbnail);
 			} 
