@@ -1,15 +1,14 @@
 // PEMS (Police Evidence Management System) Version 0.1
 // Copyright 2015 - Jacob Jones and Andrew Rottier
 // ScreenStart.java
-package gui.display.print;
 
+package gui.display.print;
 import exceptions.InvalidImgException;
 import gui.*;
 import gui.components.img.Img;
 import gui.components.img.ThumbnailImg;
 import gui.display.FrameManager;
 import gui.display.editimg.EditImgPanel;
-
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -22,13 +21,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -40,8 +37,9 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.imgscalr.Scalr;
 
-public class PrintSetUpPanel extends JPanel implements ActionListener, MouseListener,
-		FocusListener {
+public class PrintSetUpPanel extends JPanel implements ActionListener, MouseListener, FocusListener 
+{
+	
 	private FrameManager manager;
 	private ArrayList<ThumbnailImg> selectedThumbnails;
 	private EditImgPanel currentScreen;
@@ -473,7 +471,6 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 					try {
 						System.out.println("blank image");
 						imgpic = ComponentGenerator.generateImg("resources/blankimage.png");
-						imgpic.setDate(""); // will only work when we make true getter method for img
 					} catch (InvalidImgException ie) {
 						ie.printStackTrace();
 					}
@@ -533,7 +530,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 				// Add the date below the image
 				contentStream.beginText();
 				contentStream.moveTextPositionByAmount(textx + margin, texty - 12);
-				contentStream.drawString(imgpic.getDate());
+				contentStream.drawString(imgpic.getTimestamp());
 				contentStream.endText();
 
 				//Check to see if the current page is full of content

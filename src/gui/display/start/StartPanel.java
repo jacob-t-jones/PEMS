@@ -12,9 +12,9 @@ import exceptions.*;
 import gui.*;
 import gui.components.img.*;
 import gui.display.*;
+import gui.display.dialogues.PrintSetUpDialogue;
 import gui.display.editcase.*;
 import gui.display.newcase.*;
-import gui.display.print.*;
 
 public class StartPanel extends JPanel implements ActionListener
 {
@@ -66,7 +66,7 @@ public class StartPanel extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.settingsButton)
 		{
-			this.manager.getMainWindow().pushPanel(new PrintPanel(this.manager, "CrimePhotos/"), "PEMS - PDF generator");
+			this.manager.openDialogue("Choose Print Format", new PrintSetUpDialogue(this.manager, null), 50, 75);
 		}
 	}
 	

@@ -3,7 +3,7 @@
 // ResizeDialogue.java
 
 package gui.display.dialogues;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import gui.*;

@@ -24,6 +24,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	private Point[] cropCoords;
 	private EditImgMenuBar menuBar;
 	private EditedImg selectedImg;
+	private EditedImg fittedImg;
 	private Box mainContainer;
 	private Box selectedImgContainer;
 	private Box caseThumbnailContainer;
@@ -48,6 +49,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.caseThumbnailContainer = Box.createHorizontalBox();
 		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.refreshCaseThumbnails(0);
+		this.refreshSelectedImage(this.caseThumbnails.get(0).getFilePath());
 		this.populateMainContainer();
 		this.add(this.mainContainer);
 		this.manager.getMainWindow().setWindowListener(this);
@@ -120,22 +122,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 				}
 			}
 			ThumbnailImg selectedThumbnail = (ThumbnailImg)e.getSource();
-			try 
-			{
-				this.selectedImg = ComponentGenerator.generateEditedImg(selectedThumbnail.getFilePath(), CENTER_ALIGNMENT);
-				this.selectedImg.addMouseListener(this);
-				this.selectedImg.addMouseMotionListener(this);
-			} 
-			catch (InvalidImgException e1) 
-			{
-				System.out.println(e1.getMessage());
-				e1.printStackTrace();
-				return;
-			}
-			this.selectedImgContainer.removeAll();
-			this.selectedImgContainer.add(this.selectedImg);
-			this.revalidate();
-			this.repaint();
+			this.refreshSelectedImage(selectedThumbnail.getFilePath());
 		}
 		else if (SwingUtilities.isRightMouseButton(e) && this.cropping)
 		{
@@ -144,7 +131,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 			this.selectedImg.repaint();
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
-		else if (e.getSource() == this.selectedImg && this.cropping)
+		else if (e.getSource() == this.fittedImg && this.cropping)
 		{
 			if (this.cropCoords[0] == null)
 			{
@@ -204,9 +191,9 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 */
 	public void mouseMoved(MouseEvent e) 
 	{
-		if (e.getSource() == this.selectedImg && this.cropping && this.cropCoords[0] != null && this.cropCoords[1] == null)
+		if (e.getSource() == this.fittedImg && this.cropping && this.cropCoords[0] != null && this.cropCoords[1] == null)
 		{
-			this.selectedImg.drawCropBox(this.cropCoords[0], e.getPoint());
+			this.fittedImg.drawCropBox(this.cropCoords[0], e.getPoint());
 		}
 	}
 	
@@ -271,14 +258,19 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 */
 	public void saveImg()
 	{
+		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		SaveFileResult result = this.manager.getFileHandler().saveFile(this.caseNum, this.selectedImg);
 		if (result == SaveFileResult.SAVE_FAILED)
 		{
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			JOptionPane.showMessageDialog(this.manager.getMainWindow(), "Save unexpectedly failed! Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		else
 		{
+			this.caseThumbnails = this.getCaseThumbnails();
+			this.refreshCaseThumbnails(0);
 			this.selectedImg.setSaved(true);
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 	
@@ -313,6 +305,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void undo()
 	{
 		this.selectedImg.undo();
+		this.fittedImg.undo();
 	}
 	
 	/* redo - redoes the action most recently undone by the user
@@ -320,6 +313,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void redo()
 	{
 		this.selectedImg.redo();
+		this.fittedImg.redo();
 	}
 	
 	/* removeImg - attempts to remove the currently selected image from the "cases" folder, leaving a copy of the file in the "backups" directory 
@@ -329,14 +323,26 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		int selection = JOptionPane.showConfirmDialog(this.manager.getMainWindow(), "Are you sure you would like to remove this image from the case?", "Remove Image", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 		if (selection == JOptionPane.YES_OPTION)
 		{
+			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			DeleteFileResult result = this.manager.getFileHandler().deleteFile(this.selectedImg);
 			if (result == DeleteFileResult.DELETION_FAILED)
 			{
+				this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "File deletion unexpectedly failed! Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			else
 			{
-				return;
+				this.caseThumbnails = this.getCaseThumbnails();
+				this.refreshCaseThumbnails(0);
+				if (this.caseThumbnails.size() == 0)
+				{
+					this.manager.getMainWindow().pushPanel(new FinishPanel(manager, caseNum), "PEMS - Finish");
+				}
+				else 
+				{
+					this.refreshSelectedImage(this.caseThumbnails.get(0).getFilePath());
+				}
+				this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		}
 		else if (selection == JOptionPane.NO_OPTION)
@@ -350,6 +356,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void antiAlias()
 	{
 		this.selectedImg.applyAntiAliasing();
+		this.fittedImg.applyAntiAliasing();
 	}
 	
 	/* brighten - brightens "selectedImg" by 10%
@@ -357,6 +364,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void brighten()
 	{
 		this.selectedImg.brightenImage();
+		this.fittedImg.brightenImage();
 	}
 	
 	/* darken - darkens "selectedImg" by 10%
@@ -364,6 +372,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void darken()
 	{  
 		this.selectedImg.darkenImage();
+		this.fittedImg.darkenImage();
 	}
 	
 	/* grayscale - converts "selectedImg" to grayscale format
@@ -371,6 +380,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void grayscale()
 	{
 		this.selectedImg.toGrayscale();
+		this.fittedImg.toGrayscale();
 	}
 	
 	/* resizeImg - initializes and displays the resize image dialogue
@@ -402,6 +412,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void rotate90()
 	{
 		this.selectedImg.rotateRight90();
+		this.fittedImg.rotateRight90();
 	}
 	
 	/* rotate180 - rotates "selectedImg" 180 degrees to the right
@@ -409,6 +420,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void rotate180()
 	{
 		this.selectedImg.rotateRight180();
+		this.fittedImg.rotateRight180();
 	}
 	
 	/* rotate270 - rotates "selectedImg" 270 degrees to the right
@@ -416,20 +428,26 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void rotate270()
 	{
 		this.selectedImg.rotateRight270();
+		this.fittedImg.rotateRight270();
 	}
 	
 	/* applyCrop - uses the Point values stored in "cropCoords" to apply a cropping procedure to "selectedImg"
 	 */
 	private void applyCrop()
 	{
-		int x = (int)Math.min(this.cropCoords[0].getX(), this.cropCoords[1].getX());
-		int y = (int)Math.min(this.cropCoords[0].getY(), this.cropCoords[1].getY());
-		int width = (int)Math.abs(this.cropCoords[1].getX() - this.cropCoords[0].getX());
-		int height = (int)Math.abs(this.cropCoords[1].getY() - this.cropCoords[0].getY());
+		int fittedX = (int)Math.min(this.cropCoords[0].getX(), this.cropCoords[1].getX());
+		int fittedY = (int)Math.min(this.cropCoords[0].getY(), this.cropCoords[1].getY());
+		int fittedWidth = (int)Math.abs(this.cropCoords[1].getX() - this.cropCoords[0].getX());
+		int fittedHeight = (int)Math.abs(this.cropCoords[1].getY() - this.cropCoords[0].getY());
+		int trueX = (this.selectedImg.getImage().getWidth() / this.fittedImg.getImage().getWidth()) * fittedX;
+		int trueY = (this.selectedImg.getImage().getHeight() / this.fittedImg.getImage().getHeight()) * fittedY;
+		int trueWidth = (this.selectedImg.getImage().getWidth() / this.fittedImg.getImage().getWidth()) * fittedWidth;
+		int trueHeight = (this.selectedImg.getImage().getHeight() / this.fittedImg.getImage().getHeight()) * fittedHeight;
 		this.cropping = false;
 		this.cropCoords = new Point[2];
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		this.selectedImg.cropImage(x, y, width, height);
+		this.selectedImg.cropImage(trueX, trueY, trueWidth, trueHeight);
+		this.fittedImg.cropImage(fittedX, fittedY, fittedWidth, fittedHeight);
 	}
 	
 	/* getCaseThumbnails - returns an ArrayList of ThumbnailImg objects representing all of the image files that are a part of the currently selected case
@@ -499,23 +517,33 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.repaint();
 	}
 	
-	/* populateMainContainer - populates "mainContainer" with the necessary components
-	 */
-	private void populateMainContainer()
+	private void refreshSelectedImage(String filePath)
 	{
-		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
 		try 
 		{
-			this.selectedImg = ComponentGenerator.generateEditedImg(this.caseThumbnails.get(0).getFilePath(), CENTER_ALIGNMENT);
-			this.selectedImg.addMouseListener(this);
-			this.selectedImg.addMouseMotionListener(this);
-			this.selectedImgContainer.add(this.selectedImg);
+			this.selectedImg = ComponentGenerator.generateEditedImg(filePath, CENTER_ALIGNMENT);
+			this.fittedImg = ComponentGenerator.fitImageToScreen(selectedImg);
+			this.fittedImg.addMouseListener(this);
+			this.fittedImg.addMouseMotionListener(this);
+			this.selectedImgContainer.removeAll();
+			this.selectedImgContainer.add(Box.createVerticalStrut(500));
+			this.selectedImgContainer.add(this.fittedImg);
+			this.selectedImgContainer.add(Box.createVerticalStrut(500));
 		} 
 		catch (InvalidImgException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
+		this.revalidate();
+		this.repaint();
+	}
+	
+	/* populateMainContainer - populates "mainContainer" with the necessary components
+	 */
+	private void populateMainContainer()
+	{
+		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
 		this.mainContainer.add(this.selectedImgContainer);
 		this.mainContainer.add(Box.createVerticalStrut(40));
 		this.mainContainer.add(this.caseThumbnailContainer);
