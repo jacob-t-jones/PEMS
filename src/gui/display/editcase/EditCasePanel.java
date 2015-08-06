@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import gui.*;
+import gui.components.img.Img;
 import gui.components.img.ThumbnailImg;
 import gui.display.FrameManager;
 import gui.display.select.SelectPanel;
@@ -129,11 +130,8 @@ public class EditCasePanel extends JPanel implements ActionListener {
 																	// buttons
 					// create the row and add elements to it
 
-					col.add(ComponentGenerator.generateLabel(tempLabel
-							.getImage()));
-					col.add(ComponentGenerator.generateLabel(displayCaseName,
-							ComponentGenerator.STANDARD_TEXT_FONT,
-							ComponentGenerator.STANDARD_TEXT_COLOR));
+					col.add(ComponentGenerator.generateLabel(tempLabel, CENTER_ALIGNMENT));
+					col.add(ComponentGenerator.generateLabel(displayCaseName,ComponentGenerator.STANDARD_TEXT_FONT,ComponentGenerator.STANDARD_TEXT_COLOR));
 
 					col.setAlignmentX(LEFT_ALIGNMENT);
 					this.displayedImagePlace++;

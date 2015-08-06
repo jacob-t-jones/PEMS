@@ -10,6 +10,7 @@ import gui.*;
 import gui.components.field.*;
 import gui.display.*;
 import gui.display.select.*;
+import gui.display.start.StartPanel;
 import tools.FileHandler.*;
 
 public class NewCasePanel extends JPanel implements ActionListener
@@ -17,15 +18,18 @@ public class NewCasePanel extends JPanel implements ActionListener
 	
 	private FrameManager manager;
 	private Box container;
+	private Box buttonsBox;
 	private StringField caseNumField;
 	private JLabel instructionsLabel;
 	private JLabel errorLabel;
+	private JButton backButton;
 	private JButton continueButton;
 	
 	public NewCasePanel(FrameManager manager) 
 	{
 		this.manager = manager;
 		this.container = Box.createVerticalBox();
+		this.buttonsBox = Box.createHorizontalBox();
 		this.populateContainer();
 		this.add(this.container);
 	}
@@ -45,12 +49,16 @@ public class NewCasePanel extends JPanel implements ActionListener
 				this.manager.getMainWindow().pushPanel(new SelectPanel(this.manager, caseNum), "PEMS - Import Images");
 			}
 		}
+		else if (e.getSource() == this.backButton) {
+				manager.getMainWindow().pushPanel(new StartPanel(manager), "PEMS (Police Evidence Management System) Version 0.1");
+		}
 	}
 	
 	/* populateContainer - adds "instructionsLabel", "errorLabel", "caseNumField", and "continueButton" to "container" 
 	 */
 	private void populateContainer()
 	{
+		this.backButton = ComponentGenerator.generateButton("Back", this, CENTER_ALIGNMENT);
 		this.instructionsLabel = ComponentGenerator.generateLabel("Please enter the case number below:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.errorLabel = ComponentGenerator.generateLabel("", ComponentGenerator.ERROR_TEXT_FONT, ComponentGenerator.ERROR_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.caseNumField = ComponentGenerator.generateStringField("Type here...", CENTER_ALIGNMENT);
@@ -64,7 +72,11 @@ public class NewCasePanel extends JPanel implements ActionListener
 		this.container.add(Box.createVerticalStrut(50));
 		this.container.add(this.caseNumField);
 		this.container.add(Box.createVerticalStrut(80));
-		this.container.add(this.continueButton);
+		
+		this.buttonsBox.add(backButton);
+		this.buttonsBox.add(Box.createHorizontalStrut(80));
+		this.buttonsBox.add(this.continueButton);
+		this.container.add(buttonsBox);
 	}
 	
 	/* attemptCaseCreation - attempts to create a new case with the given number, checking for edge cases in the process, and returns a boolean value indicating the success of said creation
