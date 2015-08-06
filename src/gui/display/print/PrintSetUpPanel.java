@@ -103,6 +103,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		return layoutImg;
 	}
 	
+	/* populateDisplayContainer - populates the display container with buttons and the layout image
+	 */
 	private void populateDisplayContainer(Img layoutImage) {
 		this.displayContainer.removeAll();
 		this.displayContainer.add(buttonsContainer);
@@ -110,6 +112,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		return;
 	}
 	
+	/* populateButtonsContainer - add the buttons to the buttons container
+	 */
 	private void populateButtonsContainer() {
 		this.layout1 = ComponentGenerator.generateButton("  1  ", this);
 		this.layout2 = ComponentGenerator.generateButton("  2  ", this);
@@ -126,6 +130,10 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		this.buttonsContainer.add(Box.createHorizontalStrut(20));
 	}
 
+	/* populatedContainer - inserts all of the images, text, and buttons onto the panel
+	 *                img - the image of the pdf format the user chose
+	 * 
+	 */
 	private void populateContainer(Img img) {
 		this.container.removeAll();
 		this.instructionsLabel = ComponentGenerator.generateLabel("Select the format you wish to use:", ComponentGenerator.STANDARD_TEXT_FONT_BOLD,
@@ -246,6 +254,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 	}
 
 	/* generatePDF - generates a PDF document for police evidence
+	 * returns - the document with the header and all of the images attached
 	 */
 	private PDDocument generatePDF() throws IOException {
 		System.out.println("Creating PDF");
@@ -314,8 +323,10 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 
 	}
 	
-	/*generatePages - creates the number of pages needed to print all of the images selected
+	/* generatePages - creates the number of pages needed to print all of the images selected
 	 *                to a PDF document
+	 *          doc - the PDF document in which the pages will be added to
+	 * return - a list of pages needed to support the number of images selected
 	 */
 	private PDPage[] generatePages(PDDocument doc){
 		//find number of pages needed to generate
@@ -338,9 +349,10 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 		return pageList;
 	}
 
-	/*
-	 * getFormat - chooses how many images the user would like to print on one
-	 * page
+	/* getFormat - chooses how many images the user would like to print on one page
+	 * formatNum - the number of images the user has chosen to be printed on each page
+	 * return - a 2D array of Img (Img[][]) representative of the layout format the user
+	 *          has chosen
 	 */
 	private Img[][] getFormat(int formatNum) {
 		Img[][] newContent;
@@ -473,53 +485,15 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 					try {
 						System.out.println("blank image");
 						imgpic = ComponentGenerator.generateImg("resources/blankimage.png");
-						imgpic.setDate(""); // will only work when we make true getter method for img
+						//imgpic.setDate(""); // will only work when we make true getter method for img
 					} catch (InvalidImgException ie) {
 						ie.printStackTrace();
 					}
 				}
 				
 				//Re-scale the images to fit the formats
-				if(formatLayout == 1 || formatLayout == 2)
-				{
-					if (imgpic.getImage().getHeight() > 270)
-					{
-						int newWidth = (imgpic.getImage().getWidth() * 270) / imgpic.getImage().getHeight();
-						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 270);
-					}
-					if (imgpic.getImage().getWidth() > 270)
-					{
-						int newHeight = (imgpic.getImage().getHeight() * 270) / imgpic.getImage().getWidth();
-						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 270, newHeight);
-					}
-				}
-				else if(formatLayout == 4)
-				{
-					if (imgpic.getImage().getHeight() > 230)
-					{
-						int newWidth = (imgpic.getImage().getWidth() * 230) / imgpic.getImage().getHeight();
-						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 230);
-					}
-					if (imgpic.getImage().getWidth() > 230)
-					{
-						int newHeight = (imgpic.getImage().getHeight() * 230) / imgpic.getImage().getWidth();
-						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 230, newHeight);
-					}
-					
-				}
-				else if(formatLayout == 8)
-				{
-					if (imgpic.getImage().getHeight() > 125)
-					{
-						int newWidth = (imgpic.getImage().getWidth() * 125) / imgpic.getImage().getHeight();
-						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 125);
-					}
-					 if (imgpic.getImage().getWidth() > 125)
-					{
-						int newHeight = (imgpic.getImage().getHeight() * 125) / imgpic.getImage().getWidth();
-						imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 125, newHeight);
-					}
-				}
+				imgpic = resizeForPDF( formatLayout,  imgpic);
+				
 				texty = y;
 
 				//convert to a pdf readable image
@@ -533,7 +507,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 				// Add the date below the image
 				contentStream.beginText();
 				contentStream.moveTextPositionByAmount(textx + margin, texty - 12);
-				contentStream.drawString(imgpic.getDate());
+				//contentStream.drawString(imgpic.getDate());
 				contentStream.endText();
 
 				//Check to see if the current page is full of content
@@ -567,6 +541,56 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 			}
 			textx = margin + cellMargin;
 		}// END OF SECOND
+	}
+	
+	/* resizeForPDF  - Re-scale the images to fit the formats of each layout
+	 *  formatLayout - The number of images on each page the user chose to print
+	 *        imgpic - the image that will be rescaled to fit the page
+	 * return - the newly resized image to fit on the PDF
+	 */
+	private Img resizeForPDF(int formatLayout, Img imgpic)
+	{
+		if(formatLayout == 1 || formatLayout == 2)
+		{
+			if (imgpic.getImage().getHeight() > 270)
+			{
+				int newWidth = (imgpic.getImage().getWidth() * 270) / imgpic.getImage().getHeight();
+				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 270);
+			}
+			if (imgpic.getImage().getWidth() > 270)
+			{
+				int newHeight = (imgpic.getImage().getHeight() * 270) / imgpic.getImage().getWidth();
+				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 270, newHeight);
+			}
+		}
+		else if(formatLayout == 4)
+		{
+			if (imgpic.getImage().getHeight() > 230)
+			{
+				int newWidth = (imgpic.getImage().getWidth() * 230) / imgpic.getImage().getHeight();
+				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 230);
+			}
+			if (imgpic.getImage().getWidth() > 230)
+			{
+				int newHeight = (imgpic.getImage().getHeight() * 230) / imgpic.getImage().getWidth();
+				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 230, newHeight);
+			}
+			
+		}
+		else if(formatLayout == 8)
+		{
+			if (imgpic.getImage().getHeight() > 125)
+			{
+				int newWidth = (imgpic.getImage().getWidth() * 125) / imgpic.getImage().getHeight();
+				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 125);
+			}
+			 if (imgpic.getImage().getWidth() > 125)
+			{
+				int newHeight = (imgpic.getImage().getHeight() * 125) / imgpic.getImage().getWidth();
+				imgpic.resizeImage(Scalr.Method.ULTRA_QUALITY, 125, newHeight);
+			}
+		}
+		return imgpic;
 	}
 
 	
