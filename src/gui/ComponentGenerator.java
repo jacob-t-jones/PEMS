@@ -85,6 +85,20 @@ public class ComponentGenerator
 	}
 	
 	/* generateLabel - creates and returns a JLabel that complies with the parameters
+	 *          img - the text displayed in the label
+	 *          font - the font type to use in the label
+	 *         color - the font color to use in the label
+	 *    alignmentX - the horizontal alignment of the label
+	 */
+	public static JLabel generateLabel(Img img, float alignmentX)
+	{
+		JLabel newLabel = new JLabel();
+		newLabel.add(img);
+		newLabel.setAlignmentX(alignmentX);
+		return newLabel;
+	}
+	
+	/* generateLabel - creates and returns a JLabel that complies with the parameters
 	 *          text - the text displayed in the label
 	 *          font - the font type to use in the label
 	 *         color - the font color to use in the label

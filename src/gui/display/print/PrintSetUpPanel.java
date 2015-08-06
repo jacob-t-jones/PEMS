@@ -485,6 +485,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 					try {
 						System.out.println("blank image");
 						imgpic = ComponentGenerator.generateImg("resources/blankimage.png");
+						return;
 						//imgpic.setDate(""); // will only work when we make true getter method for img
 					} catch (InvalidImgException ie) {
 						ie.printStackTrace();
@@ -541,6 +542,7 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 			}
 			textx = margin + cellMargin;
 		}// END OF SECOND
+		return;
 	}
 	
 	/* resizeForPDF  - Re-scale the images to fit the formats of each layout
