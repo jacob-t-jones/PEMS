@@ -2,6 +2,7 @@ package gui.display.dialogues;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import org.apache.pdfbox.pdmodel.*;
 import exceptions.*;
 import gui.*;
 import gui.components.img.*;
@@ -12,6 +13,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 	
 	private FrameManager manager;
 	private ArrayList<ThumbnailImg> selectedThumbnails;
+	private ArrayList<PDPage> pages;
+	private PDDocument document;
 	private Img oneImgDiagram;
 	private Img twoImgDiagram;
 	private Img fourImgDiagram;
@@ -26,11 +29,13 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 	private JButton fourImgButton;
 	private JButton eightImgButton;
 	private JButton printButton;
+	private int imgsPerPage;
 	
 	public PrintSetUpDialogue(FrameManager manager, ArrayList<ThumbnailImg> selectedThumbnails) 
 	{
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;
+		this.imgsPerPage = 0;
 		this.container = Box.createVerticalBox();
 		this.displayContainer = Box.createHorizontalBox();
 		this.buttonsContainer = Box.createVerticalBox();
@@ -46,18 +51,22 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		if (e.getSource() == this.oneImgButton)
 		{
 			this.populateDisplayContainer(1);
+			this.imgsPerPage = 1;
 		}
 		else if (e.getSource() == this.twoImgButton)
 		{
 			this.populateDisplayContainer(2);
+			this.imgsPerPage = 2;
 		}
 		else if (e.getSource() == this.fourImgButton)
 		{
 			this.populateDisplayContainer(4);
+			this.imgsPerPage = 4;
 		}
 		else if (e.getSource() == this.eightImgButton)
 		{
 			this.populateDisplayContainer(8);
+			this.imgsPerPage = 8;
 		}
 		else if (e.getSource() == this.printButton)
 		{
