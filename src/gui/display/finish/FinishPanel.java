@@ -2,6 +2,7 @@ package gui.display.finish;
 
 import gui.ComponentGenerator;
 import gui.display.FrameManager;
+import gui.display.editimg.SelectImagesDialogue;
 import gui.display.print.PrintPanel;
 
 import java.awt.Cursor;
@@ -71,9 +72,7 @@ public class FinishPanel extends JPanel implements ActionListener {
 		if (e.getSource() == this.printButton) {
 			this.manager.getMainWindow().setCursor(
 					Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			manager.getMainWindow().pushPanel(
-					new PrintPanel(manager, this.caseNum),
-					"PEMS - Print Images");
+			manager.openDialogue("Select Images to Print", new SelectImagesDialogue(this.manager, this, this.caseNum), 40, 60);
 		}
 
 		if (e.getSource() == this.openInDirButton) {

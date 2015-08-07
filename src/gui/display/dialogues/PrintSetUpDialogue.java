@@ -35,6 +35,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 	{
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;
+		this.pages = new ArrayList<PDPage>();
+		this.document = new PDDocument();
 		this.imgsPerPage = 0;
 		this.container = Box.createVerticalBox();
 		this.displayContainer = Box.createHorizontalBox();
@@ -144,9 +146,33 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.container.add(this.printButton);
 	}
 	
+	private void generatePages()
+	{
+		int numPages = 0;
+		if (this.imgsPerPage >= this.selectedThumbnails.size())
+		{
+			numPages = 1;
+		}
+		else
+		{
+			if (this.selectedThumbnails.size() % this.imgsPerPage == 0)
+			{
+				numPages = this.selectedThumbnails.size() / this.imgsPerPage;
+			}
+			else
+			{
+				numPages = (this.selectedThumbnails.size() / this.imgsPerPage) + 1; 
+			}
+		}
+		for (int i = 0; i < numPages; i++)
+		{
+			this.pages.add(new PDPage());
+		}
+	}
+	
 	private void generatePDF()
 	{
-		
+		this.generatePages();
 	}
 
 }
