@@ -7,6 +7,9 @@ import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 
+import org.imgscalr.Scalr;
+
+import gui.components.img.Img;
 //import tools.ImageEditor;
 
 public class FileDisplay extends Box {
@@ -49,7 +52,10 @@ public class FileDisplay extends Box {
 		try {
 			this.filejpg = ImageIO.read(new File(
 					"/Users/andrewrottier/Documents/Pictures/folder.png"));
-			filejpg = ImageEditor.resizeImage(filejpg, 15);
+			//filejpg = Img.resizeImage(filejpg, 15);
+			Img tempImg = ComponentGenerator.generateImg(this.directoryName, 15);
+			tempImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 15);
+			this.filejpg = tempImg.getImage();
 			try {
 				directoryName = "/Users/andrewrottier/Documents/Pictures/";
 			} catch (Exception e) {

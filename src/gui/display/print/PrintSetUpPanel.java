@@ -483,11 +483,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 					try {
 						System.out.println("blank image");
 						imgpic = ComponentGenerator.generateImg("resources/blankimage.png");
-<<<<<<< HEAD
-=======
 						return;
 						//imgpic.setDate(""); // will only work when we make true getter method for img
->>>>>>> origin/master
 					} catch (InvalidImgException ie) {
 						ie.printStackTrace();
 					}
@@ -509,11 +506,8 @@ public class PrintSetUpPanel extends JPanel implements ActionListener, MouseList
 				// Add the date below the image
 				contentStream.beginText();
 				contentStream.moveTextPositionByAmount(textx + margin, texty - 12);
-<<<<<<< HEAD
 				contentStream.drawString(imgpic.getTimestamp());
-=======
 				//contentStream.drawString(imgpic.getDate());
->>>>>>> origin/master
 				contentStream.endText();
 
 				//Check to see if the current page is full of content
