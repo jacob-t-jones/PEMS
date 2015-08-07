@@ -2,7 +2,7 @@ package gui.display.finish;
 
 import gui.ComponentGenerator;
 import gui.display.FrameManager;
-import gui.display.editimg.SelectImagesDialogue;
+import gui.display.dialogues.SelectImagesDialogue;
 import gui.display.print.PrintPanel;
 
 import java.awt.Cursor;

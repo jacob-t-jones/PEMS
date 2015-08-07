@@ -1,4 +1,4 @@
-package gui.display.editimg;
+package gui.display.dialogues;
 
 import exceptions.InvalidImgException;
 import gui.ComponentGenerator;
