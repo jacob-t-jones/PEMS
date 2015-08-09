@@ -373,7 +373,7 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	 */
 	private void populateMainContainer()
 	{
-		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Selected images will appear on the right, and can be removed from the case by simply clicking on them again.", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.instructionsLabel = ComponentGenerator.generateLabel("Click on any of the images below to import them into the current case. Selected images will appear on the right, and can be removed from the case by simply clicking on them again.", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.mainContainer.add(Box.createVerticalStrut(20));
 		this.mainContainer.add(this.instructionsLabel);
 		this.mainContainer.add(Box.createVerticalStrut(30));

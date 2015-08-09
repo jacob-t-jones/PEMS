@@ -4,9 +4,18 @@
 
 package gui.display.dialogues;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.*;
+
 import javax.swing.*;
+
+import org.apache.pdfbox.exceptions.*;
 import org.apache.pdfbox.pdmodel.*;
+import org.apache.pdfbox.pdmodel.edit.*;
+import org.apache.pdfbox.pdmodel.font.*;
+import org.apache.pdfbox.pdmodel.graphics.xobject.*;
+import org.imgscalr.*;
+
 import exceptions.*;
 import gui.*;
 import gui.components.img.*;
@@ -17,6 +26,7 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 	
 	private FrameManager manager;
 	private ArrayList<ThumbnailImg> selectedThumbnails;
+	private ArrayList<Img> printableImgs;
 	private ArrayList<PDPage> pages;
 	private PDDocument document;
 	private Img oneImgDiagram;
@@ -39,6 +49,7 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 	{
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;
+		this.printableImgs = new ArrayList<Img>();
 		this.pages = new ArrayList<PDPage>();
 		this.document = new PDDocument();
 		this.imgsPerPage = 0;
@@ -76,7 +87,15 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.printButton)
 		{
-			this.generatePDF();
+			try 
+			{
+				this.generatePDF();
+			} 
+			catch (IOException | InvalidImgException e1) 
+			{
+				System.out.println(e1.getMessage());
+				e1.printStackTrace();
+			}
 		}
 	}
 	
@@ -141,13 +160,29 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 	
 	private void populateContainer()
 	{
-		this.instructionsLabel = ComponentGenerator.generateLabel("Please select the layout you would like to use to print the selected images:", ComponentGenerator.STANDARD_TEXT_FONT_ITALIC, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.instructionsLabel = ComponentGenerator.generateLabel("Please select the layout you would like to use to print the selected images:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.printButton = ComponentGenerator.generateButton("Print", this, CENTER_ALIGNMENT);
 		this.container.add(this.instructionsLabel);
 		this.container.add(Box.createVerticalStrut(25));
 		this.container.add(this.displayContainer);
 		this.container.add(Box.createVerticalStrut(15));
 		this.container.add(this.printButton);
+	}
+	
+	private void generatePDF() throws IOException, InvalidImgException 
+	{
+		this.generatePages();
+		this.generatePrintableImgs();
+		this.addHeader();
+		try 
+		{
+			this.document.save("TEST.pdf");
+		} 
+		catch (COSVisitorException e) 
+		{
+			e.printStackTrace();
+		}
+		this.document.close();
 	}
 	
 	private void generatePages()
@@ -174,9 +209,94 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
-	private void generatePDF()
+	private void generatePrintableImgs()
 	{
-		this.generatePages();
+		for (int i = 0; i < this.selectedThumbnails.size(); i++)
+		{
+			Img currentImg = null;
+			try
+			{
+				currentImg = ComponentGenerator.generateImg(this.selectedThumbnails.get(i).getFilePath());
+				currentImg = this.resizeForPrint(currentImg);
+				this.printableImgs.add(currentImg);
+			}
+			catch (InvalidImgException e)
+			{
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				break;
+			}
+		}
+	}
+	
+	private void addHeader() throws IOException, InvalidImgException
+	{
+		Img logoImg = ComponentGenerator.generateImg("resources/logo.png", CENTER_ALIGNMENT);
+		logoImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 50);
+		PDXObjectImage pdfLogo = new PDJpeg(this.document, logoImg.getImage());
+		for (int i = 0; i < this.pages.size(); i++)
+		{
+			this.document.addPage(this.pages.get(i));
+			PDPageContentStream contentStream = new PDPageContentStream(this.document, this.pages.get(i));
+			contentStream.drawImage(pdfLogo, 190, 720);
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(250, 760);
+			contentStream.drawString("Plainville Police Department");
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
+			contentStream.moveTextPositionByAmount(0, -12);
+			contentStream.drawString("19 Neal Ct");
+			contentStream.moveTextPositionByAmount(0, -12);
+			contentStream.drawString("Plainville, CT");
+			contentStream.moveTextPositionByAmount(0, -12);
+			contentStream.drawString("(860) 747-1616");
+			contentStream.endText();
+			contentStream.close();
+		}
+	}
+	
+	private Img resizeForPrint(Img img)
+	{
+		if (this.imgsPerPage == 1 || this.imgsPerPage == 2)
+		{
+			if (img.getImage().getHeight() > 270)
+			{
+				int newWidth = (img.getImage().getWidth() * 270) / img.getImage().getHeight();
+				img.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 270);
+			}
+			if (img.getImage().getWidth() > 270)
+			{
+				int newHeight = (img.getImage().getHeight() * 270) / img.getImage().getWidth();
+				img.resizeImage(Scalr.Method.ULTRA_QUALITY, 270, newHeight);
+			}
+		}
+		else if (this.imgsPerPage == 4)
+		{
+			if (img.getImage().getHeight() > 230)
+			{
+				int newWidth = (img.getImage().getWidth() * 230) / img.getImage().getHeight();
+				img.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 230);
+			}
+			if (img.getImage().getWidth() > 230)
+			{
+				int newHeight = (img.getImage().getHeight() * 230) / img.getImage().getWidth();
+				img.resizeImage(Scalr.Method.ULTRA_QUALITY, 230, newHeight);
+			}
+		}
+		else if (this.imgsPerPage == 8)
+		{
+			if (img.getImage().getHeight() > 125)
+			{
+				int newWidth = (img.getImage().getWidth() * 125) / img.getImage().getHeight();
+				img.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 125);
+			}
+			if (img.getImage().getWidth() > 125)
+			{
+				int newHeight = (img.getImage().getHeight() * 125) / img.getImage().getWidth();
+				img.resizeImage(Scalr.Method.ULTRA_QUALITY, 125, newHeight);
+			}
+		}
+		return img;
 	}
 
 }
