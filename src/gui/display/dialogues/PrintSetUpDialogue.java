@@ -4,7 +4,7 @@
 
 package gui.display.dialogues;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -174,6 +174,7 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.generatePages();
 		this.generatePrintableImgs();
 		this.addHeader();
+		this.addImgs();
 		try 
 		{
 			this.document.save("TEST.pdf");
@@ -251,6 +252,43 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 			contentStream.moveTextPositionByAmount(0, -12);
 			contentStream.drawString("(860) 747-1616");
 			contentStream.endText();
+			contentStream.close();
+		}
+	}
+	
+	private void addImgs() throws IOException
+	{
+		int currentImgIndex = 0;
+		int currentX = 0;
+		int currentY = 0;
+		int rowsPerPage = 0;
+		int colsPerPage = 0;
+		if (this.imgsPerPage == 1 || this.imgsPerPage == 2)
+		{
+			rowsPerPage = this.imgsPerPage;
+			colsPerPage = 1;
+		}
+		else if (this.imgsPerPage == 4 || this.imgsPerPage == 8)
+		{
+			rowsPerPage = this.imgsPerPage / 2;
+			colsPerPage = 2;
+		}
+		for (int i = 0; i < this.pages.size(); i++)
+		{
+			PDPageContentStream contentStream = new PDPageContentStream(this.document, this.pages.get(i));
+			for (int j = 0; j < rowsPerPage; j++)
+			{
+				for (int k = 0; k < colsPerPage; k++)
+				{
+					PDXObjectImage currentPDFImg = new PDJpeg(this.document, this.printableImgs.get(currentImgIndex).getImage());
+					contentStream.drawImage(currentPDFImg, currentX, currentY);
+					contentStream.beginText();
+					//contentStream.moveTextPositionByAmount();
+					contentStream.drawString(this.printableImgs.get(currentImgIndex).getTimestamp());
+					contentStream.endText();
+					currentImgIndex++;
+				}
+			}
 			contentStream.close();
 		}
 	}
