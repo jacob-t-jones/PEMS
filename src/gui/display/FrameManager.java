@@ -19,7 +19,7 @@ public class FrameManager
 	public FrameManager()
 	{
 		this.configuration = new Config();
-		//this.fileHandler = new FileHandler();
+		this.fileHandler = new FileHandler();
 		this.mainWindow = new MainWindow("PEMS (Police Evidence Management System) Version 0.1", this, new StartPanel(this));
 	}
 	
@@ -59,8 +59,11 @@ public class FrameManager
 	 */
 	public void closeDialogue()
 	{
-		this.dialogueWindow.setVisible(false);
-		this.dialogueWindow.dispose();
+		if (this.dialogueWindow != null)
+		{
+			this.dialogueWindow.setVisible(false);
+			this.dialogueWindow.dispose();
+		}
 	}
 	
 }

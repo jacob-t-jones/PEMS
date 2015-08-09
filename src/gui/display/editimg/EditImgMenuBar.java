@@ -42,6 +42,10 @@ public class EditImgMenuBar extends JMenuBar implements ActionListener
 		this.add(this.imageMenu);
 	}
 
+	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
+	 *	             e - the event in question
+	 *                 1-14. determines which menu item was clicked, and calls the matching method within EditImgPanel 
+	 */
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == this.saveImageMenuItem)
@@ -102,6 +106,8 @@ public class EditImgMenuBar extends JMenuBar implements ActionListener
 		}
 	}
 	
+	/* constructMenus - initializes and populates all of the menus
+	 */
 	private void constructMenus()
 	{
 		this.fileMenu = new JMenu("File");
@@ -130,6 +136,8 @@ public class EditImgMenuBar extends JMenuBar implements ActionListener
 		this.imageMenu.add(this.rotate270MenuItem);
 	}
 	
+	/* constructMenuItems - initializes all of the menu items
+	 */
 	private void constructMenuItems()
 	{
 		this.saveImageMenuItem = ComponentGenerator.generateMenuItem("Save Image", this, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));

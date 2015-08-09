@@ -1,3 +1,7 @@
+// PEMS (Police Evidence Management System) Version 0.1
+// Copyright 2015 - Jacob Jones and Andrew Rottier
+// PrintSetUpDialogue.java
+
 package gui.display.dialogues;
 import java.awt.event.*;
 import java.util.*;

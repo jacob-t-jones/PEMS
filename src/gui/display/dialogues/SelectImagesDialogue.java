@@ -1,29 +1,22 @@
+// PEMS (Police Evidence Management System) Version 0.1
+// Copyright 2015 - Jacob Jones and Andrew Rottier
+// SelectImagesDialogue.java
+
 package gui.display.dialogues;
-
-import exceptions.InvalidImgException;
-import gui.ComponentGenerator;
-import gui.components.img.ThumbnailImg;
-import gui.display.FrameManager;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.util.ArrayList;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
+import exceptions.*;
+import gui.*;
+import gui.components.img.*;
+import gui.display.*;
 
 public class SelectImagesDialogue extends JPanel implements ActionListener, MouseListener
 {
 	
 	private FrameManager manager;
-	private JPanel currentPanel;
 	private ArrayList<ThumbnailImg> displayedThumbnails;
 	private ArrayList<ThumbnailImg> selectedThumbnails;
 	private Box container;
@@ -36,10 +29,9 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 	private String caseNum;
 	private int thumbnailPlace;
 	
-	public SelectImagesDialogue(FrameManager manager, JPanel currentPanel, String caseNum)
+	public SelectImagesDialogue(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
-		this.currentPanel = currentPanel;
 		this.caseNum = caseNum;
 		this.thumbnailPlace = 0;
 		this.displayedThumbnails = this.generateThumbnails();
@@ -56,6 +48,12 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 		this.repaint();
 	}
 	
+	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
+	 *	             e - the event in question
+	 *                 1. attempts to load the next six images from the case within "thumbnailContainer"
+	 *                 2. attempts to load the previous six images from the case within "thumbnailContainer"
+	 *                 3. attempts to push PrintSetUpDialogue and displays an error message if this fails
+	 */
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == this.nextButton)
@@ -72,8 +70,25 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 				this.refreshThumbnailContainer(this.thumbnailPlace - 6);
 			}
 		}
+		else if (e.getSource() == this.continueButton)
+		{
+			if (this.selectedThumbnails.size() > 0)
+			{
+				this.manager.closeDialogue();
+				this.manager.openDialogue("Print Setup", new PrintSetUpDialogue(this.manager, this.selectedThumbnails), 50, 75);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(this, "You have not selected any images to print!", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 
+	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 *              1. if the clicked on thumbnail is selected, it is removed from "selectedThumbnails"
+	 *              2. if the clicked on thumbnail is not selected, it is added to "selectedThumbnails"
+	 */
 	public void mouseClicked(MouseEvent e) 
 	{
 		if (this.selectedThumbnails.contains(e.getSource()))
@@ -87,26 +102,40 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 		this.refreshThumbnailContainer(this.thumbnailPlace);
 	}
 
+	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
 	public void mousePressed(MouseEvent e) 
 	{
-		
-	}
-
-	public void mouseReleased(MouseEvent e) 
-	{
-
-	}
-
-	public void mouseEntered(MouseEvent e) 
-	{
-		
-	}
-
-	public void mouseExited(MouseEvent e)
-	{
-		
+		return;
 	}
 	
+	/* mouseReleased - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	           e - the event in question
+	 */
+	public void mouseReleased(MouseEvent e) 
+	{
+		return;
+	}
+	
+	/* mouseEntered - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	          e - the event in question
+	 */
+	public void mouseEntered(MouseEvent e) 
+	{
+		return;
+	}
+
+	/* mouseExited - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
+	 *	         e - the event in question
+	 */
+	public void mouseExited(MouseEvent e) 
+	{
+		return;
+	}
+	
+	/* generateThumbnails - returns an ArrayList of ThumbnailImg objects representing all of the images contained within the currently selected case
+	 */
 	private ArrayList<ThumbnailImg> generateThumbnails()
 	{
 		ArrayList<ThumbnailImg> thumbnailList = new ArrayList<ThumbnailImg>();
@@ -133,6 +162,9 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 	    return thumbnailList;
 	}
 	
+	/* refreshThumbnailContainer - refreshes the thumbnails displayed on the screen
+	 *            thumbnailPlace - the index within "displayedThumbnails" at which we should begin 
+	 */
 	private void refreshThumbnailContainer(int thumbnailPlace)
 	{
 		this.thumbnailPlace = thumbnailPlace;
@@ -155,7 +187,7 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 					col.add(Box.createHorizontalGlue());
 					if (this.selectedThumbnails.contains(this.displayedThumbnails.get(this.thumbnailPlace)))
 					{
-						col.setBackground(ComponentGenerator.SELECTED_THUMBNAIL_COLOR);
+						col.setBackground(ComponentGenerator.SELECTED_THUMBNAIL_BG_COLOR);
 						col.setOpaque(true);
 					}
 				}
@@ -176,24 +208,30 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 		this.repaint();
 	}
 	
+	/* populateButtonsContainer - populates "buttonsContainer" with the necessary components
+	 */
 	private void populateButtonsContainer()
 	{
-		this.nextButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
-		this.prevButton = ComponentGenerator.generateButton("Prev", this, CENTER_ALIGNMENT);
+		this.nextButton = ComponentGenerator.generateButton("Next >", this, CENTER_ALIGNMENT);
+		this.prevButton = ComponentGenerator.generateButton("< Prev", this, CENTER_ALIGNMENT);
 		this.buttonsContainer.add(this.prevButton);
-		this.buttonsContainer.add(Box.createHorizontalStrut(100));
+		this.buttonsContainer.add(Box.createHorizontalStrut(250));
 		this.buttonsContainer.add(this.nextButton);
 	}
 	
+	/* populateContainer - populates "container" with the necessary components
+	 */
 	private void populateContainer()
 	{
 		this.titleLabel = ComponentGenerator.generateLabel("Please select all of the images you would like to print:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
-		this.container.add(Box.createVerticalStrut(10));
+		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
+		this.container.add(Box.createVerticalStrut(5));
 		this.container.add(this.titleLabel);
-		this.container.add(Box.createVerticalStrut(10));
-		this.container.add(this.buttonsContainer);
 		this.container.add(Box.createVerticalStrut(15));
+		this.container.add(this.buttonsContainer);
 		this.container.add(this.thumbnailContainer);
+		this.container.add(Box.createVerticalStrut(5));
+		this.container.add(this.continueButton);
 	}
 
 }

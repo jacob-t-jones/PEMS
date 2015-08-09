@@ -10,7 +10,7 @@ import gui.*;
 import gui.components.field.*;
 import gui.display.*;
 import gui.display.select.*;
-import gui.display.start.StartPanel;
+import gui.display.start.*;
 import tools.FileHandler.*;
 
 public class NewCasePanel extends JPanel implements ActionListener
@@ -54,26 +54,26 @@ public class NewCasePanel extends JPanel implements ActionListener
 		}
 	}
 	
-	/* populateContainer - adds "instructionsLabel", "errorLabel", "caseNumField", and "continueButton" to "container" 
+	/* populateContainer - adds "instructionsLabel", "errorLabel", "caseNumField", "backButton", and "continueButton" to "container" 
 	 */
 	private void populateContainer()
 	{
-		this.backButton = ComponentGenerator.generateButton("Back", this, CENTER_ALIGNMENT);
 		this.instructionsLabel = ComponentGenerator.generateLabel("Please enter the case number below:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.errorLabel = ComponentGenerator.generateLabel("", ComponentGenerator.ERROR_TEXT_FONT, ComponentGenerator.ERROR_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.caseNumField = ComponentGenerator.generateStringField("Type here...", CENTER_ALIGNMENT);
 		this.caseNumField.setMaximumSize(new Dimension(250, 30));
 		this.caseNumField.setMinimumSize(new Dimension(250, 30));
-		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
+		this.backButton = ComponentGenerator.generateButton("<      Back", this, CENTER_ALIGNMENT);
+		this.continueButton = ComponentGenerator.generateButton("Continue  >", this, CENTER_ALIGNMENT);
 		this.container.add(Box.createVerticalStrut(20));
 		this.container.add(this.instructionsLabel);
-		this.container.add(Box.createVerticalStrut(10));
+		this.container.add(Box.createVerticalStrut(20));
 		this.container.add(this.errorLabel);
 		this.container.add(Box.createVerticalStrut(50));
 		this.container.add(this.caseNumField);
-		this.container.add(Box.createVerticalStrut(80));
+		this.container.add(Box.createVerticalStrut(120));
 		this.buttonsBox.add(backButton);
-		this.buttonsBox.add(Box.createHorizontalStrut(80));
+		this.buttonsBox.add(Box.createHorizontalStrut(250));
 		this.buttonsBox.add(this.continueButton);
 		this.container.add(buttonsBox);
 	}

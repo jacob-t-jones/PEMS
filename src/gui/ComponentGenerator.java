@@ -5,13 +5,12 @@
 package gui;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-
 import javax.swing.*;
 import org.imgscalr.*;
 import exceptions.*;
 import gui.components.field.*;
 import gui.components.img.*;
+import gui.display.dialogues.*;
 
 public class ComponentGenerator 
 {
@@ -29,7 +28,7 @@ public class ComponentGenerator
 	public static final Color STANDARD_TEXT_COLOR = new Color(44, 29, 29);
 	public static final Color ERROR_TEXT_COLOR = new Color(202, 12, 12);
 	public static final Color CROPBOX_COLOR = new Color(250, 40, 25);
-	public static final Color SELECTED_THUMBNAIL_COLOR = new Color(219, 219, 219);
+	public static final Color SELECTED_THUMBNAIL_BG_COLOR = new Color(219, 219, 219);
 	
 	public ComponentGenerator()
 	{
@@ -86,22 +85,7 @@ public class ComponentGenerator
 		newLabel.setFont(font);
 		newLabel.setForeground(color);
 		return newLabel;
-	}
-	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *          img - the text displayed in the label
-	 *          font - the font type to use in the label
-	 *         color - the font color to use in the label
-	 *    alignmentX - the horizontal alignment of the label
-	 */
-	public static JLabel generateLabel(Img img, float alignmentX)
-	{
-		JLabel newLabel = new JLabel();
-		newLabel.add(img);
-		newLabel.setAlignmentX(alignmentX);
-		return newLabel;
-	}
-	
+	}	
 	
 	/* generateLabel - creates and returns a JLabel that complies with the parameters
 	 *          text - the text displayed in the label
@@ -130,6 +114,42 @@ public class ComponentGenerator
 		JLabel newLabel = new JLabel(text);
 		newLabel.setFont(font);
 		newLabel.setForeground(color);
+		newLabel.setAlignmentX(alignmentX);
+		newLabel.setAlignmentY(alignmentY);
+		return newLabel;
+	}
+	
+	/* generateLabel - creates and returns a JLabel that complies with the parameters
+	 *           img - the image displayed in the label
+	 */
+	public static JLabel generateLabel(Img img)
+	{
+		JLabel newLabel = new JLabel();
+		newLabel.add(img);
+		return newLabel;
+	}
+	
+	/* generateLabel - creates and returns a JLabel that complies with the parameters
+	 *           img - the image displayed in the label
+	 *    alignmentX - the horizontal alignment of the label
+	 */
+	public static JLabel generateLabel(Img img, float alignmentX)
+	{
+		JLabel newLabel = new JLabel();
+		newLabel.add(img);
+		newLabel.setAlignmentX(alignmentX);
+		return newLabel;
+	}
+	
+	/* generateLabel - creates and returns a JLabel that complies with the parameters
+	 *           img - the image displayed in the label
+	 *    alignmentX - the horizontal alignment of the label
+	 *    alignmentY - the vertical alignment of the label
+	 */
+	public static JLabel generateLabel(Img img, float alignmentX, float alignmentY)
+	{
+		JLabel newLabel = new JLabel();
+		newLabel.add(img);
 		newLabel.setAlignmentX(alignmentX);
 		newLabel.setAlignmentY(alignmentY);
 		return newLabel;
@@ -243,82 +263,76 @@ public class ComponentGenerator
 		return newStringField;
 	}
 	
-	/* generateDecimalField - creates and returns a DecimalField that complies with the parameters
+	/* generateInchesField - creates and returns a InchesField that complies with the parameters
 	 *                value - the default value displayed in the field
-	 *                focus - the FocusListener for the field
+	 *         currentPanel - the instance of ResizeDialogue tied to the component
 	 */
-	public static DecimalField generateDecimalField(double value, FocusListener focus)
+	public static InchesField generateInchesField(double value, ResizeDialogue currentPanel)
 	{
-		DecimalField newDecimalField = new DecimalField(value);
-		newDecimalField.addFocusListener(focus);
-		return newDecimalField;
+		InchesField newInchesField = new InchesField(value, currentPanel);
+		return newInchesField;
 	}
 	
-	/* generateDecimalField - creates and returns a DecimalField that complies with the parameters
+	/* generateInchesField - creates and returns a InchesField that complies with the parameters
 	 *                value - the default value displayed in the field
-	 *                focus - the FocusListener for the field
+	 *         currentPanel - the instance of ResizeDialogue tied to the component
 	 *           alignmentX - the horizontal alignment of the field
 	 */
-	public static DecimalField generateDecimalField(double value, FocusListener focus, float alignmentX)
+	public static InchesField generateInchesField(double value, ResizeDialogue currentPanel, float alignmentX)
 	{
-		DecimalField newDecimalField = new DecimalField(value);
-		newDecimalField.addFocusListener(focus);
-		newDecimalField.setAlignmentX(alignmentX);
-		return newDecimalField;
+		InchesField newInchesField = new InchesField(value, currentPanel);
+		newInchesField.setAlignmentX(alignmentX);
+		return newInchesField;
 	}
 	
-	/* generateDecimalField - creates and returns a DecimalField that complies with the parameters
+	/* generateInchesField - creates and returns a InchesField that complies with the parameters
 	 *                value - the default value displayed in the field
-	 *                focus - the FocusListener for the field
+	 *         currentPanel - the instance of ResizeDialogue tied to the component
 	 *           alignmentX - the horizontal alignment of the field
 	 *           alignmentY - the vertical alignment of the field
 	 */
-	public static DecimalField generateDecimalField(double value, FocusListener focus, float alignmentX, float alignmentY)
+	public static InchesField generateInchesField(double value, ResizeDialogue currentPanel, float alignmentX, float alignmentY)
 	{
-		DecimalField newDecimalField = new DecimalField(value);
-		newDecimalField.addFocusListener(focus);
-		newDecimalField.setAlignmentX(alignmentX);
-		newDecimalField.setAlignmentY(alignmentY);
-		return newDecimalField;
+		InchesField newInchesField = new InchesField(value, currentPanel);
+		newInchesField.setAlignmentX(alignmentX);
+		newInchesField.setAlignmentY(alignmentY);
+		return newInchesField;
 	}
 	
-	/* generateIntegerField - creates and returns a IntegerField that complies with the parameters
+	/* generatePixelsField - creates and returns a PixelsField that complies with the parameters
 	 *                value - the default value displayed in the field
-	 *                focus - the FocusListener for the field
+	 *         currentPanel - the instance of ResizeDialogue tied to the component
 	 */
-	public static IntegerField generateIntegerField(int value, FocusListener focus)
+	public static PixelsField generatePixelsField(int value, ResizeDialogue currentPanel)
 	{
-		IntegerField newIntegerField = new IntegerField(value);
-		newIntegerField.addFocusListener(focus);
-		return newIntegerField;
+		PixelsField newPixelsField = new PixelsField(value, currentPanel);
+		return newPixelsField;
 	}
 	
-	/* generateIntegerField - creates and returns a IntegerField that complies with the parameters
+	/* generatePixelsField - creates and returns a PixelsField that complies with the parameters
 	 *                value - the default value displayed in the field
-	 *                focus - the FocusListener for the field
+	 *         currentPanel - the instance of ResizeDialogue tied to the component
 	 *           alignmentX - the horizontal alignment of the field
 	 */
-	public static IntegerField generateIntegerField(int value, FocusListener focus, float alignmentX)
+	public static PixelsField generatePixelsField(int value, ResizeDialogue currentPanel, float alignmentX)
 	{
-		IntegerField newIntegerField = new IntegerField(value);
-		newIntegerField.addFocusListener(focus);
-		newIntegerField.setAlignmentX(alignmentX);
-		return newIntegerField;
+		PixelsField newPixelsField = new PixelsField(value, currentPanel);
+		newPixelsField.setAlignmentX(alignmentX);
+		return newPixelsField;
 	}
 	
-	/* generateIntegerField - creates and returns a IntegerField that complies with the parameters
+	/* generatePixelsField - creates and returns a PixelsField that complies with the parameters
 	 *                value - the default value displayed in the field
-	 *                focus - the FocusListener for the field
+	 *         currentPanel - the instance of ResizeDialogue tied to the component
 	 *           alignmentX - the horizontal alignment of the field
 	 *           alignmentY - the vertical alignment of the field
 	 */
-	public static IntegerField generateIntegerField(int value, FocusListener focus, float alignmentX, float alignmentY)
+	public static PixelsField generatePixelsField(int value, ResizeDialogue currentPanel, float alignmentX, float alignmentY)
 	{
-		IntegerField newIntegerField = new IntegerField(value);
-		newIntegerField.addFocusListener(focus);
-		newIntegerField.setAlignmentX(alignmentX);
-		newIntegerField.setAlignmentY(alignmentY);
-		return newIntegerField;
+		PixelsField newPixelsField = new PixelsField(value, currentPanel);
+		newPixelsField.setAlignmentX(alignmentX);
+		newPixelsField.setAlignmentY(alignmentY);
+		return newPixelsField;
 	}
 	
 	/* generateImg - creates and returns an Img that complies with the parameters

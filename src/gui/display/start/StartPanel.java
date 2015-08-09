@@ -12,7 +12,7 @@ import exceptions.*;
 import gui.*;
 import gui.components.img.*;
 import gui.display.*;
-import gui.display.dialogues.PrintSetUpDialogue;
+import gui.display.dialogues.*;
 import gui.display.editcase.*;
 import gui.display.newcase.*;
 

@@ -14,6 +14,7 @@ import gui.components.img.*;
 import gui.display.*;
 import gui.display.dialogues.*;
 import gui.display.finish.*;
+import gui.display.start.*;
 import tools.FileHandler.*;
 
 public class EditImgPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener, WindowListener
@@ -95,6 +96,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 					return;
 				}
 			}
+			this.manager.getMainWindow().setWindowListener(this.manager.getMainWindow());
+			this.manager.getMainWindow().removeMenuBar();
 		    this.manager.getMainWindow().pushPanel(new FinishPanel(manager, caseNum), "PEMS - Finish");
 		}
 	}
@@ -103,7 +106,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 *	          e - the event in question
 	 *              1. displays a dialogue prompting the user to save before pushing the selected thumbnail into the editing area
 	 *              2. if the user is currently cropping and he or she right clicks, the cropping procedure is canceled
-	 *              3. if the user clicks on "selectedImg" while he or she is cropping, the coordinates of the click are recorded and used in the procedure
+	 *              3. if the user clicks on "fittedImg" while he or she is cropping, the coordinates of the click are recorded and used in the procedure
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
@@ -128,7 +131,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		{
 			this.cropping = false;
 			this.cropCoords = new Point[2];
-			this.selectedImg.repaint();
+			this.fittedImg.repaint();
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 		else if (e.getSource() == this.fittedImg && this.cropping)
@@ -187,7 +190,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 
 	/* mouseMoved - mandatory for any class implementing MouseMotionListener, checks the source of the MouseEvent and executes the appropriate code 
 	 *	        e - the event in question
-	 *            1. if the user moves the mouse over "selectedImg" while he or she is cropping, a red box is drawn over the area that he or she has selected
+	 *            1. if the user moves the mouse over "fittedImg" while he or she is cropping, a red box is drawn over the area that he or she has selected
 	 */
 	public void mouseMoved(MouseEvent e) 
 	{
@@ -293,6 +296,13 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		if (this.manager.getConfiguration().getPersistence())
 		{
 			this.manager.getMainWindow().setExtendedState(JFrame.ICONIFIED);
+			this.manager.getMainWindow().setResizable(true);
+			this.manager.getMainWindow().setBounds(50, 50);
+			this.manager.getMainWindow().setResizable(false);
+			this.manager.getMainWindow().setWindowListener(this.manager.getMainWindow());
+			this.manager.getMainWindow().removeMenuBar();
+			this.manager.closeDialogue();
+			this.manager.getMainWindow().pushPanel(new StartPanel(this.manager), "PEMS (Police Evidence Management System) Version 0.1");
 		}
 		else
 		{
@@ -351,7 +361,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 	}
 	
-	/* antiAlias - applies an anti aliasing procedure to "selectedImg"
+	/* antiAlias - applies an anti aliasing procedure to "selectedImg" and "fittedImg" 
 	 */
 	public void antiAlias()
 	{
@@ -359,7 +369,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.fittedImg.applyAntiAliasing();
 	}
 	
-	/* brighten - brightens "selectedImg" by 10%
+	/* brighten - brightens "selectedImg" and "fittedImg" by 10%
 	 */
 	public void brighten()
 	{
@@ -367,7 +377,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.fittedImg.brightenImage();
 	}
 	
-	/* darken - darkens "selectedImg" by 10%
+	/* darken - darkens "selectedImg" and "fittedImg" by 10%
 	 */
 	public void darken()
 	{  
@@ -375,7 +385,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.fittedImg.darkenImage();
 	}
 	
-	/* grayscale - converts "selectedImg" to grayscale format
+	/* grayscale - converts "selectedImg" and "fittedImg" to grayscale format
 	 */
 	public void grayscale()
 	{
@@ -390,7 +400,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.manager.openDialogue("Resize Image", new ResizeDialogue(this.manager, this, this.selectedImg.getImage().getWidth(), this.selectedImg.getImage().getHeight()), 40, 30);
 	}
 	
-	/* resizeImg - applies the image resizing procedure to "selectedImg"
+	/* resizeImg - applies the image resizing procedure to "selectedImg" and "fittedImg"
 	 *  newWidth - the new width of the image in pixels
 	 * newHeight - the new height of the image in pixels
 	 */
@@ -399,7 +409,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.selectedImg.resizeImage(newWidth, newHeight);
 	}
 	
-	/* crop - initializes the cropping procedure for "selectedImg"
+	/* crop - initializes the cropping procedure for "selectedImg" and "fittedImg"
 	 */
 	public void crop()
 	{
@@ -407,7 +417,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 	}
 	
-	/* rotate90 - rotates "selectedImg" 90 degrees to the right
+	/* rotate90 - rotates "selectedImg" and "fittedImg" 90 degrees to the right
 	 */
 	public void rotate90()
 	{
@@ -415,7 +425,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.fittedImg.rotateRight90();
 	}
 	
-	/* rotate180 - rotates "selectedImg" 180 degrees to the right
+	/* rotate180 - rotates "selectedImg" and "fittedImg" 180 degrees to the right
 	 */
 	public void rotate180()
 	{
@@ -423,7 +433,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.fittedImg.rotateRight180();
 	}
 	
-	/* rotate270 - rotates "selectedImg" 270 degrees to the right
+	/* rotate270 - rotates "selectedImg" and "fittedImg" 270 degrees to the right
 	 */
 	public void rotate270()
 	{
@@ -431,7 +441,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.fittedImg.rotateRight270();
 	}
 	
-	/* applyCrop - uses the Point values stored in "cropCoords" to apply a cropping procedure to "selectedImg"
+	/* applyCrop - uses the Point values stored in "cropCoords" to apply a cropping procedure to "selectedImg" and "fittedImg"
 	 */
 	private void applyCrop()
 	{
@@ -517,6 +527,9 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.repaint();
 	}
 	
+	/* refreshSelectedImage - constructs a new EditedImg using the passed in file path, generates a fitted version for display on the screen, and repaints the panel
+	 *             filePath - the file path of the image that will be displayed
+	 */
 	private void refreshSelectedImage(String filePath)
 	{
 		try 

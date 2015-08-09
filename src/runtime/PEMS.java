@@ -3,6 +3,7 @@
 // PEMS.java
 
 package runtime;
+import javax.swing.*;
 import gui.display.*;
 
 public class PEMS 
@@ -10,8 +11,14 @@ public class PEMS
 
 	public static void main(String[] args)
 	{
-		@SuppressWarnings("unused")
-		FrameManager frame = new FrameManager();
+		SwingUtilities.invokeLater(new Runnable() 
+		{    
+			public void run()
+			{
+				@SuppressWarnings("unused")
+				FrameManager frame = new FrameManager();  
+			}
+		}); 
 	}
 	
 }

@@ -42,8 +42,8 @@ public class MainWindow extends Window implements WindowListener
 			super.setResizable(true);
 			super.setBounds(50, 50);
 			super.setResizable(false);
+			this.getManager().closeDialogue();
 			this.pushPanel(new StartPanel(super.getManager()), "PEMS (Police Evidence Management System) Version 0.1");
-			this.setWindowListener(this);
 		}
 		else
 		{
@@ -102,6 +102,15 @@ public class MainWindow extends Window implements WindowListener
 		super.getContentPane().revalidate();
 		super.getContentPane().repaint();
 		super.setTitle(title);
+	}
+	
+	/* removeMenuBar - removes the currently displayed menu bar from the JFrame
+	 */
+	public void removeMenuBar()
+	{
+		super.setJMenuBar(null);
+		super.revalidate();
+		super.repaint();
 	}
 	
 	/* setWindowListener - removes all current WindowListeners from the JFrame and replaces them with the one passed as a parameter
