@@ -60,6 +60,14 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.add(this.container);
 	}
 	
+	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
+	 *	             e - the event in question
+	 *                 1. sets the selected layout type to one image per page
+	 *                 2. sets the selected layout type to two images per page
+	 *                 3. sets the selected layout type to four images per page
+	 *                 4. sets the selected layout type to eight images per page
+	 *                 5. initiates the print sequence
+	 */
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == this.oneImgButton)
@@ -96,6 +104,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
+	/* generateLayoutDiagrams - creates and initializes the images used to represent the four different layouts
+	 */
 	private void generateLayoutDiagrams()
 	{
 		try
@@ -112,6 +122,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
+	/* populateButtonsContainer - adds the necessary components to "buttonsContainer"
+	 */
 	private void populateButtonsContainer()
 	{
 		this.layoutLabel = ComponentGenerator.generateLabel("Images per Page", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
@@ -130,6 +142,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.buttonsContainer.add(eightImgButton);
 	}
 	
+	/* populateDisplayContainer - adds the necessary components to "displayContainer"
+	 */
 	private void populateDisplayContainer(int imgsPerPage)
 	{
 		this.displayContainer.removeAll();
@@ -155,6 +169,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.repaint();
 	}
 	
+	/* populateContainer - adds the necessary components to "container"
+	 */
 	private void populateContainer()
 	{
 		this.instructionsLabel = ComponentGenerator.generateLabel("Please select the layout you would like to use to print the selected images:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
@@ -166,6 +182,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.container.add(this.printButton);
 	}
 	
+	/* generatePDF - primary function for carrying out the PDF generation process
+	 */
 	private void generatePDF() throws IOException, InvalidImgException 
 	{
 		this.generatePages();
@@ -183,6 +201,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.document.close();
 	}
 	
+	/* generatePages - determines how many pages should be generated for the PDF, creates them, and adds them to the "pages" ArrayList
+	 */
 	private void generatePages()
 	{
 		int numPages = 0;
@@ -207,6 +227,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
+	/* generatePrintableImgs - populates the "printableImgs" ArrayList by generating fitted Img versions of the ThumbnailImg objects in "selectedThumbnails"
+	 */
 	private void generatePrintableImgs()
 	{
 		for (int i = 0; i < this.selectedThumbnails.size(); i++)
@@ -227,6 +249,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
+	/* addHeader - 
+	 */
 	private void addHeader() throws IOException, InvalidImgException
 	{
 		Img logoImg = ComponentGenerator.generateImg("resources/logo.png", CENTER_ALIGNMENT);
@@ -266,34 +290,34 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		{
 			rowsPerPage = 1;
 			colsPerPage = 1;
-			incrementX = 320;
+			incrementX = 270 + (int)(this.pages.get(0).getMediaBox().getWidth() - (2 * (50 + 270)));
 			incrementY = 290;
 		}
 		else if (this.imgsPerPage == 2)
 		{
 			rowsPerPage = 2;
 			colsPerPage = 1;
-			incrementX = 320;
+			incrementX = 270 + (int)(this.pages.get(0).getMediaBox().getWidth() - (2 * (50 + 270)));
 			incrementY = 290;
 		}
 		else if (this.imgsPerPage == 4)
 		{
 			rowsPerPage = 2;
 			colsPerPage = 2;
-			incrementX = 280;
+			incrementX = 230 + (int)(this.pages.get(0).getMediaBox().getWidth() - (2 * (50 + 230)));
 			incrementY = 250;
 		}
 		else if (this.imgsPerPage == 8)
 		{
 			rowsPerPage = 4;
 			colsPerPage = 2;
-			incrementX = 175;
+			incrementX = 125 + (int)(this.pages.get(0).getMediaBox().getWidth() - (2 * (50 + 125)));
 			incrementY = 145;
 		}
 		for (int i = 0; i < this.pages.size(); i++)
 		{
 			PDPageContentStream contentStream = new PDPageContentStream(this.document, this.pages.get(i), true ,true);
-			currentY = 500;
+			currentY = 550;
 			for (int j = 0; j < rowsPerPage; j++)
 			{
 				currentX = 50;
@@ -303,20 +327,25 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 					{
 						PDXObjectImage currentPDFImg = new PDJpeg(this.document, this.printableImgs.get(currentImgIndex).getImage());
 						contentStream.drawImage(currentPDFImg, currentX, currentY);
-						//contentStream.beginText();
-						//contentStream.moveTextPositionByAmount();
-						//contentStream.drawString(this.printableImgs.get(currentImgIndex).getTimestamp());
-						//contentStream.endText();
+						System.out.println(currentX);
+						System.out.println(incrementX);
+						contentStream.beginText();
+						contentStream.moveTextPositionByAmount(currentX, currentY - 12);
+						contentStream.drawString(this.printableImgs.get(currentImgIndex).getTimestamp());
+						contentStream.endText();
 						currentImgIndex++;
 					}
 					currentX += incrementX;
 				}
-				currentY -= incrementX;
+				currentY -= incrementY;
 			}
 			contentStream.close();
 		}
 	}
 	
+	/* resizeForPrint - returns a modified version of a given Img, resized to fit properly on the PDF
+	 *            img - the image to resize
+	 */
 	private Img resizeForPrint(Img img)
 	{
 		if (this.imgsPerPage == 1 || this.imgsPerPage == 2)
