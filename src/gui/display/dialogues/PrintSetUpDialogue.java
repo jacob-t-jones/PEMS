@@ -6,16 +6,13 @@ package gui.display.dialogues;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
-
 import javax.swing.*;
-
 import org.apache.pdfbox.exceptions.*;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.edit.*;
 import org.apache.pdfbox.pdmodel.font.*;
 import org.apache.pdfbox.pdmodel.graphics.xobject.*;
 import org.imgscalr.*;
-
 import exceptions.*;
 import gui.*;
 import gui.components.img.*;
@@ -52,7 +49,7 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.printableImgs = new ArrayList<Img>();
 		this.pages = new ArrayList<PDPage>();
 		this.document = new PDDocument();
-		this.imgsPerPage = 0;
+		this.imgsPerPage = 1;
 		this.container = Box.createVerticalBox();
 		this.displayContainer = Box.createHorizontalBox();
 		this.buttonsContainer = Box.createVerticalBox();
@@ -261,33 +258,60 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		int currentImgIndex = 0;
 		int currentX = 0;
 		int currentY = 0;
+		int incrementX = 0;
+		int incrementY = 0;
 		int rowsPerPage = 0;
 		int colsPerPage = 0;
-		if (this.imgsPerPage == 1 || this.imgsPerPage == 2)
+		if (this.imgsPerPage == 1)
 		{
-			rowsPerPage = this.imgsPerPage;
+			rowsPerPage = 1;
 			colsPerPage = 1;
+			incrementX = 320;
+			incrementY = 290;
 		}
-		else if (this.imgsPerPage == 4 || this.imgsPerPage == 8)
+		else if (this.imgsPerPage == 2)
 		{
-			rowsPerPage = this.imgsPerPage / 2;
+			rowsPerPage = 2;
+			colsPerPage = 1;
+			incrementX = 320;
+			incrementY = 290;
+		}
+		else if (this.imgsPerPage == 4)
+		{
+			rowsPerPage = 2;
 			colsPerPage = 2;
+			incrementX = 280;
+			incrementY = 250;
+		}
+		else if (this.imgsPerPage == 8)
+		{
+			rowsPerPage = 4;
+			colsPerPage = 2;
+			incrementX = 175;
+			incrementY = 145;
 		}
 		for (int i = 0; i < this.pages.size(); i++)
 		{
-			PDPageContentStream contentStream = new PDPageContentStream(this.document, this.pages.get(i));
+			PDPageContentStream contentStream = new PDPageContentStream(this.document, this.pages.get(i), true ,true);
+			currentY = 500;
 			for (int j = 0; j < rowsPerPage; j++)
 			{
+				currentX = 50;
 				for (int k = 0; k < colsPerPage; k++)
 				{
-					PDXObjectImage currentPDFImg = new PDJpeg(this.document, this.printableImgs.get(currentImgIndex).getImage());
-					contentStream.drawImage(currentPDFImg, currentX, currentY);
-					contentStream.beginText();
-					//contentStream.moveTextPositionByAmount();
-					contentStream.drawString(this.printableImgs.get(currentImgIndex).getTimestamp());
-					contentStream.endText();
-					currentImgIndex++;
+					if (currentImgIndex < this.printableImgs.size())
+					{
+						PDXObjectImage currentPDFImg = new PDJpeg(this.document, this.printableImgs.get(currentImgIndex).getImage());
+						contentStream.drawImage(currentPDFImg, currentX, currentY);
+						//contentStream.beginText();
+						//contentStream.moveTextPositionByAmount();
+						//contentStream.drawString(this.printableImgs.get(currentImgIndex).getTimestamp());
+						//contentStream.endText();
+						currentImgIndex++;
+					}
+					currentX += incrementX;
 				}
+				currentY -= incrementX;
 			}
 			contentStream.close();
 		}
