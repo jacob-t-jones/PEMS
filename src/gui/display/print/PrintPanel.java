@@ -7,7 +7,7 @@ import gui.*;
 import gui.components.img.Img;
 import gui.components.img.ThumbnailImg;
 import gui.display.FrameManager;
-import gui.display.warning.WarningPanel;
+import gui.display.dialogues.*;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -263,7 +263,8 @@ public class PrintPanel extends JPanel implements ActionListener, MouseListener 
 			// Add a pop-up box if the number of images selected is 0
 			if(this.selectedThumbnails.size() == 0)
 			{
-				WarningPanel wp = new WarningPanel( this.manager,  this);
+				System.out.println("error - no images have been selected");
+				WarningDialogue wp = new WarningDialogue( this.manager,  this);
 				this.manager.openDialogue("Warning", wp, 40, 40);
 				//this.manager.getMainWindow().pushPanel  WarningPanel(this.manager, this);
 			}

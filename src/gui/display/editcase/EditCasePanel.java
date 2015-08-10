@@ -133,7 +133,7 @@ public class EditCasePanel extends JPanel implements ActionListener {
 					col.setAlignmentX(LEFT_ALIGNMENT);
 					
 				}
-				displayedImagePlace += 1;
+				displayedImagePlace += 1; 
 
 				row.add(col);
 			}
