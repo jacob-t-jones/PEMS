@@ -95,6 +95,7 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 			try 
 			{
 				this.generatePDF();
+				this.manager.closeDialogue();
 			} 
 			catch (IOException | InvalidImgException e1) 
 			{
@@ -249,11 +250,11 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
-	/* addHeader - 
+	/* addHeader - paints the standard police department header to the top of each page
 	 */
 	private void addHeader() throws IOException, InvalidImgException
 	{
-		Img logoImg = ComponentGenerator.generateImg("resources/logo.png", CENTER_ALIGNMENT);
+		Img logoImg = ComponentGenerator.generateImg("resources/logosmall.png", CENTER_ALIGNMENT);
 		logoImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 50);
 		PDXObjectImage pdfLogo = new PDJpeg(this.document, logoImg.getImage());
 		for (int i = 0; i < this.pages.size(); i++)
@@ -273,10 +274,14 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 			contentStream.moveTextPositionByAmount(0, -12);
 			contentStream.drawString("(860) 747-1616");
 			contentStream.endText();
+			contentStream.drawLine(0, 715, this.pages.get(i).getMediaBox().getWidth(), 715);
+			contentStream.drawLine(0, 710, this.pages.get(i).getMediaBox().getWidth(), 710);
 			contentStream.close();
 		}
 	}
 	
+	/* addImgs - paints the images to the pages in the specified format
+	 */
 	private void addImgs() throws IOException
 	{
 		int currentImgIndex = 0;
@@ -291,33 +296,33 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 			rowsPerPage = 1;
 			colsPerPage = 1;
 			incrementX = 270 + (int)(this.pages.get(0).getMediaBox().getWidth() - (2 * (50 + 270)));
-			incrementY = 290;
+			incrementY = 310;
 		}
 		else if (this.imgsPerPage == 2)
 		{
 			rowsPerPage = 2;
 			colsPerPage = 1;
 			incrementX = 270 + (int)(this.pages.get(0).getMediaBox().getWidth() - (2 * (50 + 270)));
-			incrementY = 290;
+			incrementY = 310;
 		}
 		else if (this.imgsPerPage == 4)
 		{
 			rowsPerPage = 2;
 			colsPerPage = 2;
 			incrementX = 230 + (int)(this.pages.get(0).getMediaBox().getWidth() - (2 * (50 + 230)));
-			incrementY = 250;
+			incrementY = 270;
 		}
 		else if (this.imgsPerPage == 8)
 		{
 			rowsPerPage = 4;
 			colsPerPage = 2;
 			incrementX = 125 + (int)(this.pages.get(0).getMediaBox().getWidth() - (2 * (50 + 125)));
-			incrementY = 145;
+			incrementY = 165;
 		}
 		for (int i = 0; i < this.pages.size(); i++)
 		{
 			PDPageContentStream contentStream = new PDPageContentStream(this.document, this.pages.get(i), true ,true);
-			currentY = 550;
+			currentY = 700 - incrementY;
 			for (int j = 0; j < rowsPerPage; j++)
 			{
 				currentX = 50;
@@ -327,8 +332,6 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 					{
 						PDXObjectImage currentPDFImg = new PDJpeg(this.document, this.printableImgs.get(currentImgIndex).getImage());
 						contentStream.drawImage(currentPDFImg, currentX, currentY);
-						System.out.println(currentX);
-						System.out.println(incrementX);
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(currentX, currentY - 12);
 						contentStream.drawString(this.printableImgs.get(currentImgIndex).getTimestamp());
