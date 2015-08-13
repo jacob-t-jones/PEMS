@@ -59,7 +59,7 @@ public class NewCasePanel extends JPanel implements ActionListener
 	private void populateContainer()
 	{
 		this.instructionsLabel = ComponentGenerator.generateLabel("Please enter the case number below:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
-		this.errorLabel = ComponentGenerator.generateLabel("", ComponentGenerator.ERROR_TEXT_FONT, ComponentGenerator.ERROR_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.errorLabel = ComponentGenerator.generateLabel("", ComponentGenerator.SMALL_TEXT_FONT_ITALIC, ComponentGenerator.ERROR_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.caseNumField = ComponentGenerator.generateStringField("Type here...", CENTER_ALIGNMENT);
 		this.caseNumField.setMaximumSize(new Dimension(250, 30));
 		this.caseNumField.setMinimumSize(new Dimension(250, 30));

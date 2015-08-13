@@ -23,13 +23,13 @@ public class FinishPanel extends JPanel implements MouseListener
 	private Box optionsContainer;
 	private Box openContainer;
 	private Box printContainer;
-	private Box closeContainer;
+	private Box returnContainer;
 	private Img openImg;
 	private Img printImg;
-	private Img closeImg;
+	private Img returnImg;
 	private JLabel openLabel;
 	private JLabel printLabel;
-	private JLabel closeLabel;
+	private JLabel returnLabel;
 	private String caseNum;
 
 	public FinishPanel(FrameManager manager, String caseNum) 
@@ -40,10 +40,10 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.optionsContainer = Box.createHorizontalBox();
 		this.openContainer = Box.createVerticalBox();
 		this.printContainer = Box.createVerticalBox();
-		this.closeContainer = Box.createVerticalBox();
+		this.returnContainer = Box.createVerticalBox();
 		this.populateOpenContainer();
 		this.populatePrintContainer();
-		this.populateCloseContainer();
+		this.populateReturnContainer();
 		this.populateOptionsContainer();
 		this.populateContainer();
 		this.add(this.container);
@@ -59,15 +59,15 @@ public class FinishPanel extends JPanel implements MouseListener
 	{
 		if (e.getSource() == this.openImg)
 		{
-			this.open();
+			this.openCase();
 		}
 		else if (e.getSource() == this.printImg)
 		{
-			this.print();
+			this.printImgs();
 		}
-		else if (e.getSource() == this.closeImg)
+		else if (e.getSource() == this.returnImg)
 		{
-			this.close();
+			this.returnHome();
 		}
 	}
 
@@ -103,9 +103,9 @@ public class FinishPanel extends JPanel implements MouseListener
 		return;
 	}
 	
-	/* open - attempts to open the case directory in Finder if the user is using OSX, or Explorer if he or she is using Windows
+	/* openCase - attempts to open the case directory in Finder if the user is using OSX, or Explorer if he or she is using Windows
 	 */
-	private void open()
+	private void openCase()
 	{
 		try 
 		{
@@ -118,31 +118,23 @@ public class FinishPanel extends JPanel implements MouseListener
 		}
 	}
 	
-	/* print - opens an instance of SelectImagesDialogue
+	/* printImgs - opens an instance of SelectImagesDialogue
 	 */
-	private void print()
+	private void printImgs()
 	{
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		this.manager.openDialogue("Select Images to Print", new SelectImagesDialogue(this.manager, this.caseNum), 40, 55);
 	}
 	
-	/* close - executes the appropriate quit procedure depending upon the "persistence" configuration value
+	/* returnHome - pushes StartPanel into the JFrame
 	 */
-	private void close()
+	private void returnHome()
 	{
-		if (this.manager.getConfiguration().getPersistence())
-		{
-			this.manager.getMainWindow().setExtendedState(JFrame.ICONIFIED);
-			this.manager.getMainWindow().setResizable(true);
-			this.manager.getMainWindow().setBounds(50, 50);
-			this.manager.getMainWindow().setResizable(false);
-			this.manager.closeDialogue();
-			this.manager.getMainWindow().pushPanel(new StartPanel(this.manager), "PEMS (Police Evidence Management System) Version 0.1");
-		}
-		else
-		{
-			System.exit(0);
-		}
+		this.manager.getMainWindow().setResizable(true);
+		this.manager.getMainWindow().setBounds(50, 50);
+		this.manager.getMainWindow().setResizable(false);
+		this.manager.closeDialogue();
+		this.manager.getMainWindow().pushPanel(new StartPanel(this.manager), "PEMS (Police Evidence Management System) Version 0.1");
 	}
 	
 	/* populateOpenContainer - adds "openImg" and "openLabel" to "openContainer"
@@ -187,25 +179,25 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.printContainer.add(this.printLabel);
 	}
 	
-	/* populateCloseContainer - adds "closeImg" and "closeLabel" to "closeContainer"
+	/* populateReturnContainer - adds "returnImg" and "returnLabel" to "returnContainer"
 	 */
-	private void populateCloseContainer()
+	private void populateReturnContainer()
 	{
 		try 
 		{
-			this.closeImg = ComponentGenerator.generateImg("resources/quit.png", CENTER_ALIGNMENT);
-			this.closeImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 150);
-			this.closeImg.addMouseListener(this);
-			this.closeContainer.add(this.closeImg);
+			this.returnImg = ComponentGenerator.generateImg("resources/next.png", CENTER_ALIGNMENT);
+			this.returnImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 150);
+			this.returnImg.addMouseListener(this);
+			this.returnContainer.add(this.returnImg);
 		} 
 		catch (InvalidImgException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-		this.closeLabel = ComponentGenerator.generateLabel("Close PEMS", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
-		this.closeContainer.add(Box.createVerticalStrut(30));
-		this.closeContainer.add(this.closeLabel);
+		this.returnLabel = ComponentGenerator.generateLabel("Return to Start", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.returnContainer.add(Box.createVerticalStrut(30));
+		this.returnContainer.add(this.returnLabel);
 	}
 	
 	/* populateOptionsContainer - adds the containers for the three options to their parent container
@@ -216,7 +208,7 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.optionsContainer.add(Box.createHorizontalStrut(150));
 		this.optionsContainer.add(this.printContainer);
 		this.optionsContainer.add(Box.createHorizontalStrut(150));
-		this.optionsContainer.add(this.closeContainer);
+		this.optionsContainer.add(this.returnContainer);
 	}
 	
 	/* populateContainer - populates the primary container

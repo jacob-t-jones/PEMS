@@ -14,11 +14,13 @@ public class FileHandler
 
 	private OSType os;
 	private ArrayList<File> peripheralFiles;
+	private ArrayList<File> cases;
 	
 	public FileHandler()
 	{
 		this.os = this.retrieveOS();
 		this.peripheralFiles = this.retrievePeripheralFiles();
+		this.cases = this.retrieveCases();
 	}
 	
 	public enum OSType
@@ -46,6 +48,11 @@ public class FileHandler
 		SAVE_FAILED, SUCCESS
 	}
 	
+	public enum SortType
+	{
+		ASCENDING, DESCENDING
+	}
+	
 	/* getOS - returns "os", an OSType enum value indicating which operating system the JVM is currently running on
 	 */
 	public OSType getOS()
@@ -58,6 +65,13 @@ public class FileHandler
 	public ArrayList<File> getPeripheralFiles()
 	{
 		return this.peripheralFiles;
+	}
+	
+	/* getCases - returns "cases", an ArrayList of File objects, each one representing a case created by one of the program's users
+	 */
+	public ArrayList<File> getCases()
+	{
+		return this.cases;
 	}
 	
 	/* createCase - attempts to initialize a case with the specified case number by creating directories for it in the file system, and returns a CaseCreationResult enum value indicating whether or not this operation was successful 
@@ -187,6 +201,13 @@ public class FileHandler
 		this.peripheralFiles = this.retrievePeripheralFiles();
 	}
 	
+	/* refreshCases - reloads "cases", scanning the user file system for any changes to the managed case directory
+	 */
+	public void refreshCases()
+	{
+		this.cases = this.retrieveCases();
+	}
+	
 	/* retrieveOS - determines which operating system is currently being used by pulling the os.name system property value
 	 */
 	private OSType retrieveOS()
@@ -266,6 +287,21 @@ public class FileHandler
 		}
 		return peripheralFiles;
 	}
+	
+	private ArrayList<File> retrieveCases()
+	{
+		ArrayList<File> cases = new ArrayList<File>();
+		File caseDirectory = new File("cases");
+		for (int i = 0; i < caseDirectory.listFiles().length; i++)
+		{
+			File currentFile = caseDirectory.listFiles()[i];
+			if (currentFile.canRead() && currentFile.isDirectory() && !currentFile.isHidden())
+			{
+				cases.add(currentFile);
+			}
+		}
+		return cases;
+	}	
 	
 	/* caseExists - returns a boolean value indicating whether or not a case with the specified number already exists in the file system
 	 *    caseNum - the case number to try

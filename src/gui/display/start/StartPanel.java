@@ -5,14 +5,12 @@
 package gui.display.start;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 import javax.swing.*;
 import org.imgscalr.*;
 import exceptions.*;
 import gui.*;
 import gui.components.img.*;
 import gui.display.*;
-import gui.display.dialogues.*;
 import gui.display.editcase.*;
 import gui.display.newcase.*;
 
@@ -49,6 +47,8 @@ public class StartPanel extends JPanel implements ActionListener
 	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
 	 *	             e - the event in question
 	 *	               1. pushes NewCasePanel to the JFrame
+	 *				   2. pushes EditCasePanel to the JFrame
+	 *                 3. does nothing (for now)
 	 */
 	public void actionPerformed(ActionEvent e)
 	{
@@ -58,15 +58,11 @@ public class StartPanel extends JPanel implements ActionListener
 		}
 		else if (e.getSource() == this.editCaseButton)
 		{
-			try {
-				this.manager.getMainWindow().pushPanel(new EditCasePanel(this.manager), "PEMS - Edit Existing Case");
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			this.manager.getMainWindow().pushPanel(new EditCasePanel(this.manager), "PEMS - Edit Existing Case");
 		}
 		else if (e.getSource() == this.settingsButton)
 		{
-			this.manager.openDialogue("Choose Print Format", new PrintSetUpDialogue(this.manager, null), 50, 75);
+			return;
 		}
 	}
 	
@@ -131,7 +127,7 @@ public class StartPanel extends JPanel implements ActionListener
 	 */
 	private void populateBottomContainer()
 	{
-		this.creditLabel = ComponentGenerator.generateLabel("Copyright 2015 \u00a9 Jacob Jones and Andrew Rottier", ComponentGenerator.SMALL_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.creditLabel = ComponentGenerator.generateLabel("Copyright 2015 \u00a9 Jacob Jones and Andrew Rottier", ComponentGenerator.MINI_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.bottomContainer.add(Box.createVerticalStrut(5));
 		this.bottomContainer.add(this.creditLabel);
 	}

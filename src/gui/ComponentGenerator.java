@@ -5,11 +5,15 @@
 package gui;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.font.*;
+import java.util.*;
 import javax.swing.*;
 import org.imgscalr.*;
 import exceptions.*;
+import gui.components.box.*;
 import gui.components.field.*;
 import gui.components.img.*;
+import gui.display.*;
 import gui.display.dialogues.*;
 
 public class ComponentGenerator 
@@ -20,19 +24,23 @@ public class ComponentGenerator
 	public static final Font STANDARD_TEXT_FONT = new Font("Georgia", Font.PLAIN, 14);
 	public static final Font STANDARD_TEXT_FONT_BOLD = new Font("Georgia", Font.BOLD, 14);
 	public static final Font STANDARD_TEXT_FONT_ITALIC = new Font("Georgia", Font.ITALIC, 14);
-	public static final Font ERROR_TEXT_FONT = new Font("Georgia", Font.ITALIC, 12);
-	public static final Font SMALL_TEXT_FONT = new Font ("Georgia", Font.PLAIN, 10);
-	public static final Font MINI_TEXT_FONT = new Font("Georgia", Font.PLAIN, 8);
+	public static final Font SMALL_TEXT_FONT = new Font("Courier New", Font.PLAIN, 12);
+	public static final Font SMALL_TEXT_FONT_BOLD = new Font("Courier New", Font.BOLD, 12);
+	public static final Font SMALL_TEXT_FONT_ITALIC = new Font("Courier New", Font.ITALIC, 12);
+	public static final Font MINI_TEXT_FONT = new Font ("Georgia", Font.PLAIN, 10);
+	public static final Font MINI_TEXT_FONT_BOLD = new Font ("Georgia", Font.BOLD, 10);
+	public static final Font MINI_TEXT_FONT_ITALIC = new Font ("Georgia", Font.ITALIC, 10);
 	public static final Color TITLE_COLOR = new Color(46, 46, 46);
 	public static final Color SUBTITLE_COLOR = new Color(2, 2, 123);
 	public static final Color STANDARD_TEXT_COLOR = new Color(44, 29, 29);
 	public static final Color ERROR_TEXT_COLOR = new Color(202, 12, 12);
+	public static final Color LINK_TEXT_COLOR = new Color(42, 68, 219);
 	public static final Color CROPBOX_COLOR = new Color(250, 40, 25);
 	public static final Color SELECTED_THUMBNAIL_BG_COLOR = new Color(219, 219, 219);
 	
 	public ComponentGenerator()
 	{
-		
+
 	}
 	
 	/* generateButton - creates and returns a JButton that complies with the parameters
@@ -230,37 +238,39 @@ public class ComponentGenerator
 		return newMenuItem;
 	}
 	
-	/* generateStringField - creates and returns a StringField that complies with the parameters
-	 * 	              text - the default text displayed in the field
+	/* generateCaseBox - creates and returns a CaseBox that complies with the parameters
+	 *         manager - the current instance of FrameManager
+	 *         caseNum - the number of the case that the component is being generated for
 	 */
-	public static StringField generateStringField(String text)
+	public static CaseBox generateCaseBox(FrameManager manager, String caseNum)
 	{
-		StringField newStringField = new StringField(text);
-		return newStringField;
+		CaseBox newCaseBox = new CaseBox(manager, caseNum);
+		return newCaseBox;
 	}
 	
-	/* generateStringField - creates and returns a StringField that complies with the parameters
-	 * 	              text - the default text displayed in the field
-	 *          alignmentX - the horizontal alignment of the field
+	/* generateCaseBox - creates and returns a CaseBox that complies with the parameters
+	 *         manager - the current instance of FrameManager
+	 *         caseNum - the number of the case that the component is being generated for
+	 *      alignmentX - the horizontal alignment of the box
 	 */
-	public static StringField generateStringField(String text, float alignmentX)
+	public static CaseBox generateCaseBox(FrameManager manager, String caseNum, float alignmentX)
 	{
-		StringField newStringField = new StringField(text);
-		newStringField.setAlignmentX(alignmentX);
-		return newStringField;
+		CaseBox newCaseBox = new CaseBox(manager, caseNum);
+		newCaseBox.setAlignmentX(alignmentX);
+		return newCaseBox;
 	}
 	
-	/* generateStringField - creates and returns a StringField that complies with the parameters
-	 * 	              text - the default text displayed in the field
-	 *          alignmentX - the horizontal alignment of the field
-	 *          alignmentY - the vertical alignment of the field
+	/* generateCaseBox - creates and returns a CaseBox that complies with the parameters
+	 *         caseNum - the number of the case that the component is being generated for
+	 *      alignmentX - the horizontal alignment of the box
+	 *      alignmentY - the vertical alignment of the box
 	 */
-	public static StringField generateStringField(String text, float alignmentX, float alignmentY)
+	public static CaseBox generateCaseBox(FrameManager manager, String caseNum, float alignmentX, float alignmentY)
 	{
-		StringField newStringField = new StringField(text);
-		newStringField.setAlignmentX(alignmentX);
-		newStringField.setAlignmentY(alignmentY);
-		return newStringField;
+		CaseBox newCaseBox = new CaseBox(manager, caseNum);
+		newCaseBox.setAlignmentX(alignmentX);
+		newCaseBox.setAlignmentY(alignmentY);
+		return newCaseBox;
 	}
 	
 	/* generateInchesField - creates and returns a InchesField that complies with the parameters
@@ -333,6 +343,39 @@ public class ComponentGenerator
 		newPixelsField.setAlignmentX(alignmentX);
 		newPixelsField.setAlignmentY(alignmentY);
 		return newPixelsField;
+	}
+	
+	/* generateStringField - creates and returns a StringField that complies with the parameters
+	 * 	              text - the default text displayed in the field
+	 */
+	public static StringField generateStringField(String text)
+	{
+		StringField newStringField = new StringField(text);
+		return newStringField;
+	}
+	
+	/* generateStringField - creates and returns a StringField that complies with the parameters
+	 * 	              text - the default text displayed in the field
+	 *          alignmentX - the horizontal alignment of the field
+	 */
+	public static StringField generateStringField(String text, float alignmentX)
+	{
+		StringField newStringField = new StringField(text);
+		newStringField.setAlignmentX(alignmentX);
+		return newStringField;
+	}
+	
+	/* generateStringField - creates and returns a StringField that complies with the parameters
+	 * 	              text - the default text displayed in the field
+	 *          alignmentX - the horizontal alignment of the field
+	 *          alignmentY - the vertical alignment of the field
+	 */
+	public static StringField generateStringField(String text, float alignmentX, float alignmentY)
+	{
+		StringField newStringField = new StringField(text);
+		newStringField.setAlignmentX(alignmentX);
+		newStringField.setAlignmentY(alignmentY);
+		return newStringField;
 	}
 	
 	/* generateImg - creates and returns an Img that complies with the parameters
@@ -464,6 +507,26 @@ public class ComponentGenerator
 
 		}
 		return fittedImg;
+	}
+	
+	/* addUnderline - adds the underline attribute to the passed in Font, and returns the modified version
+	 *         font - the Font to modify
+	 */
+	public static Font addUnderline(Font font)
+	{
+		Map<TextAttribute, Integer>  attributes = new HashMap<TextAttribute, Integer>();
+		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		return font.deriveFont(attributes);
+	}
+	
+	/* removeUnderline - removes the underline attribute from the passed in Font, and returns the modified version
+	 *            font - the Font to modify
+	 */
+	public static Font removeUnderline(Font font)
+	{
+		Map<TextAttribute, Integer>  attributes = new HashMap<TextAttribute, Integer>();
+		attributes.put(TextAttribute.UNDERLINE, -1);
+		return font.deriveFont(attributes);
 	}
 	
 }
