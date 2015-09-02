@@ -4,58 +4,85 @@
 
 package gui.display;
 import javax.swing.*;
+import backend.*;
 import gui.display.start.*;
 import gui.window.*;
-import tools.*;
 
+/** Class used to tie all of the aspects of PEMS together. Creates and maintains the graphical user interface, and allows it to communicate with various backend classes.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class FrameManager
 {
 	
 	private Config configuration;
-	private FileHandler fileHandler;
+	private PeripheralManager peripheralManager;
+	private StorageManager storageManager;
 	private MainWindow mainWindow;
 	private DialogueWindow dialogueWindow;
 	
+	/** Populates instance fields, initializes <code>MainWindow</code> and pushes <code>StartPanel</code> into view.
+	 */
 	public FrameManager()
 	{
 		this.configuration = new Config();
-		this.fileHandler = new FileHandler();
+		this.peripheralManager = new PeripheralManager();
+		this.storageManager = new StorageManager();
 		this.mainWindow = new MainWindow("PEMS (Police Evidence Management System) Version 0.1", this, new StartPanel(this));
 	}
 	
-	/* getConfiguration - returns the global instance of the Config class
+	/** Returns the global instance of the <code>Config</code> class.
+	 * 
+	 *  @return the global instance of the <code>Config</code> class
 	 */
 	public Config getConfiguration()
 	{
 		return this.configuration;
 	}
 	
-	/* getFileHandler - returns the global instance of the FileHandler class
+	/** Returns the global instance of the <code>PeripheralManager</code> class.
+	 * 
+	 *  @return the global instance of the <code>PeripheralManager</code> class
 	 */
-	public FileHandler getFileHandler()
+	public PeripheralManager getPeripheralManager()
 	{
-		return this.fileHandler;
+		return this.peripheralManager;
+	}
+
+	/** Returns the global instance of the <code>StorageManager</code> class.
+	 * 
+	 *  @return the global instance of the <code>StorageManager</code> class
+	 */
+	public StorageManager getStorageManager()
+	{
+		return this.storageManager;
 	}
 	
-	/* getMainWindow - returns the global instance of MainWindow, the primary JFrame used by the application
+	/** Returns the global instance of <code>MainWindow</code>, the primary <code>JFrame</code> used by the application.
+	 * 
+	 *  @return the global instance of <code>MainWindow</code>, the primary <code>JFrame</code> used by the application
 	 */
 	public MainWindow getMainWindow()
 	{
 		return this.mainWindow;
 	}
 	
-	/* openDialogue - initializes a new instance of DialogueWindow based on the passed in parameters
-	 *        title - the title of the dialogue
-	 *        panel - the panel to display in the dialogue
-	 *        width - the width of the dialogue
-	 *       height - the height of the dialogue
+	/** Initializes and displays a new instance of <code>DialogueWindow</code> based on the passed in parameters.
+	 * 
+	 *  @param title the title of the new dialogue
+	 *  @param panel the <code>JPanel</code> to display in the new dialogue
+	 *  @param width the width of the new dialogue, as a percentage of total screen width
+	 *  @param height the height of the new dialogue, as a percentage of total screen height
 	 */
 	public void openDialogue(String title, JPanel panel, int width, int height)
 	{
 		this.dialogueWindow = new DialogueWindow(title, this, panel, width, height);
 	}
 	
-	/* closeDialogue - hides and disposes of the global instance of DialogueWindow
+	/** Hides and disposes of the current instance of <code>DialogueWindow</code>. 
 	 */
 	public void closeDialogue()
 	{

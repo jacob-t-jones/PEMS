@@ -7,21 +7,24 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+
 import javax.swing.*;
+
+import tools.FileHandler.*;
 import exceptions.*;
 import gui.*;
+import gui.components.icon.ImgIcon;
 import gui.components.img.*;
 import gui.display.*;
 import gui.display.dialogues.*;
 import gui.display.finish.*;
 import gui.display.start.*;
-import tools.FileHandler.*;
 
 public class EditImgPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener, WindowListener
 {
 	
 	private FrameManager manager;
-	private ArrayList<ThumbnailImg> caseThumbnails;
+	private ArrayList<ImgIcon> caseThumbnails;
 	private Point[] cropCoords;
 	private EditImgMenuBar menuBar;
 	private EditedImg selectedImg;
@@ -110,7 +113,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
-		if (e.getSource() instanceof ThumbnailImg)
+		if (e.getSource() instanceof ImgIcon)
 		{
 			if (!this.selectedImg.getSaved())
 			{
@@ -124,7 +127,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 					return;
 				}
 			}
-			ThumbnailImg selectedThumbnail = (ThumbnailImg)e.getSource();
+			ImgIcon selectedThumbnail = (ImgIcon)e.getSource();
 			this.refreshSelectedImage(selectedThumbnail.getFilePath());
 		}
 		else if (SwingUtilities.isRightMouseButton(e) && this.cropping)
@@ -462,9 +465,9 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	
 	/* getCaseThumbnails - returns an ArrayList of ThumbnailImg objects representing all of the image files that are a part of the currently selected case
 	 */
-	private ArrayList<ThumbnailImg> getCaseThumbnails()
+	private ArrayList<ImgIcon> getCaseThumbnails()
 	{
-		ArrayList<ThumbnailImg> thumbnailList = new ArrayList<ThumbnailImg>();
+		ArrayList<ImgIcon> thumbnailList = new ArrayList<ImgIcon>();
 	    File directory = new File("cases" + "/" + this.caseNum + "/");
 		for (int i = 0; i < directory.listFiles().length; i++)
 		{
@@ -474,7 +477,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 			{ 
 				try 
 				{
-					ThumbnailImg currentThumbnail = ComponentGenerator.generateThumbnailImg(directory.listFiles()[i].getPath(), 80, CENTER_ALIGNMENT);
+					ImgIcon currentThumbnail = ComponentGenerator.generateThumbnailImg(directory.listFiles()[i].getPath(), 80, CENTER_ALIGNMENT);
 				    currentThumbnail.addMouseListener(this);
 				    thumbnailList.add(currentThumbnail);
 				} 

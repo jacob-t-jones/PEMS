@@ -10,11 +10,23 @@ import javax.swing.*;
 import javax.swing.text.*;
 import gui.display.dialogues.*;
 
+/** Subclass of <code>JFormattedTextField</code> used to display the inches value in <code>ResizeDialogue</code>.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class InchesField extends JFormattedTextField
 {
 	
 	private ResizeDialogue currentPanel;
 	
+	/** Calls the parent constructor for this field, and sets its format.
+	 * 
+	 *  @param defaultValue the default <code>double</code> value to display in this field
+	 *  @param currentPanel the instance of <code>ResizeDialogue</code> this field is a part of
+	 */
 	public InchesField(double defaultValue, ResizeDialogue currentPanel)
 	{
 		super(new Double(defaultValue));
@@ -22,23 +34,25 @@ public class InchesField extends JFormattedTextField
 		this.currentPanel = currentPanel;
 	}
 	
-	/* getVal - returns the value from the text field in double format
+	/** Returns the value from this field in <code>double</code> format.
+	 * 
+	 *  @return the value from this field in <code>double</code> format
 	 */
 	public double getVal()
 	{
 		return (double)super.getValue();
 	}
 	
-	/* setVal - sets the value in the text field to be the double passed in as a parameter
-	 * newVal - the new double value
+	/** Sets the value in this field to be the <code>double</code> passed in as a parameter.
+	 * 
+	 *  @param newVal the value in question
 	 */
 	public void setVal(double newVal)
 	{
 		super.setValue(new Double(newVal));
 	} 
-	
-	/* processFocusEvent - override function used to update the text fields in ResizeDialogue upon the component gaining or losing focus
-	 *                 e - the event in question
+
+	/** Override method used to update the text fields in <code>ResizeDialogue</code> upon this component gaining or losing focus.
 	 */
 	protected void processFocusEvent(final FocusEvent e) 
     {  
@@ -52,7 +66,9 @@ public class InchesField extends JFormattedTextField
 		});
 	}  
 	
-	/* generateFormatter - returns a NumberFormatter instance that only accepts positive double values and allows users to temporarily make invalid inputs
+	/** Returns a <code>NumberFormatter</code> instance that only accepts positive <code>double</code> values and allows users to temporarily make invalid inputs.
+	 * 
+	 *  @return <code>NumberFormatter</code> instance that only accepts positive <code>double</code> values and allows users to temporarily make invalid inputs
 	 */
 	private NumberFormatter generateFormatter()
 	{
@@ -65,7 +81,9 @@ public class InchesField extends JFormattedTextField
 	    return formatter;
 	}
 	
-	/* generateFormat - returns an instance of NumberFormat that allows one decimal place and does not utilize grouping symbols (commas, etc.)
+	/** Returns an instance of <code>NumberFormat</code> that allows one decimal place and does not utilize grouping symbols (commas, etc.).
+	 * 
+	 * @return instance of <code>NumberFormat</code> that allows one decimal place and does not utilize grouping symbols (commas, etc.)
 	 */
 	private NumberFormat generateFormat()
 	{

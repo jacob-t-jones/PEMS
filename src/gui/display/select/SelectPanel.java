@@ -8,30 +8,36 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import org.imgscalr.*;
-import exceptions.*;
+import backend.storage.file.img.*;
 import gui.*;
-import gui.components.img.*;
+import gui.components.icon.*;
 import gui.display.*;
 import gui.display.editimg.*;
-import tools.FileHandler.*;
 
+/** Subclass of <code>JPanel</code> displayed when the user is importing external evidence files into a case.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class SelectPanel extends JPanel implements ActionListener, MouseListener 
 {
 
 	private FrameManager manager;
-	private ArrayList<ThumbnailImg> displayedThumbnails;
-	private ArrayList<ThumbnailImg> selectedThumbnails;
+	private ArrayList<PeripheralIcon> detectedIcons;
+	private ArrayList<PeripheralIcon> selectedIcons;
 	private Box mainContainer;
 	private Box innerContainer;
 	private Box leftContainer;
 	private Box rightContainer;
-	private Box displayedContainer;
-	private Box displayedTopContainer;
+	private Box detectedContainer;
+	private Box detectedTopContainer;
 	private Box selectedContainer;
-	private Box buttonsContainer;
-	private Img refreshImg;
+	private Box buttonContainer;
+	private ImgIcon refreshIcon;
 	private JLabel instructionsLabel;
-	private JLabel displayedTitleLabel;
+	private JLabel detectedTitleLabel;
 	private JLabel selectedTitleLabel;
 	private JButton loadNextButton;
 	private JButton loadPrevButton;
@@ -39,26 +45,26 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	private JButton loadPrevSelectedButton;
 	private JButton finishButton;
 	private String caseNum;
-	private int displayedImagePlace;
+	private int detectedImagePlace;
 	private int selectedImagePlace;
 
 	public SelectPanel(FrameManager manager, String caseNum) 
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.displayedImagePlace = 0;
+		this.detectedImagePlace = 0;
 		this.selectedImagePlace = 0;
-		this.displayedThumbnails = this.generateThumbnails();
-		this.selectedThumbnails = new ArrayList<ThumbnailImg>();
+		//this.detectedIcons = ;
+		this.selectedIcons = new ArrayList<PeripheralIcon>();
 		this.mainContainer = Box.createVerticalBox();
 		this.innerContainer = Box.createHorizontalBox();
 		this.leftContainer = Box.createVerticalBox();
 		this.rightContainer = Box.createVerticalBox();
-		this.displayedContainer = Box.createVerticalBox();
-		this.displayedTopContainer = Box.createHorizontalBox();
+		this.detectedContainer = Box.createVerticalBox();
+		this.detectedTopContainer = Box.createHorizontalBox();
 		this.selectedContainer = Box.createVerticalBox();
-		this.buttonsContainer = Box.createHorizontalBox();
-		this.displayedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.buttonContainer = Box.createHorizontalBox();
+		this.detectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.populateDisplayedTopContainer();
 		this.refreshDisplayedThumbnails(0);
@@ -76,13 +82,31 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.repaint();
 	}
 
-	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
-	 *	             e - the event in question
-	 *                 1. attempts to load the next fifteen images from the camera within "displayedContainer"
-	 *                 2. attempts to load the previous fifteen images from the camera within "displayedContainer"
-	 *                 3. displays a dialogue asking the user for his or her import preferences
-	 *                 4. attempts to load the next three selected images within "selectedContainer"
-	 *                 5. attempts to load the previous three selected images within "selectedContainer"
+	/** Mandatory method required in all classes that implement <code>ActionListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>loadNextButton</code></li>
+	 *  		<ul>
+	 *  			<li>Attempts to load the next fifteen images detected on peripheral devices within <code>detectedContainer</code>.</li>
+	 *  		</ul>
+	 *  	<li><code>loadPrevButton</code></li>
+	 *  		<ul>
+	 *  			<li>Attempts to load the previous fifteen images detected on peripheral devices within <code>detectedContainer</code>.</li>
+	 *  		</ul>
+	 *  	<li><code>finishButton</code></li>
+	 *  		<ul>
+	 *  			<li></li>
+	 *  		</ul>
+	 *  	<li><code>loadNextSelectedButton</code></li>
+	 *  		<ul>
+	 *  			<li></li>
+	 *  		</ul>
+	 *  	<li><code>loadPrevSelectedButton</code></li>
+	 *  		<ul>
+	 *  			<li></li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void actionPerformed(ActionEvent e) 
 	{
@@ -161,10 +185,10 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 			this.displayedThumbnails = this.generateThumbnails();
 			for (int i = 0; i < this.selectedThumbnails.size(); i++)
 			{
-				ThumbnailImg currentSelectedThumbnail = this.selectedThumbnails.get(i);
+				ImgIcon currentSelectedThumbnail = this.selectedThumbnails.get(i);
 				for (int j = 0; j < this.displayedThumbnails.size(); j++)
 				{
-					ThumbnailImg currentDisplayedThumbnail = this.displayedThumbnails.get(j);
+					ImgIcon currentDisplayedThumbnail = this.displayedThumbnails.get(j);
 					if (currentSelectedThumbnail.getFilePath().equalsIgnoreCase(currentDisplayedThumbnail.getFilePath()))
 					{
 						this.displayedThumbnails.remove(j);
@@ -176,14 +200,14 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		}
 		else if (this.selectedThumbnails.contains(e.getSource()))
 		{
-			this.displayedThumbnails.add((ThumbnailImg)e.getSource());
+			this.displayedThumbnails.add((ImgIcon)e.getSource());
 			this.selectedThumbnails.remove(e.getSource());
 			this.refreshDisplayedThumbnails(this.displayedImagePlace);
 			this.refreshSelectedThumbnails(this.selectedImagePlace);
 		}
 		else if (displayedThumbnails.contains(e.getSource()))
 		{
-			this.selectedThumbnails.add((ThumbnailImg)e.getSource());
+			this.selectedThumbnails.add((ImgIcon)e.getSource());
 			this.displayedThumbnails.remove(e.getSource());
 			this.refreshDisplayedThumbnails(this.displayedImagePlace);
 			this.refreshSelectedThumbnails(this.selectedImagePlace);
@@ -382,14 +406,14 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	
 	/* generateThumbnails - returns an ArrayList of ThumbnailImg objects generated from the peripheral image files detected by the global instance of FileHandler
 	 */
-	private ArrayList<ThumbnailImg> generateThumbnails()
+	private ArrayList<ImgIcon> generateThumbnails()
 	{
-		ArrayList<ThumbnailImg> thumbnails = new ArrayList<ThumbnailImg>();
+		ArrayList<ImgIcon> thumbnails = new ArrayList<ImgIcon>();
 		for (int i = 0; i < this.manager.getFileHandler().getPeripheralFiles().size(); i++)
 		{
 			try 
 			{
-				ThumbnailImg newThumbnail = ComponentGenerator.generateThumbnailImg(this.manager.getFileHandler().getPeripheralFiles().get(i).getPath(), 120);
+				ImgIcon newThumbnail = ComponentGenerator.generateThumbnailImg(this.manager.getFileHandler().getPeripheralFiles().get(i).getPath(), 120);
 				//ThumbnailImg newThumbnail = ComponentGenerator.generateThumbnailImg("/Users/andrewrottier/Documents/Pictures/folder.png", 120);
 
 				newThumbnail.addMouseListener(this);

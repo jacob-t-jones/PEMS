@@ -6,15 +6,20 @@ package gui.display.dialogues;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+
 import javax.swing.*;
+
 import org.apache.pdfbox.exceptions.*;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.edit.*;
 import org.apache.pdfbox.pdmodel.font.*;
 import org.apache.pdfbox.pdmodel.graphics.xobject.*;
 import org.imgscalr.*;
+
+import backend.storage.file.img.Img;
 import exceptions.*;
 import gui.*;
+import gui.components.icon.ImgIcon;
 import gui.components.img.*;
 import gui.display.*;
 
@@ -22,7 +27,7 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 {
 	
 	private FrameManager manager;
-	private ArrayList<ThumbnailImg> selectedThumbnails;
+	private ArrayList<ImgIcon> selectedThumbnails;
 	private ArrayList<Img> printableImgs;
 	private ArrayList<PDPage> pages;
 	private PDDocument document;
@@ -42,7 +47,7 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 	private JButton printButton;
 	private int imgsPerPage;
 	
-	public PrintSetUpDialogue(FrameManager manager, ArrayList<ThumbnailImg> selectedThumbnails) 
+	public PrintSetUpDialogue(FrameManager manager, ArrayList<ImgIcon> selectedThumbnails) 
 	{
 		this.manager = manager;
 		this.selectedThumbnails = selectedThumbnails;

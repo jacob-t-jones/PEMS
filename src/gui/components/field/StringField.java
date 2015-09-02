@@ -6,11 +6,22 @@ package gui.components.field;
 import java.awt.event.*;
 import javax.swing.*;
 
+/** Subclass of <code>JTextField</code> used as a standard <code>String</code> input field.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class StringField extends JTextField implements FocusListener
 {
 	
 	private String defaultText;
 	
+	/** Calls the parent constructor for this field, and makes it its own <code>FocusListener</code>.
+	 * 
+	 *  @param text the default <code>String</code> to display in this field
+	 */
 	public StringField(String text)
 	{
 		super(text);
@@ -18,9 +29,12 @@ public class StringField extends JTextField implements FocusListener
 		this.defaultText = text;
 	}
 
-	/* focusGained - mandatory for any class implementing FocusListener, checks the source of the FocusEvent and executes the appropriate code 
-	 *           e - the event in question
-	 *			   1. clears the text field if it still contains "defaultText" at the time of focus being gained
+	/** Mandatory method required in all classes that implement <code>FocusListener</code>.
+	 *  <p>
+	 *  <b>When this field gains focus:</b>
+	 *  <ul>
+	 *  	<li>If this field still contains the default text, it is cleared.</li>
+	 *  <ul>
 	 */
 	public void focusGained(FocusEvent e) 
 	{
@@ -30,10 +44,14 @@ public class StringField extends JTextField implements FocusListener
 		}
 	}
 
-	/* focusLost - mandatory for any class implementing FocusListener, checks the source of the FocusEvent and executes the appropriate code 
-	 *         e - the event in question
-	 *			 1. returns "defaultText" to the text field if it is empty at the time of focus being lost
+	/** Mandatory method required in all classes that implement <code>FocusListener</code>.
+	 *  <p>
+	 *  <b>When this field loses focus:</b>
+	 *  <ul>
+	 *  	<li>If this field is empty, the default text is shown once again.</li>
+	 *  <ul>
 	 */
+
 	public void focusLost(FocusEvent e)
 	{
 		if (super.getText().replaceAll("\\s", "").isEmpty())

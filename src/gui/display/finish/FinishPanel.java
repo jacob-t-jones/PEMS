@@ -6,8 +6,12 @@ package gui.display.finish;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+
 import javax.swing.*;
+
 import org.imgscalr.*;
+
+import backend.storage.file.img.Img;
 import exceptions.*;
 import gui.*;
 import gui.components.img.*;

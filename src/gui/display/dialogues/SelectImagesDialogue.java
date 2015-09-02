@@ -7,9 +7,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+
 import javax.swing.*;
+
 import exceptions.*;
 import gui.*;
+import gui.components.icon.ImgIcon;
 import gui.components.img.*;
 import gui.display.*;
 
@@ -17,8 +20,8 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 {
 	
 	private FrameManager manager;
-	private ArrayList<ThumbnailImg> displayedThumbnails;
-	private ArrayList<ThumbnailImg> selectedThumbnails;
+	private ArrayList<ImgIcon> displayedThumbnails;
+	private ArrayList<ImgIcon> selectedThumbnails;
 	private Box container;
 	private Box buttonsContainer;
 	private Box thumbnailContainer;
@@ -35,7 +38,7 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 		this.caseNum = caseNum;
 		this.thumbnailPlace = 0;
 		this.displayedThumbnails = this.generateThumbnails();
-		this.selectedThumbnails = new ArrayList<ThumbnailImg>();
+		this.selectedThumbnails = new ArrayList<ImgIcon>();
 		this.container = Box.createVerticalBox();
 		this.buttonsContainer = Box.createHorizontalBox();
 		this.thumbnailContainer = Box.createVerticalBox();
@@ -93,11 +96,11 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 	{
 		if (this.selectedThumbnails.contains(e.getSource()))
 		{
-			this.selectedThumbnails.remove((ThumbnailImg)e.getSource());
+			this.selectedThumbnails.remove((ImgIcon)e.getSource());
 		}
 		else if (this.displayedThumbnails.contains(e.getSource()))
 		{
-			this.selectedThumbnails.add((ThumbnailImg)e.getSource());
+			this.selectedThumbnails.add((ImgIcon)e.getSource());
 		}
 		this.refreshThumbnailContainer(this.thumbnailPlace);
 	}
@@ -136,9 +139,9 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 	
 	/* generateThumbnails - returns an ArrayList of ThumbnailImg objects representing all of the images contained within the currently selected case
 	 */
-	private ArrayList<ThumbnailImg> generateThumbnails()
+	private ArrayList<ImgIcon> generateThumbnails()
 	{
-		ArrayList<ThumbnailImg> thumbnailList = new ArrayList<ThumbnailImg>();
+		ArrayList<ImgIcon> thumbnailList = new ArrayList<ImgIcon>();
 	    File directory = new File("cases" + "/" + this.caseNum + "/");
 		for (int i = 0; i < directory.listFiles().length; i++)
 		{
@@ -148,7 +151,7 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 			{ 
 				try 
 				{
-					ThumbnailImg currentThumbnail = ComponentGenerator.generateThumbnailImg(directory.listFiles()[i].getPath(), 140, CENTER_ALIGNMENT);
+					ImgIcon currentThumbnail = ComponentGenerator.generateThumbnailImg(directory.listFiles()[i].getPath(), 140, CENTER_ALIGNMENT);
 				    currentThumbnail.addMouseListener(this);
 				    thumbnailList.add(currentThumbnail);
 				} 

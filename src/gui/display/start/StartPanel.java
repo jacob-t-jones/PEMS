@@ -5,15 +5,25 @@
 package gui.display.start;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.*;
+import java.io.*;
 import javax.swing.*;
+import org.apache.sanselan.*;
 import org.imgscalr.*;
-import exceptions.*;
+import backend.exceptions.*;
 import gui.*;
-import gui.components.img.*;
+import gui.components.icon.*;
 import gui.display.*;
 import gui.display.editcase.*;
 import gui.display.newcase.*;
 
+/** Subclass of <code>JPanel</code> displayed when the user first starts the program.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class StartPanel extends JPanel implements ActionListener
 {
 
@@ -21,8 +31,8 @@ public class StartPanel extends JPanel implements ActionListener
 	private Box topContainer;
 	private Box middleContainer;
 	private Box bottomContainer;
-	private Img logoImg;
-	private Img bgImg;
+	private BufferedImage bgImage;
+	private ImgIcon logoIcon;
 	private JLabel titleLabel;
 	private JLabel nameLabel;
 	private JLabel creditLabel;
@@ -30,6 +40,10 @@ public class StartPanel extends JPanel implements ActionListener
 	private JButton editCaseButton;
 	private JButton settingsButton;
 	
+	/** Populates this panel with all of the necessary graphical components.
+	 * 
+	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
+	 */
 	public StartPanel(FrameManager manager)
 	{
 		this.manager = manager;
@@ -44,11 +58,23 @@ public class StartPanel extends JPanel implements ActionListener
 		this.add(this.bottomContainer);
 	}
 	
-	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
-	 *	             e - the event in question
-	 *	               1. pushes NewCasePanel to the JFrame
-	 *				   2. pushes EditCasePanel to the JFrame
-	 *                 3. does nothing (for now)
+	/** Mandatory method required in all classes that implement <code>ActionListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>newCaseButton</code></li>
+	 *  		<ul>
+	 *  			<li><code>NewCasePanel</code> is pushed into view.</li>
+	 *  		</ul>
+	 *  	<li><code>editCaseButton</code></li>
+	 *  		<ul>
+	 *  			<li><code>EditCasePanel</code> is pushed into view.</li>
+	 *  		</ul>
+	 *  	<li><code>settingsButton</code></li>
+	 *  		<ul>
+	 *  			<li>Nothing happens (for now).</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void actionPerformed(ActionEvent e)
 	{
@@ -66,26 +92,25 @@ public class StartPanel extends JPanel implements ActionListener
 		}
 	}
 	
-	/* paintComponent - override function used, in this case, to set a background image
-	 * 			    g - the current Graphics instance
+	/** Override method used, in this case, to set a background image.
 	 */
 	protected void paintComponent(Graphics g) 
 	{
 		super.paintComponent(g);
 		try 
 		{
-			this.bgImg = ComponentGenerator.generateImg("resources/background.png", CENTER_ALIGNMENT);
+			this.bgImage = Sanselan.getBufferedImage(new File("resources/background.png"));
 		} 
-		catch (InvalidImgException e) 
+		catch (ImageReadException | IOException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			return;
 		}
-		g.drawImage(this.bgImg.getImage(), 0, 0, null);
+		g.drawImage(this.bgImage, 0, 0, null);
 	}
 	
-	/* populateTopContainer - adds "logoImg", "titleLabel", and "nameLabel" to "topContainer" 
+	/** Adds <code>titleLabel</code>, <code>nameLabel</code>, and <code>logoIcon</code> to <code>topContainer</code>.
 	 */
 	private void populateTopContainer()
 	{
@@ -93,11 +118,11 @@ public class StartPanel extends JPanel implements ActionListener
 		this.nameLabel = ComponentGenerator.generateLabel(this.manager.getConfiguration().getDepartmentName(), ComponentGenerator.SUBTITLE_FONT, ComponentGenerator.SUBTITLE_COLOR, CENTER_ALIGNMENT);
 		try 
 		{
-			this.logoImg = ComponentGenerator.generateImg("resources/logo.png", CENTER_ALIGNMENT);
-			this.logoImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 200, 200);
-			this.topContainer.add(this.logoImg);
+			this.logoIcon = new ImgIcon("resources/logo.png", Scalr.Method.ULTRA_QUALITY, 200, 200);
+			this.logoIcon.setAlignmentX(CENTER_ALIGNMENT);
+			this.topContainer.add(this.logoIcon);
 		} 
-		catch (InvalidImgException e) 
+		catch (InvalidFileException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -109,7 +134,7 @@ public class StartPanel extends JPanel implements ActionListener
 		this.topContainer.add(Box.createVerticalStrut(25));
 	}
 	
-	/* populateMiddleContainer - adds "newCaseButton", "editCaseButton", and "settingsButton" to "middleContainer" 
+	/** Adds <code>newCaseButton</code>, <code>editCaseButton</code>, and <code>settingsButton</code> to <code>middleContainer</code>.
 	 */
 	private void populateMiddleContainer()
 	{
@@ -123,7 +148,7 @@ public class StartPanel extends JPanel implements ActionListener
 		this.middleContainer.add(this.settingsButton);
 	}
 	
-	/* populateBottomContainer - adds "creditLabel" to "bottomContainer"
+	/** Adds <code>creditLabel</code> to <code>bottomContainer</code>.
 	 */
 	private void populateBottomContainer()
 	{

@@ -5,8 +5,12 @@
 package gui.components.box;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import org.imgscalr.*;
+
+import backend.storage.file.img.Img;
 import exceptions.*;
 import gui.*;
 import gui.components.img.*;

@@ -8,44 +8,177 @@ import java.awt.event.*;
 import java.awt.font.*;
 import java.util.*;
 import javax.swing.*;
-import org.imgscalr.*;
-import exceptions.*;
-import gui.components.box.*;
 import gui.components.field.*;
-import gui.components.img.*;
-import gui.display.*;
 import gui.display.dialogues.*;
 
-public class ComponentGenerator 
+/** Class containing <code>public</code> <code>static</code> methods used to generate various graphical components. Also defines <code>public</code> <code>static</code> <code>Font</code> and <code>Color</code> instance fields for use throughout the GUI.  
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
+public class ComponentGenerator
 {
 	
+	/** <code>Font</code> utilized in the title text on <code>StartPanel</code>. 
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Courier New</i>
+	 *  	<li>Style: Bold
+	 *  	<li>Size: 30
+	 *  </ul>
+	 */
 	public static final Font TITLE_FONT = new Font("Courier New", Font.BOLD, 30);
+	/** <code>Font</code> utilized in the subtitle text on <code>StartPanel</code>. 
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Courier New</i>
+	 *  	<li>Style: Bold
+	 *  	<li>Size: 22
+	 *  </ul>
+	 */
 	public static final Font SUBTITLE_FONT = new Font("Courier New", Font.BOLD, 22);
+	/** Standard <code>Font</code> utilized throughout the program. 
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Georgia</i>
+	 *  	<li>Style: Plain
+	 *  	<li>Size: 14
+	 *  </ul>
+	 */
 	public static final Font STANDARD_TEXT_FONT = new Font("Georgia", Font.PLAIN, 14);
+	/** Standard <code>Font</code> utilized throughout the program, in bold.
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Georgia</i>
+	 *  	<li>Style: Bold
+	 *  	<li>Size: 14
+	 *  </ul>
+	 */
 	public static final Font STANDARD_TEXT_FONT_BOLD = new Font("Georgia", Font.BOLD, 14);
+	/** Standard <code>Font</code> utilized throughout the program, in italics.
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Georgia</i>
+	 *  	<li>Style: Italic
+	 *  	<li>Size: 14
+	 *  </ul>
+	 */
 	public static final Font STANDARD_TEXT_FONT_ITALIC = new Font("Georgia", Font.ITALIC, 14);
+	/** Small <code>Font</code> utilized throughout the program. 
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Courier New</i>
+	 *  	<li>Style: Plain
+	 *  	<li>Size: 12
+	 *  </ul>
+	 */
 	public static final Font SMALL_TEXT_FONT = new Font("Courier New", Font.PLAIN, 12);
+	/** Small <code>Font</code> utilized throughout the program, in bold.
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Courier New</i>
+	 *  	<li>Style: Bold
+	 *  	<li>Size: 12
+	 *  </ul>
+	 */
 	public static final Font SMALL_TEXT_FONT_BOLD = new Font("Courier New", Font.BOLD, 12);
+	/** Small <code>Font</code> utilized throughout the program, in italics.
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Courier New</i>
+	 *  	<li>Style: Italic
+	 *  	<li>Size: 12
+	 *  </ul>
+	 */
 	public static final Font SMALL_TEXT_FONT_ITALIC = new Font("Courier New", Font.ITALIC, 12);
+	/** Miniature <code>Font</code> utilized throughout the program. 
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Georgia</i>
+	 *  	<li>Style: Plain
+	 *  	<li>Size: 10
+	 *  </ul>
+	 */
 	public static final Font MINI_TEXT_FONT = new Font ("Georgia", Font.PLAIN, 10);
+	/** Miniature <code>Font</code> utilized throughout the program, in bold.
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Georgia</i>
+	 *  	<li>Style: Bold
+	 *  	<li>Size: 10
+	 *  </ul>
+	 */
 	public static final Font MINI_TEXT_FONT_BOLD = new Font ("Georgia", Font.BOLD, 10);
+	/** Miniature <code>Font</code> utilized throughout the program, in italics.
+	 *  <p>
+	 *  Specifications:
+	 *  <ul>
+	 *  	<li>Name: <i>Georgia</i>
+	 *  	<li>Style: Italic
+	 *  	<li>Size: 10
+	 *  </ul>
+	 */
 	public static final Font MINI_TEXT_FONT_ITALIC = new Font ("Georgia", Font.ITALIC, 10);
+	/** <code>Color</code> applied to the title text on <code>StartPanel</code>. 
+	 *  <p>
+	 *  Description: Dark gray
+	 */
 	public static final Color TITLE_COLOR = new Color(46, 46, 46);
+	/** <code>Color</code> applied to the subtitle text on <code>StartPanel</code>. 
+	 *  <p>
+	 *  Description: Dark blue
+	 */
 	public static final Color SUBTITLE_COLOR = new Color(2, 2, 123);
+	/** Default <code>Color</code> applied to text within the GUI.
+	 *  <p>
+	 *  Description: Medium-dark gray
+	 */
 	public static final Color STANDARD_TEXT_COLOR = new Color(44, 29, 29);
+	/** <code>Color</code> applied to text notifying the user of errors and exceptions.
+	 *  <p>
+	 *  Description: Medium-dark red
+	 */
 	public static final Color ERROR_TEXT_COLOR = new Color(202, 12, 12);
+	/** <code>Color</code> applied to links.
+	 *  <p>
+	 *  Description: Medium blue
+	 */
 	public static final Color LINK_TEXT_COLOR = new Color(42, 68, 219);
+	/** <code>Color</code> applied to the rectangle drawn on an image while it is being cropped.
+	 *  <p>
+	 *  Description: Light red
+	 */
 	public static final Color CROPBOX_COLOR = new Color(250, 40, 25);
+	/** Background <code>Color</code> applied to selected images on <code>SelectImagesDialogue</code>
+	 *  <p>
+	 *  Description: Light gray
+	 */
 	public static final Color SELECTED_THUMBNAIL_BG_COLOR = new Color(219, 219, 219);
 	
+	/** Default constructor, does absolutely nothing.
+	 */
 	public ComponentGenerator()
 	{
-
+		
 	}
 	
-	/* generateButton - creates and returns a JButton that complies with the parameters
-	 *           text - the text displayed in the button
-	 *         action - the ActionListener for the button
+	/** Creates and returns a <code>JButton</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display in the <code>JButton</code>
+	 *  @param action the <code>ActionListener</code> for the <code>JButton</code>
+	 *  @return <code>JButton</code> that complies with the passed in parameter values
 	 */
 	public static JButton generateButton(String text, ActionListener action)
 	{
@@ -54,10 +187,12 @@ public class ComponentGenerator
 		return newButton;
 	}
 	
-	/* generateButton - creates and returns a JButton that complies with the parameters
-	 *           text - the text displayed in the button
-	 *         action - the ActionListener for the button
-	 *     alignmentX - the horizontal alignment of the button
+	/** Creates and returns a <code>JButton</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display in the <code>JButton</code>
+	 *  @param action the <code>ActionListener</code> for the <code>JButton</code>
+	 *  @param alignmentX the horizontal alignment of the <code>JButton</code>
+	 *  @return <code>JButton</code> that complies with the passed in parameter values
 	 */
 	public static JButton generateButton(String text, ActionListener action, float alignmentX)
 	{
@@ -67,11 +202,13 @@ public class ComponentGenerator
 		return newButton;
 	}
 	
-	/* generateButton - creates and returns a JButton that complies with the parameters
-	 *           text - the text displayed in the button
-	 *         action - the ActionListener for the button
-	 *     alignmentX - the horizontal alignment of the button
-	 *     alignmentY - the vertical alignment of the button
+	/** Creates and returns a <code>JButton</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display in the <code>JButton</code>
+	 *  @param action the <code>ActionListener</code> for the <code>JButton</code>
+	 *  @param alignmentX the horizontal alignment of the <code>JButton</code>
+	 *  @param alignmentY the vertical alignment of the <code>JButton</code>
+	 *  @return <code>JButton</code> that complies with the passed in parameter values
 	 */
 	public static JButton generateButton(String text, ActionListener action, float alignmentX, float alignmentY)
 	{
@@ -82,10 +219,12 @@ public class ComponentGenerator
 		return newButton;
 	}
 	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *          text - the text displayed in the label
-	 *          font - the font type to use in the label
-	 *         color - the font color to use in the label
+	/** Creates and returns a <code>JLabel</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display in the <code>JLabel</code>
+	 *  @param font the <code>Font</code> to utilize in the <code>JLabel</code>
+	 *  @param color the <code>Color</code> to utilize in the <code>JLabel</code>
+	 *  @return <code>JLabel</code> that complies with the passed in parameter values
 	 */
 	public static JLabel generateLabel(String text, Font font, Color color)
 	{
@@ -95,11 +234,13 @@ public class ComponentGenerator
 		return newLabel;
 	}	
 	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *          text - the text displayed in the label
-	 *          font - the font type to use in the label
-	 *         color - the font color to use in the label
-	 *    alignmentX - the horizontal alignment of the label
+	/** Creates and returns a <code>JLabel</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display in the <code>JLabel</code>
+	 *  @param font the <code>Font</code> to utilize in the <code>JLabel</code>
+	 *  @param color the <code>Color</code> to utilize in the <code>JLabel</code>
+	 *  @param alignmentX the horizontal alignment of the <code>JLabel</code>
+	 *  @return <code>JLabel</code> that complies with the passed in parameter values
 	 */
 	public static JLabel generateLabel(String text, Font font, Color color, float alignmentX)
 	{
@@ -110,12 +251,14 @@ public class ComponentGenerator
 		return newLabel;
 	}
 	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *          text - the text displayed in the label
-	 *          font - the font type to use in the label
-	 *         color - the font color to use in the label
-	 *    alignmentX - the horizontal alignment of the label
-	 *    alignmentY - the vertical alignment of the label
+	/** Creates and returns a <code>JLabel</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display in the <code>JLabel</code>
+	 *  @param font the <code>Font</code> to utilize in the <code>JLabel</code>
+	 *  @param color the <code>Color</code> to utilize in the <code>JLabel</code>
+	 *  @param alignmentX the horizontal alignment of the <code>JLabel</code>
+	 *  @param alignmentY the vertical alignment of the <code>JLabel</code>
+	 *  @return <code>JLabel</code> that complies with the passed in parameter values
 	 */
 	public static JLabel generateLabel(String text, Font font, Color color, float alignmentX, float alignmentY)
 	{
@@ -127,56 +270,24 @@ public class ComponentGenerator
 		return newLabel;
 	}
 	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *           img - the image displayed in the label
-	 */
-	public static JLabel generateLabel(Img img)
-	{
-		JLabel newLabel = new JLabel();
-		newLabel.add(img);
-		return newLabel;
-	}
-	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *           img - the image displayed in the label
-	 *    alignmentX - the horizontal alignment of the label
-	 */
-	public static JLabel generateLabel(Img img, float alignmentX)
-	{
-		JLabel newLabel = new JLabel();
-		newLabel.add(img);
-		newLabel.setAlignmentX(alignmentX);
-		return newLabel;
-	}
-	
-	/* generateLabel - creates and returns a JLabel that complies with the parameters
-	 *           img - the image displayed in the label
-	 *    alignmentX - the horizontal alignment of the label
-	 *    alignmentY - the vertical alignment of the label
-	 */
-	public static JLabel generateLabel(Img img, float alignmentX, float alignmentY)
-	{
-		JLabel newLabel = new JLabel();
-		newLabel.add(img);
-		newLabel.setAlignmentX(alignmentX);
-		newLabel.setAlignmentY(alignmentY);
-		return newLabel;
-	}
-	
-	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
-	 *             text - the text displayed alongside the check box
-	 *         selected - boolean value indicating whether or not the check box should default to selected
+	/** Creates and returns a <code>JCheckBox</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display with the <code>JCheckBox</code>
+	 *  @param selected <code>boolean</code> value indicating whether or not the <code>JCheckBox</code> should default to selected
+	 *  @return <code>JCheckBox</code> that complies with the passed in parameter values
 	 */
 	public static JCheckBox generateCheckBox(String text, boolean selected)
 	{
 		JCheckBox newCheckBox = new JCheckBox(text, selected);
 		return newCheckBox;
 	}
-	
-	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
-	 *             text - the text displayed alongside the check box
-	 *         selected - boolean value indicating whether or not the check box should default to selected
-	 *       alignmentX - the horizontal alignment of the check box
+
+	/** Creates and returns a <code>JCheckBox</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display with the <code>JCheckBox</code>
+	 *  @param selected <code>boolean</code> value indicating whether or not the <code>JCheckBox</code> should default to selected
+	 *  @param alignmentX the horizontal alignment of the <code>JCheckBox</code>
+	 *  @return <code>JCheckBox</code> that complies with the passed in parameter values
 	 */
 	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX)
 	{
@@ -185,11 +296,13 @@ public class ComponentGenerator
 		return newCheckBox;
 	}
 
-	/* generateCheckBox - creates and returns a JCheckBox that complies with the parameters
-	 *             text - the text displayed alongside the check box
-	 *         selected - boolean value indicating whether or not the check box should default to selected
-	 *       alignmentX - the horizontal alignment of the check box
-	 *       alignmentY - the vertical alignment of the check box
+	/** Creates and returns a <code>JCheckBox</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display with the <code>JCheckBox</code>
+	 *  @param selected <code>boolean</code> value indicating whether or not the <code>JCheckBox</code> should default to selected
+	 *  @param alignmentX the horizontal alignment of the <code>JCheckBox</code>
+	 *  @param alignmentY the vertical alignment of the <code>JCheckBox</code>
+	 *  @return <code>JCheckBox</code> that complies with the passed in parameter values
 	 */
 	public static JCheckBox generateCheckBox(String text, boolean selected, float alignmentX, float alignmentY)
 	{
@@ -199,9 +312,11 @@ public class ComponentGenerator
 		return newCheckBox;
 	}
 	
-	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
-	 *             text - the text displayed on the menu item
-	 *           action - the ActionListener for the menu item
+	/** Creates and returns a <code>JMenuItem</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display in the <code>JMenuItem</code>
+	 *  @param action the <code>ActionListener</code> for the <code>JMenuItem</code>
+	 *  @return <code>JMenuItem</code> that complies with the passed in parameter values
 	 */
 	public static JMenuItem generateMenuItem(String text, ActionListener action)
 	{
@@ -210,10 +325,12 @@ public class ComponentGenerator
 		return newMenuItem;
 	}
 	
-	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
-	 *             text - the text displayed on the menu item
-	 *           action - the ActionListener for the menu item
-	 *      accelerator - the KeyStroke to set the accelerator to (see: normal keyboard shortcut)
+	/** Creates and returns a <code>JMenuItem</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display in the <code>JMenuItem</code>
+	 *  @param action the <code>ActionListener</code> for the <code>JMenuItem</code>
+	 *  @param accelerator <code>KeyStroke</code> object representing the accelerator (key combination used to select menu) for the <code>JMenuItem</code>
+	 *  @return <code>JMenuItem</code> that complies with the passed in parameter values
 	 */
 	public static JMenuItem generateMenuItem(String text, ActionListener action, KeyStroke accelerator)
 	{
@@ -223,11 +340,13 @@ public class ComponentGenerator
 		return newMenuItem;
 	}
 	
-	/* generateMenuItem - creates and returns a JMenuItem that complies with the parameters
-	 *             text - the text displayed on the menu item
-	 *           action - the ActionListener for the menu item
-	 *      accelerator - the KeyStroke to set the menu item accelerator to (see: normal keyboard shortcut)
-	 *         mnemonic - the integer representation of the menu item mnemonic (see: stupid weird keyboard shortcut)
+	/** Creates and returns a <code>JMenuItem</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display in the <code>JMenuItem</code>
+	 *  @param action the <code>ActionListener</code> for the <code>JMenuItem</code>
+	 *  @param accelerator <code>KeyStroke</code> object representing the accelerator (key combination used to select menu) for the <code>JMenuItem</code>
+	 *  @param mnemonic <code>int</code> value repesenting the mnemonic (key combination used to open menu) for the <code>JMenuItem</code>
+	 *  @return <code>JMenuItem</code> that complies with the passed in parameter values
 	 */
 	public static JMenuItem generateMenuItem(String text, ActionListener action, KeyStroke accelerator, int mnemonic)
 	{
@@ -238,44 +357,11 @@ public class ComponentGenerator
 		return newMenuItem;
 	}
 	
-	/* generateCaseBox - creates and returns a CaseBox that complies with the parameters
-	 *         manager - the current instance of FrameManager
-	 *         caseNum - the number of the case that the component is being generated for
-	 */
-	public static CaseBox generateCaseBox(FrameManager manager, String caseNum)
-	{
-		CaseBox newCaseBox = new CaseBox(manager, caseNum);
-		return newCaseBox;
-	}
-	
-	/* generateCaseBox - creates and returns a CaseBox that complies with the parameters
-	 *         manager - the current instance of FrameManager
-	 *         caseNum - the number of the case that the component is being generated for
-	 *      alignmentX - the horizontal alignment of the box
-	 */
-	public static CaseBox generateCaseBox(FrameManager manager, String caseNum, float alignmentX)
-	{
-		CaseBox newCaseBox = new CaseBox(manager, caseNum);
-		newCaseBox.setAlignmentX(alignmentX);
-		return newCaseBox;
-	}
-	
-	/* generateCaseBox - creates and returns a CaseBox that complies with the parameters
-	 *         caseNum - the number of the case that the component is being generated for
-	 *      alignmentX - the horizontal alignment of the box
-	 *      alignmentY - the vertical alignment of the box
-	 */
-	public static CaseBox generateCaseBox(FrameManager manager, String caseNum, float alignmentX, float alignmentY)
-	{
-		CaseBox newCaseBox = new CaseBox(manager, caseNum);
-		newCaseBox.setAlignmentX(alignmentX);
-		newCaseBox.setAlignmentY(alignmentY);
-		return newCaseBox;
-	}
-	
-	/* generateInchesField - creates and returns a InchesField that complies with the parameters
-	 *                value - the default value displayed in the field
-	 *         currentPanel - the instance of ResizeDialogue tied to the component
+	/** Creates and returns an <code>InchesField</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param value the default value displayed in the field
+	 *  @param currentPanel the instance of <code>ResizeDialogue</code> tied to the component
+	 *  @return <code>InchesField</code> that complies with the passed in parameter values
 	 */
 	public static InchesField generateInchesField(double value, ResizeDialogue currentPanel)
 	{
@@ -283,10 +369,12 @@ public class ComponentGenerator
 		return newInchesField;
 	}
 	
-	/* generateInchesField - creates and returns a InchesField that complies with the parameters
-	 *                value - the default value displayed in the field
-	 *         currentPanel - the instance of ResizeDialogue tied to the component
-	 *           alignmentX - the horizontal alignment of the field
+	/** Creates and returns an <code>InchesField</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param value the default value displayed in the field
+	 *  @param currentPanel the instance of <code>ResizeDialogue</code> tied to the component
+	 *  @param alignmentX the horizontal alignment of the field
+	 *  @return <code>InchesField</code> that complies with the passed in parameter values
 	 */
 	public static InchesField generateInchesField(double value, ResizeDialogue currentPanel, float alignmentX)
 	{
@@ -295,11 +383,13 @@ public class ComponentGenerator
 		return newInchesField;
 	}
 	
-	/* generateInchesField - creates and returns a InchesField that complies with the parameters
-	 *                value - the default value displayed in the field
-	 *         currentPanel - the instance of ResizeDialogue tied to the component
-	 *           alignmentX - the horizontal alignment of the field
-	 *           alignmentY - the vertical alignment of the field
+	/** Creates and returns an <code>InchesField</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param value the default value displayed in the field
+	 *  @param currentPanel the instance of <code>ResizeDialogue</code> tied to the component
+	 *  @param alignmentX the horizontal alignment of the field
+	 *  @param alignmentY the vertical alignment of the field
+	 *  @return <code>InchesField</code> that complies with the passed in parameter values
 	 */
 	public static InchesField generateInchesField(double value, ResizeDialogue currentPanel, float alignmentX, float alignmentY)
 	{
@@ -309,9 +399,11 @@ public class ComponentGenerator
 		return newInchesField;
 	}
 	
-	/* generatePixelsField - creates and returns a PixelsField that complies with the parameters
-	 *                value - the default value displayed in the field
-	 *         currentPanel - the instance of ResizeDialogue tied to the component
+	/** Creates and returns a <code>PixelsField</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param value the default value displayed in the field
+	 *  @param currentPanel the instance of <code>ResizeDialogue</code> tied to the component
+	 *  @return <code>PixelsField</code> that complies with the passed in parameter values
 	 */
 	public static PixelsField generatePixelsField(int value, ResizeDialogue currentPanel)
 	{
@@ -319,10 +411,12 @@ public class ComponentGenerator
 		return newPixelsField;
 	}
 	
-	/* generatePixelsField - creates and returns a PixelsField that complies with the parameters
-	 *                value - the default value displayed in the field
-	 *         currentPanel - the instance of ResizeDialogue tied to the component
-	 *           alignmentX - the horizontal alignment of the field
+	/** Creates and returns a <code>PixelsField</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param value the default value displayed in the field
+	 *  @param currentPanel the instance of <code>ResizeDialogue</code> tied to the component
+	 *  @param alignmentX the horizontal alignment of the field
+	 *  @return <code>PixelsField</code> that complies with the passed in parameter values
 	 */
 	public static PixelsField generatePixelsField(int value, ResizeDialogue currentPanel, float alignmentX)
 	{
@@ -331,11 +425,13 @@ public class ComponentGenerator
 		return newPixelsField;
 	}
 	
-	/* generatePixelsField - creates and returns a PixelsField that complies with the parameters
-	 *                value - the default value displayed in the field
-	 *         currentPanel - the instance of ResizeDialogue tied to the component
-	 *           alignmentX - the horizontal alignment of the field
-	 *           alignmentY - the vertical alignment of the field
+	/** Creates and returns a <code>PixelsField</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param value the default value displayed in the field
+	 *  @param currentPanel the instance of <code>ResizeDialogue</code> tied to the component
+	 *  @param alignmentX the horizontal alignment of the field
+	 *  @param alignmentY the vertical alignment of the field
+	 *  @return <code>PixelsField</code> that complies with the passed in parameter values
 	 */
 	public static PixelsField generatePixelsField(int value, ResizeDialogue currentPanel, float alignmentX, float alignmentY)
 	{
@@ -345,8 +441,10 @@ public class ComponentGenerator
 		return newPixelsField;
 	}
 	
-	/* generateStringField - creates and returns a StringField that complies with the parameters
-	 * 	              text - the default text displayed in the field
+	/** Creates and returns a <code>StringField</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the default text displayed in the field
+	 *  @return <code>StringField</code> that complies with the passed in parameter values
 	 */
 	public static StringField generateStringField(String text)
 	{
@@ -354,9 +452,11 @@ public class ComponentGenerator
 		return newStringField;
 	}
 	
-	/* generateStringField - creates and returns a StringField that complies with the parameters
-	 * 	              text - the default text displayed in the field
-	 *          alignmentX - the horizontal alignment of the field
+	/** Creates and returns a <code>StringField</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the default text displayed in the field
+	 *  @param alignmentX the horizontal alignment of the field
+	 *  @return <code>StringField</code> that complies with the passed in parameter values
 	 */
 	public static StringField generateStringField(String text, float alignmentX)
 	{
@@ -364,11 +464,13 @@ public class ComponentGenerator
 		newStringField.setAlignmentX(alignmentX);
 		return newStringField;
 	}
-	
-	/* generateStringField - creates and returns a StringField that complies with the parameters
-	 * 	              text - the default text displayed in the field
-	 *          alignmentX - the horizontal alignment of the field
-	 *          alignmentY - the vertical alignment of the field
+
+	/** Creates and returns a <code>StringField</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the default text displayed in the field
+	 *  @param alignmentX the horizontal alignment of the field
+	 *  @param alignmentY the vertical alignment of the field
+	 *  @return <code>StringField</code> that complies with the passed in parameter values
 	 */
 	public static StringField generateStringField(String text, float alignmentX, float alignmentY)
 	{
@@ -378,139 +480,10 @@ public class ComponentGenerator
 		return newStringField;
 	}
 	
-	/* generateImg - creates and returns an Img that complies with the parameters
-	 *    filePath - the directory path the image will be loaded from
-	 *             * throws InvalidImgException if the image cannot be loaded into memory
-	 */
-	public static Img generateImg(String filePath) throws InvalidImgException
-	{
-		Img newImg = new Img(filePath);
-		return newImg;
-	}
-	
-	/* generateImg - creates and returns an Img that complies with the parameters
-	 *    filePath - the directory path the image will be loaded from
-	 *  alignmentX - the horizontal alignment of the image
-	 *             * throws InvalidImgException if the image cannot be loaded into memory
-	 */
-	public static Img generateImg(String filePath, float alignmentX) throws InvalidImgException
-	{
-		Img newImg = new Img(filePath);
-		newImg.setAlignmentX(alignmentX);
-		return newImg;
-	}
-	
-	/* generateImg - creates and returns an Img that complies with the parameters
-	 *    filePath - the directory path the image will be loaded from
-	 *  alignmentX - the horizontal alignment of the image
-	 *  alignmentY - the vertical alignment of the image
-	 *             * throws InvalidImgException if the image cannot be loaded into memory
-	 */
-	public static Img generateImg(String filePath, float alignmentX, float alignmentY) throws InvalidImgException
-	{
-		Img newImg = new Img(filePath);
-		newImg.setAlignmentX(alignmentX);
-		newImg.setAlignmentY(alignmentY);
-		return newImg;
-	}
-	
-	/* generateEditedImg - creates and returns an EditedImg that complies with the parameters
-	 *          filePath - the directory path the image will be loaded from
-	 *           		 * throws InvalidImgException if the image cannot be loaded into memory
-	 */
-	public static EditedImg generateEditedImg(String filePath) throws InvalidImgException
-	{
-		EditedImg newEditedImg = new EditedImg(filePath);
-		return newEditedImg;
-	}
-	
-	/* generateEditedImg - creates and returns an EditedImg that complies with the parameters
-	 *          filePath - the directory path the image will be loaded from
-	 *        alignmentX - the horizontal alignment of the image
-	 *           		 * throws InvalidImgException if the image cannot be loaded into memory
-	 */
-	public static EditedImg generateEditedImg(String filePath, float alignmentX) throws InvalidImgException
-	{
-		EditedImg newEditedImg = new EditedImg(filePath);
-		newEditedImg.setAlignmentX(alignmentX);
-		return newEditedImg;
-	}
-	
-	/* generateEditedImg - creates and returns an EditedImg that complies with the parameters
-	 *          filePath - the directory path the image will be loaded from
-	 *        alignmentX - the horizontal alignment of the image
-	 *        alignmentY - the vertical alignment of the image
-	 *           		 * throws InvalidImgException if the image cannot be loaded into memory
-	 */
-	public static EditedImg generateEditedImg(String filePath, float alignmentX, float alignmentY) throws InvalidImgException
-	{
-		EditedImg newEditedImg = new EditedImg(filePath);
-		newEditedImg.setAlignmentX(alignmentX);
-		newEditedImg.setAlignmentY(alignmentY);
-		return newEditedImg;
-	}
-	
-	/* generateThumbnailImg - creates and returns a ThumbnailImg that complies with the parameters
-	 *             filePath - the directory path the image will be loaded from
-	 *                 size - the new size of the image
-	 *           		    * throws InvalidImgException if the image cannot be loaded into memory
-	 */
-	public static ThumbnailImg generateThumbnailImg(String filePath, int size) throws InvalidImgException
-	{
-		ThumbnailImg newThumbnailImg = new ThumbnailImg(filePath, size);
-		return newThumbnailImg;
-	}
-	
-	/* generateThumbnailImg - creates and returns a ThumbnailImg that complies with the parameters
-	 *             filePath - the directory path the image will be loaded from
-	 *                 size - the new size of the image
-	 *           alignmentX - the horizontal alignment of the image
-	 *           		    * throws InvalidImgException if the image cannot be loaded into memory
-	 */
-	public static ThumbnailImg generateThumbnailImg(String filePath, int size, float alignmentX) throws InvalidImgException
-	{
-		ThumbnailImg newThumbnailImg = new ThumbnailImg(filePath, size);
-		newThumbnailImg.setAlignmentX(alignmentX);
-		return newThumbnailImg;
-	}
-	
-	/* generateThumbnailImg - creates and returns a ThumbnailImg that complies with the parameters
-	 *             filePath - the directory path the image will be loaded from
-	 *                 size - the new size of the image
-	 *           alignmentX - the horizontal alignment of the image
-	 *           alignmentY - the vertical alignment of the image
-	 *                      * throws InvalidImgException if the image cannot be loaded into memory
-	 */
-	public static ThumbnailImg generateThumbnailImg(String filePath, int size, float alignmentX, float alignmentY) throws InvalidImgException
-	{
-		ThumbnailImg newThumbnailImg = new ThumbnailImg(filePath, size);
-		newThumbnailImg.setAlignmentX(alignmentX);
-		newThumbnailImg.setAlignmentY(alignmentY);
-		return newThumbnailImg;
-	}
-	
-	/* fitImageToScreen - returns a version of a given EditedImg that is shrunk down in order to fit EditImgPanel properly
-	 *              img - the EditedImg to resize
-	 */
-	public static EditedImg fitImageToScreen(EditedImg img) throws InvalidImgException
-	{
-		EditedImg fittedImg = new EditedImg(img.getFilePath());
-		if (fittedImg.getImage().getHeight() > 500)
-		{
-			fittedImg.clearLastHistoryEntry();
-			fittedImg.resizeImage(Scalr.Method.QUALITY, 500);
-		}
-		else if (fittedImg.getImage().getWidth() > 1200)
-		{
-			fittedImg.clearLastHistoryEntry();
-			fittedImg.resizeImage(Scalr.Method.QUALITY, 1200);
-
-		}
-		return fittedImg;
-	}
-	
-	/* addUnderline - adds the underline attribute to the passed in Font, and returns the modified version
-	 *         font - the Font to modify
+	/** Accepts a <code>Font</code> object and returns that same object, with underline formatting applied.
+	 * 
+	 *  @param font the original <code>Font</code>
+	 *  @return the <code>Font</code> with underline formatting applied
 	 */
 	public static Font addUnderline(Font font)
 	{
@@ -519,8 +492,10 @@ public class ComponentGenerator
 		return font.deriveFont(attributes);
 	}
 	
-	/* removeUnderline - removes the underline attribute from the passed in Font, and returns the modified version
-	 *            font - the Font to modify
+	/** Accepts a <code>Font</code> object and returns that same object, with underline formatting removed.
+	 * 
+	 *  @param font the original <code>Font</code>
+	 *  @return the <code>Font</code> with underline formatting removed
 	 */
 	public static Font removeUnderline(Font font)
 	{

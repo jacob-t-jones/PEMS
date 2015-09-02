@@ -6,37 +6,58 @@ package gui.display.newcase;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import backend.StorageManager.*;
 import gui.*;
 import gui.components.field.*;
 import gui.display.*;
 import gui.display.select.*;
 import gui.display.start.*;
-import tools.FileHandler.*;
 
+/** Subclass of <code>JPanel</code> displayed when the user wants to create a new case.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class NewCasePanel extends JPanel implements ActionListener
 {
 	
 	private FrameManager manager;
-	private Box container;
-	private Box buttonsBox;
+	private Box mainContainer;
+	private Box buttonContainer;
 	private StringField caseNumField;
 	private JLabel instructionsLabel;
 	private JLabel errorLabel;
 	private JButton backButton;
 	private JButton continueButton;
 	
+	/** Populates this panel with all of the necessary graphical components.
+	 * 
+	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
+	 */
 	public NewCasePanel(FrameManager manager) 
 	{
 		this.manager = manager;
-		this.container = Box.createVerticalBox();
-		this.buttonsBox = Box.createHorizontalBox();
-		this.populateContainer();
-		this.add(this.container);
+		this.mainContainer = Box.createVerticalBox();
+		this.buttonContainer = Box.createHorizontalBox();
+		this.populateMainContainer();
+		this.add(this.mainContainer);
 	}
 	
-	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
-	 *	             e - the event in question
-	 *                 1. if case creation is successful, the wait cursor is displayed and SelectPanel is pushed to the JFrame
+	/** Mandatory method required in all classes that implement <code>ActionListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>continueButton</code></li>
+	 *  		<ul>
+	 *  			<li>If the case creation procedure succeeds, <code>SelectPanel</code> is pushed into view.</li>
+	 *  		</ul>
+	 *  	<li><code>backButton</code></li>
+	 *  		<ul>
+	 *  			<li><code>StartPanel</code> is pushed into view.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void actionPerformed(ActionEvent e) 
 	{
@@ -49,14 +70,15 @@ public class NewCasePanel extends JPanel implements ActionListener
 				this.manager.getMainWindow().pushPanel(new SelectPanel(this.manager, caseNum), "PEMS - Import Images");
 			}
 		}
-		else if (e.getSource() == this.backButton) {
-				manager.getMainWindow().pushPanel(new StartPanel(manager), "PEMS (Police Evidence Management System) Version 0.1");
+		else if (e.getSource() == this.backButton) 
+		{
+			this.manager.getMainWindow().pushPanel(new StartPanel(this.manager), "PEMS (Police Evidence Management System) Version 0.1");
 		}
 	}
 	
-	/* populateContainer - adds "instructionsLabel", "errorLabel", "caseNumField", "backButton", and "continueButton" to "container" 
+	/** Adds <code>instructionsLabel</code>, <code>errorLabel</code>, <code>caseNumField</code>, <code>backButton</code>, and <code>continueButton</code> to <code>mainContainer</code>.
 	 */
-	private void populateContainer()
+	private void populateMainContainer()
 	{
 		this.instructionsLabel = ComponentGenerator.generateLabel("Please enter the case number below:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.errorLabel = ComponentGenerator.generateLabel("", ComponentGenerator.SMALL_TEXT_FONT_ITALIC, ComponentGenerator.ERROR_TEXT_COLOR, CENTER_ALIGNMENT);
@@ -65,29 +87,31 @@ public class NewCasePanel extends JPanel implements ActionListener
 		this.caseNumField.setMinimumSize(new Dimension(250, 30));
 		this.backButton = ComponentGenerator.generateButton("<      Back", this, CENTER_ALIGNMENT);
 		this.continueButton = ComponentGenerator.generateButton("Continue  >", this, CENTER_ALIGNMENT);
-		this.container.add(Box.createVerticalStrut(20));
-		this.container.add(this.instructionsLabel);
-		this.container.add(Box.createVerticalStrut(20));
-		this.container.add(this.errorLabel);
-		this.container.add(Box.createVerticalStrut(50));
-		this.container.add(this.caseNumField);
-		this.container.add(Box.createVerticalStrut(120));
-		this.buttonsBox.add(backButton);
-		this.buttonsBox.add(Box.createHorizontalStrut(250));
-		this.buttonsBox.add(this.continueButton);
-		this.container.add(buttonsBox);
+		this.mainContainer.add(Box.createVerticalStrut(20));
+		this.mainContainer.add(this.instructionsLabel);
+		this.mainContainer.add(Box.createVerticalStrut(20));
+		this.mainContainer.add(this.errorLabel);
+		this.mainContainer.add(Box.createVerticalStrut(50));
+		this.mainContainer.add(this.caseNumField);
+		this.mainContainer.add(Box.createVerticalStrut(120));
+		this.buttonContainer.add(this.backButton);
+		this.buttonContainer.add(Box.createHorizontalStrut(250));
+		this.buttonContainer.add(this.continueButton);
+		this.mainContainer.add(this.buttonContainer);
 	}
 	
-	/* attemptCaseCreation - attempts to create a new case with the given number, checking for edge cases in the process, and returns a boolean value indicating the success of said creation
-	 *             caseNum - the case number for the newly created case
+	/** Attempts to create a new case with the given number, checking for edge cases in the process. Returns a <code>boolean</code> value indicating the success of this creation.
+	 * 
+	 *  @param caseNum the case number in question
+	 *  @return <code>true</code> if the case was successfully created; <code>false</code> if otherwise
 	 */
 	private boolean attemptCaseCreation(String caseNum)
 	{
-		CaseCreationResult result = this.manager.getFileHandler().createCase(caseNum);
+		CaseCreationResult result = this.manager.getStorageManager().createCase(caseNum);
 		if (result == CaseCreationResult.INVALID_CASE_NUMBER)
 		{
 			this.caseNumField.setText("");
-			this.errorLabel.setText("Error - Invalid case number! Please do not exceed ten characters. Use only letters and numbers.");
+			this.errorLabel.setText("Error - Please do not exceed ten characters. Use only letters and numbers.");
 			return false;
 		}
 		else if (result == CaseCreationResult.CASE_ALREADY_EXISTS)

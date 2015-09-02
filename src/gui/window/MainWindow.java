@@ -8,9 +8,22 @@ import javax.swing.*;
 import gui.display.*;
 import gui.display.start.*;
 
+/** Subclass of <code>Window</code> used to display the main program interface.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class MainWindow extends Window implements WindowListener
 {
 
+	/** Calls the parent constructor, sets the bounds and other options for this window.
+	 * 
+	 *  @param title the title of this window
+	 *  @param manager the instance of <code>FrameManager</code> that created this window
+	 *  @param panel the <code>JPanel</code> to display in this window
+	 */
 	public MainWindow(String title, FrameManager manager, JPanel panel)
 	{
 		super(title, manager, panel);
@@ -21,18 +34,19 @@ public class MainWindow extends Window implements WindowListener
         super.setVisible(true);
 	}
 	
-	/* windowOpened - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowOpened(WindowEvent e) 
 	{
 		return;
 	}
-
-	/* windowClosing - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	           e - the event in question
-	 *				 1. "persistence" is set to true in config => application remains open, JFrame is minimized
-	 *				 2. "persistence" is set to false in config => application quits as per usual
+	
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
+	 *  <p>
+	 *  <b>When this window is about to close:</b>
+	 *  <ul>
+	 *  	<li>If calling <code>getPersistence</code> within the global instance of <code>Config</code> returns <code>true</code>, this window is minimized and <code>StartPanel</code> is pushed. Otherwise, the program exits as per usual.</li>
+	 *  <ul>
 	 */
 	public void windowClosing(WindowEvent e) 
 	{
@@ -51,49 +65,45 @@ public class MainWindow extends Window implements WindowListener
 		}
 	}
 
-	/* windowClosed - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowClosed(WindowEvent e) 
 	{
 		return;
 	}
 	
-	/* windowIconified - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	             e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowIconified(WindowEvent e) 
 	{
 		return;
 	}
 
-	/* windowDeiconified - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	               e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowDeiconified(WindowEvent e) 
 	{
 		return;
 	}
 
-	/* windowActivated - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	             e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowActivated(WindowEvent e) 
 	{
 		return;
 	}
 
-	/* windowDeactivated - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	               e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowDeactivated(WindowEvent e) 
 	{
 		return;
 	}
 	
-	/* pushPanel - removes the currently displayed panel from the JFrame and replaces it with a newly constructed one
-	 *	   panel - the new panel to display
-	 *     title - the title of the new panel
+	/** Removes the currently displayed <code>JPanel</code> from this window and replaces it with a newly constructed one.
+	 * 
+	 *  @param panel the new <code>JPanel</code> to display
+	 *  @param title the new title of this window
 	 */
 	public void pushPanel(JPanel panel, String title)
 	{
@@ -104,7 +114,7 @@ public class MainWindow extends Window implements WindowListener
 		super.setTitle(title);
 	}
 	
-	/* removeMenuBar - removes the currently displayed menu bar from the JFrame
+	/** Removes the menu bar from this window.
 	 */
 	public void removeMenuBar()
 	{
@@ -113,8 +123,9 @@ public class MainWindow extends Window implements WindowListener
 		super.repaint();
 	}
 	
-	/* setWindowListener - removes all current WindowListeners from the JFrame and replaces them with the one passed as a parameter
-	 *            window - the WindowListener to add
+	/** Removes all current <code>WindowListener</code> instances from this window and replaces them with the one passed in as a parameter.
+	 * 
+	 *  @param window the new <code>WindowListener</code>
 	 */
 	public void setWindowListener(WindowListener window)
 	{
