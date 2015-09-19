@@ -34,7 +34,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	private Point[] cropCoords;
 	private EditImgMenuBar menuBar;
 	private Img selectedImg;
-	private ImgIcon fittedImg;
+	private ImgIcon selectedIcon;
 	private Box mainContainer;
 	private Box selectedImgContainer;
 	private Box caseIconContainer;
@@ -140,7 +140,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 *  		<ul>
 	 *  			<li>If cropping has been initiated and the user right clicked, the cropping procedure is cancelled.</li>
 	 *  		</ul>
-	 *  	<li><code>fittedImg</code></li>
+	 *  	<li><code>selectedIcon</code></li>
 	 *  		<ul>
 	 *  			<li>If cropping has been initiated, the next step in the cropping procedure is carried out.</li>
 	 *  		</ul>
@@ -169,10 +169,10 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		{
 			this.cropping = false;
 			this.cropCoords = new Point[2];
-			this.fittedImg.repaint();
+			this.selectedIcon.repaint();
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
-		else if (e.getSource() == this.fittedImg && this.cropping)
+		else if (e.getSource() == this.selectedIcon && this.cropping)
 		{
 			if (this.cropCoords[0] == null)
 			{
@@ -225,17 +225,17 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 *  <p>
 	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
 	 *  <ul>
-	 *  	<li><code>fittedImg</code></li>
+	 *  	<li><code>selectedIcon</code></li>
 	 *  		<ul>
-	 *  			<li>If cropping has been initiated and the user has already selected the first point, a crop box is drawn on <code>fittedImg</code>.</li>
+	 *  			<li>If cropping has been initiated and the user has already selected the first point, a crop box is drawn on <code>selectedIcon</code>.</li>
 	 *  		</ul>
 	 *  </ul>
 	 */
 	public void mouseMoved(MouseEvent e) 
 	{
-		if (e.getSource() == this.fittedImg && this.cropping && this.cropCoords[0] != null && this.cropCoords[1] == null)
+		if (e.getSource() == this.selectedIcon && this.cropping && this.cropCoords[0] != null && this.cropCoords[1] == null)
 		{
-			this.fittedImg.drawCropBox(this.cropCoords[0], e.getPoint());
+			this.selectedIcon.drawCropBox(this.cropCoords[0], e.getPoint());
 		}
 	}
 	
@@ -484,10 +484,10 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		int fittedY = (int)Math.min(this.cropCoords[0].getY(), this.cropCoords[1].getY());
 		int fittedWidth = (int)Math.abs(this.cropCoords[1].getX() - this.cropCoords[0].getX());
 		int fittedHeight = (int)Math.abs(this.cropCoords[1].getY() - this.cropCoords[0].getY());
-		int trueX = (this.selectedImg.getImage().getWidth() / this.fittedImg.getImage().getWidth()) * fittedX;
-		int trueY = (this.selectedImg.getImage().getHeight() / this.fittedImg.getImage().getHeight()) * fittedY;
-		int trueWidth = (this.selectedImg.getImage().getWidth() / this.fittedImg.getImage().getWidth()) * fittedWidth;
-		int trueHeight = (this.selectedImg.getImage().getHeight() / this.fittedImg.getImage().getHeight()) * fittedHeight;
+		int trueX = (this.selectedImg.getImage().getWidth() / this.selectedIcon.getImage().getWidth()) * fittedX;
+		int trueY = (this.selectedImg.getImage().getHeight() / this.selectedIcon.getImage().getHeight()) * fittedY;
+		int trueWidth = (this.selectedImg.getImage().getWidth() / this.selectedIcon.getImage().getWidth()) * fittedWidth;
+		int trueHeight = (this.selectedImg.getImage().getHeight() / this.selectedIcon.getImage().getHeight()) * fittedHeight;
 		this.cropping = false;
 		this.cropCoords = new Point[2];
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -535,16 +535,16 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.repaint();
 	}
 	
-	/** Refreshes the image currently being displayed in the editing area.
+	/** Refreshes the image currently displayed in the editing area.
 	 */
 	private void refreshSelectedImage()
 	{
-		this.fittedImg = this.selectedImg.getIcon();
-		this.fittedImg.addMouseListener(this);
-		this.fittedImg.addMouseMotionListener(this);
+		this.selectedIcon = this.selectedImg.getIcon();
+		this.selectedIcon.addMouseListener(this);
+		this.selectedIcon.addMouseMotionListener(this);
 		this.selectedImgContainer.removeAll();
 		this.selectedImgContainer.add(Box.createVerticalStrut(500));
-		this.selectedImgContainer.add(this.fittedImg);
+		this.selectedImgContainer.add(this.selectedIcon);
 		this.selectedImgContainer.add(Box.createVerticalStrut(500)); 
 		this.revalidate();
 		this.repaint();

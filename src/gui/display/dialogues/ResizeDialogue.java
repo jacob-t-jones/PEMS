@@ -11,6 +11,13 @@ import gui.components.field.*;
 import gui.display.*;
 import gui.display.editimg.*;
 
+/** Subclass of <code>JPanel</code> displayed when the resize image option is selected within <code>EditImgPanel</code>.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class ResizeDialogue extends JPanel implements ActionListener
 {
 
@@ -34,6 +41,13 @@ public class ResizeDialogue extends JPanel implements ActionListener
 	private int originalWidth;
 	private int originalHeight;
 
+	/** Populates this dialogue with all of the necessary graphical components.
+	 * 
+	 *  @param manager the instance of <code>FrameManager</code> that initialized this dialogue
+	 *  @param currentPanel the instance of <code>EditImgPanel</code> associated with this class
+	 *  @param originalWidth the original width of the image being resized, in pixels
+	 *  @param originalHeight the original height of the image being resized, in pixels
+	 */
 	public ResizeDialogue(FrameManager manager, EditImgPanel currentPanel, int originalWidth, int originalHeight) 
 	{
 		this.manager = manager;
@@ -49,9 +63,15 @@ public class ResizeDialogue extends JPanel implements ActionListener
 		this.add(this.container);
 	}
 
-	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
-	 *	             e - the event in question
-	 *                 1. calls the resize method within the current instance of EditImgPanel using the width and height values from the dialogue
+	/** Mandatory method required in all classes that implement <code>ActionListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>applyButton</code></li>
+	 *  		<ul>
+	 *  			<li>Calls the <code>resizeImg</code> method within the current instance of <code>EditImgPanel</code> using the width and height values from this dialogue.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void actionPerformed(ActionEvent e) 
 	{
@@ -62,8 +82,9 @@ public class ResizeDialogue extends JPanel implements ActionListener
 		}
 	}
 	
-	/* updateFields - upon one of the four text fields losing focus, the other text fields are updated, either to maintain aspect ratio or to keep the pixel/inch values in accordance with each other 
-	 *            e - the FocusEvent being processed
+	/** Upon one of the four text fields losing focus, the other text fields are updated, either to maintain aspect ratio or to keep the pixel/inch values in accordance with each other.
+	 * 
+	 *  @param e the <code>FocusEvent</code> being processed
 	 */
 	public void updateFields(FocusEvent e) 
 	{
@@ -109,7 +130,7 @@ public class ResizeDialogue extends JPanel implements ActionListener
 		}
 	}
 
-	/* populateWidthContainer - places the necessary components within "widthContainer"
+	/** Adds <code>widthLabel</code>, <code>widthPixelsField</code>, <code>widthPixelsLabel</code>, <code>widthInchesField</code>, and <code>widthInchesLabel</code> to <code>widthContainer</code>.
 	 */
 	private void populateWidthContainer() 
 	{
@@ -129,7 +150,7 @@ public class ResizeDialogue extends JPanel implements ActionListener
 		this.widthContainer.add(this.widthInchesLabel);
 	}
 
-	/* populateHeightContainer - places the necessary components within "heightContainer"
+	/** Adds <code>heightLabel</code>, <code>heightPixelsField</code>, <code>heightPixelsLabel</code>, <code>heightInchesField</code>, and <code>heightInchesLabel</code> to <code>heightContainer</code>.
 	 */
 	private void populateHeightContainer() 
 	{
@@ -149,7 +170,7 @@ public class ResizeDialogue extends JPanel implements ActionListener
 		this.heightContainer.add(this.heightInchesLabel);
 	}
 
-	/* populateContainer - adds "widthContainer", "heightContainer", "aspectRatio", and "applyButton" to "container"
+	/** Adds <code>widthContainer</code>, <code>heightContainer</code>, <code>aspectRatio</code>, and <code>applyButton</code> to <code>container</code>.
 	 */
 	private void populateContainer() 
 	{
@@ -165,14 +186,20 @@ public class ResizeDialogue extends JPanel implements ActionListener
 		this.container.add(this.applyButton);
 	}
 	
-	/* inchesToPixels - accepts a double inches value and outputs a corresponding pixel value in integer format
+	/** Accepts a <code>double</code> inches value and outputs a corresponding pixel value in <code>int</code> format.
+	 * 
+	 *  @param inches the inches value in question
+	 *  @return the corresponding pixel value
 	 */
 	private int inchesToPixels(double inches)
 	{
 		return (int)(inches * Toolkit.getDefaultToolkit().getScreenResolution());
 	}
 
-	/* pixelsToInches - accepts an integer pixel value and outputs a corresponding inches value in double format
+	/** Accepts an <code>int</code> pixel value and outputs a corresponding inches value in <code>double</code> format.
+	 * 
+	 *  @param pixels the pixel value in question
+	 *  @return the corresponding inches value
 	 */
 	private double pixelsToInches(int pixels)
 	{

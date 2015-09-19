@@ -36,6 +36,7 @@ public class Img
 	private String timestamp;
 	
 	/** Populates instance fields and pushes the original unedited version of <code>image</code> to <code>currentHistorySequence</code>.
+	 *  Also generates a fitted <code>ImgIcon</code> object used to display this image within the user interface.
 	 * 
 	 *  @param parentFile the instance of <code>LiveFile</code> that this image is associated with
 	 *  @throws InvalidFileException if there is an error reading the image into memory
@@ -304,6 +305,9 @@ public class Img
 		return new ImgIcon(this);
 	}
 	
+	/** Called when any of the <code>ImgScalr</code> editing functions are applied to <code>image</code>.
+	 *  Generates a new icon using the edited image. Clears the undone history sequences for both the image and its representative icon.
+	 */
 	private void imgChanged()
 	{
 		this.icon = this.generateIcon();
