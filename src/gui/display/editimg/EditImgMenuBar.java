@@ -7,6 +7,13 @@ import java.awt.event.*;
 import javax.swing.*;
 import gui.*;
 
+/** Subclass of <code>JMenuBar</code> displayed and utilized within <code>EditImgPanel</code>.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class EditImgMenuBar extends JMenuBar implements ActionListener
 {
 	
@@ -30,6 +37,10 @@ public class EditImgMenuBar extends JMenuBar implements ActionListener
 	private JMenuItem rotate180MenuItem;
 	private JMenuItem rotate270MenuItem;
 
+	/** Calls the parent constructor and populates this menu bar.
+	 * 
+	 *  @param currentPanel the instance of <code>EditImgPanel</code> associated with this class
+	 */
 	public EditImgMenuBar(EditImgPanel currentPanel)
 	{
 		super();
@@ -42,9 +53,15 @@ public class EditImgMenuBar extends JMenuBar implements ActionListener
 		this.add(this.imageMenu);
 	}
 
-	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
-	 *	             e - the event in question
-	 *                 1-14. determines which menu item was clicked, and calls the matching method within EditImgPanel 
+	/** Mandatory method required in all classes that implement <code>ActionListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li>An instance of <code>JMenuItem</code></li>
+	 *  		<ul>
+	 *  			<li>Calls the matching method for the selected <code>JMenuItem</code> within <code>EditImgPanel</code>.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void actionPerformed(ActionEvent e) 
 	{
@@ -106,7 +123,27 @@ public class EditImgMenuBar extends JMenuBar implements ActionListener
 		}
 	}
 	
-	/* constructMenus - initializes and populates all of the menus
+	/** Initializes all of the menu items.
+	 */
+	private void constructMenuItems()
+	{
+		this.saveImageMenuItem = ComponentGenerator.generateMenuItem("Save Image", this, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+		this.quitMenuItem = ComponentGenerator.generateMenuItem("Quit", this, KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+		this.undoMenuItem = ComponentGenerator.generateMenuItem("Undo", this, KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+		this.redoMenuItem = ComponentGenerator.generateMenuItem("Redo", this, KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+		this.removeImageMenuItem = ComponentGenerator.generateMenuItem("Remove Image from Case", this);
+		this.antiAliasMenuItem = ComponentGenerator.generateMenuItem("Apply Anti Aliasing", this);
+		this.brightenMenuItem = ComponentGenerator.generateMenuItem("Brighten by 10%", this);
+		this.darkenMenuItem = ComponentGenerator.generateMenuItem("Darken by 10%", this);
+		this.grayscaleMenuItem = ComponentGenerator.generateMenuItem("Convert to Grayscale", this);
+		this.resizeMenuItem = ComponentGenerator.generateMenuItem("Resize Image", this);
+		this.cropMenuItem = ComponentGenerator.generateMenuItem("Crop Image", this);
+		this.rotate90MenuItem = ComponentGenerator.generateMenuItem("Rotate Image 90\u00b0 Right", this);
+		this.rotate180MenuItem = ComponentGenerator.generateMenuItem("Rotate Image 180\u00b0 Right", this);
+		this.rotate270MenuItem = ComponentGenerator.generateMenuItem("Rotate Image 270\u00b0 Right", this);
+	}
+	
+	/** Initializes and populates all of the menus.
 	 */
 	private void constructMenus()
 	{
@@ -134,26 +171,6 @@ public class EditImgMenuBar extends JMenuBar implements ActionListener
 		this.imageMenu.add(this.rotate90MenuItem);
 		this.imageMenu.add(this.rotate180MenuItem);
 		this.imageMenu.add(this.rotate270MenuItem);
-	}
-	
-	/* constructMenuItems - initializes all of the menu items
-	 */
-	private void constructMenuItems()
-	{
-		this.saveImageMenuItem = ComponentGenerator.generateMenuItem("Save Image", this, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-		this.quitMenuItem = ComponentGenerator.generateMenuItem("Quit", this, KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
-		this.undoMenuItem = ComponentGenerator.generateMenuItem("Undo", this, KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
-		this.redoMenuItem = ComponentGenerator.generateMenuItem("Redo", this, KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
-		this.removeImageMenuItem = ComponentGenerator.generateMenuItem("Remove Image from Case", this);
-		this.antiAliasMenuItem = ComponentGenerator.generateMenuItem("Apply Anti Aliasing", this);
-		this.brightenMenuItem = ComponentGenerator.generateMenuItem("Brighten by 10%", this);
-		this.darkenMenuItem = ComponentGenerator.generateMenuItem("Darken by 10%", this);
-		this.grayscaleMenuItem = ComponentGenerator.generateMenuItem("Convert to Grayscale", this);
-		this.resizeMenuItem = ComponentGenerator.generateMenuItem("Resize Image", this);
-		this.cropMenuItem = ComponentGenerator.generateMenuItem("Crop Image", this);
-		this.rotate90MenuItem = ComponentGenerator.generateMenuItem("Rotate Image 90\u00b0 Right", this);
-		this.rotate180MenuItem = ComponentGenerator.generateMenuItem("Rotate Image 180\u00b0 Right", this);
-		this.rotate270MenuItem = ComponentGenerator.generateMenuItem("Rotate Image 270\u00b0 Right", this);
 	}
 	
 }

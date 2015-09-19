@@ -5,55 +5,66 @@
 package gui.display.editimg;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 import java.util.*;
-
 import javax.swing.*;
-
-import tools.FileHandler.*;
-import exceptions.*;
+import org.imgscalr.*;
+import backend.exceptions.*;
+import backend.storage.file.*;
+import backend.storage.file.LiveFile.*;
+import backend.storage.file.img.*;
 import gui.*;
-import gui.components.icon.ImgIcon;
-import gui.components.img.*;
+import gui.components.icon.*;
 import gui.display.*;
 import gui.display.dialogues.*;
 import gui.display.finish.*;
 import gui.display.start.*;
 
+/** Subclass of <code>JPanel</code> displayed when the user is editing an image;
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class EditImgPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener, WindowListener
 {
 	
 	private FrameManager manager;
-	private ArrayList<ImgIcon> caseThumbnails;
+	private ArrayList<CaseIcon> caseIcons;
 	private Point[] cropCoords;
 	private EditImgMenuBar menuBar;
-	private EditedImg selectedImg;
-	private EditedImg fittedImg;
+	private Img selectedImg;
+	private ImgIcon fittedImg;
 	private Box mainContainer;
 	private Box selectedImgContainer;
-	private Box caseThumbnailContainer;
-	private JButton loadNextThumbnails;
-	private JButton loadPrevThumbnails;
+	private Box caseIconContainer;
+	private JButton loadNextIconsButton;
+	private JButton loadPrevIconsButton;
 	private JButton continueButton;
 	private String caseNum;
-	private int caseThumbnailIndex;
+	private int caseIconIndex;
 	private boolean cropping;
 	
+	/** Populates this panel with all of the necessary graphical components.
+	 * 
+	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
+	 *  @param caseNum the number of the case currently being edited
+	 */
 	public EditImgPanel(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.caseThumbnailIndex = 0;
+		this.caseIconIndex = 0;
 		this.cropping = false;
-		this.caseThumbnails = this.getCaseThumbnails();
+		this.caseIcons = this.generateCaseIcons();
 		this.cropCoords = new Point[2];
 		this.menuBar = new EditImgMenuBar(this);
 		this.mainContainer = Box.createVerticalBox();
 		this.selectedImgContainer = Box.createHorizontalBox();
-		this.caseThumbnailContainer = Box.createHorizontalBox();
-		this.caseThumbnailContainer.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.refreshCaseThumbnails(0);
-		this.refreshSelectedImage(this.caseThumbnails.get(0).getFilePath());
+		this.caseIconContainer = Box.createHorizontalBox();
+		this.caseIconContainer.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.refreshCaseIcons(0);
+		this.setSelectedImage(this.caseIcons.get(0).getParentFile());
 		this.populateMainContainer();
 		this.add(this.mainContainer);
 		this.manager.getMainWindow().setWindowListener(this);
@@ -63,31 +74,43 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.repaint();
 	}
 	
-	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
-	 *	             e - the event in question
-	 *                 1. attempts to load the next eight images in "caseThumbnailContainer"
-	 *                 2. attempts to load the previous eight images in "caseThumbnailContainer"
-	 *                 3. displays a dialogue prompting the user to save, pushes FinishPanel to the JFrame
+	/** Mandatory method required in all classes that implement <code>ActionListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>loadNextIconsButton</code></li>
+	 *  		<ul>
+	 *  			<li>Attempts to load the next eight images in <code>caseIconContainer</code>.</li>
+	 *  		</ul>
+	 *  	<li><code>loadPrevIconsButton</code></li>
+	 *  		<ul>
+	 *  			<li>Attempts to load the previous eight images in <code>caseIconContainer</code>.</li>
+	 *  		</ul>
+	 *  	<li><code>continueButton</code></li>
+	 *  		<ul>
+	 *  			<li>Displays a dialogue prompting the user to save, pushes <code>FinishPanel</code> to the <code>JFrame</code>.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void actionPerformed(ActionEvent e)
 	{ 
-		if (e.getSource() == this.loadNextThumbnails)
+		if (e.getSource() == this.loadNextIconsButton)
 		{
-        	if (this.caseThumbnailIndex + 8 < this.caseThumbnails.size())
+        	if (this.caseIconIndex + 8 < this.caseIcons.size())
         	{
-        		this.refreshCaseThumbnails(this.caseThumbnailIndex + 8);
+        		this.refreshCaseIcons(this.caseIconIndex + 8);
         	}
 		}
-		else if (e.getSource() == this.loadPrevThumbnails)
+		else if (e.getSource() == this.loadPrevIconsButton)
 		{
-          	if (this.caseThumbnailIndex >= 8)
+          	if (this.caseIconIndex >= 8)
         	{
-        		this.refreshCaseThumbnails(this.caseThumbnailIndex - 8);
+        		this.refreshCaseIcons(this.caseIconIndex - 8);
         	}
 		}
 		else if (e.getSource() == this.continueButton)
 		{
-			if (!this.selectedImg.getSaved())
+			if (!this.selectedImg.getParentFile().getSaved())
 			{
 				int selection = JOptionPane.showConfirmDialog(this.manager.getMainWindow(), "Would you like to save the currently selected image before proceeding to the next step? All unsaved changes will be lost.", "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (selection == JOptionPane.YES_OPTION)
@@ -105,17 +128,29 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 	}
 	
-	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
-	 *              1. displays a dialogue prompting the user to save before pushing the selected thumbnail into the editing area
-	 *              2. if the user is currently cropping and he or she right clicks, the cropping procedure is canceled
-	 *              3. if the user clicks on "fittedImg" while he or she is cropping, the coordinates of the click are recorded and used in the procedure
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li>An instance of <code>CaseIcon</code></li>
+	 *  		<ul>
+	 *  			<li>Prompts the user to save before pushing the image associated with the selected <code>CaseIcon</code> into the editing area.</li>
+	 *  		</ul>
+	 *  	<li>Any component</li>
+	 *  		<ul>
+	 *  			<li>If cropping has been initiated and the user right clicked, the cropping procedure is cancelled.</li>
+	 *  		</ul>
+	 *  	<li><code>fittedImg</code></li>
+	 *  		<ul>
+	 *  			<li>If cropping has been initiated, the next step in the cropping procedure is carried out.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
-		if (e.getSource() instanceof ImgIcon)
+		if (e.getSource() instanceof CaseIcon)
 		{
-			if (!this.selectedImg.getSaved())
+			if (!this.selectedImg.getParentFile().getSaved())
 			{
 				int selection = JOptionPane.showConfirmDialog(this.manager.getMainWindow(), "Would you like to save the currently selected image before editing a new one? All unsaved changes will be lost.", "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 				if (selection == JOptionPane.YES_OPTION)
@@ -127,8 +162,8 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 					return;
 				}
 			}
-			ImgIcon selectedThumbnail = (ImgIcon)e.getSource();
-			this.refreshSelectedImage(selectedThumbnail.getFilePath());
+			CaseIcon selectedIcon = (CaseIcon)e.getSource();
+			this.setSelectedImage(selectedIcon.getParentFile());
 		}
 		else if (SwingUtilities.isRightMouseButton(e) && this.cropping)
 		{
@@ -151,49 +186,50 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 	}
 	
-	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mousePressed(MouseEvent e) 
 	{
 		return;
 	}
-	
-	/* mouseReleased - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	           e - the event in question
+	 
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
-	public void mouseReleased(MouseEvent e) 
+	public void mouseReleased(MouseEvent e)
 	{
 		return;
 	}
 	
-	/* mouseEntered - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseEntered(MouseEvent e) 
 	{
 		return;
 	}
-
-	/* mouseExited - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	         e - the event in question
+	
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseExited(MouseEvent e) 
 	{
 		return;
-	}
+	}	
 	
-	/* mouseDragged - mandatory for any class implementing MouseMotionListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseMotionListener</code>.
 	 */
 	public void mouseDragged(MouseEvent e) 
 	{
 		return;
 	}
 
-	/* mouseMoved - mandatory for any class implementing MouseMotionListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	        e - the event in question
-	 *            1. if the user moves the mouse over "fittedImg" while he or she is cropping, a red box is drawn over the area that he or she has selected
+	/** Mandatory method required in all classes that implement <code>MouseMotionListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>fittedImg</code></li>
+	 *  		<ul>
+	 *  			<li>If cropping has been initiated and the user has already selected the first point, a crop box is drawn on <code>fittedImg</code>.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void mouseMoved(MouseEvent e) 
 	{
@@ -203,69 +239,63 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 	}
 	
-	/* windowOpened - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowOpened(WindowEvent e) 
 	{
 		return;
 	}
 
-	/* windowClosing - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	           e - the event in question
-	 *               1. calls the quit() method
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
+	 * 
+	 *  Calls the <code>quit</code> method.
 	 */
 	public void windowClosing(WindowEvent e) 
 	{
 		this.quit();
 	}
 
-	/* windowClosed - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowClosed(WindowEvent e) 
 	{
 		return;
 	}
 
-	/* windowIconified - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	             e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowIconified(WindowEvent e) 
 	{
 		return;
 	}
 
-	/* windowDeiconified - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	               e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowDeiconified(WindowEvent e) 
 	{
 		return;
 	}
 
-	/* windowActivated - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	             e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowActivated(WindowEvent e) 
 	{
 		return;
 	}
 
-	/* windowDeactivated - mandatory for any class implementing WindowListener, checks the source of the WindowEvent and executes the appropriate code 
-	 *	               e - the event in question
+	/** Mandatory method required in all classes that implement <code>WindowListener</code>.
 	 */
 	public void windowDeactivated(WindowEvent e) 
 	{
 		return;
 	}
-
-	/* saveImg - attempts to save the image currently being edited by the user
+	
+	/** Attempts to save the image currently being edited by the user.
 	 */
 	public void saveImg()
 	{
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		SaveFileResult result = this.manager.getFileHandler().saveFile(this.caseNum, this.selectedImg);
+		SaveFileResult result = this.selectedImg.getParentFile().saveFile();
 		if (result == SaveFileResult.SAVE_FAILED)
 		{
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -273,18 +303,18 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 		else
 		{
-			this.caseThumbnails = this.getCaseThumbnails();
-			this.refreshCaseThumbnails(0);
-			this.selectedImg.setSaved(true);
+			this.caseIcons = this.generateCaseIcons();
+			this.refreshCaseIcons(0);
+			this.selectedImg.getParentFile().setSaved(true);
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 	
-	/* quit - displays a dialogue prompting the user to save his or her changes before proceeding, and then executes the appropriate exit procedure
+	/** Displays a dialogue prompting the user to save his or her changes before proceeding, and then executes the appropriate exit procedure.
 	 */
 	public void quit()
 	{
-		if (!this.selectedImg.getSaved())
+		if (!this.selectedImg.getParentFile().getSaved())
 		{
 			int selection = JOptionPane.showConfirmDialog(this.manager.getMainWindow(), "Would you like to save the currently selected image before exiting the program?", "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 			if (selection == JOptionPane.YES_OPTION)
@@ -313,23 +343,23 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 	}
 	
-	/* undo - undoes the action most recently taken by the user
+	/** Undoes the action most recently taken by the user.
 	 */
 	public void undo()
 	{
 		this.selectedImg.undo();
-		this.fittedImg.undo();
+		this.refreshSelectedImage();
 	}
 	
-	/* redo - redoes the action most recently undone by the user
+	/** Redoes the action most recently undone by the user.
 	 */
 	public void redo()
 	{
 		this.selectedImg.redo();
-		this.fittedImg.redo();
+		this.refreshSelectedImage();
 	}
 	
-	/* removeImg - attempts to remove the currently selected image from the "cases" folder, leaving a copy of the file in the "backups" directory 
+	/** Attempts to remove the currently selected image from the <i>cases</i> folder, leaving a copy of the file in the <i>backups</i> directory.
 	 */
 	public void removeImg()
 	{
@@ -337,7 +367,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		if (selection == JOptionPane.YES_OPTION)
 		{
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			DeleteFileResult result = this.manager.getFileHandler().deleteFile(this.selectedImg);
+			DeleteFileResult result = this.selectedImg.getParentFile().deleteFile();
 			if (result == DeleteFileResult.DELETION_FAILED)
 			{
 				this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -345,15 +375,15 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 			}
 			else
 			{
-				this.caseThumbnails = this.getCaseThumbnails();
-				this.refreshCaseThumbnails(0);
-				if (this.caseThumbnails.size() == 0)
+				this.caseIcons = this.generateCaseIcons();
+				this.refreshCaseIcons(0);
+				if (this.caseIcons.size() == 0)
 				{
 					this.manager.getMainWindow().pushPanel(new FinishPanel(manager, caseNum), "PEMS - Finish");
 				}
 				else 
 				{
-					this.refreshSelectedImage(this.caseThumbnails.get(0).getFilePath());
+					this.setSelectedImage(this.caseIcons.get(0).getParentFile());
 				}
 				this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
@@ -364,55 +394,57 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 	}
 	
-	/* antiAlias - applies an anti aliasing procedure to "selectedImg" and "fittedImg" 
+	/** Applies an anti aliasing procedure to <code>selectedImg</code>.
 	 */
 	public void antiAlias()
 	{
 		this.selectedImg.applyAntiAliasing();
-		this.fittedImg.applyAntiAliasing();
+		this.refreshSelectedImage();
 	}
 	
-	/* brighten - brightens "selectedImg" and "fittedImg" by 10%
+	/** Brightens <code>selectedImg</code> by 10%.
 	 */
 	public void brighten()
 	{
 		this.selectedImg.brightenImage();
-		this.fittedImg.brightenImage();
+		this.refreshSelectedImage();
 	}
 	
-	/* darken - darkens "selectedImg" and "fittedImg" by 10%
+	/** Darkens <code>selectedImg</code> by 10%.
 	 */
 	public void darken()
 	{  
 		this.selectedImg.darkenImage();
-		this.fittedImg.darkenImage();
+		this.refreshSelectedImage();
 	}
 	
-	/* grayscale - converts "selectedImg" and "fittedImg" to grayscale format
+	/** Converts <code>selectedImg</code> to grayscale format.
 	 */
 	public void grayscale()
 	{
 		this.selectedImg.toGrayscale();
-		this.fittedImg.toGrayscale();
+		this.refreshSelectedImage();
 	}
 	
-	/* resizeImg - initializes and displays the resize image dialogue
+	/** Initializes and displays the resize image dialogue.
 	 */
 	public void resizeImg()
 	{
 		this.manager.openDialogue("Resize Image", new ResizeDialogue(this.manager, this, this.selectedImg.getImage().getWidth(), this.selectedImg.getImage().getHeight()), 40, 30);
 	}
 	
-	/* resizeImg - applies the image resizing procedure to "selectedImg" and "fittedImg"
-	 *  newWidth - the new width of the image in pixels
-	 * newHeight - the new height of the image in pixels
+	/** Applies the image resizing procedure to <code>selectedImg</code>.
+	 * 
+	 *  @param newWidth the new width of the image in pixels
+	 *  @param newHeight the new height of the image in pixels
 	 */
 	public void resizeImg(int newWidth, int newHeight)
 	{
-		this.selectedImg.resizeImage(newWidth, newHeight);
+		this.selectedImg.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, newHeight);
+		this.refreshSelectedImage();
 	}
 	
-	/* crop - initializes the cropping procedure for "selectedImg" and "fittedImg"
+	/** Initializes the cropping procedure for <code>selectedImg</code>.
 	 */
 	public void crop()
 	{
@@ -420,31 +452,31 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 	}
 	
-	/* rotate90 - rotates "selectedImg" and "fittedImg" 90 degrees to the right
+	/** Rotates <code>selectedImg</code> 90 degrees to the right.
 	 */
 	public void rotate90()
 	{
 		this.selectedImg.rotateRight90();
-		this.fittedImg.rotateRight90();
+		this.refreshSelectedImage();
 	}
 	
-	/* rotate180 - rotates "selectedImg" and "fittedImg" 180 degrees to the right
+	/** Rotates <code>selectedImg</code> 180 degrees to the right.
 	 */
 	public void rotate180()
 	{
 		this.selectedImg.rotateRight180();
-		this.fittedImg.rotateRight180();
+		this.refreshSelectedImage();
 	}
 	
-	/* rotate270 - rotates "selectedImg" and "fittedImg" 270 degrees to the right
+	/** Rotates <code>selectedImg</code> 270 degrees to the right.
 	 */
 	public void rotate270()
 	{
 		this.selectedImg.rotateRight270();
-		this.fittedImg.rotateRight270();
+		this.refreshSelectedImage();
 	}
 	
-	/* applyCrop - uses the Point values stored in "cropCoords" to apply a cropping procedure to "selectedImg" and "fittedImg"
+	/** Uses the <code>Point</code> values stored in <code>cropCoords</code> to apply a cropping procedure to <code>selectedImg</code>.
 	 */
 	private void applyCrop()
 	{
@@ -460,57 +492,30 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.cropCoords = new Point[2];
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.selectedImg.cropImage(trueX, trueY, trueWidth, trueHeight);
-		this.fittedImg.cropImage(fittedX, fittedY, fittedWidth, fittedHeight);
+		this.refreshSelectedImage();
 	}
 	
-	/* getCaseThumbnails - returns an ArrayList of ThumbnailImg objects representing all of the image files that are a part of the currently selected case
+	/** Refreshes the <code>CaseIcon</code> objects contained within <code>caseIconContainer</code>.
+	 * 
+	 *  @param caseIconIndex the index within <code>caseIcons</code> of the first image to be displayed
 	 */
-	private ArrayList<ImgIcon> getCaseThumbnails()
+	private void refreshCaseIcons(int caseIconIndex)
 	{
-		ArrayList<ImgIcon> thumbnailList = new ArrayList<ImgIcon>();
-	    File directory = new File("cases" + "/" + this.caseNum + "/");
-		for (int i = 0; i < directory.listFiles().length; i++)
-		{
-			String currentName = directory.listFiles()[i].getName();
-			String currentExtension = currentName.substring(currentName.indexOf('.')).toLowerCase();
-			if ((currentExtension.equalsIgnoreCase(".png") || currentExtension.equalsIgnoreCase(".jpg") || currentExtension.equalsIgnoreCase(".jpeg")))
-			{ 
-				try 
-				{
-					ImgIcon currentThumbnail = ComponentGenerator.generateThumbnailImg(directory.listFiles()[i].getPath(), 80, CENTER_ALIGNMENT);
-				    currentThumbnail.addMouseListener(this);
-				    thumbnailList.add(currentThumbnail);
-				} 
-				catch (InvalidImgException e) 
-				{
-					System.out.println(e.getMessage());
-					e.printStackTrace();
-				}
-			}
-		}
-	    return thumbnailList;
-	}
-	
-	/* refreshCaseThumbnails - refreshes the ThumbnailImg objects contained within "caseThumbnailContainer"
-	 *    caseThumbnailIndex - the index within "caseThumbnails" of the first image to be displayed
-	 */
-	private void refreshCaseThumbnails(int caseThumbnailIndex)
-	{
-		this.loadNextThumbnails = ComponentGenerator.generateButton("Next     >", this);
-		this.loadPrevThumbnails = ComponentGenerator.generateButton("<     Prev", this); 
-		this.caseThumbnailContainer.removeAll();
-		this.caseThumbnailIndex = caseThumbnailIndex;
-		this.caseThumbnailContainer.add(this.loadPrevThumbnails);
+		this.loadNextIconsButton = ComponentGenerator.generateButton("Next     >", this);
+		this.loadPrevIconsButton = ComponentGenerator.generateButton("<     Prev", this); 
+		this.caseIconContainer.removeAll();
+		this.caseIconIndex = caseIconIndex;
+		this.caseIconContainer.add(this.loadPrevIconsButton);
 		for (int i = 0; i < 8; i++)
 		{
 			Box col = Box.createVerticalBox();
 			col.setMinimumSize(new Dimension(100, 100));
 			col.setMaximumSize(new Dimension(100, 100));
-			if (this.caseThumbnailIndex < this.caseThumbnails.size())
+			if (this.caseIconIndex < this.caseIcons.size())
 			{
 				col.add(Box.createVerticalGlue());
 				col.add(Box.createHorizontalStrut(100));
-				col.add(this.caseThumbnails.get(this.caseThumbnailIndex));
+				col.add(this.caseIcons.get(this.caseIconIndex));
 				col.add(Box.createHorizontalStrut(100));
 				col.add(Box.createVerticalGlue());
 			}
@@ -520,51 +525,75 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 				col.add(Box.createHorizontalStrut(100));
 				col.add(Box.createVerticalGlue());
 			}
-			this.caseThumbnailContainer.add(col);
-			this.caseThumbnailIndex++;
+			this.caseIconContainer.add(col);
+			this.caseIconIndex++;
 		}
-		this.caseThumbnailContainer.add(this.loadNextThumbnails);
-		this.caseThumbnailContainer.add(Box.createVerticalStrut(100));
-		this.caseThumbnailIndex = caseThumbnailIndex;
+		this.caseIconContainer.add(this.loadNextIconsButton);
+		this.caseIconContainer.add(Box.createVerticalStrut(100));
+		this.caseIconIndex = caseIconIndex;
 		this.revalidate();
 		this.repaint();
 	}
 	
-	/* refreshSelectedImage - constructs a new EditedImg using the passed in file path, generates a fitted version for display on the screen, and repaints the panel
-	 *             filePath - the file path of the image that will be displayed
+	/** Refreshes the image currently being displayed in the editing area.
 	 */
-	private void refreshSelectedImage(String filePath)
+	private void refreshSelectedImage()
+	{
+		this.fittedImg = this.selectedImg.getIcon();
+		this.fittedImg.addMouseListener(this);
+		this.fittedImg.addMouseMotionListener(this);
+		this.selectedImgContainer.removeAll();
+		this.selectedImgContainer.add(Box.createVerticalStrut(500));
+		this.selectedImgContainer.add(this.fittedImg);
+		this.selectedImgContainer.add(Box.createVerticalStrut(500)); 
+		this.revalidate();
+		this.repaint();
+	}
+	
+	/** Sets <code>selectedImg</code> to a new <code>Img</code> object created using the <code>LiveFile</code> passed in as a parameter.
+	 * 
+	 *  @param file the <code>LiveFile</code> in question
+	 */
+	private void setSelectedImage(LiveFile file)
 	{
 		try 
 		{
-			this.selectedImg = ComponentGenerator.generateEditedImg(filePath, CENTER_ALIGNMENT);
-			this.fittedImg = ComponentGenerator.fitImageToScreen(selectedImg);
-			this.fittedImg.addMouseListener(this);
-			this.fittedImg.addMouseMotionListener(this);
-			this.selectedImgContainer.removeAll();
-			this.selectedImgContainer.add(Box.createVerticalStrut(500));
-			this.selectedImgContainer.add(this.fittedImg);
-			this.selectedImgContainer.add(Box.createVerticalStrut(500));
+			this.selectedImg = new Img(file);
+			this.refreshSelectedImage();
 		} 
-		catch (InvalidImgException e) 
+		catch (InvalidFileException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-		this.revalidate();
-		this.repaint();
 	}
 	
-	/* populateMainContainer - populates "mainContainer" with the necessary components
+	/** Adds <code>selectedImgContainer</code>, <code>caseIconContainer</code>, and <code>continueButton</code> to <code>mainContainer</code>.
 	 */
 	private void populateMainContainer()
 	{
 		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
 		this.mainContainer.add(this.selectedImgContainer);
 		this.mainContainer.add(Box.createVerticalStrut(40));
-		this.mainContainer.add(this.caseThumbnailContainer);
+		this.mainContainer.add(this.caseIconContainer);
 		this.mainContainer.add(Box.createVerticalStrut(10));
 		this.mainContainer.add(this.continueButton);
+	}
+	
+	/** Returns an <code>ArrayList</code> of <code>CaseIcon</code> objects representing all of the image files that are a part of the currently selected case.
+	 * 
+	 *  @return <code>ArrayList</code> of <code>CaseIcon</code> objects representing all of the image files that are a part of the currently selected case
+	 */
+	private ArrayList<CaseIcon> generateCaseIcons()
+	{
+	    for (int i = 0; i < this.manager.getStorageManager().getCases().size(); i++)
+	    {
+	    	if (this.manager.getStorageManager().getCases().get(i).getCaseNum().equalsIgnoreCase(this.caseNum))
+	    	{
+	    		return this.manager.getStorageManager().getCases().get(i).getCaseIcons(80, this, CENTER_ALIGNMENT);
+	    	}
+	    }
+	    return new ArrayList<CaseIcon>();
 	}
 	
 }

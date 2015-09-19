@@ -68,6 +68,15 @@ public class LiveFile extends CaseFile
 		return this.saved;
 	}
 	
+	/** Sets the value within the <code>img</code> instance field.
+	 * 
+	 *  @param img the <code>Img</code> object to set <code>img</code> to
+	 */
+	public void setImg(Img img)
+	{
+		this.img = img;
+	}
+	
 	/** Sets the value within the <code>saved</code> instance field.
 	 * 
 	 *  @param saved the <code>boolean</code> value to set <code>saved</code> to
@@ -106,7 +115,8 @@ public class LiveFile extends CaseFile
 		try 
 		{
 			ImageIO.write(this.getImg().getImage(), this.getFileType(), new File("cases/live/" + this.getParentCase().getCaseNum() + "/" + this.getParentCase().getCaseNum() + " (" + this.getFileIndex() + ")" + this.getFileExt()));
-			ImageIO.write(this.getImg().getImage(), this.getFileType(), new File("cases/backup/" + this.getParentCase().getCaseNum() + "/" + this.getParentCase().getCaseNum() + " (" + this.getParentCase().getCurrentFileIndex() + "-" + this.getParentCase().getCurrentVersionIndex(this.getFileIndex()) + ")" + this.getFileExt()));
+			ImageIO.write(this.getImg().getImage(), this.getFileType(), new File("cases/backup/" + this.getParentCase().getCaseNum() + "/" + this.getParentCase().getCaseNum() + " (" + this.getFileIndex() + "-" + this.getParentCase().getCurrentVersionIndex(this.getFileIndex()) + ")" + this.getFileExt()));
+			this.getParentCase().refreshFiles();
 		} 
 		catch (IOException e) 
 		{

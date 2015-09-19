@@ -7,6 +7,8 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import backend.storage.*;
+import backend.storage.Case.*;
+import gui.components.icon.*;
 
 /** Global file management class used to handle all communication with and modification to the local file system.
  * 
@@ -41,6 +43,34 @@ public class StorageManager
 	public ArrayList<Case> getCases()
 	{
 		return this.cases;
+	}
+	
+	/** Accepts an <code>ArrayList</code> of <code>PeripheralIcon</code> objects, and attempts to add the files associated with them to the case specified in the parameters.
+	 * 
+	 *  @param delete <code>boolean</code> value indicating whether or not the original copies of the files to be added should be deleted
+	 *  @param caseNum <code>String</code> containing the number of the case the files should be added to
+	 *  @param selected <code>ArrayList</code> of <code>PeripheralIcon</code> objects representing the files to be added
+	 *  @return <code>AddFileResult</code> enum type indicating whether or not the add files operation was successful
+	 */
+	public AddFileResult addFiles(boolean delete, String caseNum, ArrayList<PeripheralIcon> selected)
+	{
+		int caseIndex = 0;
+		for (int i = 0; i < this.cases.size(); i++)
+		{
+			if (this.cases.get(i).getCaseNum().equalsIgnoreCase(caseNum))
+			{
+				caseIndex = i;
+			}
+		}
+		for (int i = 0; i < selected.size(); i++)
+		{
+			AddFileResult result = this.cases.get(caseIndex).addFile(selected.get(i).getParentFile(), delete);
+			if (result == AddFileResult.ADD_FAILED)
+			{
+				return AddFileResult.ADD_FAILED;
+			}
+		}
+		return AddFileResult.SUCCESS;
 	}
 	
 	/** Creates a case with the specified case number by making directories for it in the local file system. Also initializes a matching <code>Case</code> object and adds it to the <code>cases</code> <code>ArrayList</code>.

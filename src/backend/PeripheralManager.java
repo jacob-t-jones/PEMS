@@ -53,6 +53,13 @@ public class PeripheralManager
 		return this.devices;
 	}
 	
+	/** Reloads the <code>devices</code> <code>ArrayList</code>, scanning the system for valid external devices once again.
+	 */
+	public void refreshDevices()
+	{
+		this.devices = this.retrieveDevices();
+	}
+	
 	/** Determines which operating system is currently being used by pulling the <i>os.name</i> system property.
 	 * 
 	 *  @return <code>OSType.WINDOWS</code>, <code>OSType.OSX</code>, or <code>OSType.OTHER</code> (self explanatory)

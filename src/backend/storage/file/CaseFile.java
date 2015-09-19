@@ -150,7 +150,14 @@ public class CaseFile
 	{
 		if (this.fileName.indexOf('(') >= 0 && this.fileName.indexOf(')') >= 0)
 		{
-			return Integer.parseInt(this.fileName.substring(this.fileName.indexOf('(') + 1, this.fileName.indexOf(')')));
+			if (this.fileName.indexOf('-') >= 0)
+			{
+				return Integer.parseInt(this.fileName.substring(this.fileName.indexOf('(') + 1, this.fileName.indexOf('-')));
+			}
+			else
+			{
+				return Integer.parseInt(this.fileName.substring(this.fileName.indexOf('(') + 1, this.fileName.indexOf(')')));
+			}
 		}
 		else
 		{

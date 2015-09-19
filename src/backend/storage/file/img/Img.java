@@ -7,11 +7,13 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.*;
+import javax.imageio.*;
 import org.apache.sanselan.*;
 import org.apache.sanselan.common.*;
 import org.imgscalr.*;
 import backend.exceptions.*;
 import backend.storage.file.*;
+import gui.components.icon.*;
 
 /** Class used to represent the raw images contained within the evidence files managed by PEMS.
  * 
@@ -24,9 +26,12 @@ public class Img
 {
 	
 	private LiveFile parentFile;
-	private Stack<BufferedImage> currentHistorySequence;
-	private Stack<BufferedImage> undoneHistorySequence;
+	private Stack<BufferedImage> currentImageHistorySequence;
+	private Stack<BufferedImage> undoneImageHistorySequence;
+	private Stack<ImgIcon> currentIconHistorySequence;
+	private Stack<ImgIcon> undoneIconHistorySequence;
 	private BufferedImage image;
+	private ImgIcon icon;
 	private IImageMetadata metadata;
 	private String timestamp;
 	
@@ -38,12 +43,25 @@ public class Img
 	public Img(LiveFile parentFile) throws InvalidFileException
 	{
 		this.parentFile = parentFile;
-		this.currentHistorySequence = new Stack<BufferedImage>();
-		this.undoneHistorySequence = new Stack<BufferedImage>();
+		this.currentImageHistorySequence = new Stack<BufferedImage>();
+		this.undoneImageHistorySequence = new Stack<BufferedImage>();
+		this.currentIconHistorySequence = new Stack<ImgIcon>();
+		this.undoneIconHistorySequence = new Stack<ImgIcon>();
 		this.image = this.retrieveImage();
+		this.icon = this.generateIcon();
 		this.metadata = this.retrieveMetadata();
 		this.timestamp = this.retrieveTimestamp();
-		this.currentHistorySequence.push(this.image);
+		this.currentImageHistorySequence.push(this.image);
+		this.currentIconHistorySequence.push(this.icon);
+	}
+	
+	/** Returns the <code>LiveFile</code> object associated with this class.
+	 * 
+	 *  @return the <code>LiveFile</code> object associated with this class
+	 */
+	public LiveFile getParentFile()
+	{
+		return this.parentFile;
 	}
 	
 	/** Returns the <code>BufferedImage</code> associated with this class.
@@ -53,6 +71,15 @@ public class Img
 	public BufferedImage getImage()
 	{
 		return this.image;
+	}
+	
+	/** Returns the <code>ImgIcon</code> associated with this class.
+	 * 
+	 *  @return the <code>ImgIcon</code> associated with this class
+	 */
+	public ImgIcon getIcon()
+	{
+		return this.icon;
 	}
 	
 	/** Returns a <code>String</code> value containing the timestamp for the instant that this image was originally created.
@@ -68,11 +95,14 @@ public class Img
 	 */
 	public void undo()
 	{
-		if (this.currentHistorySequence.size() > 1)
+		if (this.currentImageHistorySequence.size() > 1)
 		{
-			this.undoneHistorySequence.push(this.currentHistorySequence.pop());
+			this.undoneImageHistorySequence.push(this.currentImageHistorySequence.pop());
+			this.undoneIconHistorySequence.push(this.currentIconHistorySequence.pop());
+			this.parentFile.setImg(this);
 			this.parentFile.setSaved(false);
-			this.image = this.currentHistorySequence.peek();
+			this.image = this.currentImageHistorySequence.peek();
+			this.icon = this.currentIconHistorySequence.peek();
 		}
 	}
 	
@@ -80,11 +110,14 @@ public class Img
 	 */
 	public void redo()
 	{
-		if (this.undoneHistorySequence.size() > 0)
+		if (this.undoneImageHistorySequence.size() > 0)
 		{
-			this.currentHistorySequence.push(this.undoneHistorySequence.pop());
+			this.currentImageHistorySequence.push(this.undoneImageHistorySequence.pop());
+			this.currentIconHistorySequence.push(this.undoneIconHistorySequence.pop());
+			this.parentFile.setImg(this);
 			this.parentFile.setSaved(false);
-			this.image = this.currentHistorySequence.peek();
+			this.image = this.currentImageHistorySequence.peek();
+			this.icon = this.currentIconHistorySequence.peek();
 		}
 	}
 	
@@ -98,9 +131,7 @@ public class Img
 	public void addPadding(int size, int red, int green, int blue)
 	{
 		this.image = Scalr.pad(this.image, size, new Color(red, green, blue));
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 
 	/** Applies an anti aliasing procedure to <code>image</code>.
@@ -108,9 +139,7 @@ public class Img
 	public void applyAntiAliasing()
 	{
 		this.image = Scalr.apply(this.image, Scalr.OP_ANTIALIAS);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 	
 	/** Brightens <code>image</code> by 10%.
@@ -118,9 +147,7 @@ public class Img
 	public void brightenImage()
 	{
 		this.image = Scalr.apply(this.image, Scalr.OP_BRIGHTER);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 
 	/** Crops <code>image</code> to the specified dimensions.
@@ -133,9 +160,7 @@ public class Img
 	public void cropImage(int x, int y, int width, int height)
 	{
 		this.image = Scalr.crop(this.image, x, y, width, height, Scalr.OP_ANTIALIAS);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 	
 	/** Darkens <code>image</code> by 10%.
@@ -143,9 +168,7 @@ public class Img
 	public void darkenImage()
 	{
 		this.image = Scalr.apply(this.image, Scalr.OP_DARKER);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 	
 	/** Resizes <code>image</code> to the specified size.
@@ -156,9 +179,7 @@ public class Img
 	public void resizeImage(Scalr.Method method, int size)
 	{
 		this.image = Scalr.resize(this.image, method, size, Scalr.OP_ANTIALIAS);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 
 	/** Resizes <code>image</code> to the specified width and height.
@@ -170,9 +191,7 @@ public class Img
 	public void resizeImage(Scalr.Method method, int width, int height)
 	{
 		this.image = Scalr.resize(this.image, method, width, height, Scalr.OP_ANTIALIAS);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 
 	/** Rotates <code>image</code> 90 degrees to the right.
@@ -180,9 +199,7 @@ public class Img
 	public void rotateRight90()
 	{
 		this.image = Scalr.rotate(this.image, Scalr.Rotation.CW_90);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 	
 	/** Rotates <code>image</code> 180 degrees to the right.
@@ -190,9 +207,7 @@ public class Img
 	public void rotateRight180()
 	{
 		this.image = Scalr.rotate(this.image, Scalr.Rotation.CW_180);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 
 	/** Rotates <code>image</code> 270 degrees to the right.
@@ -200,9 +215,7 @@ public class Img
 	public void rotateRight270()
 	{
 		this.image = Scalr.rotate(this.image, Scalr.Rotation.CW_270);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 	
 	/** Converts <code>image</code> to grayscale format.
@@ -210,9 +223,7 @@ public class Img
 	public void toGrayscale()
 	{
 		this.image = Scalr.apply(this.image, Scalr.OP_GRAYSCALE);
-		this.parentFile.setSaved(false);
-		this.undoneHistorySequence.clear();
-		this.currentHistorySequence.push(this.image);
+		this.imgChanged();
 	}
 	
 	/** Uses the file path from <code>parentFile</code> to read the associated <code>BufferedImage</code> into memory.
@@ -223,13 +234,13 @@ public class Img
 	private BufferedImage retrieveImage() throws InvalidFileException
 	{
 		File imageFile = new File(this.parentFile.getFilePath());
-		try 
+		try
 		{
-			return Sanselan.getBufferedImage(imageFile);
-		} 
-		catch (ImageReadException | IOException e) 
+			return ImageIO.read(imageFile);
+		}
+		catch (IOException e)
 		{
-			throw new InvalidFileException("Unable to retrieve image", e);
+			throw new InvalidFileException("Unable to read image into memory", e);
 		}
 	}
 	
@@ -274,6 +285,34 @@ public class Img
 			}
 		}
 		return "DATE NOT FOUND";
+	}
+	
+	/** Returns an instance of <code>ImgIcon</code> generated using the raw image contained within this object.
+	 * 
+	 *  @return instance of <code>ImgIcon</code> generated using the raw image contained within this object
+	 */
+	private ImgIcon generateIcon()
+	{
+		if (this.getImage().getHeight() > 500)
+		{
+			return new ImgIcon(this, Scalr.Method.QUALITY, 500);
+		}
+		else if (this.getImage().getWidth() > 1200)
+		{
+			return new ImgIcon(this, Scalr.Method.QUALITY, 1200);
+		}
+		return new ImgIcon(this);
+	}
+	
+	private void imgChanged()
+	{
+		this.icon = this.generateIcon();
+		this.parentFile.setImg(this);
+		this.parentFile.setSaved(false);
+		this.undoneImageHistorySequence.clear();
+		this.undoneIconHistorySequence.clear();
+		this.currentImageHistorySequence.push(this.image);
+		this.currentIconHistorySequence.push(this.icon);
 	}
 	
 }

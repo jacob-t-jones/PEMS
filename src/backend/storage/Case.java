@@ -3,9 +3,12 @@
 // Case.java
 
 package backend.storage;
+import java.awt.event.*;
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 import backend.exceptions.*;
+import backend.peripheral.*;
 import backend.storage.file.*;
 import gui.components.icon.*;
 
@@ -34,6 +37,13 @@ public class Case
 		this.liveFiles = this.retrieveLiveFiles();
 	}
 	
+	/** Values representing the possible results of calling <code>addFile</code>.
+	 */
+	public enum AddFileResult
+	{
+		ADD_FAILED, SUCCESS
+	}
+	
 	/** Returns the case number associated with this case, formatted as a <code>String</code>.
 	 * 
 	 *  @return the case number associated with this case, formatted as a <code>String</code>
@@ -42,20 +52,25 @@ public class Case
 	{
 		return this.caseNum;
 	}
-	
+
 	/** Converts all of the <code>LiveFile</code> objects associated with this class to <code>CaseIcon</code> objects.
 	 * 
 	 *  @param size the size to shrink the generated icons down to
+	 *  @param mouse the <code>MouseListener</code> for the generated icons
+	 *  @param alignmentX the horizontal alignment of the generated icons
 	 *  @return an <code>ArrayList</code> of <code>CaseIcon</code> objects generated using <code>liveFiles</code>
 	 */
-	public ArrayList<CaseIcon> getCaseIcons(int size)
+	public ArrayList<CaseIcon> getCaseIcons(int size, MouseListener mouse, float alignmentX)
 	{
 		ArrayList<CaseIcon> caseIcons = new ArrayList<CaseIcon>();
 		for (int i = 0; i < this.liveFiles.size(); i++)
 		{
 			try 
 			{
-				caseIcons.add(new CaseIcon(this.liveFiles.get(i), size));
+				CaseIcon currentIcon = new CaseIcon(this.liveFiles.get(i), size);
+				currentIcon.addMouseListener(mouse);
+				currentIcon.setAlignmentX(alignmentX);
+				caseIcons.add(currentIcon);
 			} 
 			catch (InvalidFileException e) 
 			{
@@ -104,6 +119,37 @@ public class Case
 		return index + 1;
 	}
 	
+	/** Adds the <code>PeripheralFile</code> object specified in the parameters to this case by copying said file to the directories managed by PEMS, and adding it to the global <code>ArrayLists</code>.
+	 * 
+	 *  @param file the <code>PeripheralFile</code> object to add to this case
+	 *  @param delete <code>boolean</code> value indicating whether or not the original copy of the file should be deleted
+	 *  @return <code>AddFileResult</code> enum type indicating whether or not the add file operation was successful
+	 */
+	public AddFileResult addFile(PeripheralFile file, boolean delete)
+	{
+		Path currentPath = Paths.get(file.getFilePath());
+		Path livePath = Paths.get("cases/live/" + this.caseNum + "/" + this.caseNum + " (" + this.getCurrentFileIndex() + ")" + file.getFileExt());
+		Path backupPath = Paths.get("cases/backup/" + this.caseNum + "/" + this.caseNum + " (" + this.getCurrentFileIndex() + "-" + 0 + ")" + file.getFileExt());
+		try
+		{
+			Files.copy(currentPath, livePath, StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(currentPath, backupPath, StandardCopyOption.REPLACE_EXISTING);
+			this.liveFiles.add(new LiveFile(this, livePath.toString()));
+			this.backupFiles.add(new BackupFile(this, backupPath.toString()));
+			if (delete)
+			{
+				file.deleteFile();
+			}
+		} 
+		catch (IOException | InvalidFileException e) 
+		{
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			return AddFileResult.ADD_FAILED;
+		}
+		return AddFileResult.SUCCESS;
+	}
+	
 	/** Removes the instance of <code>LiveFile</code> passed in as a parameter from the <code>livesFiles</code> <code>ArrayList</code>.
 	 * 
 	 *  @param file the file in question
@@ -111,6 +157,14 @@ public class Case
 	public void removeFile(LiveFile file)
 	{
 		this.liveFiles.remove(file);
+	}
+	
+	/** Refreshes the <code>backupFiles</code> and <code>liveFiles</code> <code>ArrayLists</code> by once again scanning the directories managed by PEMS.
+	 */
+	public void refreshFiles()
+	{
+		this.backupFiles = this.retrieveBackupFiles();
+		this.liveFiles = this.retrieveLiveFiles();
 	}
 	
 	/** Reads the backup files for this case from the local file system.

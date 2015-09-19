@@ -8,7 +8,8 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import org.imgscalr.*;
-import backend.storage.file.img.*;
+import backend.exceptions.*;
+import backend.storage.Case.*;
 import gui.*;
 import gui.components.icon.*;
 import gui.display.*;
@@ -21,7 +22,7 @@ import gui.display.editimg.*;
  *  @since 0.1
  *  @version 0.1
  */
-public class SelectPanel extends JPanel implements ActionListener, MouseListener 
+public class SelectPanel extends JPanel implements ActionListener, MouseListener
 {
 
 	private FrameManager manager;
@@ -32,44 +33,49 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	private Box leftContainer;
 	private Box rightContainer;
 	private Box detectedContainer;
-	private Box detectedTopContainer;
+	private Box detectedHeaderContainer;
 	private Box selectedContainer;
 	private Box buttonContainer;
 	private ImgIcon refreshIcon;
 	private JLabel instructionsLabel;
 	private JLabel detectedTitleLabel;
 	private JLabel selectedTitleLabel;
-	private JButton loadNextButton;
-	private JButton loadPrevButton;
+	private JButton loadNextDetectedButton;
+	private JButton loadPrevDetectedButton;
 	private JButton loadNextSelectedButton;
 	private JButton loadPrevSelectedButton;
 	private JButton finishButton;
 	private String caseNum;
-	private int detectedImagePlace;
-	private int selectedImagePlace;
+	private int detectedIconPlace;
+	private int selectedIconPlace;
 
+	/** Populates this panel with all of the necessary graphical components.
+	 * 
+	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
+	 *  @param caseNum the number of the case currently being edited
+	 */
 	public SelectPanel(FrameManager manager, String caseNum) 
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.detectedImagePlace = 0;
-		this.selectedImagePlace = 0;
-		//this.detectedIcons = ;
+		this.detectedIconPlace = 0;
+		this.selectedIconPlace = 0;
+		this.detectedIcons = this.generateIcons();
 		this.selectedIcons = new ArrayList<PeripheralIcon>();
 		this.mainContainer = Box.createVerticalBox();
 		this.innerContainer = Box.createHorizontalBox();
 		this.leftContainer = Box.createVerticalBox();
 		this.rightContainer = Box.createVerticalBox();
 		this.detectedContainer = Box.createVerticalBox();
-		this.detectedTopContainer = Box.createHorizontalBox();
+		this.detectedHeaderContainer = Box.createHorizontalBox();
 		this.selectedContainer = Box.createVerticalBox();
 		this.buttonContainer = Box.createHorizontalBox();
 		this.detectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.selectedContainer.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.populateDisplayedTopContainer();
-		this.refreshDisplayedThumbnails(0);
-		this.refreshSelectedThumbnails(0);
-		this.populateButtonsContainer();
+		this.populateDetectedHeaderContainer();
+		this.refreshDetectedIcons(0);
+		this.refreshSelectedIcons(0);
+		this.populateButtonContainer();
 		this.populateLeftContainer();
 		this.populateRightContainer();
 		this.populateInnerContainer();
@@ -81,54 +87,54 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.revalidate();
 		this.repaint();
 	}
-
+	
 	/** Mandatory method required in all classes that implement <code>ActionListener</code>.
 	 *  <p>
 	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
 	 *  <ul>
-	 *  	<li><code>loadNextButton</code></li>
+	 *  	<li><code>loadNextDetectedButton</code></li>
 	 *  		<ul>
 	 *  			<li>Attempts to load the next fifteen images detected on peripheral devices within <code>detectedContainer</code>.</li>
 	 *  		</ul>
-	 *  	<li><code>loadPrevButton</code></li>
+	 *  	<li><code>loadPrevDetectedButton</code></li>
 	 *  		<ul>
 	 *  			<li>Attempts to load the previous fifteen images detected on peripheral devices within <code>detectedContainer</code>.</li>
 	 *  		</ul>
 	 *  	<li><code>finishButton</code></li>
 	 *  		<ul>
-	 *  			<li></li>
+	 *  			<li>Displays a dialogue asking the user for his or her import preferences.</li>
 	 *  		</ul>
 	 *  	<li><code>loadNextSelectedButton</code></li>
 	 *  		<ul>
-	 *  			<li></li>
+	 *  			<li>Attempts to load the next three user-selected images within <code>selectedContainer</code>.</li>
 	 *  		</ul>
 	 *  	<li><code>loadPrevSelectedButton</code></li>
 	 *  		<ul>
-	 *  			<li></li>
+	 *  			<li>Attempts to load the previous three user-selected images within <code>selectedContainer</code>.</li>
 	 *  		</ul>
 	 *  </ul>
 	 */
 	public void actionPerformed(ActionEvent e) 
 	{
-		if (e.getSource() == this.loadNextButton)
+		if (e.getSource() == this.loadNextDetectedButton)
 		{
-        	if (this.displayedImagePlace + 15 < this.displayedThumbnails.size())
+        	if (this.detectedIconPlace + 15 < this.detectedIcons.size())
         	{
-        		this.refreshDisplayedThumbnails(this.displayedImagePlace + 15);
+        		this.refreshDetectedIcons(this.detectedIconPlace + 15);
         	}
 		}
-		else if (e.getSource() == this.loadPrevButton)
+		else if (e.getSource() == this.loadPrevDetectedButton)
 		{
-          	if (this.displayedImagePlace >= 15)
+          	if (this.detectedIconPlace >= 15)
         	{
-        		this.refreshDisplayedThumbnails(this.displayedImagePlace - 15);
+        		this.refreshDetectedIcons(this.detectedIconPlace - 15);
         	}
 		}
 		else if (e.getSource() == this.finishButton)
 		{	
-			if (this.selectedThumbnails.isEmpty())
+			if (this.selectedIcons.isEmpty())
 			{
-				if (this.displayedThumbnails.isEmpty())
+				if (this.detectedIcons.isEmpty())
 				{
 					JOptionPane.showMessageDialog(this.manager.getMainWindow(), "Unable to locate any images on external drives. Please disconnect and reconnect all cameras and devices, restart the program, and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -156,105 +162,114 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource() == this.loadNextSelectedButton)
 		{
-        	if (this.selectedImagePlace + 3 < this.selectedThumbnails.size())
+        	if (this.selectedIconPlace + 3 < this.selectedIcons.size())
         	{
-        		this.refreshSelectedThumbnails(this.selectedImagePlace + 3);
+        		this.refreshSelectedIcons(this.selectedIconPlace + 3);
         	}
 		}
 		else if (e.getSource() == this.loadPrevSelectedButton)
 		{
-        	if (this.selectedImagePlace >= 3)
+        	if (this.selectedIconPlace >= 3)
         	{
-        		this.refreshSelectedThumbnails(this.selectedImagePlace - 3);
+        		this.refreshSelectedIcons(this.selectedIconPlace - 3);
         	}
 		}
 	}
-
-	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
-	 *              1. refreshes the thumbnails in "displayedContainer" by once again scanning peripheral devices for images files 
-	 *              2. removes the source ThumbnailImg from "selectedThumbnails" and adds it to "displayedThumbnails"
-	 *              3. removes the source ThumbnailImg from "displayedThumbnails" and adds it to "selectedThumbnails"
+	
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>refreshIcon</code></li>
+	 *  		<ul>
+	 *  			<li>Refreshes the icons in <code>detectedContainer</code> by once again scanning peripheral devices for images files.</li>
+	 *  		</ul>
+	 *  	<li>An instance of <code>PeripheralIcon</code> contained within the <code>selectedIcons</code> <code>ArrayList</code></li>
+	 *  		<ul>
+	 *  			<li>Removes the source <code>PeripheralIcon</code> from <code>selectedIcons</code> and adds it to <code>detectedIcons</code>.</li>
+	 *  		</ul>
+	 *  	<li>An instance of <code>PeripheralIcon</code> contained within the <code>detectedIcons</code> <code>ArrayList</code></li>
+	 *  		<ul>
+	 *  			<li>Removes the source <code>PeripheralIcon</code> from <code>detectedIcons</code> and adds it to <code>selectedIcons</code>.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
-		if (e.getSource() == this.refreshImg)
+		if (e.getSource() == this.refreshIcon)
 		{
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			this.manager.getFileHandler().refreshPeripheralFiles();
-			this.displayedThumbnails = this.generateThumbnails();
-			for (int i = 0; i < this.selectedThumbnails.size(); i++)
+			this.manager.getPeripheralManager().refreshDevices();
+			this.detectedIcons = this.generateIcons();
+			for (int i = 0; i < this.selectedIcons.size(); i++)
 			{
-				ImgIcon currentSelectedThumbnail = this.selectedThumbnails.get(i);
-				for (int j = 0; j < this.displayedThumbnails.size(); j++)
+				PeripheralIcon currentSelectedIcon = this.selectedIcons.get(i);
+				for (int j = 0; j < this.detectedIcons.size(); j++)
 				{
-					ImgIcon currentDisplayedThumbnail = this.displayedThumbnails.get(j);
-					if (currentSelectedThumbnail.getFilePath().equalsIgnoreCase(currentDisplayedThumbnail.getFilePath()))
+					PeripheralIcon currentDetectedIcon = this.detectedIcons.get(j);
+					if (currentSelectedIcon.getParentFile().getFilePath().equalsIgnoreCase(currentDetectedIcon.getParentFile().getFilePath()))
 					{
-						this.displayedThumbnails.remove(j);
+						this.detectedIcons.remove(j);
 					}
 				}
 			}
-			this.refreshDisplayedThumbnails(0);
+			this.refreshDetectedIcons(0);
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
-		else if (this.selectedThumbnails.contains(e.getSource()))
+		else if (this.selectedIcons.contains(e.getSource()))
 		{
-			this.displayedThumbnails.add((ImgIcon)e.getSource());
-			this.selectedThumbnails.remove(e.getSource());
-			this.refreshDisplayedThumbnails(this.displayedImagePlace);
-			this.refreshSelectedThumbnails(this.selectedImagePlace);
+			this.detectedIcons.add((PeripheralIcon)e.getSource());
+			this.selectedIcons.remove(e.getSource());
+			this.refreshDetectedIcons(this.detectedIconPlace);
+			this.refreshSelectedIcons(this.selectedIconPlace);
 		}
-		else if (displayedThumbnails.contains(e.getSource()))
+		else if (this.detectedIcons.contains(e.getSource()))
 		{
-			this.selectedThumbnails.add((ImgIcon)e.getSource());
-			this.displayedThumbnails.remove(e.getSource());
-			this.refreshDisplayedThumbnails(this.displayedImagePlace);
-			this.refreshSelectedThumbnails(this.selectedImagePlace);
+			this.selectedIcons.add((PeripheralIcon)e.getSource());
+			this.detectedIcons.remove(e.getSource());
+			this.refreshDetectedIcons(this.detectedIconPlace);
+			this.refreshSelectedIcons(this.selectedIconPlace);
 		}
 	}
-
-	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
+	
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mousePressed(MouseEvent e) 
 	{
 		return;
 	}
 	 
-	/* mouseReleased - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	           e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseReleased(MouseEvent e)
 	{
 		return;
 	}
 	
-	/* mouseEntered - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseEntered(MouseEvent e) 
 	{
 		return;
 	}
 	
-	/* mouseExited - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	         e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseExited(MouseEvent e) 
 	{
 		return;
 	}	
-
-	/* refreshDisplayedThumbnails - refreshes the ThumbnailImgs for images not yet selected by the user
-	 *        displayedImagePlace - the index within "displayedThumbnails" of the first image to be displayed
+	
+	/** Refreshes the <code>PeripheralIcon</code> objects for images not yet selected by the user.
+	 * 
+	 *  @param detectedIconPlace the index within <code>detectedIcons</code> of the first image to be displayed
 	 */
-	private void refreshDisplayedThumbnails(int displayedImagePlace)
+	private void refreshDetectedIcons(int detectedIconPlace)
 	{
-		this.displayedImagePlace = displayedImagePlace;
-		this.displayedContainer.removeAll();
-		this.displayedContainer.add(Box.createVerticalStrut(5));
-		this.displayedContainer.add(this.displayedTopContainer);
+		this.detectedIconPlace = detectedIconPlace;
+		this.detectedContainer.removeAll();
+		this.detectedContainer.add(Box.createVerticalStrut(5));
+		this.detectedContainer.add(this.detectedHeaderContainer);
 		for (int i = 0; i < 3; i++)
 		{
 			Box row = Box.createHorizontalBox();
@@ -263,11 +278,11 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 				Box col = Box.createHorizontalBox();
 				col.setMinimumSize(new Dimension(150, 150));
 				col.setMaximumSize(new Dimension(150, 150));
-				if (this.displayedImagePlace < this.displayedThumbnails.size())
+				if (this.detectedIconPlace < this.detectedIcons.size())
 				{
 					col.add(Box.createHorizontalGlue());
 					col.add(Box.createVerticalStrut(150));
-					col.add(this.displayedThumbnails.get(this.displayedImagePlace));
+					col.add(this.detectedIcons.get(this.detectedIconPlace));
 					col.add(Box.createVerticalStrut(150));
 					col.add(Box.createHorizontalGlue());
 				}
@@ -278,25 +293,26 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 					col.add(Box.createHorizontalGlue());
 				}
 				row.add(col);
-				this.displayedImagePlace++;
+				this.detectedIconPlace++;
 			}
-			this.displayedContainer.add(row);
+			this.detectedContainer.add(row);
 		}
-		this.displayedContainer.add(Box.createHorizontalStrut(750));
-		this.displayedImagePlace = displayedImagePlace;
+		this.detectedContainer.add(Box.createHorizontalStrut(750));
+		this.detectedIconPlace = detectedIconPlace;
 		this.revalidate();
 		this.repaint();
 	}
-
-	/* refreshSelectedThumbnails - refreshes the ThumbnailImgs placed in "selectedContainer" by the user
-	 *        selectedImagePlace - the index within "selectedThumbnails" of the first image to be displayed
+	
+	/** Refreshes the <code>PeripheralIcon</code> objects placed in <code>selectedContainer</code> by the user.
+	 * 
+	 *  @param selectedIconPlace the index within <code>selectedIcons</code> of the first image to be displayed
 	 */
-	private void refreshSelectedThumbnails(int selectedImagePlace)
+	private void refreshSelectedIcons(int selectedIconPlace)
 	{
 		this.selectedTitleLabel = ComponentGenerator.generateLabel("Selected Images", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 	    this.loadNextSelectedButton = ComponentGenerator.generateButton("Next", this, CENTER_ALIGNMENT);
 		this.loadPrevSelectedButton = ComponentGenerator.generateButton("Previous", this, CENTER_ALIGNMENT);
-		this.selectedImagePlace = selectedImagePlace;
+		this.selectedIconPlace = selectedIconPlace;
 		this.selectedContainer.removeAll();
 		this.selectedContainer.add(this.selectedTitleLabel);
 		this.selectedContainer.add(this.loadPrevSelectedButton);
@@ -305,11 +321,11 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 			Box row = Box.createHorizontalBox();
 			row.setMinimumSize(new Dimension(150, 150));
 			row.setMaximumSize(new Dimension(150, 150));
-			if (this.selectedImagePlace < this.selectedThumbnails.size())
+			if (this.selectedIconPlace < this.selectedIcons.size())
 			{
 				row.add(Box.createHorizontalGlue());
 				row.add(Box.createVerticalStrut(150));
-				row.add(this.selectedThumbnails.get(this.selectedImagePlace));
+				row.add(this.selectedIcons.get(this.selectedIconPlace));
 				row.add(Box.createVerticalStrut(150));
 				row.add(Box.createHorizontalGlue());
 			}
@@ -320,71 +336,70 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 				row.add(Box.createHorizontalGlue());
 			}
 			this.selectedContainer.add(row);
-			this.selectedImagePlace++;
+			this.selectedIconPlace++;
 		}
 		this.selectedContainer.add(this.loadNextSelectedButton);
 		this.selectedContainer.add(Box.createHorizontalStrut(150));
-		this.selectedImagePlace = selectedImagePlace;
+		this.selectedIconPlace = selectedIconPlace;
 		this.revalidate();
 		this.repaint();
 	}
 	
-	/* populateDisplayedTopContainer() - fills the "displayedTopContainer" layout structure with the necessary components
+	/** Adds <code>detectedTitleLabel</code> and <code>refreshIcon</code> to <code>detectedHeaderContainer</code>.
 	 */
-	private void populateDisplayedTopContainer()
+	private void populateDetectedHeaderContainer()
 	{
-		this.displayedTitleLabel = ComponentGenerator.generateLabel("Images Detected on External Devices", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.detectedTitleLabel = ComponentGenerator.generateLabel("Images Detected on External Devices", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		try 
 		{
-			this.refreshImg = ComponentGenerator.generateImg("resources/refresh.png");
-			this.refreshImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 30);
-			this.refreshImg.addMouseListener(this);
-			this.displayedTopContainer.add(Box.createHorizontalStrut(5));
-			this.displayedTopContainer.add(this.refreshImg);
+			this.refreshIcon = new ImgIcon("resources/refresh.png", Scalr.Method.ULTRA_QUALITY, 30);
+			this.refreshIcon.addMouseListener(this);
+			this.detectedHeaderContainer.add(Box.createHorizontalStrut(5));
+			this.detectedHeaderContainer.add(this.refreshIcon);
 		} 
-		catch (InvalidImgException e) 
+		catch (InvalidFileException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-		this.displayedTopContainer.add(Box.createHorizontalGlue());
-		this.displayedTopContainer.add(this.displayedTitleLabel);
-		this.displayedTopContainer.add(Box.createHorizontalGlue());
-	}
-
-	/* populateButtonsContainer - fills the "buttonsContainer" layout structure with the necessary components
-	 */
-	private void populateButtonsContainer()
-	{
-		this.loadNextButton = ComponentGenerator.generateButton("Load Next Images   >", this);
-		this.loadPrevButton = ComponentGenerator.generateButton("<   Load Previous Images", this);
-		this.finishButton = ComponentGenerator.generateButton("Finish Importing", this);
-		this.buttonsContainer = Box.createHorizontalBox();
-		this.buttonsContainer.setAlignmentX(CENTER_ALIGNMENT);
-		this.buttonsContainer.add(this.loadPrevButton);
-		this.buttonsContainer.add(Box.createHorizontalStrut(100));
-		this.buttonsContainer.add(this.finishButton);
-		this.buttonsContainer.add(Box.createHorizontalStrut(100));
-		this.buttonsContainer.add(this.loadNextButton);
+		this.detectedHeaderContainer.add(Box.createHorizontalGlue());
+		this.detectedHeaderContainer.add(this.detectedTitleLabel);
+		this.detectedHeaderContainer.add(Box.createHorizontalGlue());
 	}
 	
-	/* populateLeftContainer - adds "displayedContainer" and "buttonsContainer" to "leftContainer"
+	/** Adds <code>loadNextDetectedButton</code>, <code>loadPrevDetectedButton</code>, and <code>finishButton</code> to <code>buttonContainer</code>.
+	 */
+	private void populateButtonContainer()
+	{
+		this.loadNextDetectedButton = ComponentGenerator.generateButton("Load Next Images   >", this);
+		this.loadPrevDetectedButton = ComponentGenerator.generateButton("<   Load Previous Images", this);
+		this.finishButton = ComponentGenerator.generateButton("Finish Importing", this);
+		this.buttonContainer = Box.createHorizontalBox();
+		this.buttonContainer.setAlignmentX(CENTER_ALIGNMENT);
+		this.buttonContainer.add(this.loadPrevDetectedButton);
+		this.buttonContainer.add(Box.createHorizontalStrut(100));
+		this.buttonContainer.add(this.finishButton);
+		this.buttonContainer.add(Box.createHorizontalStrut(100));
+		this.buttonContainer.add(this.loadNextDetectedButton);
+	}
+	
+	/** Adds <code>detectedContainer</code> and <code>buttonContainer</code> to <code>leftContainer</code>.
 	 */
 	private void populateLeftContainer()
 	{
-		this.leftContainer.add(this.displayedContainer);
+		this.leftContainer.add(this.detectedContainer);
 		this.leftContainer.add(Box.createVerticalStrut(30));
-		this.leftContainer.add(this.buttonsContainer);
+		this.leftContainer.add(this.buttonContainer);
 	}
 	
-	/* populateRightContainer - adds "selectedContainer" to "rightContainer"
+	/** Adds <code>selectedContainer</code> to <code>rightContainer</code>.
 	 */
 	private void populateRightContainer()
 	{
 		this.rightContainer.add(this.selectedContainer);
 	}
 	
-	/* populateInnerContainer - adds "leftContainer" and "rightContainer" to "innerContainer"
+	/** Adds <code>leftContainer</code> and <code>rightContainer</code> to <code>innerContainer</code>.
 	 */
 	private void populateInnerContainer()
 	{
@@ -393,7 +408,7 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.innerContainer.add(this.rightContainer);
 	}
 	
-	/* populateMainContainer - adds "instructionsLabel" and "innerContainer" to "mainContainer"
+	/** Adds <code>instructionsLabel</code> and <code>innerContainer</code> to <code>mainContainer</code>.
 	 */
 	private void populateMainContainer()
 	{
@@ -404,37 +419,41 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.mainContainer.add(this.innerContainer);
 	}
 	
-	/* generateThumbnails - returns an ArrayList of ThumbnailImg objects generated from the peripheral image files detected by the global instance of FileHandler
+	/** Returns an <code>ArrayList</code> of <code>PeripheralIcon</code> objects generated using the raw evidence files detected by the global instance of <code>PeripheralManager</code>.
+	 * 
+	 *  @return <code>ArrayList</code> of <code>PeripheralIcon</code> objects generated using the raw evidence files detected by the global instance of <code>PeripheralManager</code>
 	 */
-	private ArrayList<ImgIcon> generateThumbnails()
+	private ArrayList<PeripheralIcon> generateIcons()
 	{
-		ArrayList<ImgIcon> thumbnails = new ArrayList<ImgIcon>();
-		for (int i = 0; i < this.manager.getFileHandler().getPeripheralFiles().size(); i++)
+		ArrayList<PeripheralIcon> icons = new ArrayList<PeripheralIcon>();
+		for (int i = 0; i < this.manager.getPeripheralManager().getDevices().size(); i++)
 		{
-			try 
+			for (int j = 0; j < this.manager.getPeripheralManager().getDevices().get(i).getFiles().size(); j++)
 			{
-				ImgIcon newThumbnail = ComponentGenerator.generateThumbnailImg(this.manager.getFileHandler().getPeripheralFiles().get(i).getPath(), 120);
-				//ThumbnailImg newThumbnail = ComponentGenerator.generateThumbnailImg("/Users/andrewrottier/Documents/Pictures/folder.png", 120);
-
-				newThumbnail.addMouseListener(this);
-				thumbnails.add(newThumbnail);
-			} 
-			catch (InvalidImgException e) 
-			{
-				System.out.println(e.getMessage());
-				e.printStackTrace();
+				try 
+				{
+					PeripheralIcon newIcon = new PeripheralIcon(this.manager.getPeripheralManager().getDevices().get(i).getFiles().get(j), 120);
+					newIcon.addMouseListener(this);
+					icons.add(newIcon);
+				} 
+				catch (InvalidFileException e) 
+				{
+					System.out.println(e.getMessage());
+					e.printStackTrace();
+				}
 			}
 		}
-		return thumbnails;
+		return icons;
 	}
 	
-	/* attemptCopying - attempts to copy the selected image files into the local file system, where they can be managed by the program
-	 * 	       delete - boolean value indicating whether or not the user wishes to delete the original copies of the image files that he or she is importing
+	/** Attempts to copy the selected image files into the local file system, where they can be managed by PEMS.
+	 * 
+	 *  @param delete <code>boolean</code> value indicating whether or not the original copies of the selected files should be deleted as the program proceeds
 	 */
 	private void attemptCopying(boolean delete)
 	{
-		CopyFilesResult result = this.manager.getFileHandler().copyFiles(delete, this.caseNum, this.selectedThumbnails);
-		if (result == CopyFilesResult.COPY_FAILED)
+		AddFileResult result = this.manager.getStorageManager().addFiles(delete, this.caseNum, this.selectedIcons);
+		if (result == AddFileResult.ADD_FAILED)
 		{
 			JOptionPane.showMessageDialog(this.manager.getMainWindow(), "Importation of the selected image files has unexpectedly failed!\nPlease disconnect and reconnect all cameras and devices, restart the program, and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
