@@ -47,9 +47,9 @@ public class PixelsField extends JFormattedTextField
 	 * 
 	 *  @param newVal the value in question
 	 */
-	public void setVal(int newValue)
+	public void setVal(int newVal)
 	{
-		super.setValue(new Integer(newValue));
+		super.setValue(new Integer(newVal));
 	}
 	
 	/** Override method used to update the text fields in <code>ResizeDialogue</code> upon this component gaining or losing focus.
