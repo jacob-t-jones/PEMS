@@ -6,41 +6,49 @@ package gui.display.finish;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-
 import javax.swing.*;
-
 import org.imgscalr.*;
-
-import backend.storage.file.img.Img;
-import exceptions.*;
+import backend.exceptions.*;
 import gui.*;
-import gui.components.img.*;
+import gui.components.icon.*;
 import gui.display.*;
 import gui.display.dialogues.*;
 import gui.display.start.*;
 
+/** Subclass of <code>JPanel</code> displayed when the user finishes editing a given case.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class FinishPanel extends JPanel implements MouseListener
 {
 
 	private FrameManager manager;
-	private Box container;
+	private Box mainContainer;
 	private Box optionsContainer;
 	private Box openContainer;
 	private Box printContainer;
 	private Box returnContainer;
-	private Img openImg;
-	private Img printImg;
-	private Img returnImg;
+	private ImgIcon openIcon;
+	private ImgIcon printIcon;
+	private ImgIcon returnIcon;
 	private JLabel openLabel;
 	private JLabel printLabel;
 	private JLabel returnLabel;
 	private String caseNum;
 
+	/** Populates this panel with all of the necessary graphical components.
+	 * 
+	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
+	 *  @param caseNum the number of the case that was being edited
+	 */
 	public FinishPanel(FrameManager manager, String caseNum) 
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.container = Box.createVerticalBox();
+		this.mainContainer = Box.createVerticalBox();
 		this.optionsContainer = Box.createHorizontalBox();
 		this.openContainer = Box.createVerticalBox();
 		this.printContainer = Box.createVerticalBox();
@@ -49,71 +57,81 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.populatePrintContainer();
 		this.populateReturnContainer();
 		this.populateOptionsContainer();
-		this.populateContainer();
-		this.add(this.container);
+		this.populateMainContainer();
+		this.add(this.mainContainer);
 		this.revalidate();
 		this.repaint();
 	}
 	
-	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
-	 *				1-3. determines which option was selected and calls the appropriate method
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>openIcon</code></li>
+	 *  		<ul>
+	 *  			<li>Calls the <code>openCase</code> method.</li>
+	 *  		</ul>
+	 *  	<li><code>printIcon</code></li>
+	 *  		<ul>
+	 *  			<li>Calls the <code>printImgs</code> method.</li>
+	 *  		</ul>
+	 *  	<li><code>returnIcon</code></li>
+	 *  		<ul>
+	 *  			<li>Calls the <code>returnHome</code> method.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
-		if (e.getSource() == this.openImg)
+		if (e.getSource() == this.openIcon)
 		{
 			this.openCase();
 		}
-		else if (e.getSource() == this.printImg)
+		else if (e.getSource() == this.printIcon)
 		{
 			this.printImgs();
 		}
-		else if (e.getSource() == this.returnImg)
+		else if (e.getSource() == this.returnIcon)
 		{
 			this.returnHome();
 		}
 	}
 
-	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mousePressed(MouseEvent e) 
 	{
 		return;
 	}
 	
-	/* mouseReleased - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	           e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseReleased(MouseEvent e) 
 	{
 		return;
 	}
 	
-	/* mouseEntered - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseEntered(MouseEvent e) 
 	{
 		return;
 	}
 
-	/* mouseExited - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	         e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseExited(MouseEvent e) 
 	{
 		return;
 	}
 	
-	/* openCase - attempts to open the case directory in Finder if the user is using OSX, or Explorer if he or she is using Windows
+	/** Attempts to open the case directory in Finder if the user is using OSX, or Explorer if he or she is using Windows.
 	 */
 	private void openCase()
 	{
 		try 
 		{
-			Desktop.getDesktop().open(new File("cases/" + this.caseNum + "/"));
+			Desktop.getDesktop().open(new File("cases/live/" + this.caseNum + "/"));
 		} 
 		catch (IOException e) 
 		{
@@ -122,7 +140,7 @@ public class FinishPanel extends JPanel implements MouseListener
 		}
 	}
 	
-	/* printImgs - opens an instance of SelectImagesDialogue
+	/** Opens an instance of <code>SelectImagesDialogue</code>.
 	 */
 	private void printImgs()
 	{
@@ -130,7 +148,7 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.manager.openDialogue("Select Images to Print", new SelectImagesDialogue(this.manager, this.caseNum), 40, 55);
 	}
 	
-	/* returnHome - pushes StartPanel into the JFrame
+	/** Pushes <code>StartPanel</code> into the <code>JFrame</code>.
 	 */
 	private void returnHome()
 	{
@@ -141,18 +159,18 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.manager.getMainWindow().pushPanel(new StartPanel(this.manager), "PEMS (Police Evidence Management System) Version 0.1");
 	}
 	
-	/* populateOpenContainer - adds "openImg" and "openLabel" to "openContainer"
+	/** Adds <code>openIcon</code> and <code>openLabel</code> to <code>openContainer</code>.
 	 */
 	private void populateOpenContainer()
 	{
 		try 
 		{
-			this.openImg = ComponentGenerator.generateImg("resources/harddrive.png", CENTER_ALIGNMENT);
-			this.openImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 150);
-			this.openImg.addMouseListener(this);
-			this.openContainer.add(this.openImg);
+			this.openIcon = new ImgIcon("resources/harddrive.png", Scalr.Method.ULTRA_QUALITY, 150);
+			this.openIcon.addMouseListener(this);
+			this.openIcon.setAlignmentX(CENTER_ALIGNMENT);
+			this.openContainer.add(this.openIcon);
 		} 
-		catch (InvalidImgException e) 
+		catch (InvalidFileException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -162,18 +180,18 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.openContainer.add(this.openLabel);
 	}
 	
-	/* populatePrintContainer - adds "printImg" and "printLabel" to "printContainer"
+	/** Adds <code>printIcon</code> and <code>printLabel</code> to <code>printContainer</code>.
 	 */
 	private void populatePrintContainer()
 	{
 		try 
 		{
-			this.printImg = ComponentGenerator.generateImg("resources/printer.png", CENTER_ALIGNMENT);
-			this.printImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 150);
-			this.printImg.addMouseListener(this);
-			this.printContainer.add(this.printImg);
+			this.printIcon = new ImgIcon("resources/printer.png", Scalr.Method.ULTRA_QUALITY, 150);
+			this.printIcon.addMouseListener(this);
+			this.printIcon.setAlignmentX(CENTER_ALIGNMENT);
+			this.printContainer.add(this.printIcon);
 		} 
-		catch (InvalidImgException e) 
+		catch (InvalidFileException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -183,18 +201,18 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.printContainer.add(this.printLabel);
 	}
 	
-	/* populateReturnContainer - adds "returnImg" and "returnLabel" to "returnContainer"
+	/** Adds <code>returnIcon</code> and <code>returnLabel</code> to <code>returnContainer</code>.
 	 */
 	private void populateReturnContainer()
 	{
 		try 
 		{
-			this.returnImg = ComponentGenerator.generateImg("resources/next.png", CENTER_ALIGNMENT);
-			this.returnImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 150);
-			this.returnImg.addMouseListener(this);
-			this.returnContainer.add(this.returnImg);
+			this.returnIcon = new ImgIcon("resources/next.png", Scalr.Method.ULTRA_QUALITY, 150);
+			this.returnIcon.addMouseListener(this);
+			this.returnIcon.setAlignmentX(CENTER_ALIGNMENT);
+			this.returnContainer.add(this.returnIcon);
 		} 
-		catch (InvalidImgException e) 
+		catch (InvalidFileException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -204,7 +222,7 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.returnContainer.add(this.returnLabel);
 	}
 	
-	/* populateOptionsContainer - adds the containers for the three options to their parent container
+	/** Adds <code>openContainer</code>, <code>printContainer</code>, and <code>returnContainer</code> to <code>optionsContainer</code>.
 	 */
 	private void populateOptionsContainer()
 	{
@@ -215,12 +233,12 @@ public class FinishPanel extends JPanel implements MouseListener
 		this.optionsContainer.add(this.returnContainer);
 	}
 	
-	/* populateContainer - populates the primary container
+	/** Adds <code>optionsContainer</code> to <code>mainContainer</code>.
 	 */
-	private void populateContainer()
+	private void populateMainContainer()
 	{
-		this.container.add(Box.createVerticalStrut(200));
-		this.container.add(this.optionsContainer);
+		this.mainContainer.add(Box.createVerticalStrut(200));
+		this.mainContainer.add(this.optionsContainer);
 	}
 	
 }

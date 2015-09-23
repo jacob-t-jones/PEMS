@@ -6,9 +6,12 @@ package gui.components.icon;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
+
 import javax.imageio.*;
 import javax.swing.*;
+
 import org.imgscalr.*;
+
 import backend.exceptions.*;
 import backend.storage.file.img.*;
 import gui.*;
@@ -24,7 +27,18 @@ public class ImgIcon extends JLabel
 {
 	
 	private BufferedImage image;
-
+	
+	/** Retrieves the image found at the passed in file path. Displays it within this icon.
+	 * 
+	 *  @param filePath the file path of the image to display in this icon
+	 *  @throws InvalidFileException if the image contained within this component can not be read into memory
+	 */
+	public ImgIcon(String filePath) throws InvalidFileException 
+	{
+		this.image = this.retrieveImage(filePath);
+		super.setIcon(new ImageIcon(this.image));
+	}
+	
 	/** Retrieves and rezises the image found at the passed in file path. Displays it within this icon.
 	 * 
 	 *  @param filePath the file path of the image to display in this icon
@@ -111,6 +125,16 @@ public class ImgIcon extends JLabel
 		g.drawLine((int)a.getX(), (int)a.getY(), (int)b.getX(), (int)a.getY());
 	    g.drawLine((int)b.getX(), (int)b.getY(), (int)b.getX(), (int)a.getY());
 		g.drawLine((int)b.getX(), (int)b.getY(), (int)a.getX(), (int)b.getY());
+	}
+	
+	/** Resizes the image contained within this icon to the width and height specified in the parameters.
+	 * 
+	 *  @param width the new width of the image, in pixels
+	 *  @param height the new height of the image, in pixels
+	 */
+	public void resizeImage(int width, int height)
+	{
+		this.image = Scalr.resize(this.image, Scalr.Method.ULTRA_QUALITY, width, height, Scalr.OP_ANTIALIAS);
 	}
 	
 	/** Uses the passed in file path to read the associated <code>BufferedImage</code> into memory.

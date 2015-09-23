@@ -7,7 +7,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.font.*;
 import java.util.*;
+
 import javax.swing.*;
+
 import gui.components.field.*;
 import gui.display.dialogues.*;
 
@@ -502,6 +504,75 @@ public class ComponentGenerator
 		Map<TextAttribute, Integer>  attributes = new HashMap<TextAttribute, Integer>();
 		attributes.put(TextAttribute.UNDERLINE, -1);
 		return font.deriveFont(attributes);
+	}
+	
+	public static JSpinner generateNumberSpinner(int value, int min, int max, int increment, int height)
+	{
+		JSpinner newSpinner = new JSpinner(new SpinnerNumberModel(value, min, max, increment));
+		newSpinner.setMinimumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setMaximumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		return newSpinner;
+	}
+	
+	public static JSpinner generateNumberSpinner(int value, int min, int max, int increment, int height, float alignmentX)
+	{
+		JSpinner newSpinner = new JSpinner(new SpinnerNumberModel(value, min, max, increment));
+		newSpinner.setMinimumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setMaximumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setAlignmentX(alignmentX);
+		return newSpinner;
+	}
+	
+	public static JSpinner generateNumberSpinner(int value, int min, int max, int increment, int height, float alignmentX, float alignmentY)
+	{
+		JSpinner newSpinner = new JSpinner(new SpinnerNumberModel(value, min, max, increment));
+		newSpinner.setMinimumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setMaximumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setAlignmentX(alignmentX);
+		newSpinner.setAlignmentY(alignmentY);
+		return newSpinner;
+	}
+	
+	public static JRadioButton generateRadioButton(String text, boolean selected)
+	{
+		JRadioButton newRadioButton = new JRadioButton(text, selected);
+		return newRadioButton;
+	}
+	
+	public static JRadioButton generateRadioButton(String text, boolean selected, float alignmentX)
+	{
+		JRadioButton newRadioButton = new JRadioButton(text, selected);
+		newRadioButton.setAlignmentX(alignmentX);
+		return newRadioButton;
+	}
+	
+	public static JRadioButton generateRadioButton(String text, boolean selected, float alignmentX, float alignmentY)
+	{
+		JRadioButton newRadioButton = new JRadioButton(text, selected);
+		newRadioButton.setAlignmentX(alignmentX);
+		newRadioButton.setAlignmentY(alignmentY);
+		return newRadioButton;
+	}
+	
+	public static <T> JComboBox<T> generateComboBox(T[] items)
+	{
+		JComboBox<T> newComboBox = new JComboBox<T>(items);
+		return newComboBox;
+	}
+	
+	public static <T> JComboBox<T> generateComboBox(T[] items, float alignmentX)
+	{
+		JComboBox<T> newComboBox = new JComboBox<T>(items);
+		newComboBox.setAlignmentX(alignmentX);
+		return newComboBox;
+	}
+	
+	public static <T> JComboBox<T> generateComboBox(T[] items, float alignmentX, float alignmentY)
+	{
+		JComboBox<T> newComboBox = new JComboBox<T>(items);
+		newComboBox.setAlignmentX(alignmentX);
+		newComboBox.setAlignmentY(alignmentY);
+		return newComboBox;
 	}
 	
 }

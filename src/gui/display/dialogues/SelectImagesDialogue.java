@@ -5,80 +5,99 @@
 package gui.display.dialogues;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 import java.util.*;
-
 import javax.swing.*;
-
-import exceptions.*;
 import gui.*;
-import gui.components.icon.ImgIcon;
-import gui.components.img.*;
+import gui.components.icon.*;
 import gui.display.*;
 
+/** Subclass of <code>JPanel</code> displayed when the user is selecting images to print.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class SelectImagesDialogue extends JPanel implements ActionListener, MouseListener
 {
 	
 	private FrameManager manager;
-	private ArrayList<ImgIcon> displayedThumbnails;
-	private ArrayList<ImgIcon> selectedThumbnails;
-	private Box container;
-	private Box buttonsContainer;
-	private Box thumbnailContainer;
+	private ArrayList<CaseIcon> caseIcons;
+	private ArrayList<CaseIcon> selectedIcons;
+	private Box mainContainer;
+	private Box buttonContainer;
+	private Box iconContainer;
 	private JLabel titleLabel;
 	private JButton nextButton;
 	private JButton prevButton;
 	private JButton continueButton;
 	private String caseNum;
-	private int thumbnailPlace;
+	private int iconPlace;
 	
+	/** Populates this dialogue with all of the necessary graphical components.
+	 * 
+	 *  @param manager the instance of <code>FrameManager</code> that initialized this dialogue
+     *  @param caseNum the number of the case that the images are being selected from
+	 */
 	public SelectImagesDialogue(FrameManager manager, String caseNum)
 	{
 		this.manager = manager;
 		this.caseNum = caseNum;
-		this.thumbnailPlace = 0;
-		this.displayedThumbnails = this.generateThumbnails();
-		this.selectedThumbnails = new ArrayList<ImgIcon>();
-		this.container = Box.createVerticalBox();
-		this.buttonsContainer = Box.createHorizontalBox();
-		this.thumbnailContainer = Box.createVerticalBox();
-		this.populateButtonsContainer();
-		this.refreshThumbnailContainer(0);
-		this.populateContainer();
-		this.add(this.container);
+		this.iconPlace = 0;
+		this.caseIcons = this.generateIcons();
+		this.selectedIcons = new ArrayList<CaseIcon>();
+		this.mainContainer = Box.createVerticalBox();
+		this.buttonContainer = Box.createHorizontalBox();
+		this.iconContainer = Box.createVerticalBox();
+		this.populateButtonContainer();
+		this.refreshIconContainer(0);
+		this.populateMainContainer();
+		this.add(this.mainContainer);
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();
 	}
 	
-	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
-	 *	             e - the event in question
-	 *                 1. attempts to load the next six images from the case within "thumbnailContainer"
-	 *                 2. attempts to load the previous six images from the case within "thumbnailContainer"
-	 *                 3. attempts to push PrintSetUpDialogue and displays an error message if this fails
+	/** Mandatory method required in all classes that implement <code>ActionListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>nextButton</code></li>
+	 *  		<ul>
+	 *  			<li>Attempts to load the next six images from the case within <code>iconContainer</code>.</li>
+	 *  		</ul>
+	 *  	<li><code>prevButton</code></li>
+	 *  		<ul>
+	 *  			<li>Attempts to load the previous six images from the case within <code>iconContainer</code>.</li>
+	 *  		</ul>
+	 *  	<li><code>continueButton</code></li>
+	 *  		<ul>
+	 *  			<li>Attempts to push <code>PrintSetUpDialogue</code> and displays an error message if this fails.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == this.nextButton)
 		{
-			if (this.thumbnailPlace + 6 < this.displayedThumbnails.size())
+			if (this.iconPlace + 6 < this.caseIcons.size())
 			{
-				this.refreshThumbnailContainer(this.thumbnailPlace + 6);
+				this.refreshIconContainer(this.iconPlace + 6);
 			}
 		}
 		else if (e.getSource() == this.prevButton)
 		{
-			if (this.thumbnailPlace >= 6)
+			if (this.iconPlace >= 6)
 			{
-				this.refreshThumbnailContainer(this.thumbnailPlace - 6);
+				this.refreshIconContainer(this.iconPlace - 6);
 			}
 		}
 		else if (e.getSource() == this.continueButton)
 		{
-			if (this.selectedThumbnails.size() > 0)
+			if (this.selectedIcons.size() > 0)
 			{
 				this.manager.closeDialogue();
-				this.manager.openDialogue("Print Setup", new PrintSetUpDialogue(this.manager, this.selectedThumbnails), 50, 75);
+				this.manager.openDialogue("Print Setup", new PrintSetUpDialogue(this.manager, this.caseNum, this.selectedIcons), 60, 75);
 			}
 			else
 			{
@@ -87,92 +106,70 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 		}
 	}
 
-	/* mouseClicked - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
-	 *              1. if the clicked on thumbnail is selected, it is removed from "selectedThumbnails"
-	 *              2. if the clicked on thumbnail is not selected, it is added to "selectedThumbnails"
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li>An instance of <code>CaseIcon</code> contained within both the <code>caseIcons</code> and <code>selectedIcons</code> <code>ArrayLists</code>.</li>
+	 *  		<ul>
+	 *  			<li>Said instance is removed from <code>selectedIcons</code>.</li>
+	 *  		</ul>
+	 *  	<li>An instance of <code>CaseIcon</code> contained within the <code>caseIcons</code> <code>ArrayList</code>, but not within the <code>selectedIcons</code> <code>ArrayList</code>.</li>
+	 *  		<ul>
+	 *  			<li>Said instance is added to <code>selectedIcons</code>.</li>
+	 *  		</ul>
+	 *  </ul>
 	 */
 	public void mouseClicked(MouseEvent e) 
 	{
-		if (this.selectedThumbnails.contains(e.getSource()))
+		if (this.selectedIcons.contains(e.getSource()))
 		{
-			this.selectedThumbnails.remove((ImgIcon)e.getSource());
+			this.selectedIcons.remove((CaseIcon)e.getSource());
 		}
-		else if (this.displayedThumbnails.contains(e.getSource()))
+		else if (this.caseIcons.contains(e.getSource()))
 		{
-			this.selectedThumbnails.add((ImgIcon)e.getSource());
+			this.selectedIcons.add((CaseIcon)e.getSource());
 		}
-		this.refreshThumbnailContainer(this.thumbnailPlace);
+		this.refreshIconContainer(this.iconPlace);
 	}
 
-	/* mousePressed - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mousePressed(MouseEvent e) 
 	{
 		return;
 	}
 	
-	/* mouseReleased - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	           e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseReleased(MouseEvent e) 
 	{
 		return;
 	}
 	
-	/* mouseEntered - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	          e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseEntered(MouseEvent e) 
 	{
 		return;
 	}
 
-	/* mouseExited - mandatory for any class implementing MouseListener, checks the source of the MouseEvent and executes the appropriate code 
-	 *	         e - the event in question
+	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
 	 */
 	public void mouseExited(MouseEvent e) 
 	{
 		return;
 	}
 	
-	/* generateThumbnails - returns an ArrayList of ThumbnailImg objects representing all of the images contained within the currently selected case
+	/** Refreshes the icons displayed on the screen.
+	 * 
+	 *  @param iconPlace the index within <code>caseIcons</code> at which we should begin displaying said icons
 	 */
-	private ArrayList<ImgIcon> generateThumbnails()
+	private void refreshIconContainer(int iconPlace)
 	{
-		ArrayList<ImgIcon> thumbnailList = new ArrayList<ImgIcon>();
-	    File directory = new File("cases" + "/" + this.caseNum + "/");
-		for (int i = 0; i < directory.listFiles().length; i++)
-		{
-			String currentName = directory.listFiles()[i].getName();
-			String currentExtension = currentName.substring(currentName.indexOf('.')).toLowerCase();
-			if ((currentExtension.equalsIgnoreCase(".png") || currentExtension.equalsIgnoreCase(".jpg") || currentExtension.equalsIgnoreCase(".jpeg")))
-			{ 
-				try 
-				{
-					ImgIcon currentThumbnail = ComponentGenerator.generateThumbnailImg(directory.listFiles()[i].getPath(), 140, CENTER_ALIGNMENT);
-				    currentThumbnail.addMouseListener(this);
-				    thumbnailList.add(currentThumbnail);
-				} 
-				catch (InvalidImgException e) 
-				{
-					System.out.println(e.getMessage());
-					e.printStackTrace();
-				}
-			}
-		}
-	    return thumbnailList;
-	}
-	
-	/* refreshThumbnailContainer - refreshes the thumbnails displayed on the screen
-	 *            thumbnailPlace - the index within "displayedThumbnails" at which we should begin 
-	 */
-	private void refreshThumbnailContainer(int thumbnailPlace)
-	{
-		this.thumbnailPlace = thumbnailPlace;
-		this.thumbnailContainer.removeAll();
-		this.thumbnailContainer.add(Box.createVerticalStrut(5));;
+		this.iconPlace = iconPlace;
+		this.iconContainer.removeAll();
+		this.iconContainer.add(Box.createVerticalStrut(5));;
 		for (int i = 0; i < 2; i++)
 		{
 			Box row = Box.createHorizontalBox();
@@ -181,14 +178,14 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 				Box col = Box.createHorizontalBox();
 				col.setMinimumSize(new Dimension(150, 150));
 				col.setMaximumSize(new Dimension(150, 150));
-				if (this.thumbnailPlace < this.displayedThumbnails.size())
+				if (this.iconPlace < this.caseIcons.size())
 				{
 					col.add(Box.createHorizontalGlue());
 					col.add(Box.createVerticalStrut(150));
-					col.add(this.displayedThumbnails.get(this.thumbnailPlace));
+					col.add(this.caseIcons.get(this.iconPlace));
 					col.add(Box.createVerticalStrut(150));
 					col.add(Box.createHorizontalGlue());
-					if (this.selectedThumbnails.contains(this.displayedThumbnails.get(this.thumbnailPlace)))
+					if (this.selectedIcons.contains(this.caseIcons.get(this.iconPlace)))
 					{
 						col.setBackground(ComponentGenerator.SELECTED_THUMBNAIL_BG_COLOR);
 						col.setOpaque(true);
@@ -201,40 +198,56 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 					col.add(Box.createHorizontalGlue());
 				}
 				row.add(col);
-				this.thumbnailPlace++;
+				this.iconPlace++;
 			}
-			this.thumbnailContainer.add(row);
+			this.iconContainer.add(row);
 		}
-		this.thumbnailContainer.add(Box.createHorizontalStrut(450));
-		this.thumbnailPlace = thumbnailPlace;
+		this.iconContainer.add(Box.createHorizontalStrut(450));
+		this.iconPlace = iconPlace;
 		this.revalidate();
 		this.repaint();
 	}
 	
-	/* populateButtonsContainer - populates "buttonsContainer" with the necessary components
+	/** Adds <code>nextButton</code> and <code>prevButton</code> to <code>buttonContainer</code>.
 	 */
-	private void populateButtonsContainer()
+	private void populateButtonContainer()
 	{
 		this.nextButton = ComponentGenerator.generateButton("Next >", this, CENTER_ALIGNMENT);
 		this.prevButton = ComponentGenerator.generateButton("< Prev", this, CENTER_ALIGNMENT);
-		this.buttonsContainer.add(this.prevButton);
-		this.buttonsContainer.add(Box.createHorizontalStrut(250));
-		this.buttonsContainer.add(this.nextButton);
+		this.buttonContainer.add(this.prevButton);
+		this.buttonContainer.add(Box.createHorizontalStrut(250));
+		this.buttonContainer.add(this.nextButton);
 	}
 	
-	/* populateContainer - populates "container" with the necessary components
+	/** Adds <code>titleLabel</code>, <code>buttonContainer</code>, <code>iconContainer</code>, and <code>continueButton</code> to <code>mainContainer</code>.
 	 */
-	private void populateContainer()
+	private void populateMainContainer()
 	{
 		this.titleLabel = ComponentGenerator.generateLabel("Please select all of the images you would like to print:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
-		this.container.add(Box.createVerticalStrut(5));
-		this.container.add(this.titleLabel);
-		this.container.add(Box.createVerticalStrut(15));
-		this.container.add(this.buttonsContainer);
-		this.container.add(this.thumbnailContainer);
-		this.container.add(Box.createVerticalStrut(5));
-		this.container.add(this.continueButton);
+		this.mainContainer.add(Box.createVerticalStrut(5));
+		this.mainContainer.add(this.titleLabel);
+		this.mainContainer.add(Box.createVerticalStrut(15));
+		this.mainContainer.add(this.buttonContainer);
+		this.mainContainer.add(this.iconContainer);
+		this.mainContainer.add(Box.createVerticalStrut(5));
+		this.mainContainer.add(this.continueButton);
+	}
+	
+	/** Returns an <code>ArrayList</code> of <code>CaseIcon</code> objects representing all of the images contained within the currently selected case.
+	 * 
+	 *  @return <code>ArrayList</code> of <code>CaseIcon</code> objects representing all of the images contained within the currently selected case
+	 */
+	private ArrayList<CaseIcon> generateIcons()
+	{
+	    for (int i = 0; i < this.manager.getStorageManager().getCases().size(); i++)
+	    {
+	    	if (this.manager.getStorageManager().getCases().get(i).getCaseNum().equalsIgnoreCase(this.caseNum))
+	    	{
+	    		return this.manager.getStorageManager().getCases().get(i).getCaseIcons(140, this, CENTER_ALIGNMENT);
+	    	}
+	    }
+		return new ArrayList<CaseIcon>();
 	}
 
 }

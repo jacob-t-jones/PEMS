@@ -3,10 +3,15 @@
 // PrintSetUpDialogue.java
 
 package gui.display.dialogues;
+import java.awt.*;
 import java.awt.event.*;
+import java.awt.print.*;
 import java.io.*;
 import java.util.*;
 
+import javax.print.*;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.*;
 
 import org.apache.pdfbox.exceptions.*;
@@ -16,146 +21,246 @@ import org.apache.pdfbox.pdmodel.font.*;
 import org.apache.pdfbox.pdmodel.graphics.xobject.*;
 import org.imgscalr.*;
 
-import backend.storage.file.img.Img;
-import exceptions.*;
+import backend.exceptions.*;
 import gui.*;
-import gui.components.icon.ImgIcon;
-import gui.components.img.*;
+import gui.components.icon.*;
 import gui.display.*;
 
-public class PrintSetUpDialogue extends JPanel implements ActionListener
+public class PrintSetUpDialogue extends JPanel implements ActionListener, Printable
 {
 	
 	private FrameManager manager;
-	private ArrayList<ImgIcon> selectedThumbnails;
-	private ArrayList<Img> printableImgs;
+	private ArrayList<CaseIcon> selectedIcons;
+	private ArrayList<CaseIcon> printableIcons;
 	private ArrayList<PDPage> pages;
+	private PrintService[] printers;
+	private String[] printerNames;
 	private PDDocument document;
-	private Img oneImgDiagram;
-	private Img twoImgDiagram;
-	private Img fourImgDiagram;
-	private Img eightImgDiagram;
+	private ImgIcon fullPageDiagram;
+	private ImgIcon oneImgDiagram;
+	private ImgIcon twoImgDiagram;
+	private ImgIcon fourImgDiagram;
+	private ImgIcon eightImgDiagram;
 	private Box container;
 	private Box displayContainer;
-	private Box buttonsContainer;
+	private Box optionContainer;
+	private ButtonGroup orientationRadioButtons;
+	private JComboBox<String> printerComboBox;
 	private JLabel instructionsLabel;
+	private JLabel printerLabel;
 	private JLabel layoutLabel;
+	private JLabel copiesLabel;
+	private JLabel orientationLabel;
+	private JButton fullPageButton;
 	private JButton oneImgButton;
 	private JButton twoImgButton;
 	private JButton fourImgButton;
 	private JButton eightImgButton;
 	private JButton printButton;
+	private JSpinner copiesSpinner;
+	private JRadioButton portraitRadioButton;
+	private JRadioButton landscapeRadioButton;
+	private String caseNum;
 	private int imgsPerPage;
 	
-	public PrintSetUpDialogue(FrameManager manager, ArrayList<ImgIcon> selectedThumbnails) 
+	public PrintSetUpDialogue(FrameManager manager, String caseNum, ArrayList<CaseIcon> selectedIcons) 
 	{
 		this.manager = manager;
-		this.selectedThumbnails = selectedThumbnails;
-		this.printableImgs = new ArrayList<Img>();
+		this.caseNum = caseNum;
+		this.selectedIcons = selectedIcons;
+		this.printableIcons = new ArrayList<CaseIcon>();
 		this.pages = new ArrayList<PDPage>();
+		this.printers = PrintServiceLookup.lookupPrintServices(null, null);
+		this.printerNames = this.retrievePrinterNames();
 		this.document = new PDDocument();
-		this.imgsPerPage = 1;
+		this.imgsPerPage = 0;
 		this.container = Box.createVerticalBox();
 		this.displayContainer = Box.createHorizontalBox();
-		this.buttonsContainer = Box.createVerticalBox();
+		this.optionContainer = Box.createVerticalBox();
 		this.generateLayoutDiagrams();
-		this.populateButtonsContainer();
-		this.populateDisplayContainer(1);
+		this.populateOptionContainer();
+		this.populateDisplayContainer(0);
 		this.populateContainer();
 		this.add(this.container);
 	}
 	
-	/* actionPerformed - mandatory for any class implementing ActionListener, checks the source of the ActionEvent and executes the appropriate code 
-	 *	             e - the event in question
-	 *                 1. sets the selected layout type to one image per page
-	 *                 2. sets the selected layout type to two images per page
-	 *                 3. sets the selected layout type to four images per page
-	 *                 4. sets the selected layout type to eight images per page
-	 *                 5. initiates the print sequence
-	 */
+	public enum PrintResult
+	{
+		PDF_GENERATION_FAILED, PDF_NOT_PRINTABLE, PRINTER_NOT_FOUND, UNEXPECTED_FAILURE, SUCCESS
+	}
+	
 	public void actionPerformed(ActionEvent e) 
 	{
-		if (e.getSource() == this.oneImgButton)
+		if (e.getSource() == this.fullPageButton)
+		{
+			this.populateDisplayContainer(0);
+			this.landscapeRadioButton.setEnabled(true);
+			this.imgsPerPage = 0;
+		}
+		else if (e.getSource() == this.oneImgButton)
 		{
 			this.populateDisplayContainer(1);
+			this.landscapeRadioButton.setEnabled(false);
+			this.portraitRadioButton.setSelected(true);
 			this.imgsPerPage = 1;
 		}
 		else if (e.getSource() == this.twoImgButton)
 		{
 			this.populateDisplayContainer(2);
+			this.landscapeRadioButton.setEnabled(false);
+			this.portraitRadioButton.setSelected(true);
 			this.imgsPerPage = 2;
 		}
 		else if (e.getSource() == this.fourImgButton)
 		{
 			this.populateDisplayContainer(4);
+			this.landscapeRadioButton.setEnabled(false);
+			this.portraitRadioButton.setSelected(true);
 			this.imgsPerPage = 4;
 		}
 		else if (e.getSource() == this.eightImgButton)
 		{
 			this.populateDisplayContainer(8);
+			this.landscapeRadioButton.setEnabled(false);
+			this.portraitRadioButton.setSelected(true);
 			this.imgsPerPage = 8;
 		}
 		else if (e.getSource() == this.printButton)
 		{
-			try 
+			PrintResult result = this.initiatePrint();
+			if (result == PrintResult.PDF_GENERATION_FAILED || result == PrintResult.PDF_NOT_PRINTABLE)
 			{
-				this.generatePDF();
+				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "PEMS was unable to generate a printable PDF file containing the selected images. Please try again.\nIf the problem persists, restart the program and try once more.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			else if (result == PrintResult.PRINTER_NOT_FOUND)
+			{
+				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "The specified printer could not be located. Please select a different printer and try again.\nIf the problem persists, restart the program and try once more.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			else if (result == PrintResult.UNEXPECTED_FAILURE)
+			{
+				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "The print job you were attempting to complete unexpectedly failed. Please try again.\nIf the problem persists, restart the program and try once more.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			else
+			{
 				this.manager.closeDialogue();
-			} 
-			catch (IOException | InvalidImgException e1) 
-			{
-				System.out.println(e1.getMessage());
-				e1.printStackTrace();
 			}
 		}
 	}
 	
-	/* generateLayoutDiagrams - creates and initializes the images used to represent the four different layouts
-	 */
+	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException 
+	{
+		if (this.imgsPerPage == 0)
+		{
+		    if (pageIndex < this.pages.size()) 
+		    {
+		        try 
+		        {
+					graphics.drawImage(this.pages.get(pageIndex).convertToImage(), 100, 100, null);
+				} 
+		        catch (IOException e) 
+		        {
+					e.printStackTrace();
+					System.out.println(e.getMessage());
+				}
+		        return PAGE_EXISTS;
+		    } 
+		    else
+		    {
+		        return NO_SUCH_PAGE;
+		    }
+		}
+		else
+		{
+		    if (pageIndex < this.printableIcons.size()) 
+		    {
+				graphics.drawImage(this.printableIcons.get(pageIndex).getImage(), 100, 100, null);
+		        return PAGE_EXISTS;
+		    } 
+		    else
+		    {
+		        return NO_SUCH_PAGE;
+		    }
+		}
+
+	}
+	
 	private void generateLayoutDiagrams()
 	{
 		try
 		{
-			this.oneImgDiagram = ComponentGenerator.generateImg("resources/layout1.png", CENTER_ALIGNMENT);
-			this.twoImgDiagram = ComponentGenerator.generateImg("resources/layout2.png", CENTER_ALIGNMENT);
-			this.fourImgDiagram = ComponentGenerator.generateImg("resources/layout4.png", CENTER_ALIGNMENT);
-			this.eightImgDiagram = ComponentGenerator.generateImg("resources/layout8.png", CENTER_ALIGNMENT);
+			this.fullPageDiagram = new ImgIcon("resources/layoutFull.png");
+			this.fullPageDiagram.setAlignmentX(CENTER_ALIGNMENT);
+			this.oneImgDiagram = new ImgIcon("resources/layout1.png");
+			this.oneImgDiagram.setAlignmentX(CENTER_ALIGNMENT);
+			this.twoImgDiagram = new ImgIcon("resources/layout2.png");
+			this.twoImgDiagram.setAlignmentX(CENTER_ALIGNMENT);
+			this.fourImgDiagram = new ImgIcon("resources/layout4.png");
+			this.fourImgDiagram.setAlignmentX(CENTER_ALIGNMENT);
+			this.eightImgDiagram = new ImgIcon("resources/layout8.png");
+			this.eightImgDiagram.setAlignmentX(CENTER_ALIGNMENT);
 		}
-		catch (InvalidImgException e)
+		catch (InvalidFileException e)
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	
-	/* populateButtonsContainer - adds the necessary components to "buttonsContainer"
-	 */
-	private void populateButtonsContainer()
+	private void populateOptionContainer()
 	{
-		this.layoutLabel = ComponentGenerator.generateLabel("Images per Page", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.printerLabel = ComponentGenerator.generateLabel("Printer", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.layoutLabel = ComponentGenerator.generateLabel("Print Layout", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.copiesLabel = ComponentGenerator.generateLabel("Copies", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.orientationLabel = ComponentGenerator.generateLabel("Orientation", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.fullPageButton = ComponentGenerator.generateButton("Full Page", this, CENTER_ALIGNMENT);
 		this.oneImgButton = ComponentGenerator.generateButton("1 per page", this, CENTER_ALIGNMENT);
 		this.twoImgButton = ComponentGenerator.generateButton("2 per page", this, CENTER_ALIGNMENT);
 		this.fourImgButton = ComponentGenerator.generateButton("4 per page", this, CENTER_ALIGNMENT);
 		this.eightImgButton = ComponentGenerator.generateButton("8 per page", this, CENTER_ALIGNMENT);
-		this.buttonsContainer.add(layoutLabel);
-		this.buttonsContainer.add(Box.createVerticalStrut(15));
-		this.buttonsContainer.add(oneImgButton);
-		this.buttonsContainer.add(Box.createVerticalStrut(10));
-		this.buttonsContainer.add(twoImgButton);
-		this.buttonsContainer.add(Box.createVerticalStrut(10));
-		this.buttonsContainer.add(fourImgButton);
-		this.buttonsContainer.add(Box.createVerticalStrut(10));
-		this.buttonsContainer.add(eightImgButton);
+		this.printerComboBox = ComponentGenerator.generateComboBox(this.printerNames, CENTER_ALIGNMENT);
+		this.copiesSpinner = ComponentGenerator.generateNumberSpinner(1, 1, 100, 1, 30, CENTER_ALIGNMENT);
+		this.portraitRadioButton = ComponentGenerator.generateRadioButton("Portrait", true, CENTER_ALIGNMENT);
+		this.landscapeRadioButton = ComponentGenerator.generateRadioButton("Landscape", false, CENTER_ALIGNMENT);
+		this.orientationRadioButtons = new ButtonGroup();
+		this.orientationRadioButtons.add(this.portraitRadioButton);
+		this.orientationRadioButtons.add(this.landscapeRadioButton);
+		this.optionContainer.add(this.printerLabel);
+		this.optionContainer.add(Box.createVerticalStrut(15));
+		this.optionContainer.add(this.printerComboBox);
+		this.optionContainer.add(Box.createVerticalStrut(15));
+		this.optionContainer.add(this.layoutLabel);
+		this.optionContainer.add(Box.createVerticalStrut(15));
+		this.optionContainer.add(this.fullPageButton);
+		this.optionContainer.add(Box.createVerticalStrut(10));
+		this.optionContainer.add(this.oneImgButton);
+		this.optionContainer.add(Box.createVerticalStrut(10));
+		this.optionContainer.add(this.twoImgButton);
+		this.optionContainer.add(Box.createVerticalStrut(10));
+		this.optionContainer.add(this.fourImgButton);
+		this.optionContainer.add(Box.createVerticalStrut(10));
+		this.optionContainer.add(this.eightImgButton);
+		this.optionContainer.add(Box.createVerticalStrut(15));
+		this.optionContainer.add(this.copiesLabel);
+		this.optionContainer.add(Box.createVerticalStrut(15));
+		this.optionContainer.add(this.copiesSpinner);
+		this.optionContainer.add(Box.createVerticalStrut(15));
+		this.optionContainer.add(this.orientationLabel);
+		this.optionContainer.add(Box.createVerticalStrut(15));
+		this.optionContainer.add(this.portraitRadioButton);
+		this.optionContainer.add(Box.createVerticalStrut(10));
+		this.optionContainer.add(this.landscapeRadioButton);
 	}
 	
-	/* populateDisplayContainer - adds the necessary components to "displayContainer"
-	 */
 	private void populateDisplayContainer(int imgsPerPage)
 	{
 		this.displayContainer.removeAll();
-		this.displayContainer.add(this.buttonsContainer);
+		this.displayContainer.add(this.optionContainer);
 		this.displayContainer.add(Box.createHorizontalStrut(20));
-		if (imgsPerPage == 1)
+		if (imgsPerPage == 0)
+		{
+			this.displayContainer.add(this.fullPageDiagram);
+		}
+		else if (imgsPerPage == 1)
 		{
 			this.displayContainer.add(this.oneImgDiagram);
 		}
@@ -175,11 +280,9 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.repaint();
 	}
 	
-	/* populateContainer - adds the necessary components to "container"
-	 */
 	private void populateContainer()
 	{
-		this.instructionsLabel = ComponentGenerator.generateLabel("Please select the layout you would like to use to print the selected images:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.instructionsLabel = ComponentGenerator.generateLabel("Below are the options for the current print job. Please ensure they are correct before continuing.", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.printButton = ComponentGenerator.generateButton("Print", this, CENTER_ALIGNMENT);
 		this.container.add(this.instructionsLabel);
 		this.container.add(Box.createVerticalStrut(25));
@@ -188,9 +291,96 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.container.add(this.printButton);
 	}
 	
-	/* generatePDF - primary function for carrying out the PDF generation process
-	 */
-	private void generatePDF() throws IOException, InvalidImgException 
+	private String[] retrievePrinterNames()
+	{
+		if (this.printers.length == 0)
+		{
+			String[] printerNames = {"NO PRINTERS FOUND"};
+			return printerNames;
+		}
+		else
+		{
+			String[] printerNames = new String[this.printers.length];
+			for (int i = 0; i < this.printers.length; i++)
+			{
+				printerNames[i] = this.printers[i].getName();
+			}
+			return printerNames;
+		}
+	}
+	
+	private PrintResult initiatePrint()
+	{
+		PrinterJob job = PrinterJob.getPrinterJob();
+		for (int i = 0; i < this.printers.length; i++)
+		{
+			if (this.printers[i].getName().equalsIgnoreCase((String)(this.printerComboBox.getSelectedItem())))
+			{
+				try 
+				{
+					PrintService service = this.printers[i];
+					job.setPrintService(service);
+				} 
+				catch (PrinterException e) 
+				{
+					return PrintResult.PRINTER_NOT_FOUND;
+				}
+				break;
+			}
+		}
+		if (job.getPrintService() == null)
+		{
+			return PrintResult.PRINTER_NOT_FOUND;
+		}
+		if (this.imgsPerPage > 0)
+		{
+			try 
+			{
+				this.generatePDF();
+				try 
+				{
+					job.setPageable(new PDPageable(document, job));
+				} 
+				catch (NullPointerException | IllegalArgumentException | PrinterException e) 
+				{
+					e.printStackTrace();
+					System.out.println(e.getMessage());
+					return PrintResult.PDF_NOT_PRINTABLE;
+				}
+			} 
+			catch (IOException | InvalidFileException e)
+			{
+				e.printStackTrace();
+				System.out.println(e.getMessage());
+				return PrintResult.PDF_GENERATION_FAILED;
+			}
+		}
+		PageFormat format = job.getPageFormat(null);
+		if (this.portraitRadioButton.isSelected())
+		{
+			format.setOrientation(PageFormat.PORTRAIT);
+		}
+		else
+		{
+			format.setOrientation(PageFormat.LANDSCAPE);
+		}
+		job.setCopies((int)(this.copiesSpinner.getValue()));
+		job.setPrintable(this, format);
+		job.setJobName("Case " + this.caseNum);
+		try 
+		{
+			this.document.silentPrint(job);
+		} 
+		catch (PrinterException e) 
+		{
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			return PrintResult.UNEXPECTED_FAILURE;
+		}
+		return PrintResult.SUCCESS;
+	}
+	
+	private void generatePDF() throws IOException, InvalidFileException 
 	{
 		this.generatePages();
 		this.generatePrintableImgs();
@@ -198,33 +388,30 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		this.addImgs();
 		try 
 		{
-			this.document.save("TEST.pdf");
+			this.document.save("PRINTJOB.pdf");
 		} 
 		catch (COSVisitorException e) 
 		{
 			e.printStackTrace();
 		}
-		this.document.close();
 	}
 	
-	/* generatePages - determines how many pages should be generated for the PDF, creates them, and adds them to the "pages" ArrayList
-	 */
 	private void generatePages()
 	{
 		int numPages = 0;
-		if (this.imgsPerPage >= this.selectedThumbnails.size())
+		if (this.imgsPerPage >= this.selectedIcons.size())
 		{
 			numPages = 1;
 		}
 		else
 		{
-			if (this.selectedThumbnails.size() % this.imgsPerPage == 0)
+			if (this.selectedIcons.size() % this.imgsPerPage == 0)
 			{
-				numPages = this.selectedThumbnails.size() / this.imgsPerPage;
+				numPages = this.selectedIcons.size() / this.imgsPerPage;
 			}
 			else
 			{
-				numPages = (this.selectedThumbnails.size() / this.imgsPerPage) + 1; 
+				numPages = (this.selectedIcons.size() / this.imgsPerPage) + 1; 
 			}
 		}
 		for (int i = 0; i < numPages; i++)
@@ -233,20 +420,17 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
-	/* generatePrintableImgs - populates the "printableImgs" ArrayList by generating fitted Img versions of the ThumbnailImg objects in "selectedThumbnails"
-	 */
 	private void generatePrintableImgs()
 	{
-		for (int i = 0; i < this.selectedThumbnails.size(); i++)
+		for (int i = 0; i < this.selectedIcons.size(); i++)
 		{
-			Img currentImg = null;
+			CaseIcon currentImg = null;
 			try
 			{
-				currentImg = ComponentGenerator.generateImg(this.selectedThumbnails.get(i).getFilePath());
-				currentImg = this.resizeForPrint(currentImg);
-				this.printableImgs.add(currentImg);
+				currentImg = this.resizeForPrint(new CaseIcon(this.selectedIcons.get(i).getParentFile()));
+				this.printableIcons.add(currentImg);
 			}
-			catch (InvalidImgException e)
+			catch (InvalidFileException e)
 			{
 				System.out.println(e.getMessage());
 				e.printStackTrace();
@@ -255,13 +439,10 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
-	/* addHeader - paints the standard police department header to the top of each page
-	 */
-	private void addHeader() throws IOException, InvalidImgException
+	private void addHeader() throws IOException, InvalidFileException
 	{
-		Img logoImg = ComponentGenerator.generateImg("resources/logosmall.png", CENTER_ALIGNMENT);
-		logoImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 50);
-		PDXObjectImage pdfLogo = new PDJpeg(this.document, logoImg.getImage());
+		ImgIcon logoIcon = new ImgIcon("resources/logosmall.png", Scalr.Method.ULTRA_QUALITY, 50);
+		PDXObjectImage pdfLogo = new PDJpeg(this.document, logoIcon.getImage());
 		for (int i = 0; i < this.pages.size(); i++)
 		{
 			this.document.addPage(this.pages.get(i));
@@ -285,8 +466,6 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
-	/* addImgs - paints the images to the pages in the specified format
-	 */
 	private void addImgs() throws IOException
 	{
 		int currentImgIndex = 0;
@@ -333,13 +512,13 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 				currentX = 50;
 				for (int k = 0; k < colsPerPage; k++)
 				{
-					if (currentImgIndex < this.printableImgs.size())
+					if (currentImgIndex < this.printableIcons.size())
 					{
-						PDXObjectImage currentPDFImg = new PDJpeg(this.document, this.printableImgs.get(currentImgIndex).getImage());
+						PDXObjectImage currentPDFImg = new PDJpeg(this.document, this.printableIcons.get(currentImgIndex).getImage());
 						contentStream.drawImage(currentPDFImg, currentX, currentY);
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(currentX, currentY - 12);
-						contentStream.drawString(this.printableImgs.get(currentImgIndex).getTimestamp());
+						contentStream.drawString(this.printableIcons.get(currentImgIndex).getParentFile().getImg().getTimestamp());
 						contentStream.endText();
 						currentImgIndex++;
 					}
@@ -351,51 +530,48 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener
 		}
 	}
 	
-	/* resizeForPrint - returns a modified version of a given Img, resized to fit properly on the PDF
-	 *            img - the image to resize
-	 */
-	private Img resizeForPrint(Img img)
+	private CaseIcon resizeForPrint(CaseIcon icon) throws InvalidFileException
 	{
 		if (this.imgsPerPage == 1 || this.imgsPerPage == 2)
 		{
-			if (img.getImage().getHeight() > 270)
+			if (icon.getImage().getHeight() > 270)
 			{
-				int newWidth = (img.getImage().getWidth() * 270) / img.getImage().getHeight();
-				img.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 270);
+				int newWidth = (icon.getImage().getWidth() * 270) / icon.getImage().getHeight();
+				icon.resizeImage(newWidth, 270);
 			}
-			if (img.getImage().getWidth() > 270)
+			if (icon.getImage().getWidth() > 270)
 			{
-				int newHeight = (img.getImage().getHeight() * 270) / img.getImage().getWidth();
-				img.resizeImage(Scalr.Method.ULTRA_QUALITY, 270, newHeight);
+				int newHeight = (icon.getImage().getHeight() * 270) / icon.getImage().getWidth();
+				icon.resizeImage(270, newHeight);
 			}
 		}
 		else if (this.imgsPerPage == 4)
 		{
-			if (img.getImage().getHeight() > 230)
+			if (icon.getImage().getHeight() > 230)
 			{
-				int newWidth = (img.getImage().getWidth() * 230) / img.getImage().getHeight();
-				img.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 230);
+				int newWidth = (icon.getImage().getWidth() * 230) / icon.getImage().getHeight();
+				icon.resizeImage(newWidth, 230);
 			}
-			if (img.getImage().getWidth() > 230)
+			if (icon.getImage().getWidth() > 230)
 			{
-				int newHeight = (img.getImage().getHeight() * 230) / img.getImage().getWidth();
-				img.resizeImage(Scalr.Method.ULTRA_QUALITY, 230, newHeight);
+				int newHeight = (icon.getImage().getHeight() * 230) / icon.getImage().getWidth();
+				icon.resizeImage(230, newHeight);
 			}
 		}
 		else if (this.imgsPerPage == 8)
 		{
-			if (img.getImage().getHeight() > 125)
+			if (icon.getImage().getHeight() > 125)
 			{
-				int newWidth = (img.getImage().getWidth() * 125) / img.getImage().getHeight();
-				img.resizeImage(Scalr.Method.ULTRA_QUALITY, newWidth, 125);
+				int newWidth = (icon.getImage().getWidth() * 125) / icon.getImage().getHeight();
+				icon.resizeImage(newWidth, 125);
 			}
-			if (img.getImage().getWidth() > 125)
+			if (icon.getImage().getWidth() > 125)
 			{
-				int newHeight = (img.getImage().getHeight() * 125) / img.getImage().getWidth();
-				img.resizeImage(Scalr.Method.ULTRA_QUALITY, 125, newHeight);
+				int newHeight = (icon.getImage().getHeight() * 125) / icon.getImage().getWidth();
+				icon.resizeImage(125, newHeight);
 			}
 		}
-		return img;
+		return icon;
 	}
 
 }
