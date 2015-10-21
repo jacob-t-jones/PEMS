@@ -449,14 +449,14 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
 			contentStream.moveTextPositionByAmount(250, 760);
-			contentStream.drawString("Plainville Police Department");
+			contentStream.drawString(this.manager.getConfiguration().getDepartmentName());
 			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
 			contentStream.moveTextPositionByAmount(0, -12);
-			contentStream.drawString("19 Neal Ct");
+			contentStream.drawString(this.manager.getConfiguration().getAddressLineOne());
 			contentStream.moveTextPositionByAmount(0, -12);
-			contentStream.drawString("Plainville, CT");
+			contentStream.drawString(this.manager.getConfiguration().getAddressLineTwo());
 			contentStream.moveTextPositionByAmount(0, -12);
-			contentStream.drawString("(860) 747-1616");
+			contentStream.drawString(this.manager.getConfiguration().getPhoneNumber());
 			contentStream.endText();
 			contentStream.drawLine(0, 715, this.pages.get(i).getMediaBox().getWidth(), 715);
 			contentStream.drawLine(0, 710, this.pages.get(i).getMediaBox().getWidth(), 710);

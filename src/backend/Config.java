@@ -19,6 +19,9 @@ public class Config
 {
 
 	private String departmentName;
+	private String addressLineOne;
+	private String addressLineTwo;
+	private String phoneNumber;
 	private boolean setupStatus;
 	private boolean persistence;
 	
@@ -36,6 +39,33 @@ public class Config
 	public String getDepartmentName()
 	{
 		return this.departmentName;
+	}
+	
+	/** Returns a <code>String</code> value containing the first line of the address of the police department utilizing PEMS.
+	 * 
+	 *  @return <code>String</code> value containing the first line of the address of the police department utilizing PEMS
+	 */
+	public String getAddressLineOne()
+	{
+		return this.addressLineOne;
+	}
+	
+	/** Returns a <code>String</code> value containing the second line of the address of the police department utilizing PEMS.
+	 * 
+	 *  @return <code>String</code> value containing the second line of the address of the police department utilizing PEMS
+	 */
+	public String getAddressLineTwo()
+	{
+		return this.addressLineTwo;
+	}
+	
+	/** Returns a <code>String</code> value containing the phone number of the police department utilizing PEMS.
+	 * 
+	 *  @return <code>String</code> value containing the phone number of the police department utilizing PEMS
+	 */
+	public String getPhoneNumber()
+	{
+		return this.phoneNumber;
 	}
 
 	/** Returns a <code>boolean</code> value indicating whether or not the program has been set up.
@@ -80,6 +110,18 @@ public class Config
 				if (line.contains("departmentname"))
 				{
 					this.departmentName = value;
+				}
+				else if (line.contains("addresslineone"))
+				{
+					this.addressLineOne = value;
+				}
+				else if (line.contains("addresslinetwo"))
+				{
+					this.addressLineTwo = value;
+				}
+				else if (line.contains("phonenumber"))
+				{
+					this.phoneNumber = value;
 				}
 				else if (line.contains("setupstatus"))
 				{

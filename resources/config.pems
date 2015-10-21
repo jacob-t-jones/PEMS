@@ -1,5 +1,8 @@
 <config>
 	<field="departmentname" value="Plainville Police Department" />
+	<field="addresslineone"	value="19 Neal Court" />
+	<field="addresslinetwo" value="Plainville, CT 06062" />
+	<field="phonenumber"	value="(860) 747-1616" />
 	<field="setupstatus"    value="true" />
 	<field="persistence"    value="true" />
 </config>
