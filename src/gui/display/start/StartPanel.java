@@ -43,9 +43,14 @@ public class StartPanel extends JPanel implements ActionListener
 	/** Populates this panel with all of the necessary graphical components.
 	 * 
 	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public StartPanel(FrameManager manager)
 	{
+		if (manager == null)
+		{
+			throw new NullPointerException();
+		}
 		this.manager = manager;
 		this.topContainer = Box.createVerticalBox();
 		this.middleContainer = Box.createHorizontalBox();

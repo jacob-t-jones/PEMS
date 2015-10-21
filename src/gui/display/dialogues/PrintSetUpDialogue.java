@@ -8,12 +8,10 @@ import java.awt.event.*;
 import java.awt.print.*;
 import java.io.*;
 import java.util.*;
-
 import javax.print.*;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.*;
-
 import org.apache.pdfbox.exceptions.*;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.edit.*;

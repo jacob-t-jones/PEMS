@@ -26,10 +26,15 @@ public class InchesField extends JFormattedTextField
 	 * 
 	 *  @param defaultValue the default <code>double</code> value to display in this field
 	 *  @param currentPanel the instance of <code>ResizeDialogue</code> this field is a part of
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public InchesField(double defaultValue, ResizeDialogue currentPanel)
 	{
 		super(new Double(defaultValue));
+		if (currentPanel == null)
+		{
+			throw new NullPointerException();
+		}
 		super.setFormatterFactory(new DefaultFormatterFactory(this.generateFormatter()));
 		this.currentPanel = currentPanel;
 	}

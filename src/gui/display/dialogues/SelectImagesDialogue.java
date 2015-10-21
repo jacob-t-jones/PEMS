@@ -38,9 +38,14 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 	 * 
 	 *  @param manager the instance of <code>FrameManager</code> that initialized this dialogue
      *  @param caseNum the number of the case that the images are being selected from
+     *  @throws NullPointerException if any parameters are null
 	 */
 	public SelectImagesDialogue(FrameManager manager, String caseNum)
 	{
+		if (manager == null || caseNum == null)
+		{
+			throw new NullPointerException();
+		}
 		this.manager = manager;
 		this.caseNum = caseNum;
 		this.iconPlace = 0;

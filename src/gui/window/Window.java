@@ -24,10 +24,15 @@ public class Window extends JFrame
 	 *  @param title the title of this window
 	 *  @param manager the instance of <code>FrameManager</code> that created this window
 	 *  @param panel the <code>JPanel</code> to display in this window
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public Window(String title, FrameManager manager, JPanel panel)
 	{
 		super(title);
+		if (title == null || manager == null || panel == null)
+		{
+			throw new NullPointerException();
+		}
 		super.getContentPane().add(panel);
 		super.pack();
 		this.manager = manager;
@@ -37,9 +42,14 @@ public class Window extends JFrame
 	 * 
 	 *  @param width the new width of this window, as a percentage of total screen width
 	 *  @param height the new height of this window, as a percentage of total screen height
+	 *  @throws IllegalArgumentException if <code>width</code> or <code>height</code> is not a valid percentage
 	 */
 	public void setBounds(int width, int height)
 	{
+		if (width < 0 || width > 100 || height < 0 || height > 100)
+		{
+			throw new IllegalArgumentException();
+		}
 		super.setBounds(this.widthToPixels((100 - width) / 2), this.heightToPixels((100 - height) / 2), this.widthToPixels(width), this.heightToPixels(height));
 	}
 	

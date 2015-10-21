@@ -104,9 +104,14 @@ public class MainWindow extends Window implements WindowListener
 	 * 
 	 *  @param panel the new <code>JPanel</code> to display
 	 *  @param title the new title of this window
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public void pushPanel(JPanel panel, String title)
 	{
+		if (panel == null || title == null)
+		{
+			throw new NullPointerException();
+		}
 		super.getContentPane().removeAll();
 		super.getContentPane().add(panel);
 		super.getContentPane().revalidate();
@@ -133,7 +138,10 @@ public class MainWindow extends Window implements WindowListener
 		{
 			super.removeWindowListener(super.getWindowListeners()[i]);
 		}
-		super.addWindowListener(window);
+		if (window != null)
+		{
+			super.addWindowListener(window);
+		}
 	}
 	
 }

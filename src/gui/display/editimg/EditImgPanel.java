@@ -49,9 +49,14 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	 * 
 	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
 	 *  @param caseNum the number of the case currently being edited
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public EditImgPanel(FrameManager manager, String caseNum)
 	{
+		if (manager == null || caseNum == null)
+		{
+			throw new NullPointerException();
+		}
 		this.manager = manager;
 		this.caseNum = caseNum;
 		this.caseIconIndex = 0;

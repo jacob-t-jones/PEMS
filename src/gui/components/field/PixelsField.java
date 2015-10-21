@@ -6,8 +6,10 @@ package gui.components.field;
 import java.awt.event.*;
 import java.math.*;
 import java.text.*;
+
 import javax.swing.*;
 import javax.swing.text.*;
+
 import gui.display.dialogues.*;
 
 /** Subclass of <code>JFormattedTextField</code> used to display the pixels value in <code>ResizeDialogue</code>.
@@ -26,10 +28,15 @@ public class PixelsField extends JFormattedTextField
 	 * 
 	 *  @param defaultValue the default <code>int</code> value to display in this field
 	 *  @param currentPanel the instance of <code>ResizeDialogue</code> this field is a part of
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public PixelsField(int defaultValue, ResizeDialogue currentPanel)
 	{
 		super(new Integer(defaultValue));
+		if (currentPanel == null)
+		{
+			throw new NullPointerException();
+		}
 		super.setFormatterFactory(new DefaultFormatterFactory(this.generateFormatter()));
 		this.currentPanel = currentPanel;
 	}

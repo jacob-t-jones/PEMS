@@ -47,9 +47,19 @@ public class ResizeDialogue extends JPanel implements ActionListener
 	 *  @param currentPanel the instance of <code>EditImgPanel</code> associated with this class
 	 *  @param originalWidth the original width of the image being resized, in pixels
 	 *  @param originalHeight the original height of the image being resized, in pixels
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if <code>originalWidth</code> or <code>originalHeight</code> are negative
 	 */
 	public ResizeDialogue(FrameManager manager, EditImgPanel currentPanel, int originalWidth, int originalHeight) 
 	{
+		if (manager == null || currentPanel == null)
+		{
+			throw new NullPointerException();
+		}
+		if (originalWidth < 0 || originalHeight < 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.manager = manager;
 		this.currentPanel = currentPanel;
 		this.originalWidth = originalWidth;

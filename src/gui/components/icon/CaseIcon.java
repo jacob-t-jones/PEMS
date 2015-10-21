@@ -19,6 +19,11 @@ public class CaseIcon extends ImgIcon
 	
 	private LiveFile parentFile;
 	
+	/** Calls the constructor for the parent class, populates instance fields.
+	 * 
+	 *  @param parentFile the instance of <code>LiveFile</code> that this icon is associated with
+	 *  @throws InvalidFileException if the image contained within this component can not be read into memory
+	 */
 	public CaseIcon(LiveFile parentFile) throws InvalidFileException 
 	{
 		super(parentFile.getFilePath());

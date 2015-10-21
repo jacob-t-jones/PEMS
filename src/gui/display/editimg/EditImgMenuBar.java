@@ -40,10 +40,15 @@ public class EditImgMenuBar extends JMenuBar implements ActionListener
 	/** Calls the parent constructor and populates this menu bar.
 	 * 
 	 *  @param currentPanel the instance of <code>EditImgPanel</code> associated with this class
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public EditImgMenuBar(EditImgPanel currentPanel)
 	{
 		super();
+		if (currentPanel == null)
+		{
+			throw new NullPointerException();
+		}
 		this.currentPanel = currentPanel;
 		this.constructMenuItems();
 		this.constructMenus();

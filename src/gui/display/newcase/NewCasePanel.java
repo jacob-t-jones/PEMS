@@ -5,7 +5,9 @@
 package gui.display.newcase;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import backend.StorageManager.*;
 import gui.*;
 import gui.components.field.*;
@@ -35,9 +37,14 @@ public class NewCasePanel extends JPanel implements ActionListener
 	/** Populates this panel with all of the necessary graphical components.
 	 * 
 	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public NewCasePanel(FrameManager manager) 
 	{
+		if (manager == null)
+		{
+			throw new NullPointerException();
+		}
 		this.manager = manager;
 		this.mainContainer = Box.createVerticalBox();
 		this.buttonContainer = Box.createHorizontalBox();

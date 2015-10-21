@@ -21,10 +21,15 @@ public class StringField extends JTextField implements FocusListener
 	/** Calls the parent constructor for this field, and makes it its own <code>FocusListener</code>.
 	 * 
 	 *  @param text the default <code>String</code> to display in this field
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public StringField(String text)
 	{
 		super(text);
+		if (text == null)
+		{
+			throw new NullPointerException();
+		}
 		super.addFocusListener(this);
 		this.defaultText = text;
 	}

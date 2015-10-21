@@ -53,9 +53,14 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 	 * 
 	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
 	 *  @param caseNum the number of the case currently being edited
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public SelectPanel(FrameManager manager, String caseNum) 
 	{
+		if (manager == null || caseNum == null)
+		{
+			throw new NullPointerException();
+		}
 		this.manager = manager;
 		this.caseNum = caseNum;
 		this.detectedIconPlace = 0;

@@ -43,9 +43,14 @@ public class FinishPanel extends JPanel implements MouseListener
 	 * 
 	 *  @param manager the instance of <code>FrameManager</code> that initialized this panel
 	 *  @param caseNum the number of the case that was being edited
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public FinishPanel(FrameManager manager, String caseNum) 
 	{
+		if (manager == null || caseNum == null)
+		{
+			throw new NullPointerException();
+		}
 		this.manager = manager;
 		this.caseNum = caseNum;
 		this.mainContainer = Box.createVerticalBox();
