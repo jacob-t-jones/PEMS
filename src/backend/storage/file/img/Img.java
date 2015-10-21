@@ -40,9 +40,14 @@ public class Img
 	 * 
 	 *  @param parentFile the instance of <code>LiveFile</code> that this image is associated with
 	 *  @throws InvalidFileException if there is an error reading the image into memory
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public Img(LiveFile parentFile) throws InvalidFileException
 	{
+		if (parentFile == null)
+		{
+			throw new NullPointerException();
+		}
 		this.parentFile = parentFile;
 		this.currentImageHistorySequence = new Stack<BufferedImage>();
 		this.undoneImageHistorySequence = new Stack<BufferedImage>();
@@ -128,9 +133,14 @@ public class Img
 	 *  @param red the red RGB color value for the padding
 	 *  @param green the green RGB color value for the padding
 	 *  @param blue the blue RGB color value for the padding
+	 *  @throws IllegalArgumentException if <code>size</code> is negative or zero, or if one of the color codes is invalid
 	 */
 	public void addPadding(int size, int red, int green, int blue)
 	{
+		if (size <= 0 || red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 || blue > 255)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.image = Scalr.pad(this.image, size, new Color(red, green, blue));
 		this.imgChanged();
 	}
@@ -157,9 +167,14 @@ public class Img
 	 *  @param y the y value to begin the crop at
 	 *  @param width the width of the crop
 	 *  @param height the height of the crop
+	 *  @throws IllegalArgumentException if any of the dimension parameters are invalid
 	 */
 	public void cropImage(int x, int y, int width, int height)
 	{
+		if (x < 0 || x > this.image.getWidth() || y < 0 || y > this.image.getHeight() || width <= 0 || (width + x) > this.image.getWidth() || height <= 0 || (height + y) > this.image.getHeight())
+		{
+			throw new IllegalArgumentException();
+		}
 		this.image = Scalr.crop(this.image, x, y, width, height, Scalr.OP_ANTIALIAS);
 		this.imgChanged();
 	}
@@ -176,9 +191,19 @@ public class Img
 	 * 
 	 *  @param method the resizing method to use (BALANCED, SPEED, QUALITY, etc.)
 	 *  @param size the new size of the image
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if <code>size</code> is negative or zero
 	 */
 	public void resizeImage(Scalr.Method method, int size)
 	{
+		if (method == null)
+		{
+			throw new NullPointerException();
+		}
+		if (size <= 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.image = Scalr.resize(this.image, method, size, Scalr.OP_ANTIALIAS);
 		this.imgChanged();
 	}
@@ -188,9 +213,19 @@ public class Img
 	 *  @param method the resizing method to use (BALANCED, SPEED, QUALITY, etc.)
 	 *  @param width the new width of the image
 	 *  @param height the new height of the image
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if <code>width</code> or <code>height</code> is negative or zero
 	 */
 	public void resizeImage(Scalr.Method method, int width, int height)
 	{
+		if (method == null)
+		{
+			throw new NullPointerException();
+		}
+		if (width <= 0 || height <= 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.image = Scalr.resize(this.image, method, width, height, Scalr.OP_ANTIALIAS);
 		this.imgChanged();
 	}

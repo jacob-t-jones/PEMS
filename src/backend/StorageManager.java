@@ -51,9 +51,19 @@ public class StorageManager
 	 *  @param caseNum <code>String</code> containing the number of the case the files should be added to
 	 *  @param selected <code>ArrayList</code> of <code>PeripheralIcon</code> objects representing the files to be added
 	 *  @return <code>AddFileResult</code> enum type indicating whether or not the add files operation was successful
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if the <code>selected</code> <code>ArrayList</code> is empty
 	 */
 	public AddFileResult addFiles(boolean delete, String caseNum, ArrayList<PeripheralIcon> selected)
 	{
+		if (caseNum == null || selected == null)
+		{
+			throw new NullPointerException();
+		}
+		if (selected.isEmpty())
+		{
+			throw new IllegalArgumentException();
+		}
 		int caseIndex = 0;
 		for (int i = 0; i < this.cases.size(); i++)
 		{
@@ -77,9 +87,14 @@ public class StorageManager
 	 * 
 	 *  @param caseNum the case number for the case being initialized
 	 *  @return <code>CaseCreationResult</code> enum type indicating whether or not the case creation operation was successful
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public CaseCreationResult createCase(String caseNum) 
 	{
+		if (caseNum == null)
+		{
+			throw new NullPointerException();
+		}
 		if (!this.validateCaseNum(caseNum))
 		{
 			return CaseCreationResult.INVALID_CASE_NUMBER;

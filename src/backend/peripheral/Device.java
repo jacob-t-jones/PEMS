@@ -23,9 +23,14 @@ public class Device
 	/** Constructs an object representing an external device detected by this program.
 	 * 
 	 *  @param file The <code>File</code> object representing this peripheral device
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public Device(File file)
 	{
+		if (file == null)
+		{
+			throw new NullPointerException();
+		}
 		this.file = file;
 		this.files = this.retrieveFiles(this.file, new ArrayList<PeripheralFile>());
 	}

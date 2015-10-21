@@ -71,9 +71,14 @@ public class LiveFile extends CaseFile
 	/** Sets the value within the <code>img</code> instance field.
 	 * 
 	 *  @param img the <code>Img</code> object to set <code>img</code> to
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public void setImg(Img img)
 	{
+		if (img == null)
+		{
+			throw new NullPointerException();
+		}
 		this.img = img;
 	}
 	

@@ -29,9 +29,14 @@ public class CaseFile
 	 *  @param parentCase the instance of <code>Case</code> that this file is attached to
 	 *  @param filePath <code>String</code> value containing the full file path associated with this file
 	 *  @throws InvalidFileException if there is an error in reading this file into memory
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public CaseFile(Case parentCase, String filePath) throws InvalidFileException 
 	{
+		if (parentCase == null || filePath == null)
+		{
+			throw new NullPointerException();
+		}
 		this.parentCase = parentCase;
 		this.filePath = filePath;
 		this.fileName = this.retrieveFileName();

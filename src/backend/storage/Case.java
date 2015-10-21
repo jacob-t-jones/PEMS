@@ -29,9 +29,14 @@ public class Case
 	/** Initializes and populates instance fields.
 	 * 
 	 *  @param caseNum the number of the case being constructed
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public Case(String caseNum)
 	{
+		if (caseNum == null)
+		{
+			throw new NullPointerException();
+		}
 		this.caseNum = caseNum;
 		this.backupFiles = this.retrieveBackupFiles();
 		this.liveFiles = this.retrieveLiveFiles();
@@ -59,9 +64,19 @@ public class Case
 	 *  @param mouse the <code>MouseListener</code> for the generated icons
 	 *  @param alignmentX the horizontal alignment of the generated icons
 	 *  @return an <code>ArrayList</code> of <code>CaseIcon</code> objects generated using <code>liveFiles</code>
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if <code>size</code> is zero or negative
 	 */
 	public ArrayList<CaseIcon> getCaseIcons(int size, MouseListener mouse, float alignmentX)
 	{
+		if (mouse == null)
+		{
+			throw new NullPointerException();
+		}
+		if (size <= 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		ArrayList<CaseIcon> caseIcons = new ArrayList<CaseIcon>();
 		for (int i = 0; i < this.liveFiles.size(); i++)
 		{
@@ -102,9 +117,14 @@ public class Case
 	 *  
 	 *  @param fileIndex the index within this case of the file being looked at
 	 *  @return <code>int</code> value representing the next version index in line for the chosen file
+	 *  @throws IllegalArgumentException if the specified index is negative
 	 */
 	public int getCurrentVersionIndex(int fileIndex)
 	{
+		if (fileIndex < 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		int index = -1;
 		for (int i = 0; i < this.backupFiles.size(); i++)
 		{
@@ -124,9 +144,14 @@ public class Case
 	 *  @param file the <code>PeripheralFile</code> object to add to this case
 	 *  @param delete <code>boolean</code> value indicating whether or not the original copy of the file should be deleted
 	 *  @return <code>AddFileResult</code> enum type indicating whether or not the add file operation was successful
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public AddFileResult addFile(PeripheralFile file, boolean delete)
 	{
+		if (file == null)
+		{
+			throw new NullPointerException();
+		}
 		Path currentPath = Paths.get(file.getFilePath());
 		Path livePath = Paths.get("cases/live/" + this.caseNum + "/" + this.caseNum + " (" + this.getCurrentFileIndex() + ")" + file.getFileExt());
 		Path backupPath = Paths.get("cases/backup/" + this.caseNum + "/" + this.caseNum + " (" + this.getCurrentFileIndex() + "-" + 0 + ")" + file.getFileExt());
@@ -153,9 +178,14 @@ public class Case
 	/** Removes the instance of <code>LiveFile</code> passed in as a parameter from the <code>livesFiles</code> <code>ArrayList</code>.
 	 * 
 	 *  @param file the file in question
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public void removeFile(LiveFile file)
 	{
+		if (file == null)
+		{
+			throw new NullPointerException();
+		}
 		this.liveFiles.remove(file);
 	}
 	

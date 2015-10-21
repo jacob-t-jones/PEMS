@@ -26,9 +26,14 @@ public class PeripheralFile
 	 *  @param parentDevice <code>Device</code> object representing the peripheral device this file is located on
 	 *  @param filePath the full path for this file
 	 *  @throws InvalidFileException if there is an error in reading this file into memory
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public PeripheralFile(Device parentDevice, String filePath) throws InvalidFileException
 	{
+		if (parentDevice == null || filePath == null)
+		{
+			throw new NullPointerException();
+		}
 		this.parentDevice = parentDevice;
 		this.filePath = filePath;
 		this.fileExt = this.retrieveFileExt();

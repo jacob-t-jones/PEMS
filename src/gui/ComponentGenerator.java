@@ -7,9 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.font.*;
 import java.util.*;
-
 import javax.swing.*;
-
 import gui.components.field.*;
 import gui.display.dialogues.*;
 
@@ -359,6 +357,144 @@ public class ComponentGenerator
 		return newMenuItem;
 	}
 	
+	/** Creates and returns a <code>JSpinner</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param value the initial value to display in the <code>JSpinner</code>
+	 *  @param min the minimum value for the <code>JSpinner</code>
+	 *  @param max the maximum value for the <code>JSpinner</code>
+	 *  @param increment the plus or minus increment for the <code>JSpinner</code>
+	 *  @param height the height of the <code>JSpinner</code>
+	 *  @return <code>JSpinner</code> that complies with the passed in parameter values
+	 */
+	public static JSpinner generateNumberSpinner(int value, int min, int max, int increment, int height)
+	{
+		JSpinner newSpinner = new JSpinner(new SpinnerNumberModel(value, min, max, increment));
+		newSpinner.setMinimumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setMaximumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		return newSpinner;
+	}
+	
+	/** Creates and returns a <code>JSpinner</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param value the initial value to display in the <code>JSpinner</code>
+	 *  @param min the minimum value for the <code>JSpinner</code>
+	 *  @param max the maximum value for the <code>JSpinner</code>
+	 *  @param increment the plus or minus increment for the <code>JSpinner</code>
+	 *  @param height the height of the <code>JSpinner</code>
+	 *  @param alignmentX the horizontal alignment of the <code>JSpinner</code>
+	 *  @return <code>JSpinner</code> that complies with the passed in parameter values
+	 */
+	public static JSpinner generateNumberSpinner(int value, int min, int max, int increment, int height, float alignmentX)
+	{
+		JSpinner newSpinner = new JSpinner(new SpinnerNumberModel(value, min, max, increment));
+		newSpinner.setMinimumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setMaximumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setAlignmentX(alignmentX);
+		return newSpinner;
+	}
+	
+	/** Creates and returns a <code>JSpinner</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param value the initial value to display in the <code>JSpinner</code>
+	 *  @param min the minimum value for the <code>JSpinner</code>
+	 *  @param max the maximum value for the <code>JSpinner</code>
+	 *  @param increment the plus or minus increment for the <code>JSpinner</code>
+	 *  @param height the height of the <code>JSpinner</code>
+	 *  @param alignmentX the horizontal alignment of the <code>JSpinner</code>
+	 *  @param alignmentY the vertical alignment of the <code>JSpinner</code>
+	 *  @return <code>JSpinner</code> that complies with the passed in parameter values
+	 */
+	public static JSpinner generateNumberSpinner(int value, int min, int max, int increment, int height, float alignmentX, float alignmentY)
+	{
+		JSpinner newSpinner = new JSpinner(new SpinnerNumberModel(value, min, max, increment));
+		newSpinner.setMinimumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setMaximumSize(new Dimension(newSpinner.getPreferredSize().width, height));
+		newSpinner.setAlignmentX(alignmentX);
+		newSpinner.setAlignmentY(alignmentY);
+		return newSpinner;
+	}
+	
+	/** Creates and returns a <code>JRadioButton</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display with the <code>JRadioButton</code>
+	 *  @param selected <code>boolean</code> value indicating whether or not the <code>JRadioButton</code> should be initially selected
+	 *  @return <code>JRadioButton</code> that complies with the passed in parameter values
+	 */
+	public static JRadioButton generateRadioButton(String text, boolean selected)
+	{
+		JRadioButton newRadioButton = new JRadioButton(text, selected);
+		return newRadioButton;
+	}
+	
+	/** Creates and returns a <code>JRadioButton</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display with the <code>JRadioButton</code>
+	 *  @param selected <code>boolean</code> value indicating whether or not the <code>JRadioButton</code> should be initially selected
+	 *  @param alignmentX the horizontal alignment of the <code>JRadioButton</code>
+	 *  @return <code>JRadioButton</code> that complies with the passed in parameter values
+	 */
+	public static JRadioButton generateRadioButton(String text, boolean selected, float alignmentX)
+	{
+		JRadioButton newRadioButton = new JRadioButton(text, selected);
+		newRadioButton.setAlignmentX(alignmentX);
+		return newRadioButton;
+	}
+	
+	/** Creates and returns a <code>JRadioButton</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param text the text to display with the <code>JRadioButton</code>
+	 *  @param selected <code>boolean</code> value indicating whether or not the <code>JRadioButton</code> should be initially selected
+	 *  @param alignmentX the horizontal alignment of the <code>JRadioButton</code>
+	 *  @param alignmentY the vertical alignment of the <code>JRadioButton</code>
+	 *  @return <code>JRadioButton</code> that complies with the passed in parameter values
+	 */
+	public static JRadioButton generateRadioButton(String text, boolean selected, float alignmentX, float alignmentY)
+	{
+		JRadioButton newRadioButton = new JRadioButton(text, selected);
+		newRadioButton.setAlignmentX(alignmentX);
+		newRadioButton.setAlignmentY(alignmentY);
+		return newRadioButton;
+	}
+	
+	/** Creates and returns a <code>JComboBox</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param items genericized array of items to display in the <code>JComboBox</code>
+	 *  @return <code>JComboBox</code> that complies with the passed in parameter values
+	 */
+	public static <T> JComboBox<T> generateComboBox(T[] items)
+	{
+		JComboBox<T> newComboBox = new JComboBox<T>(items);
+		return newComboBox;
+	}
+	
+	/** Creates and returns a <code>JComboBox</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param items genericized array of items to display in the <code>JComboBox</code>
+	 *  @param alignmentX the horizontal alignment of the <code>JComboBox</code>
+	 *  @return <code>JComboBox</code> that complies with the passed in parameter values
+	 */
+	public static <T> JComboBox<T> generateComboBox(T[] items, float alignmentX)
+	{
+		JComboBox<T> newComboBox = new JComboBox<T>(items);
+		newComboBox.setAlignmentX(alignmentX);
+		return newComboBox;
+	}
+	
+	/** Creates and returns a <code>JComboBox</code> that complies with the passed in parameter values.
+	 * 
+	 *  @param items genericized array of items to display in the <code>JComboBox</code>
+	 *  @param alignmentX the horizontal alignment of the <code>JComboBox</code>
+	 *  @param alignmentY the vertical alignment of the <code>JComboBox</code>
+	 *  @return <code>JComboBox</code> that complies with the passed in parameter values
+	 */
+	public static <T> JComboBox<T> generateComboBox(T[] items, float alignmentX, float alignmentY)
+	{
+		JComboBox<T> newComboBox = new JComboBox<T>(items);
+		newComboBox.setAlignmentX(alignmentX);
+		newComboBox.setAlignmentY(alignmentY);
+		return newComboBox;
+	}
+	
 	/** Creates and returns an <code>InchesField</code> that complies with the passed in parameter values.
 	 * 
 	 *  @param value the default value displayed in the field
@@ -504,75 +640,6 @@ public class ComponentGenerator
 		Map<TextAttribute, Integer>  attributes = new HashMap<TextAttribute, Integer>();
 		attributes.put(TextAttribute.UNDERLINE, -1);
 		return font.deriveFont(attributes);
-	}
-	
-	public static JSpinner generateNumberSpinner(int value, int min, int max, int increment, int height)
-	{
-		JSpinner newSpinner = new JSpinner(new SpinnerNumberModel(value, min, max, increment));
-		newSpinner.setMinimumSize(new Dimension(newSpinner.getPreferredSize().width, height));
-		newSpinner.setMaximumSize(new Dimension(newSpinner.getPreferredSize().width, height));
-		return newSpinner;
-	}
-	
-	public static JSpinner generateNumberSpinner(int value, int min, int max, int increment, int height, float alignmentX)
-	{
-		JSpinner newSpinner = new JSpinner(new SpinnerNumberModel(value, min, max, increment));
-		newSpinner.setMinimumSize(new Dimension(newSpinner.getPreferredSize().width, height));
-		newSpinner.setMaximumSize(new Dimension(newSpinner.getPreferredSize().width, height));
-		newSpinner.setAlignmentX(alignmentX);
-		return newSpinner;
-	}
-	
-	public static JSpinner generateNumberSpinner(int value, int min, int max, int increment, int height, float alignmentX, float alignmentY)
-	{
-		JSpinner newSpinner = new JSpinner(new SpinnerNumberModel(value, min, max, increment));
-		newSpinner.setMinimumSize(new Dimension(newSpinner.getPreferredSize().width, height));
-		newSpinner.setMaximumSize(new Dimension(newSpinner.getPreferredSize().width, height));
-		newSpinner.setAlignmentX(alignmentX);
-		newSpinner.setAlignmentY(alignmentY);
-		return newSpinner;
-	}
-	
-	public static JRadioButton generateRadioButton(String text, boolean selected)
-	{
-		JRadioButton newRadioButton = new JRadioButton(text, selected);
-		return newRadioButton;
-	}
-	
-	public static JRadioButton generateRadioButton(String text, boolean selected, float alignmentX)
-	{
-		JRadioButton newRadioButton = new JRadioButton(text, selected);
-		newRadioButton.setAlignmentX(alignmentX);
-		return newRadioButton;
-	}
-	
-	public static JRadioButton generateRadioButton(String text, boolean selected, float alignmentX, float alignmentY)
-	{
-		JRadioButton newRadioButton = new JRadioButton(text, selected);
-		newRadioButton.setAlignmentX(alignmentX);
-		newRadioButton.setAlignmentY(alignmentY);
-		return newRadioButton;
-	}
-	
-	public static <T> JComboBox<T> generateComboBox(T[] items)
-	{
-		JComboBox<T> newComboBox = new JComboBox<T>(items);
-		return newComboBox;
-	}
-	
-	public static <T> JComboBox<T> generateComboBox(T[] items, float alignmentX)
-	{
-		JComboBox<T> newComboBox = new JComboBox<T>(items);
-		newComboBox.setAlignmentX(alignmentX);
-		return newComboBox;
-	}
-	
-	public static <T> JComboBox<T> generateComboBox(T[] items, float alignmentX, float alignmentY)
-	{
-		JComboBox<T> newComboBox = new JComboBox<T>(items);
-		newComboBox.setAlignmentX(alignmentX);
-		newComboBox.setAlignmentY(alignmentY);
-		return newComboBox;
 	}
 	
 }

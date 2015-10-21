@@ -6,12 +6,9 @@ package gui.components.icon;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
-
 import javax.imageio.*;
 import javax.swing.*;
-
 import org.imgscalr.*;
-
 import backend.exceptions.*;
 import backend.storage.file.img.*;
 import gui.*;
@@ -32,9 +29,14 @@ public class ImgIcon extends JLabel
 	 * 
 	 *  @param filePath the file path of the image to display in this icon
 	 *  @throws InvalidFileException if the image contained within this component can not be read into memory
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public ImgIcon(String filePath) throws InvalidFileException 
 	{
+		if (filePath == null)
+		{
+			throw new NullPointerException();
+		}
 		this.image = this.retrieveImage(filePath);
 		super.setIcon(new ImageIcon(this.image));
 	}
@@ -45,9 +47,19 @@ public class ImgIcon extends JLabel
 	 *  @param method the ImgScalr resampling method to use
 	 *  @param size the size that this icon should be shrunk down to
 	 *  @throws InvalidFileException if the image contained within this component can not be read into memory
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if <code>size</code> is negative or zero
 	 */
 	public ImgIcon(String filePath, Scalr.Method method, int size) throws InvalidFileException 
 	{
+		if (filePath == null || method == null)
+		{
+			throw new NullPointerException();
+		}
+		if (size <= 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.image = Scalr.resize(this.retrieveImage(filePath), method, size, Scalr.OP_ANTIALIAS);
 		super.setIcon(new ImageIcon(this.image));
 	}
@@ -59,9 +71,19 @@ public class ImgIcon extends JLabel
 	 *  @param width the width that this icon should be shrunk down to
 	 *  @param height the height that this icon should be shrunk down to
 	 *  @throws InvalidFileException if the image contained within this component can not be read into memory
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if <code>width</code> or <code>height</code> is negative or zero
 	 */
 	public ImgIcon(String filePath, Scalr.Method method, int width, int height) throws InvalidFileException 
 	{
+		if (filePath == null || method == null)
+		{
+			throw new NullPointerException();
+		}
+		if (width <= 0 || height <= 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.image = Scalr.resize(this.retrieveImage(filePath), method, width, height, Scalr.OP_ANTIALIAS);
 		super.setIcon(new ImageIcon(this.image));
 	}
@@ -69,9 +91,14 @@ public class ImgIcon extends JLabel
 	/** Retrieves the image found within the passed in <code>Img</code> object. Displays it within this icon.
 	 * 
 	 *  @param img the <code>Img</code> in question
+	 *  @throws NullPointerException if the parameter is null
 	 */
 	public ImgIcon(Img img)
 	{
+		if (img == null)
+		{
+			throw new NullPointerException();
+		}
 		this.image = img.getImage();
 		super.setIcon(new ImageIcon(this.image));
 	}
@@ -81,9 +108,19 @@ public class ImgIcon extends JLabel
 	 *  @param img the <code>Img</code> in question
 	 *  @param method the ImgScalr resampling method to use
 	 *  @param size the size that this icon should be shrunk down to
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if <code>size</code> is negative or zero
 	 */
 	public ImgIcon(Img img, Scalr.Method method, int size)
 	{
+		if (img == null || method == null)
+		{
+			throw new NullPointerException();
+		}
+		if (size <= 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.image = Scalr.resize(img.getImage(), method, size, Scalr.OP_ANTIALIAS);
 		super.setIcon(new ImageIcon(this.image));
 	}
@@ -94,9 +131,19 @@ public class ImgIcon extends JLabel
 	 *  @param method the ImgScalr resampling method to use
 	 *  @param width the width that this icon should be shrunk down to
 	 *  @param height the height that this icon should be shrunk down to
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if <code>width</code> or <code>height</code> is negative or zero
 	 */
 	public ImgIcon(Img img, Scalr.Method method, int width, int height)
 	{
+		if (img == null || method == null)
+		{
+			throw new NullPointerException();
+		}
+		if (width <= 0 || height <= 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.image = Scalr.resize(img.getImage(), method, width, height, Scalr.OP_ANTIALIAS);
 		super.setIcon(new ImageIcon(this.image));
 	}
@@ -114,9 +161,19 @@ public class ImgIcon extends JLabel
 	 * 
 	 *  @param a <code>Point</code> object that serves as one corner of the rectangle
 	 *  @param b <code>Point</code> object that serves as the other corner of the rectangle
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if the <code>Point</code> coordinates are invalid
 	 */
 	public void drawCropBox(Point a, Point b)
 	{
+		if (a == null || b == null)
+		{
+			throw new NullPointerException();
+		}
+		if ((int)a.getX() < 0 || (int)a.getX() >= this.image.getWidth() || (int)a.getY() < 0 || (int)a.getY() >= this.image.getHeight() || (int)b.getX() < 0 || (int)b.getX() >= this.image.getWidth() || (int)b.getY() < 0 || (int)b.getY() >= this.image.getHeight())
+		{
+			throw new IllegalArgumentException();
+		}
 		Graphics2D g = (Graphics2D)this.getGraphics();
 		super.update(g);
 		g.setColor(ComponentGenerator.CROPBOX_COLOR);
@@ -131,9 +188,14 @@ public class ImgIcon extends JLabel
 	 * 
 	 *  @param width the new width of the image, in pixels
 	 *  @param height the new height of the image, in pixels
+	 *  @throws IllegalArgumentException if <code>width</code> or <code>height</code> is negative or zero
 	 */
 	public void resizeImage(int width, int height)
 	{
+		if (width <= 0 || height <= 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.image = Scalr.resize(this.image, Scalr.Method.ULTRA_QUALITY, width, height, Scalr.OP_ANTIALIAS);
 	}
 	
