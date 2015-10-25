@@ -118,9 +118,7 @@ Andrew Rottier
 	* Initial code commenting
 	
 Kevin Ross
-
 [GitHub](https://github.com/rosskPCS)
-
 [LinkedIn](https://www.linkedin.com/pub/kevin-ross/12/499/7b6)
 		
 * Project Manager
