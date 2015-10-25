@@ -1,11 +1,11 @@
 PEMS (Police Evidence Management System) Version 0.1
 https://github.com/jacob-t-jones/PEMS
 
-PEMS is a simple application specifically designed for use by law enforcement officers, allowing them to easily manage, edit, 
+<p>PEMS is a simple application specifically designed for use by law enforcement officers, allowing them to easily manage, edit, 
 store, and backup evidence files acquired during investigations. Written in Java, the program is almost completely GUI based 
 and provides basic image manipulation capabilities, an easy to use photo importation interface, and the ability to backup 
 evidence files both locally and remotely. Although written and designed with the Plainville Police Department in mind, it can 
-be modified to fit the needs of most law enforcement agencies.
+be modified to fit the needs of most law enforcement agencies.</p>
 
 Installation
 ----------
