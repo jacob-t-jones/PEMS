@@ -22,7 +22,7 @@ Changelog
 ----------
 
 * Version 0.1
-..* Initial beta release
+⋅⋅* Initial beta release
 		
 Licensing
 ----------
