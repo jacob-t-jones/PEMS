@@ -88,9 +88,9 @@ Credits
 ----------
 
 Jacob Jones
-
+<br />
 [GitHub](https://github.com/jacob-t-jones)
-
+<br />
 [LinkedIn](https://www.linkedin.com/pub/jacob-jones/b7/650/2a3)
 	
 * Lead Programmer
@@ -104,9 +104,9 @@ Jacob Jones
 	* Javadoc creation
 		
 Andrew Rottier
-
+<br />
 [GitHub](https://github.com/AndrewRot)
-
+<br />
 [LinkedIn](https://www.linkedin.com/pub/andrew-rottier/b4/307/68a)
 	
 * Lead Programmer
@@ -132,5 +132,5 @@ Kevin Ross
 Contact
 ----------
 
-Any questions, comments, or concerns regarding PEMS can be referred to [Jacob Jones](jacob.theodore.jones@gmail.com) or [Kevin
-Ross](rossk@plainvilleschools.org).
+Any questions, comments, or concerns regarding PEMS can be referred to [Jacob Jones](mailto:jacob.theodore.jones@gmail.com) or [Kevin
+Ross](mailto:rossk@plainvilleschools.org).
