@@ -87,44 +87,44 @@ Resources Utilized
 Credits
 ----------
 
-	Jacob Jones
-	https://github.com/jacob-t-jones
-	https://www.linkedin.com/pub/jacob-jones/b7/650/2a3
+Jacob Jones
+[GitHub](https://github.com/jacob-t-jones)
+[LinkedIn](https://www.linkedin.com/pub/jacob-jones/b7/650/2a3)
 	
-		* Lead Programmer
-		* Responsibilities included (but were not limited to):
-			- Code for backend image importation and case creation
-			- General planning and design implementation
-			- Class hierarchy and project organization
-			- Error and exception handling
-			- File system creation and organization
-			- Development of the graphical user interface
-			- Javadoc creation
+* Lead Programmer
+* Responsibilities included (but were not limited to):
+	* Code for backend image importation and case creation
+	* General planning and design implementation
+	* Class hierarchy and project organization
+	* Error and exception handling
+	* File system creation and organization
+	* Development of the graphical user interface
+	* Javadoc creation
 		
-	Andrew Rottier
-	https://github.com/AndrewRot
-	https://www.linkedin.com/pub/andrew-rottier/b4/307/68a
+Andrew Rottier
+[GitHub](https://github.com/AndrewRot)
+[LinkedIn](https://www.linkedin.com/pub/andrew-rottier/b4/307/68a)
 	
-		* Lead Programmer
-		* Responsibilities included (but were not limited to):
-			- Development of the graphical user interface
-			- Installation of externeral libraries 
-			- General planning and design implementation
-			- Implementation of the printing interface and procedure
-			- Initial code commenting
+* Lead Programmer
+* Responsibilities included (but were not limited to):
+	* Development of the graphical user interface
+	* Installation of externeral libraries 
+	* General planning and design implementation
+	* Implementation of the printing interface and procedure
+	* Initial code commenting
 	
-	Kevin Ross
-	https://github.com/rosskPCS
-	https://www.linkedin.com/pub/kevin-ross/12/499/7b6
+Kevin Ross
+[GitHub](https://github.com/rosskPCS)
+[LinkedIn](https://www.linkedin.com/pub/kevin-ross/12/499/7b6)
 		
-		* Project Manager
-		* Responsibilities included (but were not limited to):
-			- Project conception
-			- Beta testing and bug detection
-			- Application installation and support for the Plainville Police Department
+* Project Manager
+* Responsibilities included (but were not limited to):
+	* Project conception
+	* Beta testing and bug detection
+	* Application installation and support for the Plainville Police Department
 			
 Contact
 ----------
 
-Any questions, comments, or concerns regarding PEMS can be referred to Jacob Jones (jacob.theodore.jones@gmail.com) or Kevin
-Ross (rossk@plainvilleschools.org).
+Any questions, comments, or concerns regarding PEMS can be referred to [Jacob Jones](jacob.theodore.jones@gmail.com) or [Kevin
+Ross](rossk@plainvilleschools.org).
