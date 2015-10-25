@@ -1,6 +1,11 @@
 [PEMS (Police Evidence Management System)](https://github.com/jacob-t-jones/PEMS)
 ----------
 
+Copyright &copy; 2015 Jacob Jones and Andrew Rottier
+
+Overview
+----------
+
 PEMS is a simple application specifically designed for use by law enforcement officers, allowing them to easily manage, edit, 
 store, and backup evidence files acquired during investigations. Written in Java, the program is almost completely GUI based 
 and provides basic image manipulation capabilities, an easy to use photo importation interface, and the ability to backup 
