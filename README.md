@@ -46,6 +46,7 @@ Libraries Incorporated
 	* Provides many of the basic image editing capabilities (resizing, rotating, brightening, etc.) offered by PEMS
 
 * [Sanselan (Version 0.97)](https://commons.apache.org/proper/commons-imaging/)
+	* Copyright &copy; 2009–2015 [The Apache Software Foundation](http://www.apache.org/)
 	* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 	* Used to import images from memory and retrieve their metadata
 
