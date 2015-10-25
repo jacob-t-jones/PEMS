@@ -42,61 +42,47 @@ Libraries Incorporated
 ----------
 
 * [imgscalr (Version 4.2)](http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/)
-..* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-..* Provides many of the basic image editing capabilities (resizing, rotating, brightening, etc.) offered by PEMS
+	* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+	* Provides many of the basic image editing capabilities (resizing, rotating, brightening, etc.) offered by PEMS
 
 * [Sanselan (Version 0.97)](https://commons.apache.org/proper/commons-imaging/)
-..* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-..* Used to import images from memory and retrieve their metadata
+	* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+	* Used to import images from memory and retrieve their metadata
 
 * [PDFBox (Version 1.8.1)](https://pdfbox.apache.org/index.html)
-..* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) 
-..* Utilized to generate and modify PDF files during the PEMS printing procedure 
+	* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) 
+	* Utilized to generate and modify PDF files during the PEMS printing procedure 
 		
 Resources Utilized
 ----------
 
-	add.png
-	
-		* Taken from the Tango! project set
-		* Released into the public domain by its creators
-		* Can be found at https://commons.wikimedia.org/wiki/File:List-add.svg
+* [add.png](https://commons.wikimedia.org/wiki/File:List-add.svg)
+	* Taken from the [Tango!](http://tango.freedesktop.org/Tango_Desktop_Project) project set
+	* Released into the public domain by its creators
 		
-	delete.png
-	
-		* Taken from the Tango! project set
-		* Released into the public domain by its creators
-		* Can be found at https://commons.wikimedia.org/wiki/File:Edit-delete.svg
+* [delete.png](https://commons.wikimedia.org/wiki/File:Edit-delete.svg)
+	* Taken from the [Tango!](http://tango.freedesktop.org/Tango_Desktop_Project) project set
+	* Released into the public domain by its creators	
 		
-	folder.png
+* [folder.png](https://commons.wikimedia.org/wiki/File:Folder.svg)
+	* Taken from the [Tango!](http://tango.freedesktop.org/Tango_Desktop_Project) project set
+	* Released into the public domain by its creators
+
+* [harddrive.png](https://commons.wikimedia.org/wiki/File:Drive-removable-media.svg)
+	* Taken from the [Tango!](http://tango.freedesktop.org/Tango_Desktop_Project) project set
+	* Released into the public domain by its creators
 		
-		* Taken from the Tango! project set
-		* Released into the public domain by its creators
-		* Can be found at https://commons.wikimedia.org/wiki/File:Folder.svg
+* [next.png](https://commons.wikimedia.org/wiki/File:Go-next.svg)
+	* Taken from the [Tango!](http://tango.freedesktop.org/Tango_Desktop_Project) project set
+	* Released into the public domain by its creators
 		
-	harddrive.png
-	
-		* Taken from the Tango! project set
-		* Released into the public domain by its creators
-		* Can be found at https://commons.wikimedia.org/wiki/File:Drive-removable-media.svg
+* [printer.png](https://commons.wikimedia.org/wiki/File:Printer.svg)
+	* Taken from the [Tango!](http://tango.freedesktop.org/Tango_Desktop_Project) project set
+	* Released into the public domain by its creators
 		
-	next.png
-	
-		* Taken from the Tango! project set
-		* Released into the public domain by its creators
-		* Can be found at https://commons.wikimedia.org/wiki/File:Go-next.svg
-		
-	printer.png
-	
-		* Taken from the Tango! project set
-		* Released into the public domain by its creators
-		* Can be found at https://commons.wikimedia.org/wiki/File:Printer.svg
-		
-	refresh.png
-	
-		* Taken from the Tango! project set
-		* Released into the public domain by its creators
-		* Can be found at https://commons.wikimedia.org/wiki/File:View-refresh.svg
+* [refresh.png](https://commons.wikimedia.org/wiki/File:View-refresh.svg)
+	* Taken from the [Tango!](http://tango.freedesktop.org/Tango_Desktop_Project) project set
+	* Released into the public domain by its creators
 
 Credits
 ----------
