@@ -42,15 +42,17 @@ Libraries Incorporated
 ----------
 
 * [imgscalr (Version 4.2)](http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/)
+ 	* Copyright &copy; 2012 [The Buzz Media](http://www.thebuzzmedia.com/)
 	* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 	* Provides many of the basic image editing capabilities (resizing, rotating, brightening, etc.) offered by PEMS
 
 * [Sanselan (Version 0.97)](https://commons.apache.org/proper/commons-imaging/)
-	* Copyright &copy; 2009–2015 [The Apache Software Foundation](http://www.apache.org/)
+	* Copyright &copy; 2007-2015 [The Apache Software Foundation](http://www.apache.org/)
 	* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 	* Used to import images from memory and retrieve their metadata
 
 * [PDFBox (Version 1.8.1)](https://pdfbox.apache.org/index.html)
+	* Copyright &copy; 2009–2015 [The Apache Software Foundation](http://www.apache.org/)
 	* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) 
 	* Utilized to generate and modify PDF files during the PEMS printing procedure 
 		
