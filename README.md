@@ -88,7 +88,9 @@ Credits
 ----------
 
 Jacob Jones
+
 [GitHub](https://github.com/jacob-t-jones)
+
 [LinkedIn](https://www.linkedin.com/pub/jacob-jones/b7/650/2a3)
 	
 * Lead Programmer
@@ -102,7 +104,9 @@ Jacob Jones
 	* Javadoc creation
 		
 Andrew Rottier
+
 [GitHub](https://github.com/AndrewRot)
+
 [LinkedIn](https://www.linkedin.com/pub/andrew-rottier/b4/307/68a)
 	
 * Lead Programmer
@@ -114,7 +118,9 @@ Andrew Rottier
 	* Initial code commenting
 	
 Kevin Ross
+
 [GitHub](https://github.com/rosskPCS)
+
 [LinkedIn](https://www.linkedin.com/pub/kevin-ross/12/499/7b6)
 		
 * Project Manager
