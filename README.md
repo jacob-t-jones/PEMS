@@ -22,7 +22,6 @@ Changelog
 ----------
 
 * Version 0.1
-	
 ..* Initial beta release
 		
 Licensing
@@ -42,23 +41,17 @@ with the project source code, and can be found in the "/docs/" directory.
 Libraries Incorporated
 ----------
 
-	imgscalr (Version 4.2)
-	http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/
-	
-		* Distributed under the Apache License Version 2.0
-		* Provides many of the basic image editing capabilities (resizing, rotating, brightening, etc.) offered by PEMS
+* [imgscalr (Version 4.2)](http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/)
+..* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+..* Provides many of the basic image editing capabilities (resizing, rotating, brightening, etc.) offered by PEMS
 
-	Sanselan (Version 0.97)
-	https://commons.apache.org/proper/commons-imaging/
-	
-		* Distributed under the Apache License Version 2.0
-		* Used to import images from memory and retrieve their metadata
+* [Sanselan (Version 0.97)](https://commons.apache.org/proper/commons-imaging/)
+..* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+..* Used to import images from memory and retrieve their metadata
 
-	PDFBox (Version 1.8.1)
-	https://pdfbox.apache.org/index.html
-
-		* Distributed under the Apache License Version 2.0 
-		* Utilized to generate and modify PDF files during the PEMS printing procedure 
+* [PDFBox (Version 1.8.1)](https://pdfbox.apache.org/index.html)
+..* Distributed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) 
+..* Utilized to generate and modify PDF files during the PEMS printing procedure 
 		
 Resources Utilized
 ----------
