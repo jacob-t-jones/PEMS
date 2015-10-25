@@ -9,8 +9,6 @@ import java.awt.print.*;
 import java.io.*;
 import java.util.*;
 import javax.print.*;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.*;
 import org.apache.pdfbox.exceptions.*;
 import org.apache.pdfbox.pdmodel.*;
@@ -18,12 +16,18 @@ import org.apache.pdfbox.pdmodel.edit.*;
 import org.apache.pdfbox.pdmodel.font.*;
 import org.apache.pdfbox.pdmodel.graphics.xobject.*;
 import org.imgscalr.*;
-
 import backend.exceptions.*;
 import gui.*;
 import gui.components.icon.*;
 import gui.display.*;
 
+/** Subclass of <code>JPanel</code> displayed when the user initiates a print job.
+ * 
+ *  @author Jacob Jones
+ *  @author Andrew Rottier
+ *  @since 0.1
+ *  @version 0.1
+ */
 public class PrintSetUpDialogue extends JPanel implements ActionListener, Printable
 {
 	
@@ -61,8 +65,24 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 	private String caseNum;
 	private int imgsPerPage;
 	
+	/** Populates this dialogue with all of the necessary graphical components. Handles backend retrieval of printer information.
+	 * 
+	 *  @param manager the instance of <code>FrameManager</code> that initialized this dialogue
+	 *  @param caseNum the number of the case that the images are being printed from
+	 *  @param selectedIcons <code>ArrayList</code> of <code>CaseIcon</code> objects representing the images to be printed
+	 *  @throws NullPointerException if any parameters are null
+	 *  @throws IllegalArgumentException if the <code>selectedIcons</code> <code>ArrayList</code> is empty
+	 */
 	public PrintSetUpDialogue(FrameManager manager, String caseNum, ArrayList<CaseIcon> selectedIcons) 
 	{
+		if (manager == null || caseNum == null || selectedIcons == null)
+		{
+			throw new NullPointerException();
+		}
+		if (selectedIcons.size() == 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		this.manager = manager;
 		this.caseNum = caseNum;
 		this.selectedIcons = selectedIcons;
@@ -82,11 +102,43 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		this.add(this.container);
 	}
 	
+	/** Values used to represent the result of calling the <code>initiatePrint</code> method.
+	 */
 	public enum PrintResult
 	{
 		PDF_GENERATION_FAILED, PDF_NOT_PRINTABLE, PRINTER_NOT_FOUND, UNEXPECTED_FAILURE, SUCCESS
 	}
 	
+	/** Mandatory method required in all classes that implement <code>ActionListener</code>.
+	 *  <p>
+	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
+	 *  <ul>
+	 *  	<li><code>fullPageButton</code></li>
+	 *  		<ul>
+	 *  			<li>Changes the selected print layout format to full page, without header.</li>
+	 *  		</ul>
+	 *  	<li><code>oneImgButton</code></li>
+	 *  		<ul>
+	 *  			<li>Changes the selected print layout format to one image per page, with header.</li>
+	 *  		</ul>
+	 *  	<li><code>twoImgButton</code></li>
+	 *  		<ul>
+	 *  			<li>Changes the selected print layout format to two images per page, with header.</li>
+	 *  		</ul>
+	 *  	<li><code>fourImgButton</code></li>
+	 *  		<ul>
+	 *  			<li>Changes the selected print layout format to four images per page, with header.</li>
+	 *  		</ul>
+	 *  	<li><code>eightImgButton</code></li>
+	 *  		<ul>
+	 *  			<li>Changes the selected print layout format to eight images per page, with header.</li>
+	 *  		</ul>
+	 *  	<li><code>printButton</code></li>
+	 *  		<ul>
+	 *  			<li>Calls the <code>initiatePrint</code> method; displays an error dialogue if the print job failed to complete, closes this window otherwise.</li>
+	 *  		</ul>
+	 *  </ul>
+	 */
 	public void actionPerformed(ActionEvent e) 
 	{
 		if (e.getSource() == this.fullPageButton)
@@ -128,15 +180,15 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 			PrintResult result = this.initiatePrint();
 			if (result == PrintResult.PDF_GENERATION_FAILED || result == PrintResult.PDF_NOT_PRINTABLE)
 			{
-				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "PEMS was unable to generate a printable PDF file containing the selected images. Please try again.\nIf the problem persists, restart the program and try once more.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "PEMS was unable to generate a printable PDF file containing the selected images. Please try again.\nIf the problem persists, restart the program and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			else if (result == PrintResult.PRINTER_NOT_FOUND)
 			{
-				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "The specified printer could not be located. Please select a different printer and try again.\nIf the problem persists, restart the program and try once more.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "The specified printer could not be located. Please select a different printer and try again.\nIf the problem persists, restart the program and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			else if (result == PrintResult.UNEXPECTED_FAILURE)
 			{
-				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "The print job you were attempting to complete unexpectedly failed. Please try again.\nIf the problem persists, restart the program and try once more.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this.manager.getMainWindow(), "The print job you were attempting to complete unexpectedly failed. Please try again.\nIf the problem persists, restart the program and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			else
 			{
@@ -145,6 +197,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		}
 	}
 	
+	/** Mandatory method required in all classes that implement <code>Printable</code>. Handles the actual process of printing the document.
+	 */
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException 
 	{
 		if (this.imgsPerPage == 0)
@@ -182,6 +236,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 
 	}
 	
+	/** Pulls the images for the layout preview from memory and places them into usable <code>ImgIcon</code> objects.
+	 */
 	private void generateLayoutDiagrams()
 	{
 		try
@@ -204,6 +260,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		}
 	}
 	
+	/** Adds all necessary graphics components to <code>optionContainer</code>.
+	 */
 	private void populateOptionContainer()
 	{
 		this.printerLabel = ComponentGenerator.generateLabel("Printer", ComponentGenerator.STANDARD_TEXT_FONT_BOLD, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
@@ -249,6 +307,10 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		this.optionContainer.add(this.landscapeRadioButton);
 	}
 	
+	/** Adds <code>optionContainer</code> and the selected layout diagram to <code>displayContainer</code>.
+	 * 
+	 *  @param imgsPerPage <code>int</code> value used to determine which print layout the user has selected
+	 */
 	private void populateDisplayContainer(int imgsPerPage)
 	{
 		this.displayContainer.removeAll();
@@ -278,6 +340,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		this.repaint();
 	}
 	
+	/** Adds <code>instructionsLabel</code>, <code>displayContainer</code>, and <code>printButton</code> to <code>container</code>.
+	 */
 	private void populateContainer()
 	{
 		this.instructionsLabel = ComponentGenerator.generateLabel("Below are the options for the current print job. Please ensure they are correct before continuing.", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
@@ -289,6 +353,10 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		this.container.add(this.printButton);
 	}
 	
+	/** Returns an array of <code>String</code> objects containing the names of all printers associated with the device.
+	 *
+	 *  @return array of <code>String</code> objects containing the names of all printers associated with the device
+	 */
 	private String[] retrievePrinterNames()
 	{
 		if (this.printers.length == 0)
@@ -301,12 +369,16 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 			String[] printerNames = new String[this.printers.length];
 			for (int i = 0; i < this.printers.length; i++)
 			{
-				printerNames[i] = this.printers[i].getName();
+				printerNames[i] = this.printers[i].getName().replace('_', ' ');
 			}
 			return printerNames;
 		}
 	}
-	
+
+	/** Initiates the printing process by pulling the selected user settings from this dialogue (orientation, number of copies, layout, etc.).
+	 * 
+	 *  @return <code>PrintResult</code> enum type indicating whether or not the print operation was successful
+	 */
 	private PrintResult initiatePrint()
 	{
 		PrinterJob job = PrinterJob.getPrinterJob();
@@ -377,7 +449,12 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		}
 		return PrintResult.SUCCESS;
 	}
-	
+
+	/** Generates a PDF file - formatted in accordance with the user settings specified in this dialogue - that contains all of the selected images, as well as a standardized department header.
+	 * 
+	 *  @throws IOException if modification of the generated PDF file unexpectedly fails
+	 *  @throws InvalidFileException if the program is unable to locate the logo file for the department header
+	 */
 	private void generatePDF() throws IOException, InvalidFileException 
 	{
 		this.generatePages();
@@ -394,6 +471,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		}
 	}
 	
+	/** Determines how many pages the PDF must contain in order to fit all of the selected images in the user-defined print format. 
+	 */
 	private void generatePages()
 	{
 		int numPages = 0;
@@ -418,6 +497,8 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		}
 	}
 	
+	/** Iterates through each object in the <code>selectedIcons</code> <code>ArrayList</code>, modifies them to fit the print format specified in this dialogue, and adds them to the <code>printableIcons</code> <code>ArrayList</code>.
+	 */
 	private void generatePrintableImgs()
 	{
 		for (int i = 0; i < this.selectedIcons.size(); i++)
@@ -437,6 +518,11 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		}
 	}
 	
+	/** Generates a header containing the department name, address, phone number, and logo. Adds it to the top of each page generated for the PDF.
+	 * 
+	 *  @throws IOException if modification of the generated PDF file unexpectedly fails
+	 *  @throws InvalidFileException if the program is unable to locate the logo file for the department header
+	 */
 	private void addHeader() throws IOException, InvalidFileException
 	{
 		ImgIcon logoIcon = new ImgIcon("resources/logosmall.png", Scalr.Method.ULTRA_QUALITY, 50);
@@ -464,6 +550,10 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		}
 	}
 	
+	/** Appends all of the images contained within the <code>CaseIcon</code> objects from the <code>printableIcons</code> <code>ArrayList</code> to the PDF.
+	 * 
+	 *  @throws IOException if modification of the generated PDF file unexpectedly fails
+	 */
 	private void addImgs() throws IOException
 	{
 		int currentImgIndex = 0;
@@ -528,7 +618,12 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 		}
 	}
 	
-	private CaseIcon resizeForPrint(CaseIcon icon) throws InvalidFileException
+	/** Returns a version of the <code>CaseIcon</code> object passed in as a parameter, with the image it contains scaled to fit the user-defined print format.
+	 * 
+	 *  @param icon <code>CaseIcon</code> object containing the image that will be modified
+	 *  @return a version of the <code>CaseIcon</code> object passed in as a parameter, with the image it contains scaled to fit the user-defined print format
+	 */
+	private CaseIcon resizeForPrint(CaseIcon icon) 
 	{
 		if (this.imgsPerPage == 1 || this.imgsPerPage == 2)
 		{
