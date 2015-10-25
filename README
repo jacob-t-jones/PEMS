@@ -1,0 +1,105 @@
+PEMS (Police Evidence Management System) Version 0.1
+
+PEMS is a simple application specifically designed for use by law enforcement officers, allowing them to easily manage, edit, 
+store, and backup evidence files acquired during investigations. Written in Java, the program is almost completely GUI based 
+and provides basic image manipulation capabilities, an easy to use photo importation interface, and the ability to backup 
+evidence files both locally and remotely. Although written and designed with the Plainville Police Department in mind, it can 
+be modified to fit the needs of most law enforcement agencies.
+
+Changelog
+----------
+
+	Version 0.1
+	
+		* Initial beta release
+
+Incorporated Libraries
+----------
+
+	imgscalr (Version 4.2)
+	
+		* Distributed under the Apache License Version 2.0
+		* Provides many of the basic image editing capabilities (resizing, rotating, brightening, etc.) offered by PEMS
+
+	Sanselan (Version 0.97)
+
+		* Distributed under the Apache License Version 2.0
+		* Used to import images from memory and retrieve their metadata
+
+	PDFBox (Version 1.8.1)
+
+		* Distributed under the Apache License Version 2.0 
+		* Utilized to generate and modify PDF files during the PEMS printing procedure 
+		
+Resources Utilized
+----------
+
+	add.png
+	
+		* Taken from the Tango! project set
+		* Released into the public domain by its creators
+		* Can be found at https://commons.wikimedia.org/wiki/File:List-add.svg
+		
+	delete.png
+	
+		* Taken from the Tango! project set
+		* Released into the public domain by its creators
+		* Can be found at https://commons.wikimedia.org/wiki/File:Edit-delete.svg
+		
+	folder.png
+		
+		* Taken from the Tango! project set
+		* Released into the public domain by its creators
+		* Can be found at https://commons.wikimedia.org/wiki/File:Folder.svg
+		
+	harddrive.png
+	
+		* Taken from the Tango! project set
+		* Released into the public domain by its creators
+		* Can be found at https://commons.wikimedia.org/wiki/File:Drive-removable-media.svg
+		
+	next.png
+	
+		* Taken from the Tango! project set
+		* Released into the public domain by its creators
+		* Can be found at https://commons.wikimedia.org/wiki/File:Go-next.svg
+		
+	printer.png
+	
+		* Taken from the Tango! project set
+		* Released into the public domain by its creators
+		* Can be found at https://commons.wikimedia.org/wiki/File:Printer.svg
+		
+	refresh.png
+	
+		* Taken from the Tango! project set
+		* Released into the public domain by its creators
+		* Can be found at https://commons.wikimedia.org/wiki/File:View-refresh.svg
+
+Credits
+----------
+
+	Jacob Jones
+	
+		* Lead Programmer
+		* Responsibilities included:
+			- Code for backend image importation and case creation
+			- Class hierarchy and project organization
+			- Error and exception handling
+			- Development of the graphical user interface
+			- JavaDoc creation
+		
+	Andrew Rottier
+	
+		* Lead Programmer
+		* Responsibilities included:
+			- Development of the graphical user interface
+	
+	Kevin Ross
+		
+		* Project Manager
+		* Responsibilities included:
+			- Project conception
+			- Beta testing
+		
+
