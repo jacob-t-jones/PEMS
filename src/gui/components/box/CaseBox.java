@@ -3,66 +3,56 @@
 // CaseBox.java
 
 package gui.components.box;
-import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import org.imgscalr.*;
-
-import backend.storage.file.img.Img;
-import exceptions.*;
+import backend.exceptions.*;
+import backend.storage.*;
 import gui.*;
-import gui.components.img.*;
-import gui.display.*;
-import gui.display.select.*;
+import gui.components.icon.*;
 
 public class CaseBox extends Box implements MouseListener
 {
 
-	private FrameManager manager;
-	private Img folderImg;
-	private JLabel nameLabel;
-	private String caseNum;
+	private Case curCase;
+	private ImgIcon folderIcon;
+	private JLabel numLabel;
 
-	public CaseBox(FrameManager manager, String caseNum)
+	public CaseBox(Case curCase)
 	{
 		super(BoxLayout.LINE_AXIS);
-		this.manager = manager;
-		this.caseNum = caseNum;
+		if (curCase == null)
+		{
+			throw new NullPointerException();
+		}
+		this.curCase = curCase;
 		this.populateBox();
-		super.addMouseListener(this);
 		super.revalidate();
 		super.repaint();
 	}
 	
 	private void populateBox()
 	{
-		this.nameLabel = ComponentGenerator.generateLabel(this.caseNum, ComponentGenerator.addUnderline(ComponentGenerator.SMALL_TEXT_FONT), ComponentGenerator.LINK_TEXT_COLOR);
-		this.nameLabel.addMouseListener(this);
+		this.numLabel = ComponentGenerator.generateLabel(this.curCase.getCaseNum(), ComponentGenerator.addUnderline(ComponentGenerator.SMALL_TEXT_FONT), ComponentGenerator.LINK_TEXT_COLOR);
+		this.numLabel.addMouseListener(this);
 		try 
 		{
-			this.folderImg = ComponentGenerator.generateImg("resources/folder.png");
-			this.folderImg.resizeImage(Scalr.Method.ULTRA_QUALITY, 25, 25);
-			super.add(this.folderImg);
+			this.folderIcon = new ImgIcon("resources/folder.png", Scalr.Method.ULTRA_QUALITY, 25, 25);
+			super.add(this.folderIcon);
 		} 
-		catch (InvalidImgException e) 
+		catch (InvalidFileException e) 
 		{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			super.add(Box.createHorizontalStrut(25));
 		}
 		super.add(Box.createHorizontalStrut(25));
-		super.add(this.nameLabel);
+		super.add(this.numLabel);
 	}
 
 	public void mouseClicked(MouseEvent e) 
 	{
-		if (e.getSource() == this)
-		{
-			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			this.manager.getMainWindow().pushPanel(new SelectPanel(this.manager, this.caseNum), "Import Images");
-		}
+
 	}
 
 	public void mousePressed(MouseEvent e) 
@@ -77,21 +67,21 @@ public class CaseBox extends Box implements MouseListener
 
 	public void mouseEntered(MouseEvent e) 
 	{
-		if (e.getSource() == this.nameLabel)
+		if (e.getSource() == this.numLabel)
 		{
-			this.nameLabel.setFont(ComponentGenerator.removeUnderline(ComponentGenerator.SMALL_TEXT_FONT));
-			this.nameLabel.revalidate();
-			this.nameLabel.repaint();
+			this.numLabel.setFont(ComponentGenerator.removeUnderline(ComponentGenerator.SMALL_TEXT_FONT));
+			this.numLabel.revalidate();
+			this.numLabel.repaint();
 		}
 	}
 
 	public void mouseExited(MouseEvent e) 
 	{
-		if (e.getSource() == this.nameLabel)
+		if (e.getSource() == this.numLabel)
 		{
-			this.nameLabel.setFont(ComponentGenerator.addUnderline(ComponentGenerator.SMALL_TEXT_FONT));
-			this.nameLabel.repaint();
-			this.nameLabel.repaint();
+			this.numLabel.setFont(ComponentGenerator.addUnderline(ComponentGenerator.SMALL_TEXT_FONT));
+			this.numLabel.repaint();
+			this.numLabel.repaint();
 		}
 	}
 		

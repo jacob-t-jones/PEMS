@@ -31,7 +31,8 @@ public class FrameManager
 		this.configuration = new Config();
 		this.peripheralManager = new PeripheralManager();
 		this.storageManager = new StorageManager();
-		this.mainWindow = new MainWindow("PEMS (Police Evidence Management System) Version 0.1", this, new StartPanel(this));
+		this.mainWindow = new MainWindow(this);
+		this.mainWindow.pushPanel(new StartPanel(this), "PEMS (Police Evidence Management System) Version 0.1");
 	}
 	
 	/** Returns the global instance of the <code>Config</code> class.

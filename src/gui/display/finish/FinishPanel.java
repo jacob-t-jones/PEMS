@@ -157,9 +157,6 @@ public class FinishPanel extends JPanel implements MouseListener
 	 */
 	private void returnHome()
 	{
-		this.manager.getMainWindow().setResizable(true);
-		this.manager.getMainWindow().setBounds(50, 50);
-		this.manager.getMainWindow().setResizable(false);
 		this.manager.closeDialogue();
 		this.manager.getMainWindow().pushPanel(new StartPanel(this.manager), "PEMS (Police Evidence Management System) Version 0.1");
 	}

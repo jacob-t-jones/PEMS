@@ -105,7 +105,6 @@ public class Img
 		{
 			this.undoneImageHistorySequence.push(this.currentImageHistorySequence.pop());
 			this.undoneIconHistorySequence.push(this.currentIconHistorySequence.pop());
-			this.parentFile.setImg(this);
 			this.parentFile.setSaved(false);
 			this.image = this.currentImageHistorySequence.peek();
 			this.icon = this.currentIconHistorySequence.peek();
@@ -120,7 +119,6 @@ public class Img
 		{
 			this.currentImageHistorySequence.push(this.undoneImageHistorySequence.pop());
 			this.currentIconHistorySequence.push(this.undoneIconHistorySequence.pop());
-			this.parentFile.setImg(this);
 			this.parentFile.setSaved(false);
 			this.image = this.currentImageHistorySequence.peek();
 			this.icon = this.currentIconHistorySequence.peek();
@@ -346,7 +344,6 @@ public class Img
 	private void imgChanged()
 	{
 		this.icon = this.generateIcon();
-		this.parentFile.setImg(this);
 		this.parentFile.setSaved(false);
 		this.undoneImageHistorySequence.clear();
 		this.undoneIconHistorySequence.clear();

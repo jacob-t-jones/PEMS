@@ -5,7 +5,9 @@
 package backend.storage.file;
 import java.io.*;
 import java.nio.file.*;
+
 import javax.imageio.*;
+
 import backend.exceptions.*;
 import backend.storage.*;
 import backend.storage.file.img.*;
@@ -20,7 +22,6 @@ import backend.storage.file.img.*;
 public class LiveFile extends CaseFile
 {
 	
-	private Img img;
 	private boolean saved;
 	
 	/** Calls the constructor for <code>CaseFile</code> using the passed in values, initializes and populates instance fields.
@@ -32,7 +33,6 @@ public class LiveFile extends CaseFile
 	public LiveFile(Case parentCase, String filePath) throws InvalidFileException
 	{
 		super(parentCase, filePath);
-		this.img = this.retrieveImg();
 		this.saved = true;
 	}
 	
@@ -50,13 +50,14 @@ public class LiveFile extends CaseFile
 		SAVE_FAILED, SUCCESS
 	}
 	
-	/** Returns the instance of <code>Img</code> associated with this file.
+	/** Returns an <code>Img</code> object representing the image stored within this file.
 	 * 
-	 *  @return the instance of <code>Img</code> associated with this file
+	 *  @return <code>Img</code> object representing the image stored within this file
+	 *  @throws InvalidFileException if there is an error reading the image into memory 
 	 */
-	public Img getImg()
+	public Img getImg() throws InvalidFileException
 	{
-		return this.img;
+		return new Img(this);
 	}
 	
 	/** Returns a <code>boolean</code> value indicating whether or not this file has been saved since it was last modified.
@@ -66,20 +67,6 @@ public class LiveFile extends CaseFile
 	public boolean getSaved()
 	{
 		return this.saved;
-	}
-	
-	/** Sets the value within the <code>img</code> instance field.
-	 * 
-	 *  @param img the <code>Img</code> object to set <code>img</code> to
-	 *  @throws NullPointerException if the parameter is null
-	 */
-	public void setImg(Img img)
-	{
-		if (img == null)
-		{
-			throw new NullPointerException();
-		}
-		this.img = img;
 	}
 	
 	/** Sets the value within the <code>saved</code> instance field.
@@ -113,14 +100,15 @@ public class LiveFile extends CaseFile
 
 	/** Saves this file by overwriting the version stored in <i>/cases/live/</i> and adding to the versions stored in <i>/cases/backup/</i>.
 	 * 
+	 *  @param img <code>Img</code> object containing the image that will be saved within this file
 	 *  @return <code>SaveFileResult</code> enum type indicating whether or not the save operation was successful
 	 */
-	public SaveFileResult saveFile()
+	public SaveFileResult saveFile(Img img)
 	{
 		try 
 		{
-			ImageIO.write(this.getImg().getImage(), this.getFileType(), new File("cases/live/" + this.getParentCase().getCaseNum() + "/" + this.getParentCase().getCaseNum() + " (" + this.getFileIndex() + ")" + this.getFileExt()));
-			ImageIO.write(this.getImg().getImage(), this.getFileType(), new File("cases/backup/" + this.getParentCase().getCaseNum() + "/" + this.getParentCase().getCaseNum() + " (" + this.getFileIndex() + "-" + this.getParentCase().getCurrentVersionIndex(this.getFileIndex()) + ")" + this.getFileExt()));
+			ImageIO.write(img.getImage(), this.getFileType(), new File("cases/live/" + this.getParentCase().getCaseNum() + "/" + this.getParentCase().getCaseNum() + " (" + this.getFileIndex() + ")" + this.getFileExt()));
+			ImageIO.write(img.getImage(), this.getFileType(), new File("cases/backup/" + this.getParentCase().getCaseNum() + "/" + this.getParentCase().getCaseNum() + " (" + this.getFileIndex() + "-" + this.getParentCase().getCurrentVersionIndex(this.getFileIndex()) + ")" + this.getFileExt()));
 			this.getParentCase().refreshFiles();
 		} 
 		catch (IOException e) 
@@ -131,16 +119,6 @@ public class LiveFile extends CaseFile
 		}
 		this.saved = true;
 		return SaveFileResult.SUCCESS;
-	}
-	
-	/** Creates and initializes an instance of <code>Img</code>, which contains a <code>BufferedImage</code> representing the contents of this file.
-	 * 
-	 *  @return <code>Img</code> object generated using this file
-	 *  @throws InvalidFileException if there is an error reading the image into memory
-	 */
-	private Img retrieveImg() throws InvalidFileException
-	{
-		return new Img(this);
 	}
 	
 }

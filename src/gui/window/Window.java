@@ -19,23 +19,20 @@ public class Window extends JFrame
 	
 	private FrameManager manager;
 
-	/** Calls the <code>JFrame</code> parent constructor, pushes the passed in <code>JPanel</code> to this window.
+	/** Calls the <code>JFrame</code> parent constructor.
 	 * 
-	 *  @param title the title of this window
 	 *  @param manager the instance of <code>FrameManager</code> that created this window
-	 *  @param panel the <code>JPanel</code> to display in this window
-	 *  @throws NullPointerException if any parameters are null
+	 *  @throws NullPointerException if the parameter is null
 	 */
-	public Window(String title, FrameManager manager, JPanel panel)
+	public Window(FrameManager manager)
 	{
-		super(title);
-		if (title == null || manager == null || panel == null)
+		super();
+		if (manager == null)
 		{
 			throw new NullPointerException();
 		}
-		super.getContentPane().add(panel);
-		super.pack();
 		this.manager = manager;
+        super.setResizable(false);
 	}
 	
 	/** Resizes this window using the width and height percentage values specified in the parameters. Positions it at the center of the screen.
@@ -50,7 +47,9 @@ public class Window extends JFrame
 		{
 			throw new IllegalArgumentException();
 		}
+		super.setResizable(true);
 		super.setBounds(this.widthToPixels((100 - width) / 2), this.heightToPixels((100 - height) / 2), this.widthToPixels(width), this.heightToPixels(height));
+		super.setResizable(false);
 	}
 	
 	/** Maximizes this window.
@@ -58,7 +57,9 @@ public class Window extends JFrame
 	public void setMaximized()
 	{
 		super.setResizable(true);
-		super.setExtendedState(MAXIMIZED_BOTH);
+		super.setSize((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+		super.setLocationRelativeTo(null); 
+		super.setResizable(false);
 	}
 	
 	/** Returns the instance of <code>FrameManager</code> associated with this window.

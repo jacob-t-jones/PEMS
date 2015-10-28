@@ -8,14 +8,17 @@ import java.awt.event.*;
 import java.awt.print.*;
 import java.io.*;
 import java.util.*;
+
 import javax.print.*;
 import javax.swing.*;
+
 import org.apache.pdfbox.exceptions.*;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.edit.*;
 import org.apache.pdfbox.pdmodel.font.*;
 import org.apache.pdfbox.pdmodel.graphics.xobject.*;
 import org.imgscalr.*;
+
 import backend.exceptions.*;
 import gui.*;
 import gui.components.icon.*;
@@ -453,7 +456,7 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 	/** Generates a PDF file - formatted in accordance with the user settings specified in this dialogue - that contains all of the selected images, as well as a standardized department header.
 	 * 
 	 *  @throws IOException if modification of the generated PDF file unexpectedly fails
-	 *  @throws InvalidFileException if the program is unable to locate the logo file for the department header
+	 *  @throws InvalidFileException if the program is unable to locate the logo file for the department header, or if the images cannot be loaded into memory
 	 */
 	private void generatePDF() throws IOException, InvalidFileException 
 	{
@@ -553,8 +556,9 @@ public class PrintSetUpDialogue extends JPanel implements ActionListener, Printa
 	/** Appends all of the images contained within the <code>CaseIcon</code> objects from the <code>printableIcons</code> <code>ArrayList</code> to the PDF.
 	 * 
 	 *  @throws IOException if modification of the generated PDF file unexpectedly fails
+	 *  @throws InvalidFileException if the images cannot be loaded into memory
 	 */
-	private void addImgs() throws IOException
+	private void addImgs() throws IOException, InvalidFileException
 	{
 		int currentImgIndex = 0;
 		int currentX = 0;

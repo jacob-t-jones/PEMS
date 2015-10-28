@@ -86,7 +86,6 @@ public class SelectPanel extends JPanel implements ActionListener, MouseListener
 		this.populateInnerContainer();
 		this.populateMainContainer();
 		this.add(this.mainContainer);
-		this.manager.getMainWindow().setResizable(true);
 		this.manager.getMainWindow().setMaximized();
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();

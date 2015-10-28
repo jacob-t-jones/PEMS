@@ -61,6 +61,7 @@ public class StartPanel extends JPanel implements ActionListener
 		this.add(this.topContainer);
 		this.add(this.middleContainer);
 		this.add(this.bottomContainer);
+		this.manager.getMainWindow().setBounds(50, 50);
 	}
 	
 	/** Mandatory method required in all classes that implement <code>ActionListener</code>.

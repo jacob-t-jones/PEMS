@@ -300,7 +300,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 	public void saveImg()
 	{
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		SaveFileResult result = this.selectedImg.getParentFile().saveFile();
+		SaveFileResult result = this.selectedImg.getParentFile().saveFile(this.selectedImg);
 		if (result == SaveFileResult.SAVE_FAILED)
 		{
 			this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -333,10 +333,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		}
 		if (this.manager.getConfiguration().getPersistence())
 		{
-			this.manager.getMainWindow().setExtendedState(JFrame.ICONIFIED);
-			this.manager.getMainWindow().setResizable(true);
-			this.manager.getMainWindow().setBounds(50, 50);
-			this.manager.getMainWindow().setResizable(false);
+			this.manager.getMainWindow().setExtendedState(this.manager.getMainWindow().getExtendedState() | JFrame.ICONIFIED);
 			this.manager.getMainWindow().setWindowListener(this.manager.getMainWindow());
 			this.manager.getMainWindow().removeMenuBar();
 			this.manager.closeDialogue();

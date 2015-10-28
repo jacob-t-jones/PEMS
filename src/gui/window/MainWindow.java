@@ -20,17 +20,13 @@ public class MainWindow extends Window implements WindowListener
 
 	/** Calls the parent constructor, sets the bounds and other options for this window.
 	 * 
-	 *  @param title the title of this window
 	 *  @param manager the instance of <code>FrameManager</code> that created this window
-	 *  @param panel the <code>JPanel</code> to display in this window
 	 */
-	public MainWindow(String title, FrameManager manager, JPanel panel)
+	public MainWindow(FrameManager manager)
 	{
-		super(title, manager, panel);
+		super(manager);
         super.addWindowListener(this);
-        super.setBounds(50, 50);
 		super.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        super.setResizable(false);
         super.setVisible(true);
 	}
 	
@@ -52,11 +48,8 @@ public class MainWindow extends Window implements WindowListener
 	{
 		if (super.getManager().getConfiguration().getPersistence())
 		{
-			super.setExtendedState(ICONIFIED);
-			super.setResizable(true);
-			super.setBounds(50, 50);
-			super.setResizable(false);
-			this.getManager().closeDialogue();
+			super.setExtendedState(super.getExtendedState() | JFrame.ICONIFIED);
+			super.getManager().closeDialogue();
 			this.pushPanel(new StartPanel(super.getManager()), "PEMS (Police Evidence Management System) Version 0.1");
 		}
 		else
