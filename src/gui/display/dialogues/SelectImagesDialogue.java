@@ -11,51 +11,48 @@ import gui.*;
 import gui.components.icon.*;
 import gui.display.*;
 
-/** Subclass of <code>JPanel</code> displayed when the user is selecting images to print.
+/** Subclass of <code>JPanel</code> allowing the user to select from a list of images.
  * 
  *  @author Jacob Jones
  *  @author Andrew Rottier
  *  @since 0.1
  *  @version 0.1
  */
-public class SelectImagesDialogue extends JPanel implements ActionListener, MouseListener
+public class SelectImagesDialogue extends JPanel implements ActionListener
 {
 	
 	private FrameManager manager;
-	private ArrayList<CaseIcon> caseIcons;
-	private ArrayList<CaseIcon> selectedIcons;
 	private Box mainContainer;
 	private Box buttonContainer;
 	private Box iconContainer;
-	private JLabel titleLabel;
+	private JLabel instructionsLabel;
 	private JButton nextButton;
 	private JButton prevButton;
 	private JButton continueButton;
 	private String caseNum;
+	private String instructions;
 	private int iconPlace;
 	
 	/** Populates this dialogue with all of the necessary graphical components.
 	 * 
 	 *  @param manager the instance of <code>FrameManager</code> that initialized this dialogue
-     *  @param caseNum the number of the case that the images are being selected from
-     *  @throws NullPointerException if any parameters are null
+	 *  @param caseNum the number of the case that the images are being selected for or from
+	 *  @param instructions <code>String</code> containing the instructions to display in <code>instructionsLabel</code>
+	 *  @throws NullPointerException if any parameters are null
 	 */
-	public SelectImagesDialogue(FrameManager manager, String caseNum)
+	public SelectImagesDialogue(FrameManager manager, String caseNum, String instructions)
 	{
-		if (manager == null || caseNum == null)
+		if (manager == null || caseNum == null || instructions == null)
 		{
 			throw new NullPointerException();
 		}
 		this.manager = manager;
 		this.caseNum = caseNum;
 		this.iconPlace = 0;
-		this.caseIcons = this.generateIcons();
-		this.selectedIcons = new ArrayList<CaseIcon>();
 		this.mainContainer = Box.createVerticalBox();
 		this.buttonContainer = Box.createHorizontalBox();
 		this.iconContainer = Box.createVerticalBox();
 		this.populateButtonContainer();
-		this.refreshIconContainer(0);
 		this.populateMainContainer();
 		this.add(this.mainContainer);
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -69,15 +66,15 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 	 *  <ul>
 	 *  	<li><code>nextButton</code></li>
 	 *  		<ul>
-	 *  			<li>Attempts to load the next six images from the case within <code>iconContainer</code>.</li>
+	 *  			<li>Calls the <code>nextButtonClicked</code> method.</li>
 	 *  		</ul>
 	 *  	<li><code>prevButton</code></li>
 	 *  		<ul>
-	 *  			<li>Attempts to load the previous six images from the case within <code>iconContainer</code>.</li>
+	 *  			<li>Calls the <code>prevButtonClicked</code> method.</li>
 	 *  		</ul>
 	 *  	<li><code>continueButton</code></li>
 	 *  		<ul>
-	 *  			<li>Attempts to push <code>PrintSetUpDialogue</code> and displays an error message if this fails.</li>
+	 *  			<li>Calls the <code>continueButtonClicked</code> method.</li>
 	 *  		</ul>
 	 *  </ul>
 	 */
@@ -85,92 +82,73 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 	{
 		if (e.getSource() == this.nextButton)
 		{
-			if (this.iconPlace + 6 < this.caseIcons.size())
-			{
-				this.refreshIconContainer(this.iconPlace + 6);
-			}
+			this.nextButtonClicked();
 		}
 		else if (e.getSource() == this.prevButton)
 		{
-			if (this.iconPlace >= 6)
-			{
-				this.refreshIconContainer(this.iconPlace - 6);
-			}
+			this.prevButtonClicked();
 		}
-		else if (e.getSource() == this.continueButton)
+		if (e.getSource() == this.continueButton)
 		{
-			if (this.selectedIcons.size() > 0)
-			{
-				this.manager.closeDialogue();
-				this.manager.openDialogue("Print Setup", new PrintSetUpDialogue(this.manager, this.caseNum, this.selectedIcons), 60, 75);
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(this, "You have not selected any images to print!", "Error", JOptionPane.ERROR_MESSAGE);
-			}
+			this.continueButtonClicked();
 		}
-	}
-
-	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
-	 *  <p>
-	 *  <b>Below is a list of possible source objects and their corresponding actions:</b>
-	 *  <ul>
-	 *  	<li>An instance of <code>CaseIcon</code> contained within both the <code>caseIcons</code> and <code>selectedIcons</code> <code>ArrayLists</code>.</li>
-	 *  		<ul>
-	 *  			<li>Said instance is removed from <code>selectedIcons</code>.</li>
-	 *  		</ul>
-	 *  	<li>An instance of <code>CaseIcon</code> contained within the <code>caseIcons</code> <code>ArrayList</code>, but not within the <code>selectedIcons</code> <code>ArrayList</code>.</li>
-	 *  		<ul>
-	 *  			<li>Said instance is added to <code>selectedIcons</code>.</li>
-	 *  		</ul>
-	 *  </ul>
-	 */
-	public void mouseClicked(MouseEvent e) 
-	{
-		if (this.selectedIcons.contains(e.getSource()))
-		{
-			this.selectedIcons.remove((CaseIcon)e.getSource());
-		}
-		else if (this.caseIcons.contains(e.getSource()))
-		{
-			this.selectedIcons.add((CaseIcon)e.getSource());
-		}
-		this.refreshIconContainer(this.iconPlace);
-	}
-
-	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
-	 */
-	public void mousePressed(MouseEvent e) 
-	{
-		return;
 	}
 	
-	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
-	 */
-	public void mouseReleased(MouseEvent e) 
-	{
-		return;
-	}
-	
-	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
-	 */
-	public void mouseEntered(MouseEvent e) 
-	{
-		return;
-	}
-
-	/** Mandatory method required in all classes that implement <code>MouseListener</code>.
-	 */
-	public void mouseExited(MouseEvent e) 
-	{
-		return;
-	}
-	
-	/** Refreshes the icons displayed on the screen.
+	/** Returns the instance of <code>FrameManager</code> associated with this dialogue.
 	 * 
-	 *  @param iconPlace the index within <code>caseIcons</code> at which we should begin displaying said icons
+	 *  @return the instance of <code>FrameManager</code> associated with this dialogue
 	 */
-	private void refreshIconContainer(int iconPlace)
+	protected FrameManager getManager()
+	{
+		return this.manager;
+	}
+	
+	/** Returns a <code>String</code> containing the case number of the currently selected case.
+	 * 
+	 *  @return <code>String</code> containing the case number of the currently selected case
+	 */
+	protected String getCaseNum()
+	{
+		return this.caseNum;
+	}
+	
+	/** Returns the 
+	 * 
+	 *  @return
+	 */
+	protected int getIconPlace()
+	{
+		return this.iconPlace;
+	}
+	
+	/** Placeholder method - should be overriden in subclasses.
+	 */
+	protected void nextButtonClicked()
+	{
+		return;
+	}
+	
+	/** Placeholder method - should be overriden in subclasses.
+	 */
+	protected void prevButtonClicked()
+	{
+		return;
+	}
+	
+	/** Placeholder method - should be overriden in subclasses.
+	 */
+	protected void continueButtonClicked()
+	{
+		return;
+	}
+
+	/** Refreshes the contents of <code>iconContainer</code> in accordance with the passed in parameters.
+	 * 
+	 *  @param iconPlace the index within <code>displayedIcons</code> of the first image to be displayed
+	 *  @param displayedIcons genericized <code>ArrayList</code> containing all of the icons currently being displayed
+	 *  @param selectedIcons genericized <code>ArrayList</code> containing the icons that have been selected by the user
+	 */
+	protected <T> void refreshIconContainer(int iconPlace, ArrayList<T> displayedIcons, ArrayList<T> selectedIcons)
 	{
 		this.iconPlace = iconPlace;
 		this.iconContainer.removeAll();
@@ -183,14 +161,14 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 				Box col = Box.createHorizontalBox();
 				col.setMinimumSize(new Dimension(150, 150));
 				col.setMaximumSize(new Dimension(150, 150));
-				if (this.iconPlace < this.caseIcons.size())
+				if (this.iconPlace < displayedIcons.size())
 				{
 					col.add(Box.createHorizontalGlue());
 					col.add(Box.createVerticalStrut(150));
-					col.add(this.caseIcons.get(this.iconPlace));
+					col.add((ImgIcon)displayedIcons.get(this.iconPlace));
 					col.add(Box.createVerticalStrut(150));
 					col.add(Box.createHorizontalGlue());
-					if (this.selectedIcons.contains(this.caseIcons.get(this.iconPlace)))
+					if (selectedIcons.contains(displayedIcons.get(this.iconPlace)))
 					{
 						col.setBackground(ComponentGenerator.SELECTED_THUMBNAIL_BG_COLOR);
 						col.setOpaque(true);
@@ -213,7 +191,7 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 		this.repaint();
 	}
 	
-	/** Adds <code>nextButton</code> and <code>prevButton</code> to <code>buttonContainer</code>.
+	/** Adds <code>prevButton</code> and <code>nextButton</code> to <code>buttonContainer</code>.
 	 */
 	private void populateButtonContainer()
 	{
@@ -224,35 +202,19 @@ public class SelectImagesDialogue extends JPanel implements ActionListener, Mous
 		this.buttonContainer.add(this.nextButton);
 	}
 	
-	/** Adds <code>titleLabel</code>, <code>buttonContainer</code>, <code>iconContainer</code>, and <code>continueButton</code> to <code>mainContainer</code>.
+	/** Adds <code>instructionsLabel</code>, <code>buttonContainer</code>, <code>iconContainer</code>, and <code>continueButton</code> to <code>mainContainer</code>.
 	 */
 	private void populateMainContainer()
 	{
-		this.titleLabel = ComponentGenerator.generateLabel("Please select all of the images you would like to print:", ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
+		this.instructionsLabel = ComponentGenerator.generateLabel(this.instructions, ComponentGenerator.STANDARD_TEXT_FONT, ComponentGenerator.STANDARD_TEXT_COLOR, CENTER_ALIGNMENT);
 		this.continueButton = ComponentGenerator.generateButton("Continue", this, CENTER_ALIGNMENT);
 		this.mainContainer.add(Box.createVerticalStrut(5));
-		this.mainContainer.add(this.titleLabel);
+		this.mainContainer.add(this.instructionsLabel);
 		this.mainContainer.add(Box.createVerticalStrut(15));
 		this.mainContainer.add(this.buttonContainer);
 		this.mainContainer.add(this.iconContainer);
 		this.mainContainer.add(Box.createVerticalStrut(5));
 		this.mainContainer.add(this.continueButton);
-	}
-	
-	/** Returns an <code>ArrayList</code> of <code>CaseIcon</code> objects representing all of the images contained within the currently selected case.
-	 * 
-	 *  @return <code>ArrayList</code> of <code>CaseIcon</code> objects representing all of the images contained within the currently selected case
-	 */
-	private ArrayList<CaseIcon> generateIcons()
-	{
-	    for (int i = 0; i < this.manager.getStorageManager().getCases().size(); i++)
-	    {
-	    	if (this.manager.getStorageManager().getCases().get(i).getCaseNum().equalsIgnoreCase(this.caseNum))
-	    	{
-	    		return this.manager.getStorageManager().getCases().get(i).getCaseIcons(140, this, CENTER_ALIGNMENT);
-	    	}
-	    }
-		return new ArrayList<CaseIcon>();
 	}
 
 }

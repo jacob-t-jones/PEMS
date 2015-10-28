@@ -150,7 +150,7 @@ public class FinishPanel extends JPanel implements MouseListener
 	private void printImgs()
 	{
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		this.manager.openDialogue("Select Images to Print", new SelectImagesDialogue(this.manager, this.caseNum), 40, 55);
+		this.manager.openDialogue("Select Images to Print", new SelectImagesPrintDialogue(this.manager, this.caseNum), 40, 55);
 	}
 	
 	/** Pushes <code>StartPanel</code> into the <code>JFrame</code>.

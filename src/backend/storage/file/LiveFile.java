@@ -50,9 +50,9 @@ public class LiveFile extends CaseFile
 		SAVE_FAILED, SUCCESS
 	}
 	
-	/** Returns an <code>Img</code> object representing the image stored within this file.
+	/** Returns an <code>Img</code> object containing the image currently stored within this file.
 	 * 
-	 *  @return <code>Img</code> object representing the image stored within this file
+	 *  @return <code>Img</code> object containing the image currently stored within this file
 	 *  @throws InvalidFileException if there is an error reading the image into memory 
 	 */
 	public Img getImg() throws InvalidFileException
