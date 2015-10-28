@@ -48,6 +48,7 @@ public class SelectImagesDialogue extends JPanel implements ActionListener
 		}
 		this.manager = manager;
 		this.caseNum = caseNum;
+		this.instructions = instructions;
 		this.iconPlace = 0;
 		this.mainContainer = Box.createVerticalBox();
 		this.buttonContainer = Box.createHorizontalBox();
@@ -112,9 +113,9 @@ public class SelectImagesDialogue extends JPanel implements ActionListener
 		return this.caseNum;
 	}
 	
-	/** Returns the 
+	/** Returns the index of the first image being displayed on the screen.
 	 * 
-	 *  @return
+	 *  @return index of the first image being displayed on the screen
 	 */
 	protected int getIconPlace()
 	{

@@ -74,6 +74,7 @@ public class EditImgPanel extends JPanel implements ActionListener, MouseListene
 		this.add(this.mainContainer);
 		this.manager.getMainWindow().setWindowListener(this);
 		this.manager.getMainWindow().setJMenuBar(this.menuBar);
+		this.manager.getMainWindow().setMaximized();
 		this.manager.getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		this.revalidate();
 		this.repaint();

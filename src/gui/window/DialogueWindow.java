@@ -23,7 +23,7 @@ public class DialogueWindow extends Window
 	 *  @param panel the <code>JPanel</code> to display in this window
 	 *  @param width the width of this window, as a percentage of total screen width
 	 *  @param height the height of this window, as a percentage of total screen height
-	 *  @throw NullPointerException if any parameters are null
+	 *  @throws NullPointerException if any parameters are null
 	 */
 	public DialogueWindow(String title, FrameManager manager, JPanel panel, int width, int height)
 	{
