@@ -71,24 +71,4 @@ public class Window extends JFrame
 		return this.manager;
 	}
 	
-	/** Converts a width percentage value to its equivalent pixel value.
-	 * 
-	 *  @param percent the percentage value to convert
-	 *  @return <code>int</code> calculated by converting the passed in percentage of screen width into a corresponding pixel value
-	 */
-	private int widthToPixels(double percent)
-	{
-		return (int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * (percent / 100.0));
-	}
-	
-	/** Converts a height percentage value to its equivalent pixel value.
-	 * 
-	 *  @param percent the percentage value to convert
-	 *  @return <code>int</code> calculated by converting the passed in percentage of screen height into a corresponding pixel value
-	 */
-	private int heightToPixels(double percent)
-	{
-		return (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * (percent / 100.0));
-	}
-	
 }
