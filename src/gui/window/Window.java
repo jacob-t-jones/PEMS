@@ -35,20 +35,20 @@ public class Window extends JFrame
         super.setResizable(false);
 	}
 	
-	/** Resizes this window using the width and height percentage values specified in the parameters. Positions it at the center of the screen.
+	/** Resizes this window using the width and height values specified in the parameters. Positions it at the center of the screen.
 	 * 
-	 *  @param width the new width of this window, as a percentage of total screen width
-	 *  @param height the new height of this window, as a percentage of total screen height
-	 *  @throws IllegalArgumentException if <code>width</code> or <code>height</code> is not a valid percentage
+	 *  @param width the new width of this window
+	 *  @param height the new height of this window
+	 *  @throws IllegalArgumentException if <code>width</code> or <code>height</code> is greater than the screen dimensions
 	 */
 	public void setBounds(int width, int height)
 	{
-		if (width < 0 || width > 100 || height < 0 || height > 100)
+		if (width < 0 || width > Toolkit.getDefaultToolkit().getScreenSize().getWidth() || height < 0 || height > Toolkit.getDefaultToolkit().getScreenSize().getHeight())
 		{
 			throw new IllegalArgumentException();
 		}
 		super.setResizable(true);
-		super.setBounds(this.widthToPixels((100 - width) / 2), this.heightToPixels((100 - height) / 2), this.widthToPixels(width), this.heightToPixels(height));
+		super.setBounds((int)((Toolkit.getDefaultToolkit().getScreenSize().getWidth() - width) / 2), (int)((Toolkit.getDefaultToolkit().getScreenSize().getHeight() - height) / 2), width, height);
 		super.setResizable(false);
 	}
 	
