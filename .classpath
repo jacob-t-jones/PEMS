@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry excluding="gui/components/img/package-info.java|gui/components/box/package-info.java|gui/components/thumbnail/package-info.java" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 8 [1.8.0_65]"/>
-	<classpathentry kind="lib" path="libraries/imgscalr-lib-4.2.jar"/>
-	<classpathentry kind="lib" path="libraries/pdfbox-app-1.8.10.jar"/>
-	<classpathentry kind="lib" path="libraries/sanselan-0.97-incubator.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
