@@ -1,7 +1,7 @@
 [PEMS (Police Evidence Management System)](https://github.com/jacob-t-jones/PEMS)
 ----------
 
-Copyright &copy; 2015 Jacob Jones and Andrew Rottier
+Copyright &copy; 2017 Jacob Jones and Andrew Rottier
 
 Overview
 ----------
@@ -15,9 +15,9 @@ with the Plainville Police Department in mind, it can be modified to fit the nee
 Installation
 ----------
 
-Those who have been granted permission to install and use PEMS have two options for installation:
+Those who wish to install and use PEMS have two options for installation:
 
-1. The source code provided on GitHub can be downloaded and compiled on the machine in question. Uses who choose this 
+1. The source code provided on GitHub can be downloaded and compiled on the machine in question. Users who choose this 
    option should be aware that PEMS was written and compiled using Java Development Kit Version 1.7.0 Update 67 (JDK 7u67).
 	
 2. An executable file can be provided for installion on the machine in question. This is the simpler option, and leaves
@@ -32,10 +32,9 @@ Changelog
 Licensing
 ----------
 
-At the moment, PEMS is a closed source project, and its source code is not available to the public. All three external
-libraries utilized within the project, however, are open source, and fall under the Apache License Version 2.0. As is
-required by law, a copy of said license has been included within this project, and can be found in the APACHE file in
-the project's home directory.
+PEMS and all three external libraries utilized within the project are open source, and fall under the Apache License 
+Version 2.0. As is required by law, a copy of said license has been included within this project, and can be found in 
+the APACHE file in the project's home directory.
 		
 Documentation
 ----------
